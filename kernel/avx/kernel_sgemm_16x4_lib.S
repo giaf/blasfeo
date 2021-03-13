@@ -63,13 +63,13 @@
 	FUN_START(inner_kernel_gemm_nt_16x4_lib8c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -180,16 +180,16 @@
 	vaddps			%ymm15, %ymm7, %ymm7
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -292,15 +292,15 @@
 	vaddps			%ymm15, %ymm7, %ymm7
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -331,10 +331,10 @@
 	vaddps			%ymm15, %ymm7, %ymm7
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -378,13 +378,13 @@
 	FUN_START(inner_kernel_gemm_nt_16x3_lib8c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -475,16 +475,16 @@
 	vaddps			%ymm15, %ymm6, %ymm6
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -567,15 +567,15 @@
 	vaddps			%ymm15, %ymm6, %ymm6
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -601,10 +601,10 @@
 	vaddps			%ymm15, %ymm6, %ymm6
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -648,13 +648,13 @@
 	FUN_START(inner_kernel_gemm_nt_16x2_lib8c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -725,16 +725,16 @@
 	vaddps			%ymm15, %ymm5, %ymm5
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -797,15 +797,15 @@
 	vaddps			%ymm15, %ymm5, %ymm5
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -826,10 +826,10 @@
 	vaddps			%ymm15, %ymm5, %ymm5
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -873,13 +873,13 @@
 	FUN_START(inner_kernel_gemm_nt_16x1_lib8c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -930,16 +930,16 @@
 	prefetcht0		0(%r13, %r14, 8)
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -982,15 +982,15 @@
 	vaddps			%ymm15, %ymm4, %ymm4
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -1006,10 +1006,10 @@
 	vaddps			%ymm15, %ymm4, %ymm4
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -1053,7 +1053,7 @@
 	FUN_START(inner_kernel_gemm_nn_16x4_lib8c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r14, %r14, 2), %r15
@@ -1061,7 +1061,7 @@
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -1167,17 +1167,17 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm7, %ymm7
 
-	subl	$4, %r10d
-	addq	$16, %r13
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 16, %r13
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -1276,16 +1276,16 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm7, %ymm7
 
-	subl	$4, %r10d
-	addq	$16, %r13
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 16, %r13
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -1315,11 +1315,11 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm7, %ymm7
 
-	subl	$1, %r10d
-	addq	$4, %r13
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 4, %r13
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -1363,7 +1363,7 @@
 	FUN_START(inner_kernel_gemm_nn_16x3_lib8c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 //	leaq	0(%r14, %r14, 2), %r15
@@ -1371,7 +1371,7 @@
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -1457,17 +1457,17 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm6, %ymm6
 
-	subl	$4, %r10d
-	addq	$16, %r13
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 16, %r13
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -1546,16 +1546,16 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm6, %ymm6
 
-	subl	$4, %r10d
-	addq	$16, %r13
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 16, %r13
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -1580,11 +1580,11 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm6, %ymm6
 
-	subl	$1, %r10d
-	addq	$4, %r13
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 4, %r13
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -1628,7 +1628,7 @@
 	FUN_START(inner_kernel_gemm_nn_16x2_lib8c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 //	leaq	0(%r14, %r14, 2), %r15
@@ -1636,7 +1636,7 @@
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -1702,17 +1702,17 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm5, %ymm5
 
-	subl	$4, %r10d
-	addq	$16, %r13
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 16, %r13
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -1771,16 +1771,16 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm5, %ymm5
 
-	subl	$4, %r10d
-	addq	$16, %r13
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 16, %r13
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -1800,11 +1800,11 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm5, %ymm5
 
-	subl	$1, %r10d
-	addq	$4, %r13
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 4, %r13
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -1848,7 +1848,7 @@
 	FUN_START(inner_kernel_gemm_nn_16x1_lib8c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 //	leaq	0(%r14, %r14, 2), %r15
@@ -1856,7 +1856,7 @@
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -1902,17 +1902,17 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm4, %ymm4
 
-	subl	$4, %r10d
-	addq	$16, %r13
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 16, %r13
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -1951,16 +1951,16 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm4, %ymm4
 
-	subl	$4, %r10d
-	addq	$16, %r13
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 16, %r13
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -1975,11 +1975,11 @@
 	vmulps			%ymm14, %ymm12, %ymm15
 	vaddps			%ymm15, %ymm4, %ymm4
 
-	subl	$1, %r10d
-	addq	$4, %r13
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 4, %r13
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -2149,8 +2149,8 @@
 #elif defined(OS_MAC)
 	vmovups		LC01(%rip), %ymm13
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm13, %ymm13
 
 	leaq		0(%r13, %r13, 2), %rax
@@ -2161,7 +2161,7 @@
 	vmaskmovps	32(%r12), %ymm13, %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
 	vaddps		%ymm4, %ymm15, %ymm4
-	cmpl		$2, %r13d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmovups		0(%r12, %r13), %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
@@ -2169,7 +2169,7 @@
 	vmaskmovps	32(%r12, %r13), %ymm13, %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
 	vaddps		%ymm5, %ymm15, %ymm5
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmovups		0(%r12, %r13, 2), %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
@@ -2284,19 +2284,19 @@
 #elif defined(OS_MAC)
 	vmovups		LC01(%rip), %ymm13
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm13, %ymm15
 
 	leaq		0(%r11, %r11, 2), %r14
 
 	vmovups		%ymm0, 0(%r10)
 	vmaskmovps	%ymm4, %ymm15, 32(%r10)
-	cmpl		$2, %r13d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmovups		%ymm1, 0(%r10, %r11)
 	vmaskmovps	%ymm5, %ymm15, 32(%r10, %r11)
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmovups		%ymm2, 0(%r10, %r11, 2)
 	vmaskmovps	%ymm6, %ymm15, 32(%r10, %r11, 2)
@@ -2377,10 +2377,10 @@
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$2, %r14d
+	sall	$ 2, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_NT_16X4_LIB8C
@@ -2393,7 +2393,7 @@
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_16X4_LIB
@@ -2408,7 +2408,7 @@
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$2, %r13d
+	sall	$ 2, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_16X4_LIB
@@ -2421,7 +2421,7 @@
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_16X4_LIB
@@ -2458,13 +2458,13 @@
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$2, %r14d
+	sall	$ 2, %r14d
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -2478,7 +2478,7 @@
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -2492,7 +2492,7 @@
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -2519,7 +2519,7 @@
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_16X4_LIB
@@ -2534,7 +2534,7 @@
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$2, %r13d
+	sall	$ 2, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -2549,7 +2549,7 @@
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -2593,7 +2593,7 @@
 
 	movq	ARG7, %r10 // C
 	movq	ARG8, %r11 // ldc
-	sall	$2, %r11d // ldc*sizeof(float)
+	sall	$ 2, %r11d // ldc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_16X4_LIB
@@ -2609,7 +2609,7 @@
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -2625,7 +2625,7 @@
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movl	ARG8, %r13d // ldc
-	sall	$2, %r13d // ldc*sizeof(float)
+	sall	$ 2, %r13d // ldc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_16X4_LIB
@@ -2638,7 +2638,7 @@
 
 	movq	ARG9, %r10 // D
 	movl	ARG10, %r11d // ldd
-	sall	$2, %r11d // ldd*sizeof(float)
+	sall	$ 2, %r11d // ldd*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_16X4_LIB
@@ -2675,7 +2675,7 @@
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -2691,7 +2691,7 @@
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movl	ARG8, %r13d // ldc
-	sall	$2, %r13d // ldc*sizeof(float)
+	sall	$ 2, %r13d // ldc*sizeof(float)
 	movq	ARG11, %r14 // km
 	movq	ARG12, %r15 // kn
 
@@ -2706,7 +2706,7 @@
 
 	movq	ARG9, %r10 // D
 	movl	ARG10, %r11d // ldd
-	sall	$2, %r11d // ldd*sizeof(float)
+	sall	$ 2, %r11d // ldd*sizeof(float)
 	movq	ARG11, %r12 // km
 	movq	ARG12, %r13 // kn
 
@@ -2745,10 +2745,10 @@
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$2, %r14d
+	sall	$ 2, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_NN_16X4_LIB8C
@@ -2761,7 +2761,7 @@
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_16X4_LIB
@@ -2776,7 +2776,7 @@
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$2, %r13d
+	sall	$ 2, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_16X4_LIB
@@ -2789,7 +2789,7 @@
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_16X4_LIB
@@ -2826,13 +2826,13 @@
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$2, %r14d
+	sall	$ 2, %r14d
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -2846,7 +2846,7 @@
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -2860,7 +2860,7 @@
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -2887,7 +2887,7 @@
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_16X4_LIB
@@ -2902,7 +2902,7 @@
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$2, %r13d
+	sall	$ 2, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -2917,7 +2917,7 @@
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 

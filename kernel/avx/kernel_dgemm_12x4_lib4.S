@@ -392,14 +392,14 @@ NAME:
 	FUN_START(inner_kernel_dgemm_add_nn_12x4_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 	vmovapd 0(%r11), %ymm12 // A0[0]
 	vmovapd 0(%r11, %r12, 1), %ymm13 // A1[0]
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -425,7 +425,7 @@ NAME:
 	vaddpd			%ymm15, %ymm5, %ymm5
 	vmulpd			0(%r11, %r12, 2), %ymm14, %ymm15
 	vaddpd			%ymm15, %ymm9, %ymm9
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vbroadcastsd	64(%r13), %ymm14
 	vmulpd			%ymm12, %ymm14, %ymm15
@@ -514,7 +514,7 @@ NAME:
 	vaddpd			%ymm15, %ymm7, %ymm7
 	vmulpd			64(%r11, %r12, 2), %ymm14, %ymm15
 	vaddpd			%ymm15, %ymm11, %ymm11
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	// unroll 3
 	vbroadcastsd	24(%r13), %ymm14
@@ -552,12 +552,12 @@ NAME:
 	vaddpd			%ymm15, %ymm11, %ymm11
 	addq	%r14, %r13
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop 
 
 0: // consider clean4-up
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -576,7 +576,7 @@ NAME:
 	vaddpd			%ymm15, %ymm5, %ymm5
 	vmulpd			0(%r11, %r12, 2), %ymm14, %ymm15
 	vaddpd			%ymm15, %ymm9, %ymm9
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vbroadcastsd	64(%r13), %ymm14
 	vmulpd			%ymm12, %ymm14, %ymm15
@@ -665,7 +665,7 @@ NAME:
 	vaddpd			%ymm15, %ymm7, %ymm7
 	vmulpd			64(%r11, %r12, 2), %ymm14, %ymm15
 	vaddpd			%ymm15, %ymm11, %ymm11
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	// unroll 3
 	vbroadcastsd	24(%r13), %ymm14
@@ -709,7 +709,7 @@ NAME:
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -733,7 +733,7 @@ NAME:
 	vaddpd			%ymm15, %ymm5, %ymm5
 	vmulpd			0(%r11, %r12, 2), %ymm14, %ymm15
 	vaddpd			%ymm15, %ymm9, %ymm9
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	vbroadcastsd	64(%r13), %ymm14
 	vmulpd			%ymm12, %ymm14, %ymm15
@@ -751,10 +751,10 @@ NAME:
 	vmulpd			0(%r11, %r12, 2), %ymm14, %ymm15
 	vaddpd			%ymm15, %ymm11, %ymm11
 
-	addq	$32, %r11
-	addq	$8, %r13
+	addq	$ 32, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 2: // return
@@ -801,13 +801,13 @@ NAME:
 	FUN_START(inner_edge_dgemm_add_nn_12x4_lib4)
 #endif
 	
-	cmpl			$0, %r15d // offset==0
+	cmpl			$ 0, %r15d // offset==0
 	jle				2f // end
 
-	cmpl			$0, %r10d // k==0
+	cmpl			$ 0, %r10d // k==0
 	jle				2f // end
 
-	movl			$4, %ebx
+	movl			$ 4, %ebx
 	subl			%r15d, %ebx // 4-offsetB
 	cmpl			%r10d, %ebx
 //	jle				0f
@@ -816,7 +816,7 @@ NAME:
 	cmovgl			%r10d, %ebx // kend=min(k,4-offsetB)
 
 	movl			%r15d, %eax
-	sall			$3, %eax // offsetB*sizeof(double)
+	sall			$ 3, %eax // offsetB*sizeof(double)
 	addq			%rax, %r13 // B+offsetB*sizeof(double)
 
 1:
@@ -855,19 +855,19 @@ NAME:
 	vmulpd			0(%r11, %r12, 2), %ymm14, %ymm15
 	vaddpd			%ymm15, %ymm11, %ymm11
 
-	subl			$1, %r10d // k-1
-	subl			$1, %ebx // kend-1
-	addq			$32, %r11 // A0+1*bs*sizeof(float)
-	addq			$8, %r13 // B+1*sizeof(float)
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %ebx // kend-1
+	addq			$ 32, %r11 // A0+1*bs*sizeof(float)
+	addq			$ 8, %r13 // B+1*sizeof(float)
 
-	cmpl			$0, %ebx
+	cmpl			$ 0, %ebx
 	jg				1b
 
-	cmpl			$0, %r10d
+	cmpl			$ 0, %r10d
 	jle				2f // end
 
 	addq			%r14, %r13
-	subq			$32, %r13 // B+bs*(sdb-1)*sizeof(double)
+	subq			$ 32, %r13 // B+bs*(sdb-1)*sizeof(double)
 
 2:
 
@@ -1149,18 +1149,18 @@ NAME:
 	vmovupd		LC04(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	vmovapd		%ymm0, 0(%r10)
 	vmovapd		%ymm4, 0(%r10, %r11, 1)
 	vmaskmovpd	%ymm8, %ymm15,  0(%r10, %r11, 2)
-	cmpl		$2, %r13d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmovapd		%ymm1, 32(%r10)
 	vmovapd		%ymm5, 32(%r10, %r11, 1)
 	vmaskmovpd	%ymm9, %ymm15, 32(%r10, %r11, 2)
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmovapd		%ymm2, 64(%r10)
 	vmovapd		%ymm6, 64(%r10, %r11, 1)
@@ -1202,10 +1202,10 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -1227,7 +1227,7 @@ NAME:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -1240,7 +1240,7 @@ NAME:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -1277,10 +1277,10 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sda
-	sall	$5, %r14d // 4*sda*sizeof(double)
+	sall	$ 5, %r14d // 4*sda*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -1302,7 +1302,7 @@ NAME:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -1315,7 +1315,7 @@ NAME:
 
 	movq	ARG11, %r10 // store address D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 
 	movq	ARG13, %r12 // km 
 	movq	ARG14, %r13 // kn 

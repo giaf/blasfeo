@@ -176,10 +176,10 @@ inner_kernel_sgetr_8_lib8:
 #endif
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$7, %r10d
+	cmpl	$ 7, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -202,41 +202,41 @@ inner_kernel_sgetr_8_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	subl		$8, %r10d
+	subl		$ 8, %r10d
 	addq		%r12, %r11
 
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vperm2f128	$0x20, %ymm1, %ymm0, %ymm2
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm3
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vperm2f128	$ 0x20, %ymm1, %ymm0, %ymm2
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm3
 	vmovaps		%ymm2, 0(%r13)
 	vmovaps		%ymm3, 128(%r13)
-	vshufps		$0xee, %ymm10, %ymm8, %ymm0
-	vshufps		$0xee, %ymm14, %ymm12, %ymm1
-	vperm2f128	$0x20, %ymm1, %ymm0, %ymm2
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm3
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm1
+	vperm2f128	$ 0x20, %ymm1, %ymm0, %ymm2
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm3
 	vmovaps		%ymm2, 32(%r13)
 	vmovaps		%ymm3, 160(%r13)
-	vshufps		$0x44, %ymm11, %ymm9, %ymm0
-	vshufps		$0x44, %ymm15, %ymm13, %ymm1
-	vperm2f128	$0x20, %ymm1, %ymm0, %ymm2
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm0
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm1
+	vperm2f128	$ 0x20, %ymm1, %ymm0, %ymm2
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm3
 	vmovaps		%ymm2, 64(%r13)
 	vmovaps		%ymm3, 192(%r13)
-	vshufps		$0xee, %ymm11, %ymm9, %ymm0
-	vshufps		$0xee, %ymm15, %ymm13, %ymm1
-	vperm2f128	$0x20, %ymm1, %ymm0, %ymm2
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm3
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm0
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm1
+	vperm2f128	$ 0x20, %ymm1, %ymm0, %ymm2
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm3
 	vmovaps		%ymm2, 96(%r13)
 	vmovaps		%ymm3, 224(%r13)
 
-	addq		$256, %r13
+	addq		$ 256, %r13
 
-	cmpl		$7, %r10d
+	cmpl		$ 7, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// common
@@ -256,62 +256,62 @@ inner_kernel_sgetr_8_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vshufps		$0xee, %ymm10, %ymm8, %ymm2
-	vshufps		$0xee, %ymm14, %ymm12, %ymm3
-	vshufps		$0x44, %ymm11, %ymm9, %ymm4
-	vshufps		$0x44, %ymm15, %ymm13, %ymm5
-	vshufps		$0xee, %ymm11, %ymm9, %ymm6
-	vshufps		$0xee, %ymm15, %ymm13, %ymm7
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm2
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm4
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm5
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm6
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm7
 
 	// 0
-	vperm2f128	$0x20, %ymm1, %ymm0, %ymm8
+	vperm2f128	$ 0x20, %ymm1, %ymm0, %ymm8
 	vmovaps		%ymm8, 0(%r13)
-	cmpl	$1, %r10d
+	cmpl	$ 1, %r10d
 	jle		3f
 	// 1
-	vperm2f128	$0x20, %ymm3, %ymm2, %ymm8
+	vperm2f128	$ 0x20, %ymm3, %ymm2, %ymm8
 	vmovaps		%ymm8, 32(%r13)
-	cmpl	$2, %r10d
+	cmpl	$ 2, %r10d
 	jle		3f
 	// 2
-	vperm2f128	$0x20, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x20, %ymm5, %ymm4, %ymm8
 	vmovaps		%ymm8, 64(%r13)
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		3f
 	// 3
-	vperm2f128	$0x20, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x20, %ymm7, %ymm6, %ymm8
 	vmovaps		%ymm8, 96(%r13)
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		3f
 	// 4
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm8
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm8
 	vmovaps		%ymm8, 128(%r13)
-	cmpl	$5, %r10d
+	cmpl	$ 5, %r10d
 	jle		3f
 	// 5
-	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
+	vperm2f128	$ 0x31, %ymm3, %ymm2, %ymm8
 	vmovaps		%ymm8, 160(%r13)
-	cmpl	$6, %r10d
+	cmpl	$ 6, %r10d
 	jle		3f
 	// 6
-	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x31, %ymm5, %ymm4, %ymm8
 	vmovaps		%ymm8, 192(%r13)
-//	cmpl	$7, %r10d
+//	cmpl	$ 7, %r10d
 //	jle		3f
 	// 7
-//	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
+//	vperm2f128	$ 0x31, %ymm7, %ymm6, %ymm8
 //	vmovaps		%ymm8, 224(%r13)
 
 3:
 	movl	%r10d, %r14d
-	sall	$2, %r14d // kleft*sizeof(float)
+	sall	$ 2, %r14d // kleft*sizeof(float)
 	addq	%r14, %r11 // A+kleft
 	movl	%r10d, %r14d
-	sall	$5, %r14d // kleft*bs*sizeof(float)
+	sall	$ 5, %r14d // kleft*bs*sizeof(float)
 	addq	%r14, %r13
-	movl	$0, %r10d
+	movl	$ 0, %r10d
 
 2: // return
 
@@ -350,10 +350,10 @@ inner_kernel_sgetr_8_gen_lib8:
 #endif
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$7, %r10d
+	cmpl	$ 7, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -376,43 +376,43 @@ inner_kernel_sgetr_8_gen_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	subl		$8, %r10d
+	subl		$ 8, %r10d
 	addq		%r12, %r11
 
 	vmovupd		-32(%rsp), %ymm4
 
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vperm2f128	$0x20, %ymm1, %ymm0, %ymm2
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm3
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vperm2f128	$ 0x20, %ymm1, %ymm0, %ymm2
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm3
 	vmaskmovps	%ymm2, %ymm4, 0(%r13)
 	vmaskmovps	%ymm3, %ymm4, 128(%r13)
-	vshufps		$0xee, %ymm10, %ymm8, %ymm0
-	vshufps		$0xee, %ymm14, %ymm12, %ymm1
-	vperm2f128	$0x20, %ymm1, %ymm0, %ymm2
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm3
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm1
+	vperm2f128	$ 0x20, %ymm1, %ymm0, %ymm2
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm3
 	vmaskmovps	%ymm2, %ymm4, 32(%r13)
 	vmaskmovps	%ymm3, %ymm4, 160(%r13)
-	vshufps		$0x44, %ymm11, %ymm9, %ymm0
-	vshufps		$0x44, %ymm15, %ymm13, %ymm1
-	vperm2f128	$0x20, %ymm1, %ymm0, %ymm2
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm0
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm1
+	vperm2f128	$ 0x20, %ymm1, %ymm0, %ymm2
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm3
 	vmaskmovps	%ymm2, %ymm4, 64(%r13)
 	vmaskmovps	%ymm3, %ymm4, 192(%r13)
-	vshufps		$0xee, %ymm11, %ymm9, %ymm0
-	vshufps		$0xee, %ymm15, %ymm13, %ymm1
-	vperm2f128	$0x20, %ymm1, %ymm0, %ymm2
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm3
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm0
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm1
+	vperm2f128	$ 0x20, %ymm1, %ymm0, %ymm2
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm3
 	vmaskmovps	%ymm2, %ymm4, 96(%r13)
 	vmaskmovps	%ymm3, %ymm4, 224(%r13)
 
-	addq		$256, %r13
+	addq		$ 256, %r13
 
-	cmpl		$7, %r10d
+	cmpl		$ 7, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// common
@@ -432,64 +432,64 @@ inner_kernel_sgetr_8_gen_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vshufps		$0xee, %ymm10, %ymm8, %ymm2
-	vshufps		$0xee, %ymm14, %ymm12, %ymm3
-	vshufps		$0x44, %ymm11, %ymm9, %ymm4
-	vshufps		$0x44, %ymm15, %ymm13, %ymm5
-	vshufps		$0xee, %ymm11, %ymm9, %ymm6
-	vshufps		$0xee, %ymm15, %ymm13, %ymm7
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm2
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm4
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm5
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm6
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm7
 
 	vmovupd		-32(%rsp), %ymm9
 
 	// 0
-	vperm2f128	$0x20, %ymm1, %ymm0, %ymm8
+	vperm2f128	$ 0x20, %ymm1, %ymm0, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 0(%r13)
-	cmpl	$1, %r10d
+	cmpl	$ 1, %r10d
 	jle		3f
 	// 1
-	vperm2f128	$0x20, %ymm3, %ymm2, %ymm8
+	vperm2f128	$ 0x20, %ymm3, %ymm2, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 32(%r13)
-	cmpl	$2, %r10d
+	cmpl	$ 2, %r10d
 	jle		3f
 	// 2
-	vperm2f128	$0x20, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x20, %ymm5, %ymm4, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 64(%r13)
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		3f
 	// 3
-	vperm2f128	$0x20, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x20, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 96(%r13)
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		3f
 	// 4
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm8
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 128(%r13)
-	cmpl	$5, %r10d
+	cmpl	$ 5, %r10d
 	jle		3f
 	// 5
-	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
+	vperm2f128	$ 0x31, %ymm3, %ymm2, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 160(%r13)
-	cmpl	$6, %r10d
+	cmpl	$ 6, %r10d
 	jle		3f
 	// 6
-	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x31, %ymm5, %ymm4, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 192(%r13)
-//	cmpl	$7, %r10d
+//	cmpl	$ 7, %r10d
 //	jle		3f
 	// 7
-//	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
+//	vperm2f128	$ 0x31, %ymm7, %ymm6, %ymm8
 //	vmaskmovps	%ymm8, %ymm9, 224(%r13)
 
 3:
 	movl	%r10d, %r14d
-	sall	$2, %r14d // kleft*sizeof(float)
+	sall	$ 2, %r14d // kleft*sizeof(float)
 	addq	%r14, %r11 // A+kleft
 	movl	%r10d, %r14d
-	sall	$5, %r14d // kleft*bs*sizeof(float)
+	sall	$ 5, %r14d // kleft*bs*sizeof(float)
 	addq	%r14, %r13
-	movl	$0, %r10d
+	movl	$ 0, %r10d
 
 2: // return
 
@@ -537,8 +537,8 @@ inner_edge_sgetr_8_0_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
 
@@ -588,12 +588,12 @@ inner_edge_sgetr_8_1_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// common
@@ -613,70 +613,70 @@ inner_edge_sgetr_8_1_gen_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vshufps		$0xee, %ymm10, %ymm8, %ymm2
-	vshufps		$0xee, %ymm14, %ymm12, %ymm3
-	vshufps		$0x44, %ymm11, %ymm9, %ymm4
-	vshufps		$0x44, %ymm15, %ymm13, %ymm5
-	vshufps		$0xee, %ymm11, %ymm9, %ymm6
-	vshufps		$0xee, %ymm15, %ymm13, %ymm7
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm2
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm4
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm5
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm6
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm7
 
 	vmovupd		-32(%rsp), %ymm9
 
 	// 0
 	// 1
-	vperm2f128	$0x20, %ymm3, %ymm2, %ymm8
+	vperm2f128	$ 0x20, %ymm3, %ymm2, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 0(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 2
-	vperm2f128	$0x20, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x20, %ymm5, %ymm4, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 32(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 3
-	vperm2f128	$0x20, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x20, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 64(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 4
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm8
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 96(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 5
-	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
+	vperm2f128	$ 0x31, %ymm3, %ymm2, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 128(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 6
-	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x31, %ymm5, %ymm4, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 160(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 7
-	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x31, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 192(%r13)
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
-	addq	$224, %r13 // B+7*bs*sizeof(float)
+	addq	$ 224, %r13 // B+7*bs*sizeof(float)
 
 	jmp		2f
 
 3:
 	movl	%r10d, %r14d
-	sall	$2, %r14d
+	sall	$ 2, %r14d
 	addq	%r14, %r11 // A+k*sizeof(float)
 	movl	%r10d, %r14d
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	addq	%r14, %r13 // B+k*bs*sizeof(float)
 
 2: // return
@@ -727,12 +727,12 @@ inner_edge_sgetr_8_2_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// common
@@ -752,65 +752,65 @@ inner_edge_sgetr_8_2_gen_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vshufps		$0xee, %ymm10, %ymm8, %ymm2
-	vshufps		$0xee, %ymm14, %ymm12, %ymm3
-	vshufps		$0x44, %ymm11, %ymm9, %ymm4
-	vshufps		$0x44, %ymm15, %ymm13, %ymm5
-	vshufps		$0xee, %ymm11, %ymm9, %ymm6
-	vshufps		$0xee, %ymm15, %ymm13, %ymm7
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm2
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm4
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm5
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm6
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm7
 
 	vmovupd		-32(%rsp), %ymm9
 
 	// 0
 	// 1
 	// 2
-	vperm2f128	$0x20, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x20, %ymm5, %ymm4, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 0(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 3
-	vperm2f128	$0x20, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x20, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 32(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 4
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm8
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 64(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 5
-	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
+	vperm2f128	$ 0x31, %ymm3, %ymm2, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 96(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 6
-	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x31, %ymm5, %ymm4, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 128(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 7
-	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x31, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 160(%r13)
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
-	addq	$192, %r13 // B+6*bs*sizeof(float)
+	addq	$ 192, %r13 // B+6*bs*sizeof(float)
 
 	jmp		2f
 
 3:
 	movl	%r10d, %r14d
-	sall	$2, %r14d
+	sall	$ 2, %r14d
 	addq	%r14, %r11 // A+k*sizeof(float)
 	movl	%r10d, %r14d
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	addq	%r14, %r13 // B+k*bs*sizeof(float)
 
 2: // return
@@ -861,12 +861,12 @@ inner_edge_sgetr_8_3_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// common
@@ -886,14 +886,14 @@ inner_edge_sgetr_8_3_gen_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vshufps		$0xee, %ymm10, %ymm8, %ymm2
-	vshufps		$0xee, %ymm14, %ymm12, %ymm3
-	vshufps		$0x44, %ymm11, %ymm9, %ymm4
-	vshufps		$0x44, %ymm15, %ymm13, %ymm5
-	vshufps		$0xee, %ymm11, %ymm9, %ymm6
-	vshufps		$0xee, %ymm15, %ymm13, %ymm7
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm2
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm4
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm5
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm6
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm7
 
 	vmovupd		-32(%rsp), %ymm9
 
@@ -901,45 +901,45 @@ inner_edge_sgetr_8_3_gen_lib8:
 	// 1
 	// 2
 	// 3
-	vperm2f128	$0x20, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x20, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 0(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 4
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm8
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 32(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 5
-	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
+	vperm2f128	$ 0x31, %ymm3, %ymm2, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 64(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 6
-	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x31, %ymm5, %ymm4, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 96(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 7
-	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x31, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 128(%r13)
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
-	addq	$160, %r13 // B+6*bs*sizeof(float)
+	addq	$ 160, %r13 // B+6*bs*sizeof(float)
 
 	jmp		2f
 
 3:
 	movl	%r10d, %r14d
-	sall	$2, %r14d
+	sall	$ 2, %r14d
 	addq	%r14, %r11 // A+k*sizeof(float)
 	movl	%r10d, %r14d
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	addq	%r14, %r13 // B+k*bs*sizeof(float)
 
 2: // return
@@ -990,12 +990,12 @@ inner_edge_sgetr_8_4_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// common
@@ -1015,14 +1015,14 @@ inner_edge_sgetr_8_4_gen_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vshufps		$0xee, %ymm10, %ymm8, %ymm2
-	vshufps		$0xee, %ymm14, %ymm12, %ymm3
-	vshufps		$0x44, %ymm11, %ymm9, %ymm4
-	vshufps		$0x44, %ymm15, %ymm13, %ymm5
-	vshufps		$0xee, %ymm11, %ymm9, %ymm6
-	vshufps		$0xee, %ymm15, %ymm13, %ymm7
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm2
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm4
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm5
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm6
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm7
 
 	vmovupd		-32(%rsp), %ymm9
 
@@ -1031,39 +1031,39 @@ inner_edge_sgetr_8_4_gen_lib8:
 	// 2
 	// 3
 	// 4
-	vperm2f128	$0x31, %ymm1, %ymm0, %ymm8
+	vperm2f128	$ 0x31, %ymm1, %ymm0, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 0(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 5
-	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
+	vperm2f128	$ 0x31, %ymm3, %ymm2, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 32(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 6
-	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x31, %ymm5, %ymm4, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 64(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 7
-	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x31, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 96(%r13)
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
-	addq	$128, %r13 // B+6*bs*sizeof(float)
+	addq	$ 128, %r13 // B+6*bs*sizeof(float)
 
 	jmp		2f
 
 3:
 	movl	%r10d, %r14d
-	sall	$2, %r14d
+	sall	$ 2, %r14d
 	addq	%r14, %r11 // A+k*sizeof(float)
 	movl	%r10d, %r14d
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	addq	%r14, %r13 // B+k*bs*sizeof(float)
 
 2: // return
@@ -1114,12 +1114,12 @@ inner_edge_sgetr_8_5_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// common
@@ -1139,14 +1139,14 @@ inner_edge_sgetr_8_5_gen_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vshufps		$0xee, %ymm10, %ymm8, %ymm2
-	vshufps		$0xee, %ymm14, %ymm12, %ymm3
-	vshufps		$0x44, %ymm11, %ymm9, %ymm4
-	vshufps		$0x44, %ymm15, %ymm13, %ymm5
-	vshufps		$0xee, %ymm11, %ymm9, %ymm6
-	vshufps		$0xee, %ymm15, %ymm13, %ymm7
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm2
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm4
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm5
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm6
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm7
 
 	vmovupd		-32(%rsp), %ymm9
 
@@ -1156,33 +1156,33 @@ inner_edge_sgetr_8_5_gen_lib8:
 	// 3
 	// 4
 	// 5
-	vperm2f128	$0x31, %ymm3, %ymm2, %ymm8
+	vperm2f128	$ 0x31, %ymm3, %ymm2, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 0(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 6
-	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x31, %ymm5, %ymm4, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 32(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 7
-	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x31, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 64(%r13)
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
-	addq	$96, %r13 // B+6*bs*sizeof(float)
+	addq	$ 96, %r13 // B+6*bs*sizeof(float)
 
 	jmp		2f
 
 3:
 	movl	%r10d, %r14d
-	sall	$2, %r14d
+	sall	$ 2, %r14d
 	addq	%r14, %r11 // A+k*sizeof(float)
 	movl	%r10d, %r14d
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	addq	%r14, %r13 // B+k*bs*sizeof(float)
 
 2: // return
@@ -1233,12 +1233,12 @@ inner_edge_sgetr_8_6_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// common
@@ -1258,14 +1258,14 @@ inner_edge_sgetr_8_6_gen_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vshufps		$0xee, %ymm10, %ymm8, %ymm2
-	vshufps		$0xee, %ymm14, %ymm12, %ymm3
-	vshufps		$0x44, %ymm11, %ymm9, %ymm4
-	vshufps		$0x44, %ymm15, %ymm13, %ymm5
-	vshufps		$0xee, %ymm11, %ymm9, %ymm6
-	vshufps		$0xee, %ymm15, %ymm13, %ymm7
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm2
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm4
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm5
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm6
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm7
 
 	vmovupd		-32(%rsp), %ymm9
 
@@ -1276,27 +1276,27 @@ inner_edge_sgetr_8_6_gen_lib8:
 	// 4
 	// 5
 	// 6
-	vperm2f128	$0x31, %ymm5, %ymm4, %ymm8
+	vperm2f128	$ 0x31, %ymm5, %ymm4, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 0(%r13)
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jle		3f
 	// 7
-	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x31, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 32(%r13)
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
-	addq	$64, %r13 // B+6*bs*sizeof(float)
+	addq	$ 64, %r13 // B+6*bs*sizeof(float)
 
 	jmp		2f
 
 3:
 	movl	%r10d, %r14d
-	sall	$2, %r14d
+	sall	$ 2, %r14d
 	addq	%r14, %r11 // A+k*sizeof(float)
 	movl	%r10d, %r14d
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	addq	%r14, %r13 // B+k*bs*sizeof(float)
 
 2: // return
@@ -1347,12 +1347,12 @@ inner_edge_sgetr_8_7_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 	vmovupd		%ymm15, -32(%rsp) // spill mask to stack
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// common
@@ -1372,14 +1372,14 @@ inner_edge_sgetr_8_7_gen_lib8:
 	vmovaps		224(%r11), %ymm1
 	vunpcklps	%ymm1, %ymm0, %ymm14
 	vunpckhps	%ymm1, %ymm0, %ymm15
-	vshufps		$0x44, %ymm10, %ymm8, %ymm0
-	vshufps		$0x44, %ymm14, %ymm12, %ymm1
-	vshufps		$0xee, %ymm10, %ymm8, %ymm2
-	vshufps		$0xee, %ymm14, %ymm12, %ymm3
-	vshufps		$0x44, %ymm11, %ymm9, %ymm4
-	vshufps		$0x44, %ymm15, %ymm13, %ymm5
-	vshufps		$0xee, %ymm11, %ymm9, %ymm6
-	vshufps		$0xee, %ymm15, %ymm13, %ymm7
+	vshufps		$ 0x44, %ymm10, %ymm8, %ymm0
+	vshufps		$ 0x44, %ymm14, %ymm12, %ymm1
+	vshufps		$ 0xee, %ymm10, %ymm8, %ymm2
+	vshufps		$ 0xee, %ymm14, %ymm12, %ymm3
+	vshufps		$ 0x44, %ymm11, %ymm9, %ymm4
+	vshufps		$ 0x44, %ymm15, %ymm13, %ymm5
+	vshufps		$ 0xee, %ymm11, %ymm9, %ymm6
+	vshufps		$ 0xee, %ymm15, %ymm13, %ymm7
 
 	vmovupd		-32(%rsp), %ymm9
 
@@ -1391,21 +1391,21 @@ inner_edge_sgetr_8_7_gen_lib8:
 	// 5
 	// 6
 	// 7
-	vperm2f128	$0x31, %ymm7, %ymm6, %ymm8
+	vperm2f128	$ 0x31, %ymm7, %ymm6, %ymm8
 	vmaskmovps	%ymm8, %ymm9, 0(%r13)
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	addq	%r12, %r11 // A+bs*sda*sizeof(float)
-	addq	$32, %r13 // B+6*bs*sizeof(float)
+	addq	$ 32, %r13 // B+6*bs*sizeof(float)
 
 //	jmp		2f
 //
 //3:
 //	movl	%r10d, %r14d
-//	sall	$2, %r14d
+//	sall	$ 2, %r14d
 //	addq	%r14, %r11 // A+k*sizeof(float)
 //	movl	%r10d, %r14d
-//	sall	$5, %r14d
+//	sall	$ 5, %r14d
 //	addq	%r14, %r13 // B+k*bs*sizeof(float)
 
 2: // return
@@ -1448,7 +1448,7 @@ kernel_sgetr_8_0_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
 
 	// offsetA==0: no edge
@@ -1497,7 +1497,7 @@ kernel_sgetr_8_0_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // m1
 
@@ -1558,9 +1558,9 @@ kernel_sgetr_8_1_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
-	movq	$8, %r14  // m1
+	movq	$ 8, %r14  // m1
 
 	// offsetA==1
 
@@ -1619,7 +1619,7 @@ kernel_sgetr_8_1_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // m1
 
@@ -1680,9 +1680,9 @@ kernel_sgetr_8_2_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
-	movq	$8, %r14  // m1
+	movq	$ 8, %r14  // m1
 
 	// offsetA==1
 
@@ -1740,7 +1740,7 @@ kernel_sgetr_8_2_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // m1
 
@@ -1801,9 +1801,9 @@ kernel_sgetr_8_3_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
-	movq	$8, %r14  // m1
+	movq	$ 8, %r14  // m1
 
 	// offsetA==1
 
@@ -1861,7 +1861,7 @@ kernel_sgetr_8_3_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // m1
 
@@ -1923,9 +1923,9 @@ kernel_sgetr_8_4_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
-	movq	$8, %r14  // m1
+	movq	$ 8, %r14  // m1
 
 	// offsetA==1
 
@@ -1984,7 +1984,7 @@ kernel_sgetr_8_4_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // m1
 
@@ -2045,9 +2045,9 @@ kernel_sgetr_8_5_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
-	movq	$8, %r14  // m1
+	movq	$ 8, %r14  // m1
 
 	// offsetA==1
 
@@ -2105,7 +2105,7 @@ kernel_sgetr_8_5_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // m1
 
@@ -2166,9 +2166,9 @@ kernel_sgetr_8_6_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
-	movq	$8, %r14  // m1
+	movq	$ 8, %r14  // m1
 
 	// offsetA==1
 
@@ -2227,7 +2227,7 @@ kernel_sgetr_8_6_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // m1
 
@@ -2288,9 +2288,9 @@ kernel_sgetr_8_7_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
-	movq	$8, %r14  // m1
+	movq	$ 8, %r14  // m1
 
 	// offsetA==1
 
@@ -2348,7 +2348,7 @@ kernel_sgetr_8_7_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // m1
 

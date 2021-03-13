@@ -51,7 +51,7 @@
 #if 1
 
 #define PROLOGUE \
-	subl	$16, %esp; \
+	subl	$ 16, %esp; \
 	movl	%ebx, 0(%esp); \
 	movl	%esi, 4(%esp); \
 	movl	%edi, 8(%esp); \
@@ -61,7 +61,7 @@
 	movl	4(%esp), %esi; \
 	movl	8(%esp), %edi; \
 	movl	12(%esp), %ebp; \
-	addl	$16, %esp;
+	addl	$ 16, %esp;
 
 #else
 
@@ -114,8 +114,8 @@ blasfeo_align_4096_byte:
 	movl	ARG1, %eax
 	movl	ARG2, %ebx
 
-	addl 	$4095, %eax
-	movl	$4095, %ecx
+	addl 	$ 4095, %eax
+	movl	$ 4095, %ecx
 	notl	%ecx
 	andl	%ecx, %eax
 	movl	%eax, (%ebx)
@@ -154,8 +154,8 @@ blasfeo_align_64_byte:
 	movl	ARG1, %eax
 	movl	ARG2, %ebx
 
-	addl 	$63, %eax
-	movl	$63, %ecx
+	addl 	$ 63, %eax
+	movl	$ 63, %ecx
 	notl	%ecx
 	andl	%ecx, %eax
 	movl	%eax, (%ebx)

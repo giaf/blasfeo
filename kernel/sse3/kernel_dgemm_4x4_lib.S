@@ -505,7 +505,7 @@
 	movq	ARG5, %r11 // beta
 	movq	ARG6, %r12   // C
 	movq	ARG7, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_4X4_LIB
@@ -518,7 +518,7 @@
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB
@@ -569,7 +569,7 @@
 	movq	ARG4, %r10 // beta
 	movq	ARG5, %r11 // C
 	movq	ARG6, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_M1B_4X4_LIB
@@ -582,7 +582,7 @@
 
 	movq	ARG9, %r10  // E 
 	movq	ARG10, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -596,7 +596,7 @@
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB

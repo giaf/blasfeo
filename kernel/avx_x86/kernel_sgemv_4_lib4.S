@@ -50,7 +50,7 @@
 #if 1
 
 #define PROLOGUE \
-	subl	$16, %esp; \
+	subl	$ 16, %esp; \
 	movl	%ebx, 0(%esp); \
 	movl	%esi, 4(%esp); \
 	movl	%edi, 8(%esp); \
@@ -60,7 +60,7 @@
 	movl	4(%esp), %esi; \
 	movl	8(%esp), %edi; \
 	movl	12(%esp), %ebp; \
-	addl	$16, %esp;
+	addl	$ 16, %esp;
 
 #else
 
@@ -134,10 +134,10 @@ NAME:
 inner_kernel_gemv_add_n_4_lib4:
 #endif
 	
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jl		0f // clean-up loop
 
 	// main loop
@@ -164,17 +164,17 @@ inner_kernel_gemv_add_n_4_lib4:
 	vmulps	%xmm4, %xmm5, %xmm7
 	vaddps	%xmm3, %xmm7, %xmm3
 	
-	subl	$4, %eax
-	addl	$64, %ebx
-	addl	$16, %ecx
+	subl	$ 4, %eax
+	addl	$ 64, %ebx
+	addl	$ 16, %ecx
 	
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 0: // clean-up
@@ -184,11 +184,11 @@ inner_kernel_gemv_add_n_4_lib4:
 	vmulps	%xmm4, %xmm5, %xmm7
 	vaddps	%xmm0, %xmm7, %xmm0
 	
-	addl	$16, %ebx
-	addl	$4, %ecx
+	addl	$ 16, %ebx
+	addl	$ 4, %ecx
 	
-	subl	$1, %eax
-	cmpl	$0, %eax
+	subl	$ 1, %eax
+	cmpl	$ 0, %eax
 
 	jg		0b // clean
 
@@ -237,10 +237,10 @@ inner_kernel_gemv_add_n_4_lib4:
 inner_kernel_gemv_add_t_4_lib4:
 #endif
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jl		0f // clean-up loop
 
 	// main loop
@@ -255,7 +255,7 @@ inner_kernel_gemv_add_t_4_lib4:
 	vmulps	%xmm5, %xmm4, %xmm7
 	vaddps	%xmm0, %xmm7, %xmm0
 	
-	subl	$4, %eax
+	subl	$ 4, %eax
 
 	vmovaps	16(%ebx), %xmm5
 	vmulps	%xmm5, %xmm4, %xmm7
@@ -270,22 +270,22 @@ inner_kernel_gemv_add_t_4_lib4:
 	vaddps	%xmm3, %xmm7, %xmm3
 	
 	addl	%ecx, %ebx
-	addl	$16, %edx
+	addl	$ 16, %edx
 	
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 0: // clean-up
 	
 	vcvtsi2ss	%eax, %xmm6, %xmm6
 	vmovups		.LC00, %xmm5
-	vshufps		$0x00, %xmm6, %xmm6, %xmm6
+	vshufps		$ 0x00, %xmm6, %xmm6, %xmm6
 	vsubps		%xmm6, %xmm5, %xmm6
 
 	vmaskmovps	0(%edx), %xmm6, %xmm4
@@ -306,7 +306,7 @@ inner_kernel_gemv_add_t_4_lib4:
 	vmulps	%xmm5, %xmm4, %xmm7
 	vaddps	%xmm3, %xmm7, %xmm3
 
-	sall	$3, %eax
+	sall	$ 3, %eax
 	addl	%eax, %ebx
 	addl	%eax, %edx
 	xorl	%eax, %eax
@@ -360,11 +360,11 @@ inner_kernel_gemv_add_t_4_lib4:
 	FUN_START(inner_edge_gemv_add_t_4_lib4)
 #endif
 
-	cmpl	$0, %esi
+	cmpl	$ 0, %esi
 	jle		0f // return
 
 	movl	%esi, %edi
-	sall	$2, %edi // offA*sizeof(float)
+	sall	$ 2, %edi // offA*sizeof(float)
 
 	subl	%edi, %ebx // A - offA
 	subl	%edi, %edx // x - offA
@@ -375,8 +375,8 @@ inner_kernel_gemv_add_t_4_lib4:
 	vcvtsi2ss	%esi, %xmm6, %xmm6 // offA
 	vcvtsi2ss	%edi, %xmm7, %xmm7 // offA + kmax
 	vmovupd		.LC00, %ymm5
-	vshufps		$0x00, %xmm6, %xmm6, %xmm6
-	vshufps		$0x00, %xmm7, %xmm7, %xmm7
+	vshufps		$ 0x00, %xmm6, %xmm6, %xmm6
+	vshufps		$ 0x00, %xmm7, %xmm7, %xmm7
 	vsubpd		%xmm5, %xmm6, %xmm6
 	vsubpd		%xmm7, %xmm5, %xmm7
 	vandpd		%xmm7, %xmm6, %xmm6
@@ -399,11 +399,11 @@ inner_kernel_gemv_add_t_4_lib4:
 	vmulps	%xmm5, %xmm4, %xmm7
 	vaddps	%xmm3, %xmm7, %xmm3
 
-	addl	$16, %edx // x + 4
+	addl	$ 16, %edx // x + 4
 	addl	%ecx, %ebx // A + bs*sda
 		
 	addl	%esi, %eax
-	subl	$4, %eax // kmax - (4-offA)
+	subl	$ 4, %eax // kmax - (4-offA)
 	
 0: // return
 
@@ -583,7 +583,7 @@ inner_store_4_vs_lib4:
 	
 	vcvtsi2ss	%ebx, %xmm7, %xmm7
 	vmovups		.LC00, %xmm6
-	vshufps		$0x00, %xmm7, %xmm7, %xmm7
+	vshufps		$ 0x00, %xmm7, %xmm7, %xmm7
 	vsubps		%xmm7, %xmm6, %xmm7
 
 	vmaskmovps	%xmm0, %xmm7,  0(%eax)
@@ -758,7 +758,7 @@ kernel_sgemv_t_4_lib4:
 	movl	ARG1, %eax // k
 	movl	ARG4, %ebx  // A
 	movl	ARG5, %ecx // sda
-	sall	$5, %ecx // 4*sda*sizeof(double)
+	sall	$ 5, %ecx // 4*sda*sizeof(double)
 	movl	ARG6, %edx  // x
 	movl	ARG3, %esi  // offA
 
@@ -832,7 +832,7 @@ kernel_sgemv_t_4_vs_lib4:
 	movl	ARG1, %eax // k
 	movl	ARG4, %ebx  // A
 	movl	ARG5, %ecx // sda
-	sall	$5, %ecx // 4*sda*sizeof(double)
+	sall	$ 5, %ecx // 4*sda*sizeof(double)
 	movl	ARG6, %edx  // x
 	movl	ARG3, %esi  // offA
 

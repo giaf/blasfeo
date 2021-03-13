@@ -51,7 +51,7 @@
 #if 1
 
 #define PROLOGUE \
-	subl	$16, %esp; \
+	subl	$ 16, %esp; \
 	movl	%ebx, 0(%esp); \
 	movl	%esi, 4(%esp); \
 	movl	%edi, 8(%esp); \
@@ -61,7 +61,7 @@
 	movl	4(%esp), %esi; \
 	movl	8(%esp), %edi; \
 	movl	12(%esp), %ebp; \
-	addl	$16, %esp;
+	addl	$ 16, %esp;
 
 #else
 
@@ -112,12 +112,12 @@
 inner_kernel_gemm_nt_4x4_lib4:
 #endif
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -184,17 +184,17 @@ inner_kernel_gemm_nt_4x4_lib4:
 	vmulpd			%ymm4, %ymm5, %ymm7
 	vaddpd			%ymm3, %ymm7, %ymm3
 
-	subl	$4, %eax
-	addl	$128, %ecx
-	addl	$128, %ebx
+	subl	$ 4, %eax
+	addl	$ 128, %ecx
+	addl	$ 128, %ebx
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jle		4f // clean1
 
 	// unroll 0
@@ -257,17 +257,17 @@ inner_kernel_gemm_nt_4x4_lib4:
 	vmulpd			%ymm4, %ymm5, %ymm7
 	vaddpd			%ymm3, %ymm7, %ymm3
 
-	subl	$4, %eax
-	addl	$128, %ecx
-	addl	$128, %ebx
+	subl	$ 4, %eax
+	addl	$ 128, %ecx
+	addl	$ 128, %ebx
 
-//	cmpl	$3, %eax
+//	cmpl	$ 3, %eax
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// clean-up loop
@@ -288,11 +288,11 @@ inner_kernel_gemm_nt_4x4_lib4:
 	vmulpd			%ymm4, %ymm5, %ymm7
 	vaddpd			%ymm3, %ymm7, %ymm3
 
-	subl	$1, %eax
-	addl	$32, %ecx
-	addl	$32, %ebx
+	subl	$ 1, %eax
+	addl	$ 32, %ecx
+	addl	$ 32, %ebx
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jg		3b // clean up loop
 
 2: // return
@@ -332,12 +332,12 @@ inner_kernel_gemm_nt_4x4_lib4:
 inner_kernel_gemm_nn_4x4_lib4:
 #endif
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -407,17 +407,17 @@ inner_kernel_gemm_nn_4x4_lib4:
 	vmulpd			%ymm4, %ymm5, %ymm7
 	vaddpd			%ymm3, %ymm7, %ymm3
 
-	subl	$4, %eax
-	addl	$128, %ebx
+	subl	$ 4, %eax
+	addl	$ 128, %ebx
 	addl	%edx, %ecx
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jle		4f // clean1
 
 	// unroll 0
@@ -480,17 +480,17 @@ inner_kernel_gemm_nn_4x4_lib4:
 	vmulpd			%ymm4, %ymm5, %ymm7
 	vaddpd			%ymm3, %ymm7, %ymm3
 
-	subl	$4, %eax
-	addl	$128, %ebx
+	subl	$ 4, %eax
+	addl	$ 128, %ebx
 	addl	%edx, %ecx
 
-//	cmpl	$3, %eax
+//	cmpl	$ 3, %eax
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// clean-up loop
@@ -511,11 +511,11 @@ inner_kernel_gemm_nn_4x4_lib4:
 	vmulpd			%ymm4, %ymm5, %ymm7
 	vaddpd			%ymm3, %ymm7, %ymm3
 
-	subl	$1, %eax
-	addl	$32, %ebx
-	addl	$8, %ecx
+	subl	$ 1, %eax
+	addl	$ 32, %ebx
+	addl	$ 8, %ecx
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jg		3b // clean up loop
 
 2: // return
@@ -559,17 +559,17 @@ inner_kernel_gemm_nn_4x4_lib4:
 inner_edge_gemm_nn_4x4_lib4:
 #endif
 
-	cmpl			$0, %esi				// offset==0
+	cmpl			$ 0, %esi				// offset==0
 	jle				2f						// end
 
-	cmpl			$0, %eax				// k==0
+	cmpl			$ 0, %eax				// k==0
 	jle				2f						// end
 
 	movl			%esi, %edi				// load offsetB
-	sall			$3, %edi				// offsetB*sizeof(double)
+	sall			$ 3, %edi				// offsetB*sizeof(double)
 	addl			%edi, %ecx				// B+offsetB*sizeof(double)
 
-	movl			$4, %edi				// load 4
+	movl			$ 4, %edi				// load 4
 	subl			%esi, %edi				// 4-offsetB
 	cmpl			%eax, %edi				// k > 4-offsetB
 	cmovgl			%eax, %edi				// kend=min(k,4-offsetB)
@@ -593,19 +593,19 @@ inner_edge_gemm_nn_4x4_lib4:
 	vmulpd			%ymm5, %ymm4, %ymm7		// mul
 	vaddpd			%ymm7, %ymm3, %ymm3		// store
 
-	subl			$1, %eax				// k=-1
-	subl			$1, %edi				// k_panel=-1
-	addl			$32, %ebx				// A=+bs
-	addl			$8, %ecx				// B=+1
+	subl			$ 1, %eax				// k=-1
+	subl			$ 1, %edi				// k_panel=-1
+	addl			$ 32, %ebx				// A=+bs
+	addl			$ 8, %ecx				// B=+1
 
-	cmpl			$0, %edi				// if k_panel=0
+	cmpl			$ 0, %edi				// if k_panel=0
 	jg				1b						// loop 1
 
-	cmpl			$0, %eax				// if k=0
+	cmpl			$ 0, %eax				// if k=0
 	jle				2f						// end
 
 	addl			%edx, %ecx				// B=Boff+sdb*bs
-	subl			$32, %ecx				// B-=4*sizeof(double) (loop+offsetB)
+	subl			$ 32, %ecx				// B-=4*sizeof(double) (loop+offsetB)
 
 2:
 
@@ -922,13 +922,13 @@ inner_store_4x4_vs_lib4:
 	vcvtsi2sd	%ebx, %xmm7, %xmm7
 	vmovupd		.LC02, %ymm6
 	vmovddup	%xmm7, %xmm7
-	vinsertf128	$1, %xmm7, %ymm7, %ymm7
+	vinsertf128	$ 1, %xmm7, %ymm7, %ymm7
 	vsubpd		%ymm7, %ymm6, %ymm7
 
-	cmpl		$2, %ecx
+	cmpl		$ 2, %ecx
 	vmaskmovpd	%ymm0, %ymm7,  0(%eax)
 	jl			0f // end
-	cmpl		$3, %ecx
+	cmpl		$ 3, %ecx
 	vmaskmovpd	%ymm1, %ymm7, 32(%eax)
 	jl			0f // end
 	vmaskmovpd	%ymm2, %ymm7, 64(%eax)
@@ -1103,7 +1103,7 @@ kernel_dgemm_nn_4x4_lib4:
 	movl	ARG3, %ebx  // A
 	movl	ARG5, %ecx  // B
 	movl	ARG6, %edx // sdb
-	sall	$5, %edx // 4*sdb*sizeof(double)
+	sall	$ 5, %edx // 4*sdb*sizeof(double)
 	movl	ARG4, %esi // offsetB
 
 #if MACRO_LEVEL>=1
@@ -1177,7 +1177,7 @@ kernel_dgemm_nn_4x4_vs_lib4:
 	movl	ARG3, %ebx  // A
 	movl	ARG5, %ecx  // B
 	movl	ARG6, %edx // sdb
-	sall	$5, %edx // 4*sdb*sizeof(double)
+	sall	$ 5, %edx // 4*sdb*sizeof(double)
 	movl	ARG4, %esi // offsetB
 
 #if MACRO_LEVEL>=1

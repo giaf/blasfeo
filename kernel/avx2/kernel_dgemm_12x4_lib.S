@@ -89,7 +89,7 @@
 
 // broadcast scheme
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// prefetch
@@ -99,10 +99,10 @@
 	vmovapd 0(%r11, %r12), %ymm14 // A1[0]
 	vmovapd 0(%r11, %r12, 2), %ymm15 // A2[0]
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
-	cmpl	$8, %r10d
+	cmpl	$ 8, %r10d
 	jle		5f // consider clean-up loop
 
 	// main loop
@@ -124,7 +124,7 @@
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	prefetcht0	2*128(%r13) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -196,7 +196,7 @@
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	vbroadcastsd	104(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
@@ -209,7 +209,7 @@
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
 	vbroadcastsd	120(%r13), %ymm12
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	vmovapd			0(%r11), %ymm13 // A0
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
@@ -218,8 +218,8 @@
 	vmovapd			0(%r11, %r12, 2), %ymm15 // A1
 
 
-//	cmpl	$4, %r10d
-	cmpl	$8, %r10d
+//	cmpl	$ 4, %r10d
+	cmpl	$ 8, %r10d
 	jg		1b // main loop
 
 
@@ -241,7 +241,7 @@
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	prefetcht0	0(%r15) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -313,7 +313,7 @@
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	vbroadcastsd	104(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
@@ -326,7 +326,7 @@
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
 	vbroadcastsd	120(%r13), %ymm12
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	vmovapd			0(%r11), %ymm13 // A0
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
@@ -338,7 +338,7 @@
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -355,7 +355,7 @@
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	prefetcht0	128(%r15) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -427,7 +427,7 @@
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	vbroadcastsd	104(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
@@ -440,7 +440,7 @@
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
 	vbroadcastsd	120(%r13), %ymm12
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 //	vmovapd			0(%r11), %ymm13 // A0
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
@@ -454,7 +454,7 @@
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -472,21 +472,21 @@
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	addq	$32, %r11
+	addq	$ 32, %r11
 
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	vbroadcastsd	24(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
-	addq	$32, %r13
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 
@@ -558,7 +558,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 
 // broadcast scheme
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// prefetch
@@ -570,10 +570,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 
 	movq	%r14, %rax
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
-	cmpl	$8, %r10d
+	cmpl	$ 8, %r10d
 	jle		5f // consider clean-up loop
 
 	// main loop
@@ -595,7 +595,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	prefetcht0	2*128(%r13) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -631,7 +631,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	prefetcht2	64(%rax, %r12, 2) // prefetch A_p
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
-	addq	$128, %rax
+	addq	$ 128, %rax
 
 	vbroadcastsd	56(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
@@ -674,7 +674,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	vbroadcastsd	104(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
@@ -687,7 +687,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
 	vbroadcastsd	120(%r13), %ymm12
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	vmovapd			0(%r11), %ymm13 // A0
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
@@ -696,8 +696,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vmovapd			0(%r11, %r12, 2), %ymm15 // A1
 
 
-//	cmpl	$4, %r10d
-	cmpl	$8, %r10d
+//	cmpl	$ 4, %r10d
+	cmpl	$ 8, %r10d
 	jg		1b // main loop
 
 
@@ -719,7 +719,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	prefetcht0	0(%r15) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -755,7 +755,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	prefetcht2	64(%rax, %r12, 2) // prefetch A_p
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
-	addq	$128, %rax
+	addq	$ 128, %rax
 
 	vbroadcastsd	56(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
@@ -798,7 +798,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	vbroadcastsd	104(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
@@ -811,7 +811,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
 	vbroadcastsd	120(%r13), %ymm12
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	vmovapd			0(%r11), %ymm13 // A0
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
@@ -823,7 +823,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -840,7 +840,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	prefetcht0	128(%r15) // prefetch B
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
@@ -876,7 +876,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	prefetcht2	64(%rax, %r12, 2) // prefetch A_p
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
-	addq	$128, %rax
+	addq	$ 128, %rax
 
 	vbroadcastsd	56(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
@@ -919,7 +919,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	vbroadcastsd	104(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
@@ -932,7 +932,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
 	vbroadcastsd	120(%r13), %ymm12
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 //	vmovapd			0(%r11), %ymm13 // A0
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
@@ -946,7 +946,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -964,21 +964,21 @@ FUN_END(inner_kernel_dgemm_nt_12x4_p0_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	addq	$32, %r11
+	addq	$ 32, %r11
 
 	vbroadcastsd	16(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	vbroadcastsd	24(%r13), %ymm12
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
-	addq	$32, %r13
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 
@@ -1026,13 +1026,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x4_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -1103,7 +1103,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	vbroadcastsd	16(%r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	vbroadcastsd	24(%r13), %ymm12 // B
@@ -1128,7 +1128,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	vbroadcastsd	16(%r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	vbroadcastsd	24(%r13), %ymm12 // B
@@ -1138,13 +1138,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -1235,15 +1235,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -1271,10 +1271,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -1322,13 +1322,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x3_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -1407,16 +1407,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -1491,15 +1491,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -1523,10 +1523,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -1574,13 +1574,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x2_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -1643,16 +1643,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -1711,15 +1711,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -1739,10 +1739,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -1790,13 +1790,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x1_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -1843,16 +1843,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -1895,15 +1895,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -1919,10 +1919,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -1970,7 +1970,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_12x4_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r14, %r14, 2), %r15
@@ -1978,7 +1978,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -2025,7 +2025,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	vbroadcastsd	8(%r13, %r14, 2), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	vbroadcastsd	8(%r13, %r15), %ymm12 // B
@@ -2060,7 +2060,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd			96(%r11, %r12, 2), %ymm15 // A
 	vbroadcastsd	24(%r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm0
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 	vbroadcastsd	24(%r13, %r14), %ymm12 // B
@@ -2073,18 +2073,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	vbroadcastsd	24(%r13, %r15), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
-	addq	$32, %r13
+	addq	$ 32, %r13
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -2171,16 +2171,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -2207,11 +2207,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -2259,7 +2259,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_12x3_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	movq	%r13, %r15
@@ -2269,7 +2269,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -2347,18 +2347,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -2429,17 +2429,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -2462,12 +2462,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -2515,7 +2515,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_12x2_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	movq	%r13, %r15
@@ -2525,7 +2525,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -2587,18 +2587,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -2653,17 +2653,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -2682,12 +2682,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -2735,7 +2735,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_12x1_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	movq	%r13, %r15
@@ -2745,7 +2745,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -2791,18 +2791,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -2841,17 +2841,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -2866,12 +2866,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -2910,12 +2910,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_4x12_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -3042,16 +3042,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 	addq	%r13, %r12
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -3166,15 +3166,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 	addq	%r13, %r12
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -3208,10 +3208,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 	addq	%r13, %r12
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -3250,12 +3250,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_4x11_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -3366,16 +3366,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm10
 	addq	%r13, %r12
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -3482,15 +3482,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm10
 	addq	%r13, %r12
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -3522,10 +3522,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm10
 	addq	%r13, %r12
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -3564,12 +3564,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_4x10_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -3672,16 +3672,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm9
 	addq	%r13, %r12
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -3780,15 +3780,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm9
 	addq	%r13, %r12
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -3818,10 +3818,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm9
 	addq	%r13, %r12
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -3860,12 +3860,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_4x9_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -3960,16 +3960,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm8
 	addq	%r13, %r12
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -4060,15 +4060,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm8
 	addq	%r13, %r12
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -4096,10 +4096,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm8
 	addq	%r13, %r12
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -4138,7 +4138,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_4x12_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r13, %r13, 2), %r15
@@ -4147,7 +4147,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -4265,19 +4265,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rbx, %r15), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$32, %rax
-	addq	$32, %rbx
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %rax
+	addq	$ 32, %rbx
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -4388,18 +4388,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rbx, %r15), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$32, %rax
-	addq	$32, %rbx
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %rax
+	addq	$ 32, %rbx
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -4432,13 +4432,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	0(%rbx, %r15), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 
-	subl	$1, %r10d
-	addq	$8, %r12
-	addq	$8, %rax
-	addq	$8, %rbx
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r12
+	addq	$ 8, %rax
+	addq	$ 8, %rbx
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -4477,7 +4477,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_4x11_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r13, %r13, 2), %r15
@@ -4486,7 +4486,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -4596,19 +4596,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rbx, %r13, 2), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm10
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$32, %rax
-	addq	$32, %rbx
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %rax
+	addq	$ 32, %rbx
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -4711,18 +4711,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rbx, %r13, 2), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm10
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$32, %rax
-	addq	$32, %rbx
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %rax
+	addq	$ 32, %rbx
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -4753,13 +4753,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	0(%rbx, %r13, 2), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm10
 
-	subl	$1, %r10d
-	addq	$8, %r12
-	addq	$8, %rax
-	addq	$8, %rbx
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r12
+	addq	$ 8, %rax
+	addq	$ 8, %rbx
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -4798,7 +4798,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_4x10_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r13, %r13, 2), %r15
@@ -4807,7 +4807,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -4909,19 +4909,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rbx, %r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm9
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$32, %rax
-	addq	$32, %rbx
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %rax
+	addq	$ 32, %rbx
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -5016,18 +5016,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rbx, %r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm9
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$32, %rax
-	addq	$32, %rbx
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %rax
+	addq	$ 32, %rbx
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -5056,13 +5056,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	0(%rbx, %r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm9
 
-	subl	$1, %r10d
-	addq	$8, %r12
-	addq	$8, %rax
-	addq	$8, %rbx
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r12
+	addq	$ 8, %rax
+	addq	$ 8, %rbx
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -5101,7 +5101,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_4x9_lib4c)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r13, %r13, 2), %r15
@@ -5110,7 +5110,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -5204,19 +5204,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rbx), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm8
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$32, %rax
-	addq	$32, %rbx
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %rax
+	addq	$ 32, %rbx
+	addq	$ 128, %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -5303,18 +5303,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rbx), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm8
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$32, %rax
-	addq	$32, %rbx
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %rax
+	addq	$ 32, %rbx
+	addq	$ 128, %r11
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -5341,13 +5341,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	0(%rbx), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm8
 
-	subl	$1, %r10d
-	addq	$8, %r12
-	addq	$8, %rax
-	addq	$8, %rbx
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r12
+	addq	$ 8, %rax
+	addq	$ 8, %rbx
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -5383,7 +5383,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x4_libc4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r12, %r12, 2), %r15
@@ -5391,7 +5391,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -5494,19 +5494,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	prefetcht0		64(%rax, %r15)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -5591,10 +5591,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	120(%r13), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -5602,7 +5602,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -5628,12 +5628,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
-	addq	$32, %r13
+	addq	$ 32, %r13
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -5669,7 +5669,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x3_libc4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r12, %r12, 2), %r15
@@ -5677,7 +5677,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -5780,19 +5780,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	prefetcht0		64(%rax, %r15)
 //	vfmadd231pd		%ymm14, %ymm12, %ymm7
-	addq	$128, %r13
+	addq	$ 128, %r13
 //	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -5877,10 +5877,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vbroadcastsd	120(%r13), %ymm12 // B
 //	vfmadd231pd		%ymm13, %ymm12, %ymm3
 //	vfmadd231pd		%ymm14, %ymm12, %ymm7
-	addq	$128, %r13
+	addq	$ 128, %r13
 //	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -5888,7 +5888,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -5914,12 +5914,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vfmadd231pd		%ymm13, %ymm12, %ymm3
 //	vfmadd231pd		%ymm14, %ymm12, %ymm7
 //	vfmadd231pd		%ymm15, %ymm12, %ymm11
-	addq	$32, %r13
+	addq	$ 32, %r13
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -5955,7 +5955,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x2_libc4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r12, %r12, 2), %r15
@@ -5963,7 +5963,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -6066,19 +6066,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	prefetcht0		64(%rax, %r15)
 //	vfmadd231pd		%ymm14, %ymm12, %ymm7
-	addq	$128, %r13
+	addq	$ 128, %r13
 //	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -6163,10 +6163,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vbroadcastsd	120(%r13), %ymm12 // B
 //	vfmadd231pd		%ymm13, %ymm12, %ymm3
 //	vfmadd231pd		%ymm14, %ymm12, %ymm7
-	addq	$128, %r13
+	addq	$ 128, %r13
 //	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -6174,7 +6174,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -6200,12 +6200,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vfmadd231pd		%ymm13, %ymm12, %ymm3
 //	vfmadd231pd		%ymm14, %ymm12, %ymm7
 //	vfmadd231pd		%ymm15, %ymm12, %ymm11
-	addq	$32, %r13
+	addq	$ 32, %r13
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -6241,7 +6241,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x1_libc4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r12, %r12, 2), %r15
@@ -6249,7 +6249,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -6352,19 +6352,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	prefetcht0		64(%rax, %r15)
 //	vfmadd231pd		%ymm14, %ymm12, %ymm7
-	addq	$128, %r13
+	addq	$ 128, %r13
 //	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -6449,10 +6449,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vbroadcastsd	120(%r13), %ymm12 // B
 //	vfmadd231pd		%ymm13, %ymm12, %ymm3
 //	vfmadd231pd		%ymm14, %ymm12, %ymm7
-	addq	$128, %r13
+	addq	$ 128, %r13
 //	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -6460,7 +6460,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -6486,12 +6486,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vfmadd231pd		%ymm13, %ymm12, %ymm3
 //	vfmadd231pd		%ymm14, %ymm12, %ymm7
 //	vfmadd231pd		%ymm15, %ymm12, %ymm11
-	addq	$32, %r13
+	addq	$ 32, %r13
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -6527,7 +6527,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x4_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r12, %r12, 2), %r15
@@ -6535,7 +6535,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -6648,16 +6648,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -6752,7 +6752,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -6760,7 +6760,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -6789,10 +6789,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq	%r14, %r13
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -6829,7 +6829,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x4_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -6839,7 +6839,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	vmovupd		%ymm15, -32(%rsp)
@@ -6849,7 +6849,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -6970,16 +6970,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -7082,7 +7082,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -7090,7 +7090,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -7121,10 +7121,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq	%r14, %r13
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -7161,7 +7161,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x3_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -7171,7 +7171,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	vmovupd		%ymm15, -32(%rsp)
@@ -7181,7 +7181,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -7282,16 +7282,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -7378,7 +7378,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -7386,7 +7386,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -7413,10 +7413,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 	addq	%r14, %r13
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -7453,7 +7453,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x2_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -7463,7 +7463,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	vmovupd		%ymm15, -32(%rsp)
@@ -7473,7 +7473,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -7558,16 +7558,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	prefetcht0		64(%rax, %rbx)
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -7638,7 +7638,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -7646,7 +7646,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -7669,10 +7669,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	addq	%r14, %r13
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -7709,7 +7709,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nt_12x1_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -7719,7 +7719,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	vmovupd		%ymm15, -32(%rsp)
@@ -7729,7 +7729,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -7798,16 +7798,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	prefetcht0		64(%rax, %rbx)
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -7862,7 +7862,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	prefetcht0		0(%r13, %r14, 8)
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -7870,7 +7870,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -7889,10 +7889,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	prefetcht0		0(%r13, %r14, 8)
 	addq	%r14, %r13
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -7928,7 +7928,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_12x4_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r12, %r12, 2), %rax
@@ -7937,7 +7937,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -8045,17 +8045,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -8142,8 +8142,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -8151,7 +8151,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -8178,11 +8178,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$1, %r10d
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -8219,7 +8219,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_12x4_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -8229,7 +8229,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	vmovupd		%ymm15, -32(%rsp)
@@ -8240,7 +8240,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -8356,17 +8356,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -8461,8 +8461,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -8470,7 +8470,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -8499,11 +8499,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$1, %r10d
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -8540,7 +8540,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_12x3_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -8550,7 +8550,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	vmovupd		%ymm15, -32(%rsp)
@@ -8561,7 +8561,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -8657,17 +8657,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
-	subl	$4, %r10d
-	addq	$32, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -8746,8 +8746,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
-	subl	$4, %r10d
-	addq	$32, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -8755,7 +8755,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -8780,11 +8780,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
-	subl	$1, %r10d
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -8821,7 +8821,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_12x2_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -8831,7 +8831,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	vmovupd		%ymm15, -32(%rsp)
@@ -8842,7 +8842,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -8922,17 +8922,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 	prefetcht0		64(%rbx, %rax)
 
-	subl	$4, %r10d
-	addq	$32, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -8995,8 +8995,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 
-	subl	$4, %r10d
-	addq	$32, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -9004,7 +9004,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -9025,11 +9025,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 
-	subl	$1, %r10d
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -9066,7 +9066,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_12x1_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -9076,7 +9076,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	vmovupd		%ymm15, -32(%rsp)
@@ -9087,7 +9087,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -9151,17 +9151,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	prefetcht0		0(%rbx, %rax)
 	prefetcht0		64(%rbx, %rax)
 
-	subl	$4, %r10d
-	addq	$32, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
 	leaq	0(%r11, %r12, 4), %r11
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -9208,8 +9208,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 
-	subl	$4, %r10d
-	addq	$32, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
 	leaq	0(%r11, %r12, 4), %r11
 
 	jmp		2f // return
@@ -9217,7 +9217,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -9234,11 +9234,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 
-	subl	$1, %r10d
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -9274,7 +9274,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_4x12_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	leaq	0(%r14, %r14, 2), %r15
@@ -9283,7 +9283,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -9415,18 +9415,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rax, %r15), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rbp
-	addq	$32, %rax
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rbp
+	addq	$ 32, %rax
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -9539,17 +9539,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rax, %r15), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rbp
-	addq	$32, %rax
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rbp
+	addq	$ 32, %rax
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -9582,13 +9582,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	0(%rax, %r15), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %rbp
-	addq	$8, %rax
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %rbp
+	addq	$ 8, %rax
 	addq	%r12, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -9625,7 +9625,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_4x12_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -9635,7 +9635,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	leaq	0(%r14, %r14, 2), %rbx
@@ -9644,7 +9644,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -9785,18 +9785,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 //	leaq	0(%r11, %r12, 2), %r11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rbp
-	addq	$32, %rax
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rbp
+	addq	$ 32, %rax
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -9915,17 +9915,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rax, %rbx), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rbp
-	addq	$32, %rax
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rbp
+	addq	$ 32, %rax
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -9960,12 +9960,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	0(%rax, %rbx), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm11
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %rbp
-	addq	$8, %rax
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %rbp
+	addq	$ 8, %rax
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -10002,7 +10002,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_4x11_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -10012,7 +10012,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	leaq	0(%r14, %r14, 2), %rbx
@@ -10021,7 +10021,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -10154,18 +10154,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 //	leaq	0(%r11, %r12, 2), %r11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rbp
-	addq	$32, %rax
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rbp
+	addq	$ 32, %rax
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -10276,17 +10276,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rax, %r14, 2), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm10
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rbp
-	addq	$32, %rax
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rbp
+	addq	$ 32, %rax
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -10319,12 +10319,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	0(%rax, %r14, 2), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm10
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %rbp
-	addq	$8, %rax
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %rbp
+	addq	$ 8, %rax
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -10361,7 +10361,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_4x10_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -10371,7 +10371,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	leaq	0(%r14, %r14, 2), %rbx
@@ -10380,7 +10380,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -10505,18 +10505,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 //	leaq	0(%r11, %r12, 2), %r11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rbp
-	addq	$32, %rax
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rbp
+	addq	$ 32, %rax
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -10619,17 +10619,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rax, %r14), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm9
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rbp
-	addq	$32, %rax
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rbp
+	addq	$ 32, %rax
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -10660,12 +10660,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	0(%rax, %r14), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm9
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %rbp
-	addq	$8, %rax
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %rbp
+	addq	$ 8, %rax
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -10702,7 +10702,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_kernel_dgemm_nn_4x9_vs_libcc)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -10712,7 +10712,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm15
 
 	leaq	0(%r14, %r14, 2), %rbx
@@ -10721,7 +10721,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -10838,18 +10838,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 //	leaq	0(%r11, %r12, 2), %r11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rbp
-	addq	$32, %rax
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rbp
+	addq	$ 32, %rax
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -10944,17 +10944,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	24(%rax), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm8
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rbp
-	addq	$32, %rax
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rbp
+	addq	$ 32, %rax
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -10983,12 +10983,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vbroadcastsd	0(%rax), %ymm12 // B
 	vfmadd231pd		%ymm13, %ymm12, %ymm8
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %rbp
-	addq	$8, %rax
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %rbp
+	addq	$ 8, %rax
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -11098,10 +11098,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
+	addq	$ 128, %r11
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -11143,7 +11143,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrmm_nn_rl_12x4_vs_lib4c)
 #endif
 	
-	cmp		$0, %r10d
+	cmp		$ 0, %r10d
 	jle		0f
 
 	movq	%r13, %r15
@@ -11159,12 +11159,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
-	cmp		$0, %r10d
+	cmp		$ 0, %r10d
 	jle		0f
 
 	// unroll 1
@@ -11180,12 +11180,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
-	cmp		$0, %r10d
+	cmp		$ 0, %r10d
 	jle		0f
 
 	// unroll 2
@@ -11205,12 +11205,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
-	cmp		$0, %r10d
+	cmp		$ 0, %r10d
 	jle		0f
 
 	// unroll 3
@@ -11234,10 +11234,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
 0:
 
@@ -11341,10 +11341,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm7, %ymm14, %ymm7
 	vaddpd			%ymm11, %ymm15, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
+	addq	$ 128, %r11
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -11386,7 +11386,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrmm_nn_rl_one_12x4_vs_lib4c)
 #endif
 	
-	cmp		$0, %r10d
+	cmp		$ 0, %r10d
 	jle		0f
 
 	movq	%r13, %r15
@@ -11401,12 +11401,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm4, %ymm14, %ymm4
 	vaddpd			%ymm8, %ymm15, %ymm8
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
-	cmp		$0, %r10d
+	cmp		$ 0, %r10d
 	jle		0f
 
 	// unroll 1
@@ -11421,12 +11421,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm5, %ymm14, %ymm5
 	vaddpd			%ymm9, %ymm15, %ymm9
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
-	cmp		$0, %r10d
+	cmp		$ 0, %r10d
 	jle		0f
 
 	// unroll 2
@@ -11445,12 +11445,12 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm6, %ymm14, %ymm6
 	vaddpd			%ymm10, %ymm15, %ymm10
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
-	cmp		$0, %r10d
+	cmp		$ 0, %r10d
 	jle		0f
 
 	// unroll 3
@@ -11473,10 +11473,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm7, %ymm14, %ymm7
 	vaddpd			%ymm11, %ymm15, %ymm11
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
+	addq	$ 32, %r11
 
 0:
 
@@ -11580,10 +11580,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
+	addq	$ 128, %r11
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -11622,14 +11622,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrmm_nn_ru_12x4_vs_lib4c)
 #endif
 	
-	cmpl	$0, %r15d
+	cmpl	$ 0, %r15d
 	jle		0f // end
 
 	movq	%r13, %rax
 	addq	%r14, %rax
 	addq	%r14, %rax // B+2*ldb
 
-	cmpl	$4, %r15d
+	cmpl	$ 4, %r15d
 	jl		1f // end
 
 	// unroll 0
@@ -11692,16 +11692,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rax
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rax
+	addq	$ 128, %r11
 
 	jmp		0f
 
 1:
 
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jl		2f // end
 
 	// unroll 0
@@ -11745,16 +11745,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$3, %r10d
-	addq	$24, %r13
-	addq	$24, %rax
-	addq	$96, %r11
+	subl	$ 3, %r10d
+	addq	$ 24, %r13
+	addq	$ 24, %rax
+	addq	$ 96, %r11
 
 	jmp		0f
 
 2:
 
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jl		3f // end
 
 	// unroll 0
@@ -11783,16 +11783,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$2, %r10d
-	addq	$16, %r13
-	addq	$16, %rax
-	addq	$64, %r11
+	subl	$ 2, %r10d
+	addq	$ 16, %r13
+	addq	$ 16, %rax
+	addq	$ 64, %r11
 
 	jmp		0f
 
 3:
 
-//	cmpl	$1, %r15d
+//	cmpl	$ 1, %r15d
 //	jl		0f // end
 
 	// unroll 0
@@ -11810,10 +11810,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %rax
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %rax
+	addq	$ 32, %r11
 
 0:
 
@@ -11913,10 +11913,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm7, %ymm14, %ymm7
 	vaddpd			%ymm11, %ymm15, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
+	addq	$ 128, %r11
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -11955,14 +11955,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrmm_nn_ru_one_12x4_vs_lib4c)
 #endif
 	
-	cmpl	$0, %r15d
+	cmpl	$ 0, %r15d
 	jle		0f // end
 
 	movq	%r13, %rax
 	addq	%r14, %rax
 	addq	%r14, %rax // B+2*ldb
 
-	cmpl	$4, %r15d
+	cmpl	$ 4, %r15d
 	jl		1f // end
 
 	// unroll 0
@@ -12021,16 +12021,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm7, %ymm14, %ymm7
 	vaddpd			%ymm11, %ymm15, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %rax
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %rax
+	addq	$ 128, %r11
 
 	jmp		0f
 
 1:
 
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jl		2f // end
 
 	// unroll 0
@@ -12071,16 +12071,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$3, %r10d
-	addq	$24, %r13
-	addq	$24, %rax
-	addq	$96, %r11
+	subl	$ 3, %r10d
+	addq	$ 24, %r13
+	addq	$ 24, %rax
+	addq	$ 96, %r11
 
 	jmp		0f
 
 2:
 
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jl		3f // end
 
 	// unroll 0
@@ -12107,16 +12107,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$2, %r10d
-	addq	$16, %r13
-	addq	$16, %rax
-	addq	$64, %r11
+	subl	$ 2, %r10d
+	addq	$ 16, %r13
+	addq	$ 16, %rax
+	addq	$ 64, %r11
 
 	jmp		0f
 
 3:
 
-//	cmpl	$1, %r15d
+//	cmpl	$ 1, %r15d
 //	jl		0f // end
 
 	// unroll 0
@@ -12133,10 +12133,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %rax
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %rax
+	addq	$ 32, %r11
 
 0:
 
@@ -12240,8 +12240,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -12280,10 +12280,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrmm_nt_rl_12x4_vs_lib4c)
 #endif
 	
-	cmpl	$0, %r15d
+	cmpl	$ 0, %r15d
 	jle		0f // end
 
-	cmpl	$4, %r15d
+	cmpl	$ 4, %r15d
 	jl		1f // end
 
 	// unroll 0
@@ -12350,14 +12350,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		0f
 
 1:
 
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jl		2f // end
 
 	// unroll 0
@@ -12404,14 +12404,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$3, %r10d
-	addq	$96, %r11
+	subl	$ 3, %r10d
+	addq	$ 96, %r11
 
 	jmp		0f
 
 2:
 
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jl		3f // end
 
 	// unroll 0
@@ -12442,14 +12442,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$2, %r10d
-	addq	$64, %r11
+	subl	$ 2, %r10d
+	addq	$ 64, %r11
 
 	jmp		0f
 
 3:
 
-//	cmpl	$1, %r15d
+//	cmpl	$ 1, %r15d
 //	jl		0f // end
 
 	// unroll 0
@@ -12468,8 +12468,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
 0:
 
@@ -12569,8 +12569,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm11, %ymm15, %ymm11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -12609,10 +12609,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrmm_nt_rl_one_12x4_vs_lib4c)
 #endif
 	
-	cmpl	$0, %r15d
+	cmpl	$ 0, %r15d
 	jle		0f // end
 
-	cmpl	$4, %r15d
+	cmpl	$ 4, %r15d
 	jl		1f // end
 
 	// unroll 0
@@ -12675,14 +12675,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm11, %ymm15, %ymm11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 	jmp		0f
 
 1:
 
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jl		2f // end
 
 	// unroll 0
@@ -12726,14 +12726,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$3, %r10d
-	addq	$96, %r11
+	subl	$ 3, %r10d
+	addq	$ 96, %r11
 
 	jmp		0f
 
 2:
 
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jl		3f // end
 
 	// unroll 0
@@ -12762,14 +12762,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$2, %r10d
-	addq	$64, %r11
+	subl	$ 2, %r10d
+	addq	$ 64, %r11
 
 	jmp		0f
 
 3:
 
-//	cmpl	$1, %r15d
+//	cmpl	$ 1, %r15d
 //	jl		0f // end
 
 	// unroll 0
@@ -12787,8 +12787,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// unroll 3
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
 0:
 
@@ -12897,8 +12897,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
 	addq			%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -12945,7 +12945,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrmm_nt_ru_12x4_vs_lib4c)
 #endif
 	
-	cmp		$0, %r10d
+	cmp		$ 0, %r10d
 	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
@@ -12955,11 +12955,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm14, %ymm12, %ymm4
 	vmovapd			0(%r11, %r12, 2), %ymm15
 	vfmadd231pd		%ymm15, %ymm12, %ymm8
-	subl			$1, %r10d
-	addq			$32, %r11
+	subl			$ 1, %r10d
+	addq			$ 32, %r11
 	addq			%r14, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
@@ -12973,11 +12973,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm1
 	vfmadd231pd		%ymm14, %ymm12, %ymm5
 	vfmadd231pd		%ymm15, %ymm12, %ymm9
-	subl			$1, %r10d
-	addq			$32, %r11
+	subl			$ 1, %r10d
+	addq			$ 32, %r11
 	addq			%r14, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
@@ -12995,11 +12995,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm2
 	vfmadd231pd		%ymm14, %ymm12, %ymm6
 	vfmadd231pd		%ymm15, %ymm12, %ymm10
-	subl			$1, %r10d
-	addq			$32, %r11
+	subl			$ 1, %r10d
+	addq			$ 32, %r11
 	addq			%r14, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
@@ -13021,8 +13021,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfmadd231pd		%ymm13, %ymm12, %ymm3
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	vfmadd231pd		%ymm15, %ymm12, %ymm11
-	subl			$1, %r10d
-	addq			$32, %r11
+	subl			$ 1, %r10d
+	addq			$ 32, %r11
 	addq			%r14, %r13
 
 0:
@@ -13128,8 +13128,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm11, %ymm15, %ymm11
 	addq			%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -13176,7 +13176,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrmm_nt_ru_one_12x4_vs_lib4c)
 #endif
 	
-	cmp		$0, %r10d
+	cmp		$ 0, %r10d
 	jle		0f
 
 	vmovapd			0(%r11), %ymm13
@@ -13185,11 +13185,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm4, %ymm14, %ymm4
 	vmovapd			0(%r11, %r12, 2), %ymm15
 	vaddpd			%ymm8, %ymm15, %ymm8
-	subl			$1, %r10d
-	addq			$32, %r11
+	subl			$ 1, %r10d
+	addq			$ 32, %r11
 	addq			%r14, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
@@ -13202,11 +13202,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm1, %ymm13, %ymm1
 	vaddpd			%ymm5, %ymm14, %ymm5
 	vaddpd			%ymm9, %ymm15, %ymm9
-	subl			$1, %r10d
-	addq			$32, %r11
+	subl			$ 1, %r10d
+	addq			$ 32, %r11
 	addq			%r14, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
@@ -13223,11 +13223,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm2, %ymm13, %ymm2
 	vaddpd			%ymm6, %ymm14, %ymm6
 	vaddpd			%ymm10, %ymm15, %ymm10
-	subl			$1, %r10d
-	addq			$32, %r11
+	subl			$ 1, %r10d
+	addq			$ 32, %r11
 	addq			%r14, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f
 
 	vbroadcastsd	0(%r13), %ymm12
@@ -13248,8 +13248,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vaddpd			%ymm3, %ymm13, %ymm3
 	vaddpd			%ymm7, %ymm14, %ymm7
 	vaddpd			%ymm11, %ymm15, %ymm11
-	subl			$1, %r10d
-	addq			$32, %r11
+	subl			$ 1, %r10d
+	addq			$ 32, %r11
 	addq			%r14, %r13
 
 0:
@@ -13291,22 +13291,22 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovupd			0(%r10), %ymm12
-	vblendpd		$0x1, %ymm15, %ymm12, %ymm12
+	vblendpd		$ 0x1, %ymm15, %ymm12, %ymm12
 	vmovupd			32(%r10), %ymm14
 	vmovupd			64(%r10), %ymm15
-	vpermpd			$0x00, %ymm0, %ymm13
+	vpermpd			$ 0x00, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0x00, %ymm2, %ymm13
+	vpermpd			$ 0x00, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0x00, %ymm3, %ymm13
+	vpermpd			$ 0x00, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
@@ -13314,22 +13314,22 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovupd			0(%r10), %ymm12
-	vblendpd		$0x3, %ymm15, %ymm12, %ymm12
+	vblendpd		$ 0x3, %ymm15, %ymm12, %ymm12
 	vmovupd			32(%r10), %ymm14
 	vmovupd			64(%r10), %ymm15
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0x55, %ymm2, %ymm13
+	vpermpd			$ 0x55, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0x55, %ymm3, %ymm13
+	vpermpd			$ 0x55, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
@@ -13337,22 +13337,22 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovupd			0(%r10), %ymm12
-	vblendpd		$0x7, %ymm15, %ymm12, %ymm12
+	vblendpd		$ 0x7, %ymm15, %ymm12, %ymm12
 	vmovupd			32(%r10), %ymm14
 	vmovupd			64(%r10), %ymm15
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0xaa, %ymm2, %ymm13
+	vpermpd			$ 0xaa, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0xaa, %ymm3, %ymm13
+	vpermpd			$ 0xaa, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
@@ -13360,16 +13360,16 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	vmovupd			32(%r10), %ymm14
 	vmovupd			64(%r10), %ymm15
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0xff, %ymm2, %ymm13
+	vpermpd			$ 0xff, %ymm2, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0xff, %ymm3, %ymm13
+	vpermpd			$ 0xff, %ymm3, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
 	add				%r11, %r10
@@ -13379,66 +13379,66 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	vxorpd			%ymm14, %ymm14, %ymm14
 	vmovupd			32(%r10), %ymm12
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm12
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm12
 	vmovupd			64(%r10), %ymm14
-	vpermpd			$0x00, %ymm4, %ymm13
+	vpermpd			$ 0x00, %ymm4, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm4
 	vfnmadd231pd	%ymm14, %ymm13, %ymm8
-	vpermpd			$0x00, %ymm5, %ymm13
+	vpermpd			$ 0x00, %ymm5, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm5
 	vfnmadd231pd	%ymm14, %ymm13, %ymm9
-	vpermpd			$0x00, %ymm6, %ymm13
+	vpermpd			$ 0x00, %ymm6, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm6
 	vfnmadd231pd	%ymm14, %ymm13, %ymm10
-	vpermpd			$0x00, %ymm7, %ymm13
+	vpermpd			$ 0x00, %ymm7, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm7
 	vfnmadd231pd	%ymm14, %ymm13, %ymm11
 	add				%r11, %r10
 
 	vxorpd			%ymm14, %ymm14, %ymm14
 	vmovupd			32(%r10), %ymm12
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm12
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm12
 	vmovupd			64(%r10), %ymm14
-	vpermpd			$0x55, %ymm4, %ymm13
+	vpermpd			$ 0x55, %ymm4, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm4
 	vfnmadd231pd	%ymm14, %ymm13, %ymm8
-	vpermpd			$0x55, %ymm5, %ymm13
+	vpermpd			$ 0x55, %ymm5, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm5
 	vfnmadd231pd	%ymm14, %ymm13, %ymm9
-	vpermpd			$0x55, %ymm6, %ymm13
+	vpermpd			$ 0x55, %ymm6, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm6
 	vfnmadd231pd	%ymm14, %ymm13, %ymm10
-	vpermpd			$0x55, %ymm7, %ymm13
+	vpermpd			$ 0x55, %ymm7, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm7
 	vfnmadd231pd	%ymm14, %ymm13, %ymm11
 	add				%r11, %r10
 
 	vxorpd			%ymm14, %ymm14, %ymm14
 	vmovupd			32(%r10), %ymm12
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm12
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm12
 	vmovupd			64(%r10), %ymm14
-	vpermpd			$0xaa, %ymm4, %ymm13
+	vpermpd			$ 0xaa, %ymm4, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm4
 	vfnmadd231pd	%ymm14, %ymm13, %ymm8
-	vpermpd			$0xaa, %ymm5, %ymm13
+	vpermpd			$ 0xaa, %ymm5, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm5
 	vfnmadd231pd	%ymm14, %ymm13, %ymm9
-	vpermpd			$0xaa, %ymm6, %ymm13
+	vpermpd			$ 0xaa, %ymm6, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm6
 	vfnmadd231pd	%ymm14, %ymm13, %ymm10
-	vpermpd			$0xaa, %ymm7, %ymm13
+	vpermpd			$ 0xaa, %ymm7, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm7
 	vfnmadd231pd	%ymm14, %ymm13, %ymm11
 	add				%r11, %r10
 
 	vmovupd			64(%r10), %ymm14
-	vpermpd			$0xff, %ymm4, %ymm13
+	vpermpd			$ 0xff, %ymm4, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm8
-	vpermpd			$0xff, %ymm5, %ymm13
+	vpermpd			$ 0xff, %ymm5, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm9
-	vpermpd			$0xff, %ymm6, %ymm13
+	vpermpd			$ 0xff, %ymm6, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm10
-	vpermpd			$0xff, %ymm7, %ymm13
+	vpermpd			$ 0xff, %ymm7, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm11
 	add				%r11, %r10
 
@@ -13448,38 +13448,38 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vxorpd			%ymm14, %ymm14, %ymm14
 
 	vmovupd			64(%r10), %ymm12
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm12
-	vpermpd			$0x00, %ymm8, %ymm13
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm12
+	vpermpd			$ 0x00, %ymm8, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm8
-	vpermpd			$0x00, %ymm9, %ymm13
+	vpermpd			$ 0x00, %ymm9, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm9
-	vpermpd			$0x00, %ymm10, %ymm13
+	vpermpd			$ 0x00, %ymm10, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm10
-	vpermpd			$0x00, %ymm11, %ymm13
+	vpermpd			$ 0x00, %ymm11, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm11
 	add				%r11, %r10
 
 	vmovupd			64(%r10), %ymm12
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm12
-	vpermpd			$0x55, %ymm8, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm12
+	vpermpd			$ 0x55, %ymm8, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm8
-	vpermpd			$0x55, %ymm9, %ymm13
+	vpermpd			$ 0x55, %ymm9, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm9
-	vpermpd			$0x55, %ymm10, %ymm13
+	vpermpd			$ 0x55, %ymm10, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm10
-	vpermpd			$0x55, %ymm11, %ymm13
+	vpermpd			$ 0x55, %ymm11, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm11
 	add				%r11, %r10
 
 	vmovupd			64(%r10), %ymm12
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm12
-	vpermpd			$0xaa, %ymm8, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm12
+	vpermpd			$ 0xaa, %ymm8, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm8
-	vpermpd			$0xaa, %ymm9, %ymm13
+	vpermpd			$ 0xaa, %ymm9, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm9
-	vpermpd			$0xaa, %ymm10, %ymm13
+	vpermpd			$ 0xaa, %ymm10, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm10
-	vpermpd			$0xaa, %ymm11, %ymm13
+	vpermpd			$ 0xaa, %ymm11, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm11
 
 #if MACRO_LEVEL>=1
@@ -13615,7 +13615,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrsm_rln_inv_12x4_vs_lib)
 #endif
 	
-	cmpl			$3, %r13d
+	cmpl			$ 3, %r13d
 	jle				0f
 
 	// 4th column
@@ -13637,7 +13637,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm11, %ymm13, %ymm8
 
 0:
-	cmpl			$2, %r13d
+	cmpl			$ 2, %r13d
 	jle				0f
 
 	// 3rd column
@@ -13655,7 +13655,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm10, %ymm13, %ymm8
 
 0:
-	cmpl			$1, %r13d
+	cmpl			$ 1, %r13d
 	jle				0f
 
 	// 2nd column
@@ -13791,7 +13791,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrsm_rln_one_12x4_vs_lib)
 #endif
 	
-	cmpl			$3, %r12d
+	cmpl			$ 3, %r12d
 	jle				0f
 
 	// 4th column
@@ -13809,7 +13809,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm11, %ymm13, %ymm8
 
 0:
-	cmpl			$2, %r12d
+	cmpl			$ 2, %r12d
 	jle				0f
 
 	// 3rd column
@@ -13823,7 +13823,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm10, %ymm13, %ymm8
 
 0:
-	cmpl			$1, %r12d
+	cmpl			$ 1, %r12d
 	jle				0f
 
 	// 2nd column
@@ -13962,7 +13962,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmulpd			%ymm4, %ymm13, %ymm4
 	vmulpd			%ymm8, %ymm13, %ymm8
 
-	cmpl			$2, %r13d
+	cmpl			$ 2, %r13d
 	jl				0f // ret
 
 	vbroadcastsd	8(%r10), %ymm13
@@ -13974,7 +13974,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmulpd			%ymm5, %ymm13, %ymm5
 	vmulpd			%ymm9, %ymm13, %ymm9
 
-	cmpl			$3, %r13d
+	cmpl			$ 3, %r13d
 	jl				0f // ret
 
 	vbroadcastsd	16(%r10), %ymm13
@@ -13990,7 +13990,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmulpd			%ymm6, %ymm13, %ymm6
 	vmulpd			%ymm10, %ymm13, %ymm10
 
-	cmpl			$4, %r13d
+	cmpl			$ 4, %r13d
 	jl				0f // ret
 
 	vbroadcastsd	24(%r10), %ymm13
@@ -14114,7 +14114,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	FUN_START(inner_edge_dtrsm_rlt_one_12x4_vs_lib)
 #endif
 	
-	cmpl			$2, %r12d
+	cmpl			$ 2, %r12d
 	jl				0f // ret
 
 	vbroadcastsd	8(%r10), %ymm13
@@ -14122,7 +14122,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm4, %ymm13, %ymm5
 	vfnmadd231pd	%ymm8, %ymm13, %ymm9
 
-	cmpl			$3, %r12d
+	cmpl			$ 3, %r12d
 	jl				0f // ret
 
 	vbroadcastsd	16(%r10), %ymm13
@@ -14134,7 +14134,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm5, %ymm13, %ymm6
 	vfnmadd231pd	%ymm9, %ymm13, %ymm10
 
-	cmpl			$4, %r12d
+	cmpl			$ 4, %r12d
 	jl				0f // ret
 
 	vbroadcastsd	24(%r10), %ymm13
@@ -14282,7 +14282,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmulpd			%ymm4, %ymm13, %ymm4
 	vmulpd			%ymm8, %ymm13, %ymm8
 
-	cmpl			$2, %r13d
+	cmpl			$ 2, %r13d
 	jl				0f // ret
 
 	vbroadcastsd	0(%r10), %ymm13
@@ -14294,7 +14294,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmulpd			%ymm5, %ymm13, %ymm5
 	vmulpd			%ymm9, %ymm13, %ymm9
 
-	cmpl			$3, %r13d
+	cmpl			$ 3, %r13d
 	jl				0f // ret
 
 	vbroadcastsd	0(%r10, %r11), %ymm13
@@ -14310,7 +14310,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmulpd			%ymm6, %ymm13, %ymm6
 	vmulpd			%ymm10, %ymm13, %ymm10
 
-	cmpl			$4, %r13d
+	cmpl			$ 4, %r13d
 	jl				0f // ret
 
 	vbroadcastsd	0(%r10, %r11, 2), %ymm13
@@ -14438,7 +14438,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	
 	addq	%r11, %r10
 
-	cmpl			$2, %r12d
+	cmpl			$ 2, %r12d
 	jl				0f // ret
 
 	vbroadcastsd	0(%r10), %ymm13
@@ -14446,7 +14446,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm4, %ymm13, %ymm5
 	vfnmadd231pd	%ymm8, %ymm13, %ymm9
 
-	cmpl			$3, %r12d
+	cmpl			$ 3, %r12d
 	jl				0f // ret
 
 	vbroadcastsd	0(%r10, %r11), %ymm13
@@ -14458,7 +14458,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm5, %ymm13, %ymm6
 	vfnmadd231pd	%ymm9, %ymm13, %ymm10
 
-	cmpl			$4, %r12d
+	cmpl			$ 4, %r12d
 	jl				0f // ret
 
 	vbroadcastsd	0(%r10, %r11, 2), %ymm13
@@ -14605,7 +14605,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	
 	addq	%r11, %r10
 
-	cmpl			$3, %r13d
+	cmpl			$ 3, %r13d
 	jle				0f
 
 	// 4th column
@@ -14627,7 +14627,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm11, %ymm13, %ymm8
 
 0:
-	cmpl			$2, %r13d
+	cmpl			$ 2, %r13d
 	jle				0f
 
 	// 3rd column
@@ -14645,7 +14645,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm10, %ymm13, %ymm8
 
 0:
-	cmpl			$1, %r13d
+	cmpl			$ 1, %r13d
 	jle				0f
 
 	// 2nd column
@@ -14777,7 +14777,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	
 	addq	%r11, %r10
 
-	cmpl			$3, %r12d
+	cmpl			$ 3, %r12d
 	jle				0f
 
 	// 4th column
@@ -14795,7 +14795,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm11, %ymm13, %ymm8
 
 0:
-	cmpl			$2, %r12d
+	cmpl			$ 2, %r12d
 	jle				0f
 
 	// 3rd column
@@ -14809,7 +14809,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vfnmadd231pd	%ymm10, %ymm13, %ymm8
 
 0:
-	cmpl			$1, %r12d
+	cmpl			$ 1, %r12d
 	jle				0f
 
 	// 2nd column
@@ -14898,82 +14898,82 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovupd			0(%r10), %ymm12
-	vblendpd		$0x1, %ymm15, %ymm12, %ymm12
+	vblendpd		$ 0x1, %ymm15, %ymm12, %ymm12
 	vmovupd			32(%r10), %ymm14
 	vmovupd			64(%r10), %ymm15
-	vpermpd			$0x00, %ymm0, %ymm13
+	vpermpd			$ 0x00, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0x00, %ymm2, %ymm13
+	vpermpd			$ 0x00, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0x00, %ymm3, %ymm13
+	vpermpd			$ 0x00, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
 
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovupd			0(%r10, %r11), %ymm12
-	vblendpd		$0x3, %ymm15, %ymm12, %ymm12
+	vblendpd		$ 0x3, %ymm15, %ymm12, %ymm12
 	vmovupd			32(%r10, %r11), %ymm14
 	vmovupd			64(%r10, %r11), %ymm15
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0x55, %ymm2, %ymm13
+	vpermpd			$ 0x55, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0x55, %ymm3, %ymm13
+	vpermpd			$ 0x55, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
 
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovupd			0(%r10, %r11, 2), %ymm12
-	vblendpd		$0x7, %ymm15, %ymm12, %ymm12
+	vblendpd		$ 0x7, %ymm15, %ymm12, %ymm12
 	vmovupd			32(%r10, %r11, 2), %ymm14
 	vmovupd			64(%r10, %r11, 2), %ymm15
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0xaa, %ymm2, %ymm13
+	vpermpd			$ 0xaa, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0xaa, %ymm3, %ymm13
+	vpermpd			$ 0xaa, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
 
 	vmovupd			32(%r10, %r14), %ymm14
 	vmovupd			64(%r10, %r14), %ymm15
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0xff, %ymm2, %ymm13
+	vpermpd			$ 0xff, %ymm2, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0xff, %ymm3, %ymm13
+	vpermpd			$ 0xff, %ymm3, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
 
@@ -14988,71 +14988,71 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vmovddup		%xmm14, %xmm14
 
 	// first column
-//	vblendpd		$0x1, %ymm4, %ymm12, %ymm12
+//	vblendpd		$ 0x1, %ymm4, %ymm12, %ymm12
 	vmovapd			%ymm4, %ymm12
 	vdivsd			%xmm4, %xmm14, %xmm13
-	vpermpd			$0x00, %ymm13, %ymm13
+	vpermpd			$ 0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 0(%r12)
 	vmulpd			%ymm4, %ymm13, %ymm4
 	vmulpd			%ymm8, %ymm13, %ymm8
-	vblendpd		$0x1, %ymm12, %ymm4, %ymm4
+	vblendpd		$ 0x1, %ymm12, %ymm4, %ymm4
 
 	// second column
-	vpermpd			$0x00, %ymm5, %ymm13
+	vpermpd			$ 0x00, %ymm5, %ymm13
 	vfnmadd231pd	%ymm4, %ymm13, %ymm5
 	vfnmadd231pd	%ymm8, %ymm13, %ymm9
-	vblendpd		$0x2, %ymm5, %ymm13, %ymm12
+	vblendpd		$ 0x2, %ymm5, %ymm13, %ymm12
 
-	vpermilpd		$0x3, %xmm5, %xmm13
+	vpermilpd		$ 0x3, %xmm5, %xmm13
 	vdivsd			%xmm13, %xmm14, %xmm13
-	vpermpd			$0x00, %ymm13, %ymm13
+	vpermpd			$ 0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 8(%r12)
 	vmulpd			%ymm5, %ymm13, %ymm5
 	vmulpd			%ymm9, %ymm13, %ymm9
-	vblendpd		$0x3, %ymm12, %ymm5, %ymm5
+	vblendpd		$ 0x3, %ymm12, %ymm5, %ymm5
 
 	// third column
-	vpermpd			$0x00, %ymm6, %ymm13
+	vpermpd			$ 0x00, %ymm6, %ymm13
 	vfnmadd231pd	%ymm4, %ymm13, %ymm6
 	vfnmadd231pd	%ymm8, %ymm13, %ymm10
-	vblendpd		$0x2, %ymm6, %ymm13, %ymm12
+	vblendpd		$ 0x2, %ymm6, %ymm13, %ymm12
 
-	vpermpd			$0x55, %ymm6, %ymm13
+	vpermpd			$ 0x55, %ymm6, %ymm13
 	vfnmadd231pd	%ymm5, %ymm13, %ymm6
 	vfnmadd231pd	%ymm9, %ymm13, %ymm10
-	vblendpd		$0x4, %ymm6, %ymm12, %ymm12
+	vblendpd		$ 0x4, %ymm6, %ymm12, %ymm12
 
-	vpermpd			$0xaa, %ymm6, %ymm13
+	vpermpd			$ 0xaa, %ymm6, %ymm13
 	vdivsd			%xmm13, %xmm14, %xmm13
-	vpermpd			$0x00, %ymm13, %ymm13
+	vpermpd			$ 0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 16(%r12)
 	vmulpd			%ymm6, %ymm13, %ymm6
 	vmulpd			%ymm10, %ymm13, %ymm10
-	vblendpd		$0x7, %ymm12, %ymm6, %ymm6
+	vblendpd		$ 0x7, %ymm12, %ymm6, %ymm6
 
 	// fourth column
-	vpermpd			$0x00, %ymm7, %ymm13
+	vpermpd			$ 0x00, %ymm7, %ymm13
 	vfnmadd231pd	%ymm4, %ymm13, %ymm7
 	vfnmadd231pd	%ymm8, %ymm13, %ymm11
-	vblendpd		$0x2, %ymm7, %ymm13, %ymm12
+	vblendpd		$ 0x2, %ymm7, %ymm13, %ymm12
 
-	vpermpd			$0x55, %ymm7, %ymm13
+	vpermpd			$ 0x55, %ymm7, %ymm13
 	vfnmadd231pd	%ymm5, %ymm13, %ymm7
 	vfnmadd231pd	%ymm9, %ymm13, %ymm11
-	vblendpd		$0x4, %ymm7, %ymm12, %ymm12
+	vblendpd		$ 0x4, %ymm7, %ymm12, %ymm12
 
-	vpermpd			$0xaa, %ymm7, %ymm13
+	vpermpd			$ 0xaa, %ymm7, %ymm13
 	vfnmadd231pd	%ymm6, %ymm13, %ymm7
 	vfnmadd231pd	%ymm10, %ymm13, %ymm11
-	vblendpd		$0x8, %ymm7, %ymm12, %ymm12
+	vblendpd		$ 0x8, %ymm7, %ymm12, %ymm12
 	
-	vpermpd			$0xff, %ymm7, %ymm13
+	vpermpd			$ 0xff, %ymm7, %ymm13
 	vdivsd			%xmm13, %xmm14, %xmm13
-	vpermpd			$0x00, %ymm13, %ymm13
+	vpermpd			$ 0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 24(%r12)
 //	vmulpd			%ymm7, %ymm13, %ymm7
 	vmulpd			%ymm11, %ymm13, %ymm11
-	vblendpd		$0x7, %ymm12, %ymm7, %ymm7
+	vblendpd		$ 0x7, %ymm12, %ymm7, %ymm7
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -15130,82 +15130,82 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovupd			0(%r10), %ymm12
-	vblendpd		$0x1, %ymm15, %ymm12, %ymm12
+	vblendpd		$ 0x1, %ymm15, %ymm12, %ymm12
 	vmovupd			32(%r10), %ymm14
 	vmovupd			64(%r10), %ymm15
-	vpermpd			$0x00, %ymm0, %ymm13
+	vpermpd			$ 0x00, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0x00, %ymm2, %ymm13
+	vpermpd			$ 0x00, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0x00, %ymm3, %ymm13
+	vpermpd			$ 0x00, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
 
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovupd			0(%r10, %r11), %ymm12
-	vblendpd		$0x3, %ymm15, %ymm12, %ymm12
+	vblendpd		$ 0x3, %ymm15, %ymm12, %ymm12
 	vmovupd			32(%r10, %r11), %ymm14
 	vmovupd			64(%r10, %r11), %ymm15
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0x55, %ymm2, %ymm13
+	vpermpd			$ 0x55, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0x55, %ymm3, %ymm13
+	vpermpd			$ 0x55, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
 
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovupd			0(%r10, %r11, 2), %ymm12
-	vblendpd		$0x7, %ymm15, %ymm12, %ymm12
+	vblendpd		$ 0x7, %ymm15, %ymm12, %ymm12
 	vmovupd			32(%r10, %r11, 2), %ymm14
 	vmovupd			64(%r10, %r11, 2), %ymm15
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm0
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm1
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0xaa, %ymm2, %ymm13
+	vpermpd			$ 0xaa, %ymm2, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm2
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0xaa, %ymm3, %ymm13
+	vpermpd			$ 0xaa, %ymm3, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm3
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
 
 	vmovupd			32(%r10, %r14), %ymm14
 	vmovupd			64(%r10, %r14), %ymm15
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm4
 	vfnmadd231pd	%ymm15, %ymm13, %ymm8
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm5
 	vfnmadd231pd	%ymm15, %ymm13, %ymm9
-	vpermpd			$0xff, %ymm2, %ymm13
+	vpermpd			$ 0xff, %ymm2, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm6
 	vfnmadd231pd	%ymm15, %ymm13, %ymm10
-	vpermpd			$0xff, %ymm3, %ymm13
+	vpermpd			$ 0xff, %ymm3, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm7
 	vfnmadd231pd	%ymm15, %ymm13, %ymm11
 
@@ -15215,63 +15215,63 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	vxorpd			%ymm14, %ymm14, %ymm14
 	vmovupd			32(%r10), %ymm12
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm12
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm12
 	vmovupd			64(%r10), %ymm14
-	vpermpd			$0x00, %ymm4, %ymm13
+	vpermpd			$ 0x00, %ymm4, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm4
 	vfnmadd231pd	%ymm14, %ymm13, %ymm8
-	vpermpd			$0x00, %ymm5, %ymm13
+	vpermpd			$ 0x00, %ymm5, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm5
 	vfnmadd231pd	%ymm14, %ymm13, %ymm9
-	vpermpd			$0x00, %ymm6, %ymm13
+	vpermpd			$ 0x00, %ymm6, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm6
 	vfnmadd231pd	%ymm14, %ymm13, %ymm10
-	vpermpd			$0x00, %ymm7, %ymm13
+	vpermpd			$ 0x00, %ymm7, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm7
 	vfnmadd231pd	%ymm14, %ymm13, %ymm11
 
 	vxorpd			%ymm14, %ymm14, %ymm14
 	vmovupd			32(%r10, %r11), %ymm12
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm12
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm12
 	vmovupd			64(%r10, %r11), %ymm14
-	vpermpd			$0x55, %ymm4, %ymm13
+	vpermpd			$ 0x55, %ymm4, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm4
 	vfnmadd231pd	%ymm14, %ymm13, %ymm8
-	vpermpd			$0x55, %ymm5, %ymm13
+	vpermpd			$ 0x55, %ymm5, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm5
 	vfnmadd231pd	%ymm14, %ymm13, %ymm9
-	vpermpd			$0x55, %ymm6, %ymm13
+	vpermpd			$ 0x55, %ymm6, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm6
 	vfnmadd231pd	%ymm14, %ymm13, %ymm10
-	vpermpd			$0x55, %ymm7, %ymm13
+	vpermpd			$ 0x55, %ymm7, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm7
 	vfnmadd231pd	%ymm14, %ymm13, %ymm11
 
 	vxorpd			%ymm14, %ymm14, %ymm14
 	vmovupd			32(%r10, %r11, 2), %ymm12
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm12
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm12
 	vmovupd			64(%r10, %r11, 2), %ymm14
-	vpermpd			$0xaa, %ymm4, %ymm13
+	vpermpd			$ 0xaa, %ymm4, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm4
 	vfnmadd231pd	%ymm14, %ymm13, %ymm8
-	vpermpd			$0xaa, %ymm5, %ymm13
+	vpermpd			$ 0xaa, %ymm5, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm5
 	vfnmadd231pd	%ymm14, %ymm13, %ymm9
-	vpermpd			$0xaa, %ymm6, %ymm13
+	vpermpd			$ 0xaa, %ymm6, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm6
 	vfnmadd231pd	%ymm14, %ymm13, %ymm10
-	vpermpd			$0xaa, %ymm7, %ymm13
+	vpermpd			$ 0xaa, %ymm7, %ymm13
 	vfnmadd231pd	%ymm12, %ymm13, %ymm7
 	vfnmadd231pd	%ymm14, %ymm13, %ymm11
 
 	vmovupd			64(%r10, %r14), %ymm14
-	vpermpd			$0xff, %ymm4, %ymm13
+	vpermpd			$ 0xff, %ymm4, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm8
-	vpermpd			$0xff, %ymm5, %ymm13
+	vpermpd			$ 0xff, %ymm5, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm9
-	vpermpd			$0xff, %ymm6, %ymm13
+	vpermpd			$ 0xff, %ymm6, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm10
-	vpermpd			$0xff, %ymm7, %ymm13
+	vpermpd			$ 0xff, %ymm7, %ymm13
 	vfnmadd231pd	%ymm14, %ymm13, %ymm11
 
 
@@ -15286,61 +15286,61 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	vmovddup		%xmm14, %xmm14
 
 	// first column
-//	vblendpd		$0x1, %ymm8, %ymm12, %ymm12
+//	vblendpd		$ 0x1, %ymm8, %ymm12, %ymm12
 	vmovapd			%ymm8, %ymm12
 	vdivsd			%xmm8, %xmm14, %xmm13
-	vpermpd			$0x00, %ymm13, %ymm13
+	vpermpd			$ 0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 0(%r12)
 	vmulpd			%ymm8, %ymm13, %ymm8
-	vblendpd		$0x1, %ymm12, %ymm8, %ymm8
+	vblendpd		$ 0x1, %ymm12, %ymm8, %ymm8
 
 	// second column
-	vpermpd			$0x00, %ymm9, %ymm13
+	vpermpd			$ 0x00, %ymm9, %ymm13
 	vfnmadd231pd	%ymm8, %ymm13, %ymm9
-	vblendpd		$0x2, %ymm9, %ymm13, %ymm12
+	vblendpd		$ 0x2, %ymm9, %ymm13, %ymm12
 
-	vpermilpd		$0x3, %xmm9, %xmm13
+	vpermilpd		$ 0x3, %xmm9, %xmm13
 	vdivsd			%xmm13, %xmm14, %xmm13
-	vpermpd			$0x00, %ymm13, %ymm13
+	vpermpd			$ 0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 8(%r12)
 	vmulpd			%ymm9, %ymm13, %ymm9
-	vblendpd		$0x3, %ymm12, %ymm9, %ymm9
+	vblendpd		$ 0x3, %ymm12, %ymm9, %ymm9
 
 	// third column
-	vpermpd			$0x00, %ymm10, %ymm13
+	vpermpd			$ 0x00, %ymm10, %ymm13
 	vfnmadd231pd	%ymm8, %ymm13, %ymm10
-	vblendpd		$0x2, %ymm10, %ymm13, %ymm12
+	vblendpd		$ 0x2, %ymm10, %ymm13, %ymm12
 
-	vpermpd			$0x55, %ymm10, %ymm13
+	vpermpd			$ 0x55, %ymm10, %ymm13
 	vfnmadd231pd	%ymm9, %ymm13, %ymm10
-	vblendpd		$0x4, %ymm10, %ymm12, %ymm12
+	vblendpd		$ 0x4, %ymm10, %ymm12, %ymm12
 
-	vpermpd			$0xaa, %ymm10, %ymm13
+	vpermpd			$ 0xaa, %ymm10, %ymm13
 	vdivsd			%xmm13, %xmm14, %xmm13
-	vpermpd			$0x00, %ymm13, %ymm13
+	vpermpd			$ 0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 16(%r12)
 	vmulpd			%ymm10, %ymm13, %ymm10
-	vblendpd		$0x7, %ymm12, %ymm10, %ymm10
+	vblendpd		$ 0x7, %ymm12, %ymm10, %ymm10
 
 	// fourth column
-	vpermpd			$0x00, %ymm11, %ymm13
+	vpermpd			$ 0x00, %ymm11, %ymm13
 	vfnmadd231pd	%ymm8, %ymm13, %ymm11
-	vblendpd		$0x2, %ymm11, %ymm13, %ymm12
+	vblendpd		$ 0x2, %ymm11, %ymm13, %ymm12
 
-	vpermpd			$0x55, %ymm11, %ymm13
+	vpermpd			$ 0x55, %ymm11, %ymm13
 	vfnmadd231pd	%ymm9, %ymm13, %ymm11
-	vblendpd		$0x4, %ymm11, %ymm12, %ymm12
+	vblendpd		$ 0x4, %ymm11, %ymm12, %ymm12
 
-	vpermpd			$0xaa, %ymm11, %ymm13
+	vpermpd			$ 0xaa, %ymm11, %ymm13
 	vfnmadd231pd	%ymm10, %ymm13, %ymm11
-	vblendpd		$0x8, %ymm11, %ymm12, %ymm12
+	vblendpd		$ 0x8, %ymm11, %ymm12, %ymm12
 	
-	vpermpd			$0xff, %ymm11, %ymm13
+	vpermpd			$ 0xff, %ymm11, %ymm13
 	vdivsd			%xmm13, %xmm14, %xmm13
-//	vpermpd			$0x00, %ymm13, %ymm13
+//	vpermpd			$ 0x00, %ymm13, %ymm13
 	vmovsd			%xmm13, 24(%r12)
 //	vmulpd			%ymm11, %ymm13, %ymm11
-	vblendpd		$0x7, %ymm12, %ymm11, %ymm11
+	vblendpd		$ 0x7, %ymm12, %ymm11, %ymm11
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -15386,30 +15386,30 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vunpcklpd	%ymm3, %ymm2, %ymm14
 	vunpckhpd	%ymm3, %ymm2, %ymm15
 
-	vperm2f128	$0x20, %ymm14, %ymm12, %ymm0
-	vperm2f128	$0x31, %ymm14, %ymm12, %ymm2
-	vperm2f128	$0x20, %ymm15, %ymm13, %ymm1
-	vperm2f128	$0x31, %ymm15, %ymm13, %ymm3
+	vperm2f128	$ 0x20, %ymm14, %ymm12, %ymm0
+	vperm2f128	$ 0x31, %ymm14, %ymm12, %ymm2
+	vperm2f128	$ 0x20, %ymm15, %ymm13, %ymm1
+	vperm2f128	$ 0x31, %ymm15, %ymm13, %ymm3
 
 	vunpcklpd	%ymm5, %ymm4, %ymm12
 	vunpckhpd	%ymm5, %ymm4, %ymm13
 	vunpcklpd	%ymm7, %ymm6, %ymm14
 	vunpckhpd	%ymm7, %ymm6, %ymm15
 
-	vperm2f128	$0x20, %ymm14, %ymm12, %ymm4
-	vperm2f128	$0x31, %ymm14, %ymm12, %ymm6
-	vperm2f128	$0x20, %ymm15, %ymm13, %ymm5
-	vperm2f128	$0x31, %ymm15, %ymm13, %ymm7
+	vperm2f128	$ 0x20, %ymm14, %ymm12, %ymm4
+	vperm2f128	$ 0x31, %ymm14, %ymm12, %ymm6
+	vperm2f128	$ 0x20, %ymm15, %ymm13, %ymm5
+	vperm2f128	$ 0x31, %ymm15, %ymm13, %ymm7
 
 	vunpcklpd	%ymm9, %ymm8, %ymm12
 	vunpckhpd	%ymm9, %ymm8, %ymm13
 	vunpcklpd	%ymm11, %ymm10, %ymm14
 	vunpckhpd	%ymm11, %ymm10, %ymm15
 
-	vperm2f128	$0x20, %ymm14, %ymm12, %ymm8
-	vperm2f128	$0x31, %ymm14, %ymm12, %ymm10
-	vperm2f128	$0x20, %ymm15, %ymm13, %ymm9
-	vperm2f128	$0x31, %ymm15, %ymm13, %ymm11
+	vperm2f128	$ 0x20, %ymm14, %ymm12, %ymm8
+	vperm2f128	$ 0x31, %ymm14, %ymm12, %ymm10
+	vperm2f128	$ 0x20, %ymm15, %ymm13, %ymm9
+	vperm2f128	$ 0x31, %ymm15, %ymm13, %ymm11
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -15585,7 +15585,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm13
 
 
@@ -15596,7 +15596,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmaskmovpd	64(%r12), %ymm13, %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm8
 	addq		%r13, %r12
-	cmpl		$2, %r15d
+	cmpl		$ 2, %r15d
 	jl			0f // end
 	vmovupd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm1
@@ -15605,7 +15605,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmaskmovpd	64(%r12), %ymm13, %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm9
 	addq		%r13, %r12
-	cmpl		$3, %r15d
+	cmpl		$ 3, %r15d
 	jl			0f // end
 	vmovupd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm2
@@ -15614,7 +15614,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmaskmovpd	64(%r12), %ymm13, %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm10
 	addq		%r13, %r12
-	cmpl		$3, %r15d
+	cmpl		$ 3, %r15d
 	je			0f // end
 	vmovupd		0(%r12), %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm3
@@ -15766,7 +15766,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm13
 
 
@@ -15777,7 +15777,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmaskmovpd	64(%r11), %ymm13, %ymm15
 	vfmsub231pd	%ymm14, %ymm15, %ymm8
 	addq		%r12, %r11
-	cmpl		$2, %r14d
+	cmpl		$ 2, %r14d
 	jl			0f // end
 	vmovupd		0(%r11), %ymm15
 	vfmsub231pd	%ymm14, %ymm15, %ymm1
@@ -15786,7 +15786,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmaskmovpd	64(%r11), %ymm13, %ymm15
 	vfmsub231pd	%ymm14, %ymm15, %ymm9
 	addq		%r12, %r11
-	cmpl		$3, %r14d
+	cmpl		$ 3, %r14d
 	jl			0f // end
 	vmovupd		0(%r11), %ymm15
 	vfmsub231pd	%ymm14, %ymm15, %ymm2
@@ -15795,7 +15795,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmaskmovpd	64(%r11), %ymm13, %ymm15
 	vfmsub231pd	%ymm14, %ymm15, %ymm10
 	addq		%r12, %r11
-	cmpl		$3, %r14d
+	cmpl		$ 3, %r14d
 	je			0f // end
 	vmovupd		0(%r11), %ymm15
 	vfmsub231pd	%ymm14, %ymm15, %ymm3
@@ -15925,7 +15925,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm13
 
 
@@ -15936,7 +15936,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmaskmovpd	64(%r10), %ymm13, %ymm15
 	vsubpd		%ymm8, %ymm15, %ymm8
 	addq		%r11, %r10
-	cmpl		$2, %r13d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmovupd		0(%r10), %ymm15
 	vsubpd		%ymm1, %ymm15, %ymm1
@@ -15945,7 +15945,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmaskmovpd	64(%r10), %ymm13, %ymm15
 	vsubpd		%ymm9, %ymm15, %ymm9
 	addq		%r11, %r10
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmovupd		0(%r10), %ymm15
 	vsubpd		%ymm2, %ymm15, %ymm2
@@ -15954,7 +15954,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmaskmovpd	64(%r10), %ymm13, %ymm15
 	vsubpd		%ymm10, %ymm15, %ymm10
 	addq		%r11, %r10
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	je			0f // end
 	vmovupd		0(%r10), %ymm15
 	vsubpd		%ymm3, %ymm15, %ymm3
@@ -16138,7 +16138,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm13, %ymm13
 
 
@@ -16169,17 +16169,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmaskmovpd	0(%r12), %ymm13, %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm8
 	addq		%r13, %r12
-	cmpl		$10, %r15d
+	cmpl		$ 10, %r15d
 	jl			0f // end
 	vmaskmovpd	0(%r12), %ymm13, %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm9
 	addq		%r13, %r12
-	cmpl		$11, %r15d
+	cmpl		$ 11, %r15d
 	jl			0f // end
 	vmaskmovpd	0(%r12), %ymm13, %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm10
 	addq		%r13, %r12
-	cmpl		$11, %r15d
+	cmpl		$ 11, %r15d
 	je			0f // end
 	vmaskmovpd	0(%r12), %ymm13, %ymm15
 	vfmadd231pd	%ymm14, %ymm15, %ymm11
@@ -16343,19 +16343,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		%ymm8, 64(%r10)
 	addq		%r11, %r10
 	vmovupd		0(%r10), %ymm15
-	vblendpd	$0x1, %ymm15, %ymm1, %ymm1
+	vblendpd	$ 0x1, %ymm15, %ymm1, %ymm1
 	vmovupd		%ymm1, 0(%r10)
 	vmovupd		%ymm5, 32(%r10)
 	vmovupd		%ymm9, 64(%r10)
 	addq		%r11, %r10
 	vmovupd		0(%r10), %ymm15
-	vblendpd	$0x3, %ymm15, %ymm2, %ymm2
+	vblendpd	$ 0x3, %ymm15, %ymm2, %ymm2
 	vmovupd		%ymm2, 0(%r10)
 	vmovupd		%ymm6, 32(%r10)
 	vmovupd		%ymm10, 64(%r10)
 	addq		%r11, %r10
 	vmovupd		0(%r10), %ymm15
-	vblendpd	$0x7, %ymm15, %ymm3, %ymm3
+	vblendpd	$ 0x7, %ymm15, %ymm3, %ymm3
 	vmovupd		%ymm3, 0(%r10)
 	vmovupd		%ymm7, 32(%r10)
 	vmovupd		%ymm11, 64(%r10)
@@ -16397,19 +16397,19 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		%ymm0, 0(%r10)
 	vmovupd		%ymm4, 32(%r10)
 	vmovupd		64(%r10), %ymm15
-	vblendpd	$0x1, %ymm8, %ymm15, %ymm8
+	vblendpd	$ 0x1, %ymm8, %ymm15, %ymm8
 	vmovupd		%ymm8, 64(%r10)
 	addq		%r11, %r10
 	vmovupd		%ymm1, 0(%r10)
 	vmovupd		%ymm5, 32(%r10)
 	vmovupd		64(%r10), %ymm15
-	vblendpd	$0x3, %ymm9, %ymm15, %ymm9
+	vblendpd	$ 0x3, %ymm9, %ymm15, %ymm9
 	vmovupd		%ymm9, 64(%r10)
 	addq		%r11, %r10
 	vmovupd		%ymm2, 0(%r10)
 	vmovupd		%ymm6, 32(%r10)
 	vmovupd		64(%r10), %ymm15
-	vblendpd	$0x7, %ymm10, %ymm15, %ymm10
+	vblendpd	$ 0x7, %ymm10, %ymm15, %ymm10
 	vmovupd		%ymm10, 64(%r10)
 	addq		%r11, %r10
 	vmovupd		%ymm3, 0(%r10)
@@ -16467,26 +16467,26 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	vmovupd		%ymm0, 0(%r10)
 	vmovupd		%ymm4, 32(%r10)
 	vmaskmovpd	%ymm8, %ymm15, 64(%r10)
 	addq		%r11, %r10
-	cmpl		$2, %r13d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmovupd		%ymm1, 0(%r10)
 	vmovupd		%ymm5, 32(%r10)
 	vmaskmovpd	%ymm9, %ymm15, 64(%r10)
 	addq		%r11, %r10
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmovupd		%ymm2, 0(%r10)
 	vmovupd		%ymm6, 32(%r10)
 	vmaskmovpd	%ymm10, %ymm15, 64(%r10)
 	addq		%r11, %r10
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	je			0f // end
 	vmovupd		%ymm3, 0(%r10)
 	vmovupd		%ymm7, 32(%r10)
@@ -16539,7 +16539,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	vmaskmovpd	%ymm0, %ymm15, 0(%r10)
@@ -16560,15 +16560,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	addq		%r11, %r10
 	vmaskmovpd	%ymm8, %ymm15, 0(%r10)
 	addq		%r11, %r10
-	cmpl		$10, %r13d
+	cmpl		$ 10, %r13d
 	jl			0f // end
 	vmaskmovpd	%ymm9, %ymm15, 0(%r10)
 	addq		%r11, %r10
-	cmpl		$11, %r13d
+	cmpl		$ 11, %r13d
 	jl			0f // end
 	vmaskmovpd	%ymm10, %ymm15, 0(%r10)
 	addq		%r11, %r10
-	cmpl		$11, %r13d
+	cmpl		$ 11, %r13d
 	je			0f // end
 	vmaskmovpd	%ymm11, %ymm15, 0(%r10)
 
@@ -16616,33 +16616,33 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm13
 
 	vmovupd		%ymm0, 0(%r10)
 	vmovupd		%ymm4, 32(%r10)
 	vmaskmovpd	%ymm8, %ymm13, 64(%r10)
 	addq		%r11, %r10
-	cmpl		$2, %r13d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmovupd		0(%r10), %ymm15
-	vblendpd	$0x1, %ymm15, %ymm1, %ymm1
+	vblendpd	$ 0x1, %ymm15, %ymm1, %ymm1
 	vmovupd		%ymm1, 0(%r10)
 	vmovupd		%ymm5, 32(%r10)
 	vmaskmovpd	%ymm9, %ymm13, 64(%r10)
 	addq		%r11, %r10
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmovupd		0(%r10), %ymm15
-	vblendpd	$0x3, %ymm15, %ymm2, %ymm2
+	vblendpd	$ 0x3, %ymm15, %ymm2, %ymm2
 	vmovupd		%ymm2, 0(%r10)
 	vmovupd		%ymm6, 32(%r10)
 	vmaskmovpd	%ymm10, %ymm13, 64(%r10)
 	addq		%r11, %r10
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	je			0f // end
 	vmovupd		0(%r10), %ymm15
-	vblendpd	$0x7, %ymm15, %ymm3, %ymm3
+	vblendpd	$ 0x7, %ymm15, %ymm3, %ymm3
 	vmovupd		%ymm3, 0(%r10)
 	vmovupd		%ymm7, 32(%r10)
 	vmaskmovpd	%ymm11, %ymm13, 64(%r10)
@@ -16692,32 +16692,32 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	vmovupd		LC04(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm13
 
 	vmovupd		%ymm0, 0(%r10)
 	vmovupd		%ymm4, 32(%r10)
 	vmovupd		64(%r10), %ymm15
-	vblendpd	$0x1, %ymm8, %ymm15, %ymm8
+	vblendpd	$ 0x1, %ymm8, %ymm15, %ymm8
 	vmaskmovpd	%ymm8, %ymm13, 64(%r10)
 	addq		%r11, %r10
-	cmpl		$2, %r13d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmovupd		%ymm1, 0(%r10)
 	vmovupd		%ymm5, 32(%r10)
 	vmovupd		64(%r10), %ymm15
-	vblendpd	$0x3, %ymm9, %ymm15, %ymm9
+	vblendpd	$ 0x3, %ymm9, %ymm15, %ymm9
 	vmaskmovpd	%ymm9, %ymm13, 64(%r10)
 	addq		%r11, %r10
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmovupd		%ymm2, 0(%r10)
 	vmovupd		%ymm6, 32(%r10)
 	vmovupd		64(%r10), %ymm15
-	vblendpd	$0x7, %ymm10, %ymm15, %ymm10
+	vblendpd	$ 0x7, %ymm10, %ymm15, %ymm10
 	vmaskmovpd	%ymm10, %ymm13, 64(%r10)
 	addq		%r11, %r10
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	je			0f // end
 	vmovupd		%ymm3, 0(%r10)
 	vmovupd		%ymm7, 32(%r10)
@@ -16980,10 +16980,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIBCC
@@ -16996,7 +16996,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -17011,7 +17011,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -17024,7 +17024,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -17061,14 +17061,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // lda
-	sall	$3, %r12d // lda*sizeof(double)
+	sall	$ 3, %r12d // lda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 	movq	ARG12, %r15  // m1
 
 	movq	ARG13, %rax  // n1
-	cmpl	$1, %eax
+	cmpl	$ 1, %eax
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -17082,7 +17082,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %rax  // n1
-	cmpl	$2, %eax
+	cmpl	$ 2, %eax
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -17096,7 +17096,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %rax  // n1
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -17123,7 +17123,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -17138,7 +17138,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -17153,7 +17153,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -17197,7 +17197,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // C
 	movq	ARG9, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -17213,10 +17213,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -17229,7 +17229,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 //	movq	ARG10, %r10 // D
 //	movq	ARG11, %r11 // ldd
-//	sall	$3, %r11d
+//	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 //	INNER_PREFETCH0_12X4_LIB
@@ -17244,7 +17244,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -17257,7 +17257,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -17294,13 +17294,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -17314,7 +17314,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -17328,7 +17328,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -17355,7 +17355,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -17370,7 +17370,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -17385,7 +17385,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -17429,7 +17429,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG7, %r10 // C
 	movq	ARG8, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -17445,7 +17445,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -17461,7 +17461,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -17474,7 +17474,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -17517,7 +17517,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG7, %r10 // C
 	movq	ARG8, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH1_12X4_LIB
@@ -17533,7 +17533,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 	movq	ARG11, %r14 // A_p
@@ -17553,7 +17553,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -17566,7 +17566,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -17603,7 +17603,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -17619,7 +17619,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // ldd
 	movq	ARG12, %r15 // ldd
 
@@ -17634,7 +17634,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // ldd
 	movq	ARG12, %r13 // ldd
 
@@ -17673,7 +17673,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -17690,7 +17690,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r11  // B
 	movq	ARG3, %r12  // A
 	movq	ARG4, %r13  // lda
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_4X12_LIB4C
@@ -17710,7 +17710,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -17725,7 +17725,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -17738,7 +17738,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -17777,11 +17777,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG5, %r13  // B
 
 	movq	ARG12, %r14  // n1
-	cmpl	$1, %r14d
+	cmpl	$ 1, %r14d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -17795,7 +17795,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r14  // n1
-	cmpl	$2, %r14d
+	cmpl	$ 2, %r14d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -17809,7 +17809,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r14  // n1
-	cmpl	$3, %r14d
+	cmpl	$ 3, %r14d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -17836,10 +17836,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r11  // B
 	movq	ARG3, %r12  // A
 	movq	ARG4, %r13  // lda
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 	movq	ARG11, %r14  // m1
-	cmpl	$9, %r14d
+	cmpl	$ 9, %r14d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -17853,7 +17853,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG11, %r14  // m1
-	cmpl	$10, %r14d
+	cmpl	$ 10, %r14d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -17867,7 +17867,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG11, %r14  // m1
-	cmpl	$11, %r14d
+	cmpl	$ 11, %r14d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -17902,7 +17902,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -17917,7 +17917,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // m1
 	movq	ARG12, %r15 // n1
 
@@ -17932,7 +17932,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -17976,7 +17976,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG7, %r10 // C
 	movq	ARG8, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -17992,7 +17992,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // B
 	movq	ARG5, %r12 // sdb
-	sall	$5, %r12d // 4*sdb*sizeof(double)
+	sall	$ 5, %r12d // 4*sdb*sizeof(double)
 	movq	ARG3, %r13  // A
 
 #if MACRO_LEVEL>=2
@@ -18014,7 +18014,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X12_LIB
@@ -18027,7 +18027,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X12_LIB
@@ -18064,7 +18064,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // B
 	movq	ARG5, %r12 // sdb
-	sall	$5, %r12d // 4*sdb*sizeof(double)
+	sall	$ 5, %r12d // 4*sdb*sizeof(double)
 	movq	ARG3, %r13  // A
 
 #if MACRO_LEVEL>=2
@@ -18086,7 +18086,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // ldd
 	movq	ARG12, %r15 // ldd
 
@@ -18101,7 +18101,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // ldd
 	movq	ARG12, %r13 // ldd
 
@@ -18140,10 +18140,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIBCC
@@ -18156,7 +18156,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -18171,7 +18171,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -18184,7 +18184,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -18221,14 +18221,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$3, %r12d // sda*sizeof(double)
+	sall	$ 3, %r12d // sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb*sizeof(double)
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 	movq	ARG12, %r15  // m1
 
 	movq	ARG13, %rax  // n1
-	cmpl	$1, %eax
+	cmpl	$ 1, %eax
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -18242,7 +18242,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %rax  // n1
-	cmpl	$2, %eax
+	cmpl	$ 2, %eax
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -18256,7 +18256,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %rax  // n1
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -18283,7 +18283,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -18298,7 +18298,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -18313,7 +18313,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -18357,7 +18357,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // C
 	movq	ARG9, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -18373,10 +18373,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -18389,7 +18389,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 //	movq	ARG10, %r10 // D
 //	movq	ARG11, %r11 // ldd
-//	sall	$3, %r11d
+//	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 //	INNER_PREFETCH0_12X4_LIB
@@ -18421,7 +18421,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG2, %r10 // alpha
 	movq	ARG10, %r11   // D
 	movq	ARG11, %r12   // ldd
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_A1_STORE_12X4_LIB
@@ -18442,7 +18442,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -18455,7 +18455,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -18495,13 +18495,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -18515,7 +18515,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -18529,7 +18529,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -18556,7 +18556,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -18571,7 +18571,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -18586,7 +18586,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -18625,10 +18625,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG6, %r12  // ldb
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG3, %r13  // A
 	movq	ARG4, %r14 // lda
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIBCC
@@ -18641,7 +18641,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -18656,7 +18656,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -18676,7 +18676,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X12_LIB
@@ -18713,14 +18713,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG6, %r12  // ldb*sizeof(double)
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG3, %r13  // A
 	movq	ARG4, %r14 // sda
-	sall	$3, %r14d // sda*sizeof(double)
+	sall	$ 3, %r14d // sda*sizeof(double)
 	movq	ARG13, %r15  // n1
 
 	movq	ARG12, %rax  // m1
-	cmpl	$1, %eax
+	cmpl	$ 1, %eax
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -18734,7 +18734,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %rax  // m1
-	cmpl	$2, %eax
+	cmpl	$ 2, %eax
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -18748,7 +18748,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %rax  // m1
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -18775,7 +18775,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -18790,7 +18790,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -18812,7 +18812,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -18856,7 +18856,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG7, %r10 // C
 	movq	ARG8, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -18872,7 +18872,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r11  // B
 	movq	ARG3, %r12  // A
 	movq	ARG4, %r13  // lda
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_4X12_LIB4C
@@ -18885,7 +18885,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 //	movq	ARG9, %r10 // D
 //	movq	ARG10, %r11 // ldd
-//	sall	$3, %r11d
+//	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 //	INNER_PREFETCH0_12X4_LIB
@@ -18900,7 +18900,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -18920,7 +18920,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -18958,10 +18958,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r11  // B
 	movq	ARG3, %r12  // A
 	movq	ARG4, %r13  // lda
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 	movq	ARG11, %r14  // m1
-	cmpl	$9, %r14d
+	cmpl	$ 9, %r14d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -18975,7 +18975,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG11, %r14  // m1
-	cmpl	$10, %r14d
+	cmpl	$ 10, %r14d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -18989,7 +18989,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG11, %r14  // m1
-	cmpl	$11, %r14d
+	cmpl	$ 11, %r14d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -19016,7 +19016,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -19031,7 +19031,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // m1
 	movq	ARG12, %r15 // n1
 
@@ -19053,7 +19053,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -19092,10 +19092,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG6, %r12  // ldb
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG3, %r13  // A
 	movq	ARG4, %r14 // lda
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_4X12_LIBCC
@@ -19108,7 +19108,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -19123,7 +19123,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -19143,7 +19143,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -19180,14 +19180,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG6, %r12  // ldb*sizeof(double)
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG3, %r13  // A
 	movq	ARG4, %r14 // sda
-	sall	$3, %r14d // sda*sizeof(double)
+	sall	$ 3, %r14d // sda*sizeof(double)
 	movq	ARG13, %r15  // n1
 
 	movq	ARG12, %rax  // m1
-	cmpl	$9, %eax
+	cmpl	$ 9, %eax
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -19201,7 +19201,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %rax  // m1
-	cmpl	$10, %eax
+	cmpl	$ 10, %eax
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -19215,7 +19215,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %rax  // m1
-	cmpl	$11, %eax
+	cmpl	$ 11, %eax
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -19242,7 +19242,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -19257,7 +19257,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -19279,7 +19279,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -19318,10 +19318,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -19334,7 +19334,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -19349,7 +19349,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -19362,7 +19362,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB
@@ -19399,13 +19399,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -19419,7 +19419,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -19433,7 +19433,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -19460,7 +19460,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_12X4_LIB
@@ -19475,7 +19475,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -19490,7 +19490,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -19529,7 +19529,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -19545,7 +19545,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -19558,7 +19558,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB
@@ -19595,7 +19595,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -19611,7 +19611,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // ldd
 	movq	ARG12, %r15 // ldd
 
@@ -19626,7 +19626,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // ldd
 	movq	ARG12, %r13 // ldd
 
@@ -19665,7 +19665,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -19681,7 +19681,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -19694,7 +19694,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_U_12X4_LIB
@@ -19731,7 +19731,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -19747,7 +19747,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // ldd
 	movq	ARG12, %r15 // ldd
 
@@ -19762,7 +19762,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // ldd
 	movq	ARG12, %r13 // ldd
 
@@ -19801,10 +19801,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_12X4_LIB4C
@@ -19825,7 +19825,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -19838,7 +19838,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -19875,10 +19875,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_12X4_VS_LIB4C
@@ -19887,7 +19887,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 #endif
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -19901,7 +19901,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -19915,7 +19915,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -19943,7 +19943,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -19958,7 +19958,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -19997,10 +19997,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_ONE_12X4_LIB4C
@@ -20021,7 +20021,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -20034,7 +20034,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -20071,10 +20071,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_ONE_12X4_VS_LIB4C
@@ -20083,7 +20083,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 #endif
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -20097,7 +20097,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -20111,7 +20111,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -20139,7 +20139,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -20154,7 +20154,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -20193,10 +20193,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_12X4_LIB4C
@@ -20217,7 +20217,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -20230,7 +20230,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -20273,10 +20273,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_12X4_VS_LIB4C
@@ -20285,7 +20285,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 #endif
 
 	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -20299,7 +20299,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -20313,7 +20313,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -20341,7 +20341,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -20354,7 +20354,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -20399,10 +20399,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_ONE_12X4_LIB4C
@@ -20423,7 +20423,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -20436,7 +20436,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -20479,10 +20479,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NN_RL_ONE_12X4_VS_LIB4C
@@ -20491,7 +20491,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 #endif
 
 	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -20505,7 +20505,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -20519,7 +20519,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -20547,7 +20547,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -20560,7 +20560,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -20605,10 +20605,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -20629,7 +20629,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -20642,7 +20642,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -20679,13 +20679,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -20699,7 +20699,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -20713,7 +20713,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -20749,7 +20749,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -20764,7 +20764,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -20803,10 +20803,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -20827,7 +20827,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -20840,7 +20840,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -20877,13 +20877,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -20897,7 +20897,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -20911,7 +20911,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -20947,7 +20947,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -20962,7 +20962,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -21001,10 +21001,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -21025,7 +21025,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -21038,7 +21038,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -21081,13 +21081,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -21101,7 +21101,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -21115,7 +21115,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -21151,7 +21151,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -21164,7 +21164,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -21209,10 +21209,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -21233,7 +21233,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -21246,7 +21246,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -21289,13 +21289,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -21309,7 +21309,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -21323,7 +21323,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -21359,7 +21359,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -21372,7 +21372,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -21417,7 +21417,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -21439,7 +21439,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -21452,7 +21452,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -21489,7 +21489,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -21513,7 +21513,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // m1
 	movq	ARG12, %r15 // n1
 
@@ -21528,7 +21528,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -21567,7 +21567,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -21589,7 +21589,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -21602,7 +21602,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -21639,7 +21639,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 
 #if MACRO_LEVEL>=2
@@ -21663,7 +21663,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // m1
 	movq	ARG12, %r15 // n1
 
@@ -21678,7 +21678,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -21717,7 +21717,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -21741,7 +21741,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -21754,7 +21754,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -21797,7 +21797,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -21823,7 +21823,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -21836,7 +21836,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12   // m1
 	movq	ARG12, %r13   // n1
 
@@ -21881,7 +21881,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -21905,7 +21905,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -21918,7 +21918,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -21961,7 +21961,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -21987,7 +21987,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -22000,7 +22000,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12   // m1
 	movq	ARG12, %r13   // n1
 
@@ -22045,10 +22045,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -22069,7 +22069,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -22082,7 +22082,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -22119,13 +22119,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -22139,7 +22139,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -22153,7 +22153,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -22189,7 +22189,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -22204,7 +22204,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -22243,10 +22243,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -22267,7 +22267,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -22280,7 +22280,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -22317,13 +22317,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -22337,7 +22337,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -22351,7 +22351,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -22387,7 +22387,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -22402,7 +22402,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -22441,10 +22441,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -22465,7 +22465,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -22478,7 +22478,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -22521,13 +22521,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -22541,7 +22541,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -22555,7 +22555,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -22591,7 +22591,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -22604,7 +22604,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -22649,10 +22649,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -22673,7 +22673,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -22686,7 +22686,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -22729,13 +22729,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -22749,7 +22749,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -22763,7 +22763,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -22799,7 +22799,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -22812,7 +22812,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -22855,13 +22855,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// call inner dgemm kernel nn
 
 	movq	ARG1, %r10 // k
-//	subl	$4, %r10d //k-4
+//	subl	$ 4, %r10d //k-4
 	movq	ARG3, %r11  // A
-//	addq	$128, %r11 // A+4*bs
+//	addq	$ 128, %r11 // A+4*bs
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
-//	addq	$128, %r13 // B+4*bs
+//	addq	$ 128, %r13 // B+4*bs
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4
@@ -22890,7 +22890,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	movq	ARG1, %r10
 //	movq	ARG3, %r11 // A
 //	movq	ARG4, %r12 // sda
-//	sall	$5, %r12d // 4*sda*sizeof(double)
+//	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=1
@@ -22906,7 +22906,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -22919,7 +22919,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -22954,13 +22954,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// call inner dgemm kernel nn
 
 	movq	ARG1, %r10 // k
-//	subl	$4, %r10d //k-4
+//	subl	$ 4, %r10d //k-4
 	movq	ARG3, %r11  // A
-//	addq	$128, %r11 // A+4*bs
+//	addq	$ 128, %r11 // A+4*bs
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
-//	addq	$128, %r13 // B+4*bs
+//	addq	$ 128, %r13 // B+4*bs
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_12X4_VS_LIB4
@@ -22989,7 +22989,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	movq	ARG1, %r10
 //	movq	ARG3, %r11 // A
 //	movq	ARG4, %r12 // sda
-//	sall	$5, %r12d // 4*sda*sizeof(double)
+//	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=1
@@ -23005,7 +23005,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // m1
 	movq	ARG12, %r15 // n1
 
@@ -23020,7 +23020,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -23059,10 +23059,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4C
@@ -23083,7 +23083,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -23096,7 +23096,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -23133,10 +23133,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_12X4_VS_LIB4C
@@ -23145,7 +23145,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 #endif
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -23159,7 +23159,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -23173,7 +23173,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -23201,7 +23201,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -23216,7 +23216,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -23255,10 +23255,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4C
@@ -23279,7 +23279,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -23292,7 +23292,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -23335,10 +23335,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_12X4_VS_LIB4C
@@ -23347,7 +23347,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 #endif
 
 	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -23361,7 +23361,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -23375,7 +23375,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -23403,7 +23403,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -23416,7 +23416,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -23461,10 +23461,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_12X4_LIB4C
@@ -23485,7 +23485,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -23498,7 +23498,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -23541,10 +23541,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_12X4_VS_LIB4C
@@ -23553,7 +23553,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 #endif
 
 	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -23567,7 +23567,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -23581,7 +23581,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -23609,7 +23609,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -23622,7 +23622,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -23665,13 +23665,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// call inner dgemm kernel nn
 
 	movq	ARG1, %r10 // k
-//	subl	$4, %r10d //k-4
+//	subl	$ 4, %r10d //k-4
 	movq	ARG3, %r11  // A
-//	addq	$128, %r11 // A+4*bs
+//	addq	$ 128, %r11 // A+4*bs
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
-//	addq	$128, %r13 // B+4*bs
+//	addq	$ 128, %r13 // B+4*bs
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_12X4_LIB4
@@ -23700,7 +23700,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	movq	ARG1, %r10
 //	movq	ARG3, %r11 // A
 //	movq	ARG4, %r12 // sda
-//	sall	$5, %r12d // 4*sda*sizeof(double)
+//	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=1
@@ -23716,7 +23716,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -23729,7 +23729,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -23764,13 +23764,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// call inner dgemm kernel nn
 
 	movq	ARG1, %r10 // k
-//	subl	$4, %r10d //k-4
+//	subl	$ 4, %r10d //k-4
 	movq	ARG3, %r11  // A
-//	addq	$128, %r11 // A+4*bs
+//	addq	$ 128, %r11 // A+4*bs
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
-//	addq	$128, %r13 // B+4*bs
+//	addq	$ 128, %r13 // B+4*bs
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_12X4_VS_LIB4
@@ -23799,7 +23799,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 //	movq	ARG1, %r10
 //	movq	ARG3, %r11 // A
 //	movq	ARG4, %r12 // sda
-//	sall	$5, %r12d // 4*sda*sizeof(double)
+//	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=1
@@ -23815,7 +23815,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // m1
 	movq	ARG12, %r15 // n1
 
@@ -23830,7 +23830,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -23869,7 +23869,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=1
@@ -23891,7 +23891,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -23904,7 +23904,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -23947,7 +23947,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=1
@@ -23969,7 +23969,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -23982,7 +23982,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12   // m1
 	movq	ARG12, %r13   // n1
 
@@ -24027,7 +24027,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=1
@@ -24049,7 +24049,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -24062,7 +24062,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -24105,7 +24105,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13 // B
 
 #if MACRO_LEVEL>=1
@@ -24127,7 +24127,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB4
@@ -24140,7 +24140,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12   // m1
 	movq	ARG12, %r13   // n1
 
@@ -24185,10 +24185,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_12X4_LIB4C
@@ -24209,7 +24209,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -24222,7 +24222,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -24259,10 +24259,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRMM_NT_RU_ONE_12X4_VS_LIB4C
@@ -24271,7 +24271,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 #endif
 
 	movq	ARG13, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -24285,7 +24285,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -24299,7 +24299,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -24327,7 +24327,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -24342,7 +24342,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -24381,7 +24381,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // ldb
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -24395,7 +24395,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG5, %r10 // C
 	movq	ARG6, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_12X4_LIB
@@ -24407,7 +24407,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// factorization
 
 	movq	ARG9, %r10  // inv_diag_D 
-	movl	$4, %r11d
+	movl	$ 4, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_12X4_VS_LIB4
@@ -24420,7 +24420,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB
@@ -24457,7 +24457,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // ldb
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 
 #if MACRO_LEVEL>=2
@@ -24471,7 +24471,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG5, %r10 // C
 	movq	ARG6, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG10, %r12 // m1
 	movq	ARG11, %r13 // n1
 
@@ -24498,7 +24498,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG10, %r12 // m1
 	movq	ARG11, %r13 // n1
 
@@ -24537,10 +24537,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -24554,7 +24554,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -24567,7 +24567,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -24581,7 +24581,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -24618,13 +24618,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG15, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -24638,7 +24638,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -24652,7 +24652,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -24679,7 +24679,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -24692,7 +24692,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 	movq	ARG15, %r13 // n1
 
@@ -24707,7 +24707,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 	movq	ARG14, %r12 // m1
 	movq	ARG15, %r13 // n1
 
@@ -24746,10 +24746,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -24763,7 +24763,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -24776,7 +24776,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -24790,7 +24790,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -24827,13 +24827,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG15, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -24847,7 +24847,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -24861,7 +24861,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -24888,7 +24888,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG14, %r13 // m1
 	movq	ARG15, %r14 // n1
 
@@ -24903,7 +24903,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 	movq	ARG15, %r13 // n1
 
@@ -24918,7 +24918,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r12 // m1
 	movq	ARG15, %r13 // n1
 
@@ -24957,10 +24957,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -24974,7 +24974,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -24987,7 +24987,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLN_ONE_12X4_LIB
@@ -25000,7 +25000,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -25037,13 +25037,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG14, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -25057,7 +25057,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -25071,7 +25071,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -25098,7 +25098,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -25111,7 +25111,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r12 // n1
 
 #if MACRO_LEVEL>=1
@@ -25125,7 +25125,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 	movq	ARG13, %r12 // m1
 	movq	ARG14, %r13 // n1
 
@@ -25164,10 +25164,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -25181,7 +25181,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -25194,7 +25194,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLN_ONE_12X4_LIB
@@ -25207,7 +25207,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -25244,13 +25244,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG14, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -25264,7 +25264,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -25278,7 +25278,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -25305,7 +25305,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG13, %r13 // m1
 	movq	ARG14, %r14 // n1
 
@@ -25320,7 +25320,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r13 // n1
 
 #if MACRO_LEVEL>=1
@@ -25334,7 +25334,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12 // m1
 	movq	ARG14, %r13 // n1
 
@@ -25373,7 +25373,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -25388,7 +25388,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r10 // beta
 	movq	ARG6, %r11 // C
 	movq	ARG7, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -25413,7 +25413,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -25450,7 +25450,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -25465,7 +25465,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r10 // beta
 	movq	ARG6, %r11 // C
 	movq	ARG7, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG12, %r13 // m1
 	movq	ARG13, %r14 // n1
 
@@ -25492,7 +25492,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -25531,7 +25531,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -25545,7 +25545,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG5, %r10 // C
 	movq	ARG6, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_12X4_LIB
@@ -25558,7 +25558,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10  // E 
 	movq	ARG10, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -25572,7 +25572,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -25609,7 +25609,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -25623,7 +25623,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG5, %r10 // C
 	movq	ARG6, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -25638,7 +25638,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10  // E 
 	movq	ARG10, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12  // inv_diag_E 
 	movq	ARG13, %r13 // n1
 
@@ -25653,7 +25653,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -25692,10 +25692,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -25709,7 +25709,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -25722,7 +25722,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -25736,7 +25736,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -25773,13 +25773,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG15, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -25793,7 +25793,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -25807,7 +25807,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -25834,7 +25834,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -25847,7 +25847,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 	movq	ARG15, %r13  // n1 
 
@@ -25862,7 +25862,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 	movq	ARG14, %r12  // m1 
 	movq	ARG15, %r13  // n1 
 
@@ -25901,10 +25901,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -25918,7 +25918,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -25931,7 +25931,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -25945,7 +25945,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -25982,13 +25982,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG15, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -26002,7 +26002,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -26016,7 +26016,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -26043,7 +26043,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG14, %r13 // m1
 	movq	ARG15, %r14 // n1
 
@@ -26058,7 +26058,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 	movq	ARG15, %r13 // n1
 
@@ -26073,7 +26073,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r12 // m1
 	movq	ARG15, %r13 // n1
 
@@ -26112,7 +26112,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -26127,7 +26127,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r10 // beta
 	movq	ARG6, %r11 // C
 	movq	ARG7, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -26151,7 +26151,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -26188,7 +26188,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -26203,7 +26203,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r10 // beta
 	movq	ARG6, %r11 // C
 	movq	ARG7, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG11, %r13 // m1
 	movq	ARG12, %r14 // n1
 
@@ -26229,7 +26229,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -26268,10 +26268,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -26285,7 +26285,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -26298,7 +26298,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_ONE_12X4_LIB
@@ -26311,7 +26311,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -26348,13 +26348,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG14, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -26368,7 +26368,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -26382,7 +26382,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -26409,7 +26409,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -26422,7 +26422,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r12  // n1 
 
 #if MACRO_LEVEL>=1
@@ -26436,7 +26436,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 	movq	ARG13, %r12  // m1 
 	movq	ARG14, %r13  // n1 
 
@@ -26475,10 +26475,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -26492,7 +26492,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -26505,7 +26505,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RLT_ONE_12X4_LIB
@@ -26518,7 +26518,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -26555,13 +26555,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG14, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -26575,7 +26575,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -26589,7 +26589,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -26616,7 +26616,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG13, %r13 // m1
 	movq	ARG14, %r14 // n1
 
@@ -26631,7 +26631,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r13 // n1
 
 #if MACRO_LEVEL>=1
@@ -26645,7 +26645,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12 // m1
 	movq	ARG14, %r13 // n1
 
@@ -26683,10 +26683,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -26700,7 +26700,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -26713,7 +26713,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -26727,7 +26727,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -26764,13 +26764,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG15, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -26784,7 +26784,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -26798,7 +26798,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -26825,7 +26825,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -26838,7 +26838,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 	movq	ARG15, %r13  // n1
 
@@ -26853,7 +26853,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 	movq	ARG14, %r12  // m1
 	movq	ARG15, %r13  // n1
 
@@ -26892,10 +26892,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -26909,7 +26909,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -26922,7 +26922,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -26936,7 +26936,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -26973,13 +26973,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG15, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -26993,7 +26993,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -27007,7 +27007,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -27034,7 +27034,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG14, %r13  // m1
 	movq	ARG15, %r14  // n1
 
@@ -27049,7 +27049,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 	movq	ARG15, %r13  // n1
 
@@ -27064,7 +27064,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r12  // m1
 	movq	ARG15, %r13  // n1
 
@@ -27102,10 +27102,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -27119,7 +27119,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -27132,7 +27132,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUN_ONE_12X4_LIB
@@ -27145,7 +27145,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -27182,13 +27182,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG14, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -27202,7 +27202,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -27216,7 +27216,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -27243,7 +27243,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -27256,7 +27256,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r12  // n1
 
 #if MACRO_LEVEL>=1
@@ -27270,7 +27270,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 	movq	ARG13, %r12  // m1
 	movq	ARG14, %r13  // n1
 
@@ -27309,10 +27309,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -27326,7 +27326,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -27339,7 +27339,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUN_ONE_12X4_LIB
@@ -27352,7 +27352,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -27389,13 +27389,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG14, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -27409,7 +27409,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -27423,7 +27423,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -27450,7 +27450,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG13, %r13  // m1
 	movq	ARG14, %r14  // n1
 
@@ -27465,7 +27465,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r12  // n1
 
 #if MACRO_LEVEL>=1
@@ -27479,7 +27479,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // m1
 	movq	ARG14, %r13  // n1
 
@@ -27517,7 +27517,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -27532,7 +27532,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r10 // beta
 	movq	ARG6, %r11 // C
 	movq	ARG7, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -27557,7 +27557,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -27594,7 +27594,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -27609,7 +27609,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r10 // beta
 	movq	ARG6, %r11 // C
 	movq	ARG7, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG12, %r13 // m1
 	movq	ARG13, %r14 // n1
 
@@ -27637,7 +27637,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -27676,10 +27676,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -27693,7 +27693,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -27706,7 +27706,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -27720,7 +27720,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -27757,13 +27757,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG15, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -27777,7 +27777,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -27791,7 +27791,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -27818,7 +27818,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -27831,7 +27831,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 	movq	ARG15, %r13  // n1
 
@@ -27846,7 +27846,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 	movq	ARG14, %r12  // m1
 	movq	ARG15, %r13  // n1
 
@@ -27884,10 +27884,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -27901,7 +27901,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -27914,7 +27914,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 
 #if MACRO_LEVEL>=1
@@ -27928,7 +27928,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -27965,13 +27965,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG15, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -27985,7 +27985,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -27999,7 +27999,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -28026,7 +28026,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG14, %r13  // m1
 	movq	ARG15, %r14  // n1
 
@@ -28041,7 +28041,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // inv_diag_E 
 	movq	ARG15, %r13  // n1
 
@@ -28056,7 +28056,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r12  // m1
 	movq	ARG15, %r13  // n1
 
@@ -28094,7 +28094,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -28109,7 +28109,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r10 // beta
 	movq	ARG6, %r11 // C
 	movq	ARG7, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -28133,7 +28133,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -28170,7 +28170,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -28185,7 +28185,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG5, %r10 // beta
 	movq	ARG6, %r11 // C
 	movq	ARG7, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG11, %r13 // m1
 	movq	ARG12, %r14 // n1
 
@@ -28212,7 +28212,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -28251,10 +28251,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -28268,7 +28268,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -28281,7 +28281,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUT_ONE_12X4_LIB
@@ -28294,7 +28294,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB4
@@ -28331,13 +28331,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG14, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -28351,7 +28351,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -28365,7 +28365,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -28392,7 +28392,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // sdc
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB4
@@ -28405,7 +28405,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r12  // n1
 
 #if MACRO_LEVEL>=1
@@ -28419,7 +28419,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // sdd
-	sall	$5, %r11d
+	sall	$ 5, %r11d
 	movq	ARG13, %r12  // m1
 	movq	ARG14, %r13  // n1
 
@@ -28458,10 +28458,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -28475,7 +28475,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -28488,7 +28488,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_RUT_ONE_12X4_LIB
@@ -28501,7 +28501,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -28538,13 +28538,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG14, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -28558,7 +28558,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -28572,7 +28572,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG14, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -28599,7 +28599,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG13, %r13  // m1
 	movq	ARG14, %r14  // n1
 
@@ -28614,7 +28614,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG14, %r13  // n1
 
 #if MACRO_LEVEL>=1
@@ -28628,7 +28628,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12  // m1
 	movq	ARG14, %r13  // n1
 
@@ -28667,10 +28667,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -28684,7 +28684,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_12X4_LIB
@@ -28697,7 +28697,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_LLN_ONE_12X4_LIB
@@ -28710,7 +28710,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -28747,13 +28747,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13
 	movq	ARG5, %r14 // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG15, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -28767,7 +28767,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -28781,7 +28781,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG15, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -28808,7 +28808,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r10 // beta
 	movq	ARG7, %r11 // C
 	movq	ARG8, %r12 // ldc
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG13, %r13 // m1
 	movq	ARG14, %r14 // n1
 
@@ -28823,7 +28823,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10  // E 
 	movq	ARG12, %r11 // lde
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSM_LLN_ONE_12X4_LIB
@@ -28836,7 +28836,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG13, %r12 // m1
 	movq	ARG14, %r13 // n1
 
@@ -28877,7 +28877,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // B
 	movq	ARG5, %r12  // ldb
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG3, %r13  // A
 
 #if MACRO_LEVEL>=2
@@ -28898,7 +28898,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // B
 	movq	ARG5, %r13  // ldb
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_4X12_LIB4C
@@ -28915,7 +28915,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X12_LIB
@@ -28928,7 +28928,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X12_LIB
@@ -28967,11 +28967,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // B
 	movq	ARG5, %r12  // ldb
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG3, %r13  // A
 
 	movq	ARG11, %r14  // m1
-	cmpl	$1, %r14d
+	cmpl	$ 1, %r14d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -28985,7 +28985,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG11, %r14  // m1
-	cmpl	$2, %r14d
+	cmpl	$ 2, %r14d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -28999,7 +28999,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG11, %r14  // m1
-	cmpl	$3, %r14d
+	cmpl	$ 3, %r14d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -29032,11 +29032,11 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // B
 	movq	ARG5, %r13  // ldb
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 
 	movq	ARG12, %r14  // n1
-	cmpl	$9, %r14d
+	cmpl	$ 9, %r14d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -29050,7 +29050,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r14  // n1
-	cmpl	$10, %r14d
+	cmpl	$ 10, %r14d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -29064,7 +29064,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r14  // n1
-	cmpl	$11, %r14d
+	cmpl	$ 11, %r14d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -29094,7 +29094,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // m1
 	movq	ARG12, %r15 // n1
 
@@ -29109,7 +29109,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -29153,7 +29153,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // C
 	movq	ARG9, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -29169,10 +29169,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG6, %r12  // sdb
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG3, %r13  // A
 	movq	ARG4, %r14  // lda
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIB4C
@@ -29185,7 +29185,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 //	movq	ARG10, %r10 // D
 //	movq	ARG11, %r11 // ldd
-//	sall	$3, %r11d
+//	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 //	INNER_PREFETCH0_4X12_LIB
@@ -29200,7 +29200,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -29220,7 +29220,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X12_LIB
@@ -29257,13 +29257,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG6, %r12  // sdb
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG3, %r13  // A
 	movq	ARG4, %r14  // lda
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -29277,7 +29277,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -29291,7 +29291,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -29318,7 +29318,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -29333,7 +29333,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14   // m1
 	movq	ARG13, %r15   // n1
 
@@ -29355,7 +29355,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12   // m1
 	movq	ARG13, %r13   // n1
 
@@ -29394,10 +29394,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG6, %r12  // ldb
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG3, %r13  // A
 	movq	ARG4, %r14 // lda
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NT_12X4_LIBCC
@@ -29416,7 +29416,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -29431,7 +29431,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X12_LIB
@@ -29444,7 +29444,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X12_LIB
@@ -29481,14 +29481,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG6, %r12  // ldb*sizeof(double)
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG3, %r13  // A
 	movq	ARG4, %r14 // sda
-	sall	$3, %r14d // sda*sizeof(double)
+	sall	$ 3, %r14d // sda*sizeof(double)
 	movq	ARG13, %r15  // n1
 
 	movq	ARG12, %rax  // m1
-	cmpl	$1, %eax
+	cmpl	$ 1, %eax
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -29502,7 +29502,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %rax  // m1
-	cmpl	$2, %eax
+	cmpl	$ 2, %eax
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -29516,7 +29516,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %rax  // m1
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -29549,7 +29549,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -29564,7 +29564,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -29579,7 +29579,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -29619,7 +29619,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // B
 	movq	ARG5, %r13  // ldb
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_4X12_LIB4C
@@ -29632,7 +29632,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -29647,7 +29647,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X12_LIB
@@ -29660,7 +29660,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X12_LIB
@@ -29698,10 +29698,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // B
 	movq	ARG5, %r13  // ldb
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 	movq	ARG12, %r14  // n1
-	cmpl	$9, %r14d
+	cmpl	$ 9, %r14d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -29715,7 +29715,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r14  // n1
-	cmpl	$10, %r14d
+	cmpl	$ 10, %r14d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -29729,7 +29729,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r14  // n1
-	cmpl	$11, %r14d
+	cmpl	$ 11, %r14d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -29756,7 +29756,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -29771,7 +29771,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movq	ARG8, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG11, %r14 // m1
 	movq	ARG12, %r15 // n1
 
@@ -29786,7 +29786,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // D
 	movq	ARG10, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -29825,10 +29825,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_4X12_LIBCC
@@ -29841,7 +29841,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -29856,7 +29856,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X12_LIB
@@ -29869,7 +29869,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X12_LIB
@@ -29906,14 +29906,14 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$3, %r12d // sda*sizeof(double)
+	sall	$ 3, %r12d // sda*sizeof(double)
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb*sizeof(double)
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 	movq	ARG12, %r15  // m1
 
 	movq	ARG13, %rax  // n1
-	cmpl	$9, %eax
+	cmpl	$ 9, %eax
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -29927,7 +29927,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG13, %rax  // n1
-	cmpl	$10, %eax
+	cmpl	$ 10, %eax
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -29941,7 +29941,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG13, %rax  // n1
-	cmpl	$11, %eax
+	cmpl	$ 11, %eax
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -29968,7 +29968,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -29983,7 +29983,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -29998,7 +29998,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -30042,7 +30042,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // C
 	movq	ARG9, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -30058,10 +30058,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG6, %r12  // sdb
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG3, %r13  // A
 	movq	ARG4, %r14  // lda
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -30074,7 +30074,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 //	movq	ARG10, %r10 // D
 //	movq	ARG11, %r11 // ldd
-//	sall	$3, %r11d
+//	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 //	INNER_PREFETCH0_4X12_LIB
@@ -30089,7 +30089,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_TRAN_12X4_LIB
@@ -30109,7 +30109,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X12_LIB
@@ -30146,13 +30146,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11  // B
 	movq	ARG6, %r12  // sdb
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG3, %r13  // A
 	movq	ARG4, %r14  // lda
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG12, %r15  // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -30166,7 +30166,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -30180,7 +30180,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -30207,7 +30207,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH0_4X12_LIB
@@ -30222,7 +30222,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14   // m1
 	movq	ARG13, %r15   // n1
 
@@ -30244,7 +30244,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12   // m1
 	movq	ARG13, %r13   // n1
 
@@ -30283,10 +30283,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -30299,7 +30299,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG6, %r10 // C
 	movq	ARG7, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_12X4_LIB
@@ -30323,7 +30323,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -30360,13 +30360,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG12, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -30380,7 +30380,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -30394,7 +30394,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -30420,7 +30420,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG6, %r10 // C
 	movq	ARG7, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_12X4_LIB
@@ -30444,7 +30444,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -30483,10 +30483,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -30499,7 +30499,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG6, %r10 // C
 	movq	ARG7, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_12X4_LIB
@@ -30512,7 +30512,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d // ldd*sizeof(double)
+	sall	$ 3, %r11d // ldd*sizeof(double)
 	movq	ARG10, %r12  // inv_diag_D 
 
 #if MACRO_LEVEL>=1
@@ -30526,7 +30526,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -30563,13 +30563,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG12, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -30583,7 +30583,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -30597,7 +30597,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -30623,7 +30623,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG6, %r10 // C
 	movq	ARG7, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_12X4_LIB
@@ -30636,7 +30636,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10  // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d // ldd*sizeof(double)
+	sall	$ 3, %r11d // ldd*sizeof(double)
 	movq	ARG10, %r12  // inv_diag_D 
 
 #if MACRO_LEVEL>=1
@@ -30650,7 +30650,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -30689,10 +30689,10 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_12X4_LIB4C
@@ -30705,7 +30705,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG6, %r10 // C
 	movq	ARG7, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_12X4_LIB
@@ -30718,7 +30718,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d // ldd*sizeof(double)
+	sall	$ 3, %r11d // ldd*sizeof(double)
 	movq	ARG10, %r12  // inv_diag_D 
 
 #if MACRO_LEVEL>=1
@@ -30732,7 +30732,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -30769,13 +30769,13 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 	movq	ARG12, %r15  // n1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=2
@@ -30789,7 +30789,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 100:
 
 	movq	ARG12, %r15  // n1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=2
@@ -30803,7 +30803,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 101:
 
 	movq	ARG12, %r15  // n1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=2
@@ -30829,7 +30829,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG6, %r10 // C
 	movq	ARG7, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_12X4_LIB
@@ -30842,7 +30842,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10  // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d // ldd*sizeof(double)
+	sall	$ 3, %r11d // ldd*sizeof(double)
 	movq	ARG10, %r12  // inv_diag_D 
 
 #if MACRO_LEVEL>=1
@@ -30856,7 +30856,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG11, %r12 // m1
 	movq	ARG12, %r13 // n1
 
@@ -30895,7 +30895,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// loop over n
 //1001:
-	cmpq	$3, ARG1
+	cmpq	$ 3, ARG1
 	jle		1000f // consider clean-up loop
 1001:
 
@@ -30914,7 +30914,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // C
 	movq	ARG10, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH1_12X4_LIB
@@ -30930,17 +30930,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	salq	$5, %r12 // 4*sda*sizeof(double)
+	salq	$ 5, %r12 // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 
 	movq	ARG4, %r14  // A_p
-	cmpq	$4, ARG1
+	cmpq	$ 4, ARG1
 	cmoveq	ARG13, %r14  // A_p
 
 	movq	ARG7, %r15 // sdb
-	salq	$5, %r15 // 4*sdb*sizeof(double)
+	salq	$ 5, %r15 // 4*sdb*sizeof(double)
 	addq	ARG6, %r15 // B_p
-	cmpq	$4, ARG1
+	cmpq	$ 4, ARG1
 	cmoveq	ARG14, %r15  // B_p
 
 #if MACRO_LEVEL>=2
@@ -30974,7 +30974,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG3, %r10 // alpha
 	movq	ARG11, %r11   // D
 	movq	ARG12, %r12   // ldd
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_A1_STORE_12X4_LIB
@@ -30995,7 +30995,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12   // C
 	movq	ARG10, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -31008,7 +31008,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -31023,28 +31023,28 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// loop increments
 	// n
 //	movzx	%edi, %rdi //ARG1
-	subq	$4, ARG1
+	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG11
 
 
-	cmpq	$3, ARG1
+	cmpq	$ 3, ARG1
 	jg		1001b // main loop
 
 
 1000:
 	// TODO clean-up
-	cmpq	$0, ARG1
+	cmpq	$ 0, ARG1
 	jle		1000f // consider clean-up loop
 
 
@@ -31063,7 +31063,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // C
 	movq	ARG10, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 	// TODO prefetch vs
 
@@ -31081,7 +31081,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 	movq	ARG4, %r14  // A_p
 	addq	ARG6, %r15 // B_p
@@ -31101,8 +31101,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12   // C
 	movq	ARG10, %r13   // ldc
-	sall	$3, %r13d
-	movq	$12, %r14   // m1
+	sall	$ 3, %r13d
+	movq	$ 12, %r14   // m1
 	movq	ARG1, %r15   // n1
 
 #if MACRO_LEVEL>=1
@@ -31116,8 +31116,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // ldd
-	sall	$3, %r11d
-	movq	$12, %r12   // m1
+	sall	$ 3, %r11d
+	movq	$ 12, %r12   // m1
 	movq	ARG1, %r13   // n1
 
 #if MACRO_LEVEL>=1
@@ -31136,18 +31136,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 #if 0
 	// n
 //	movzx	%edi, %rdi //ARG1
-	subq	$4, ARG1
+	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG11
 #endif
 
@@ -31184,8 +31184,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// loop over n
 //1001:
-//	cmpq	$3, ARG1
-	cmpq	$4, ARG1
+//	cmpq	$ 3, ARG1
+	cmpq	$ 4, ARG1
 	jle		1000f // consider clean-up loop
 
 1001:
@@ -31205,7 +31205,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // C
 	movq	ARG10, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH1_12X4_LIB
@@ -31221,17 +31221,17 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	salq	$5, %r12 // 4*sda*sizeof(double)
+	salq	$ 5, %r12 // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 
 	movq	ARG4, %r14  // A_p
-	cmpq	$4, ARG1
+	cmpq	$ 4, ARG1
 	cmoveq	ARG13, %r14  // A_p
 
 	movq	ARG7, %r15 // sdb
-	salq	$5, %r15 // 4*sdb*sizeof(double)
+	salq	$ 5, %r15 // 4*sdb*sizeof(double)
 	addq	ARG6, %r15 // B_p
-	cmpq	$4, ARG1
+	cmpq	$ 4, ARG1
 	cmoveq	ARG14, %r15  // B_p
 
 #if MACRO_LEVEL>=2
@@ -31265,7 +31265,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG3, %r10 // alpha
 	movq	ARG11, %r11   // D
 	movq	ARG12, %r12   // ldd
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_A1_STORE_12X4_LIB
@@ -31286,7 +31286,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12   // C
 	movq	ARG10, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -31299,7 +31299,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -31314,30 +31314,30 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// loop increments
 	// n
 //	movzx	%edi, %rdi //ARG1
-	subq	$4, ARG1
+	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG11
 
 
-//	cmpq	$3, ARG1
-	cmpq	$4, ARG1
+//	cmpq	$ 3, ARG1
+	cmpq	$ 4, ARG1
 	jg		1001b // main loop
 
 
 1000:
 	// TODO clean-up
-	cmpq	$3, ARG1
-//	cmpq	$0, ARG1
+	cmpq	$ 3, ARG1
+//	cmpq	$ 0, ARG1
 	jle		1000f // consider clean-up loop
 
 
@@ -31355,7 +31355,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // C
 	movq	ARG10, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_PREFETCH1_12X4_LIB
@@ -31371,18 +31371,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	salq	$5, %r12 // 4*sda*sizeof(double)
+	salq	$ 5, %r12 // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 
 //	movq	ARG4, %r14  // A_p
-//	cmpq	$4, ARG1
+//	cmpq	$ 4, ARG1
 //	cmoveq	ARG13, %r14  // A_p
 	mov		ARG13, %r14  // A_p
 
 //	movq	ARG7, %r15 // sdb
-//	salq	$5, %r15 // 4*sdb*sizeof(double)
+//	salq	$ 5, %r15 // 4*sdb*sizeof(double)
 //	addq	ARG6, %r15 // B_p
-//	cmpq	$4, ARG1
+//	cmpq	$ 4, ARG1
 //	cmoveq	ARG14, %r15  // B_p
 	mov		ARG14, %r15  // B_p
 
@@ -31417,7 +31417,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG3, %r10 // alpha
 	movq	ARG11, %r11   // D
 	movq	ARG12, %r12   // ldd
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_A1_STORE_12X4_LIB
@@ -31438,7 +31438,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12   // C
 	movq	ARG10, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_12X4_LIB
@@ -31451,7 +31451,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_LIB
@@ -31467,18 +31467,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// loop increments
 	// n
 //	movzx	%edi, %rdi //ARG1
-	subq	$4, ARG1
+	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG11
 #endif
 
@@ -31489,7 +31489,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 1000:
 	// TODO clean-up
-	cmpq	$0, ARG1
+	cmpq	$ 0, ARG1
 	jle		2000f // consider clean-up loop
 
 
@@ -31508,7 +31508,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG9, %r10 // C
 	movq	ARG10, %r11 // ldc
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 	// TODO prefetch vs
 
@@ -31526,7 +31526,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 	movq	ARG4, %r14  // A_p
 	addq	ARG6, %r15 // B_p
@@ -31546,8 +31546,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12   // C
 	movq	ARG10, %r13   // ldc
-	sall	$3, %r13d
-	movq	$12, %r14   // m1
+	sall	$ 3, %r13d
+	movq	$ 12, %r14   // m1
 	movq	ARG1, %r15   // n1
 
 #if MACRO_LEVEL>=1
@@ -31561,8 +31561,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // ldd
-	sall	$3, %r11d
-	movq	$12, %r12   // m1
+	sall	$ 3, %r11d
+	movq	$ 12, %r12   // m1
 	movq	ARG1, %r13   // n1
 
 #if MACRO_LEVEL>=1
@@ -31581,18 +31581,18 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 #if 0
 	// n
 //	movzx	%edi, %rdi //ARG1
-	subq	$4, ARG1
+	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$5, %r10
+	salq	$ 5, %r10
 	addq	%r10, ARG11
 #endif
 

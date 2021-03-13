@@ -242,12 +242,12 @@ NAME:
 
 
 	// early return
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 
 	// consider clean-up loop
-	cmpl	$15, %r10d
+	cmpl	$ 15, %r10d
 	jle		0f
 
 
@@ -259,16 +259,16 @@ NAME:
 	vmovupd		64(%r11), %ymm0
 	vmovupd		96(%r11), %ymm0
 
-	subl	$16, %r10d
-	addq	$128, %r11
+	subl	$ 16, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$15, %r10d
+	cmpl	$ 15, %r10d
 	jg		1b
 
 0:
 
 	// consider clean-up loop
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f
 
 
@@ -277,15 +277,15 @@ NAME:
 
 	vmovupd		0(%r11), %ymm0
 
-	subl	$4, %r10d
-	addq	$32, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 0:
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 
@@ -294,10 +294,10 @@ NAME:
 
 	vmovsd		0(%r11), %xmm0
 
-	subl	$1, %r10d
-	addq	$8, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		1b
 
 
@@ -329,12 +329,12 @@ NAME:
 
 
 	// early return
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 
 	// consider clean-up loop
-	cmpl	$15, %r10d
+	cmpl	$ 15, %r10d
 	jle		0f
 
 
@@ -350,17 +350,17 @@ NAME:
 	vmovupd		96(%r11), %ymm0
 	vmovupd		%ymm0, 96(%r12)
 
-	subl	$16, %r10d
-	addq	$128, %r11
-	addq	$128, %r12
+	subl	$ 16, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r12
 
-	cmpl	$15, %r10d
+	cmpl	$ 15, %r10d
 	jg		1b
 
 0:
 
 	// consider clean-up loop
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f
 
 
@@ -370,16 +370,16 @@ NAME:
 	vmovupd		0(%r11), %ymm0
 	vmovupd		%ymm0, 0(%r12)
 
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	$32, %r12
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r12
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 0:
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 
@@ -389,11 +389,11 @@ NAME:
 	vmovsd		0(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r12)
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r12
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r12
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		1b
 
 

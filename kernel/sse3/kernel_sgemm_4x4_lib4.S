@@ -261,7 +261,7 @@ NAME:
 	FUN_START(inner_kernel_sgemm_nt_4x4_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// zero temp accumulators
@@ -274,7 +274,7 @@ NAME:
 	movaps		0(%r12), %xmm8
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -283,16 +283,16 @@ NAME:
 
 	// unroll 0
 	addps		%xmm10, %xmm2
-	pshufd		$0x39, %xmm8, %xmm9
+	pshufd		$ 0x39, %xmm8, %xmm9
 	mulps		%xmm12, %xmm8
 
 	addps		%xmm11, %xmm3
-	pshufd		$0x39, %xmm9, %xmm10
+	pshufd		$ 0x39, %xmm9, %xmm10
 	mulps		%xmm12, %xmm9
 
 	addps		%xmm8, %xmm0
 	movaps		16(%r12), %xmm8
-	pshufd		$0x39, %xmm10, %xmm11
+	pshufd		$ 0x39, %xmm10, %xmm11
 	mulps		%xmm12, %xmm10
 
 	addps		%xmm9, %xmm1
@@ -302,17 +302,17 @@ NAME:
 
 	// unroll 1
 	addps		%xmm10, %xmm2
-	pshufd		$0x39, %xmm8, %xmm9
+	pshufd		$ 0x39, %xmm8, %xmm9
 	mulps		%xmm13, %xmm8
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	addps		%xmm11, %xmm3
-	pshufd		$0x39, %xmm9, %xmm10
+	pshufd		$ 0x39, %xmm9, %xmm10
 	mulps		%xmm13, %xmm9
 
 	addps		%xmm8, %xmm0
 	movaps		32(%r12), %xmm8
-	pshufd		$0x39, %xmm10, %xmm11
+	pshufd		$ 0x39, %xmm10, %xmm11
 	mulps		%xmm13, %xmm10
 
 	addps		%xmm9, %xmm1
@@ -322,16 +322,16 @@ NAME:
 
 	// unroll 2
 	addps		%xmm10, %xmm2
-	pshufd		$0x39, %xmm8, %xmm9
+	pshufd		$ 0x39, %xmm8, %xmm9
 	mulps		%xmm12, %xmm8
 
 	addps		%xmm11, %xmm3
-	pshufd		$0x39, %xmm9, %xmm10
+	pshufd		$ 0x39, %xmm9, %xmm10
 	mulps		%xmm12, %xmm9
 
 	addps		%xmm8, %xmm0
 	movaps		48(%r12), %xmm8
-	pshufd		$0x39, %xmm10, %xmm11
+	pshufd		$ 0x39, %xmm10, %xmm11
 	mulps		%xmm12, %xmm10
 
 	addps		%xmm9, %xmm1
@@ -341,47 +341,47 @@ NAME:
 
 	// unroll 3
 	addps		%xmm10, %xmm2
-	pshufd		$0x39, %xmm8, %xmm9
+	pshufd		$ 0x39, %xmm8, %xmm9
 	mulps		%xmm13, %xmm8
 
 	addps		%xmm11, %xmm3
-	pshufd		$0x39, %xmm9, %xmm10
+	pshufd		$ 0x39, %xmm9, %xmm10
 	mulps		%xmm13, %xmm9
 
 	addps		%xmm8, %xmm0
 	movaps		64(%r12), %xmm8
-	pshufd		$0x39, %xmm10, %xmm11
+	pshufd		$ 0x39, %xmm10, %xmm11
 	mulps		%xmm13, %xmm10
 
 	addps		%xmm9, %xmm1
 	mulps		%xmm13, %xmm11
 	movaps		80(%r11), %xmm13
 
-	addq		$64, %r11 // A += 16
-	addq		$64, %r12 // B += 16
+	addq		$ 64, %r11 // A += 16
+	addq		$ 64, %r12 // B += 16
 
-	cmpl		$4, %r10d
+	cmpl		$ 4, %r10d
 	jg		1b // main loop 
 
 
 0: // consider clean4-up
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 
 	// unroll 0
 	addps		%xmm10, %xmm2
-	pshufd		$0x39, %xmm8, %xmm9
+	pshufd		$ 0x39, %xmm8, %xmm9
 	mulps		%xmm12, %xmm8
 
 	addps		%xmm11, %xmm3
-	pshufd		$0x39, %xmm9, %xmm10
+	pshufd		$ 0x39, %xmm9, %xmm10
 	mulps		%xmm12, %xmm9
 
 	addps		%xmm8, %xmm0
 	movaps		16(%r12), %xmm8
-	pshufd		$0x39, %xmm10, %xmm11
+	pshufd		$ 0x39, %xmm10, %xmm11
 	mulps		%xmm12, %xmm10
 
 	addps		%xmm9, %xmm1
@@ -391,17 +391,17 @@ NAME:
 
 	// unroll 1
 	addps		%xmm10, %xmm2
-	pshufd		$0x39, %xmm8, %xmm9
+	pshufd		$ 0x39, %xmm8, %xmm9
 	mulps		%xmm13, %xmm8
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	addps		%xmm11, %xmm3
-	pshufd		$0x39, %xmm9, %xmm10
+	pshufd		$ 0x39, %xmm9, %xmm10
 	mulps		%xmm13, %xmm9
 
 	addps		%xmm8, %xmm0
 	movaps		32(%r12), %xmm8
-	pshufd		$0x39, %xmm10, %xmm11
+	pshufd		$ 0x39, %xmm10, %xmm11
 	mulps		%xmm13, %xmm10
 
 	addps		%xmm9, %xmm1
@@ -411,16 +411,16 @@ NAME:
 
 	// unroll 2
 	addps		%xmm10, %xmm2
-	pshufd		$0x39, %xmm8, %xmm9
+	pshufd		$ 0x39, %xmm8, %xmm9
 	mulps		%xmm12, %xmm8
 
 	addps		%xmm11, %xmm3
-	pshufd		$0x39, %xmm9, %xmm10
+	pshufd		$ 0x39, %xmm9, %xmm10
 	mulps		%xmm12, %xmm9
 
 	addps		%xmm8, %xmm0
 	movaps		48(%r12), %xmm8
-	pshufd		$0x39, %xmm10, %xmm11
+	pshufd		$ 0x39, %xmm10, %xmm11
 	mulps		%xmm12, %xmm10
 
 	addps		%xmm9, %xmm1
@@ -430,24 +430,24 @@ NAME:
 
 	// unroll 3
 	addps		%xmm10, %xmm2
-	pshufd		$0x39, %xmm8, %xmm9
+	pshufd		$ 0x39, %xmm8, %xmm9
 	mulps		%xmm13, %xmm8
 
 	addps		%xmm11, %xmm3
-	pshufd		$0x39, %xmm9, %xmm10
+	pshufd		$ 0x39, %xmm9, %xmm10
 	mulps		%xmm13, %xmm9
 
 	addps		%xmm8, %xmm0
 //	movaps		64(%r12), %xmm8
-	pshufd		$0x39, %xmm10, %xmm11
+	pshufd		$ 0x39, %xmm10, %xmm11
 	mulps		%xmm13, %xmm10
 
 	addps		%xmm9, %xmm1
 	mulps		%xmm13, %xmm11
 //	movaps		80(%r11), %xmm13
 
-	addq		$64, %r11 // A += 16
-	addq		$64, %r12 // B += 16
+	addq		$ 64, %r11 // A += 16
+	addq		$ 64, %r12 // B += 16
 
 	// clean accumulators
 	addps		%xmm10, %xmm2
@@ -459,7 +459,7 @@ NAME:
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -471,25 +471,25 @@ NAME:
 	movaps		0(%r12), %xmm8
 
 	addps		%xmm10, %xmm2
-	pshufd		$0x39, %xmm8, %xmm9
+	pshufd		$ 0x39, %xmm8, %xmm9
 	mulps		%xmm12, %xmm8
 
 	addps		%xmm11, %xmm3
-	pshufd		$0x39, %xmm9, %xmm10
+	pshufd		$ 0x39, %xmm9, %xmm10
 	mulps		%xmm12, %xmm9
 
 	addps		%xmm8, %xmm0
-	pshufd		$0x39, %xmm10, %xmm11
+	pshufd		$ 0x39, %xmm10, %xmm11
 	mulps		%xmm12, %xmm10
 
 	addps		%xmm9, %xmm1
 	mulps		%xmm12, %xmm11
 
-	subl	$1, %r10d
-	addq	$16, %r12
-	addq	$16, %r11
+	subl	$ 1, %r10d
+	addq	$ 16, %r12
+	addq	$ 16, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 
@@ -542,13 +542,13 @@ NAME:
 	FUN_START(inner_kernel_sgemm_nn_4x4_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// prefetch
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -561,22 +561,22 @@ NAME:
 	movaps		0(%r11), %xmm12
 
 	movaps		0(%r12), %xmm8
-	pshufd		$0x00, %xmm8, %xmm14
+	pshufd		$ 0x00, %xmm8, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm0
 
 	movaps		16(%r12), %xmm9
-	pshufd		$0x00, %xmm9, %xmm14
+	pshufd		$ 0x00, %xmm9, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm1
 
 	movaps		32(%r12), %xmm10
-	pshufd		$0x00, %xmm10, %xmm14
+	pshufd		$ 0x00, %xmm10, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm2
 
 	movaps		48(%r12), %xmm11
-	pshufd		$0x00, %xmm11, %xmm14
+	pshufd		$ 0x00, %xmm11, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm3
 
@@ -584,19 +584,19 @@ NAME:
 	// unroll 1
 	movaps		16(%r11), %xmm12
 
-	pshufd		$0x55, %xmm8, %xmm14
+	pshufd		$ 0x55, %xmm8, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm0
 
-	pshufd		$0x55, %xmm9, %xmm14
+	pshufd		$ 0x55, %xmm9, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm1
 
-	pshufd		$0x55, %xmm10, %xmm14
+	pshufd		$ 0x55, %xmm10, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm2
 
-	pshufd		$0x55, %xmm11, %xmm14
+	pshufd		$ 0x55, %xmm11, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm3
 
@@ -604,19 +604,19 @@ NAME:
 	// unroll 2
 	movaps		32(%r11), %xmm12
 
-	pshufd		$0xaa, %xmm8, %xmm14
+	pshufd		$ 0xaa, %xmm8, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm0
 
-	pshufd		$0xaa, %xmm9, %xmm14
+	pshufd		$ 0xaa, %xmm9, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm1
 
-	pshufd		$0xaa, %xmm10, %xmm14
+	pshufd		$ 0xaa, %xmm10, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm2
 
-	pshufd		$0xaa, %xmm11, %xmm14
+	pshufd		$ 0xaa, %xmm11, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm3
 
@@ -624,56 +624,56 @@ NAME:
 	// unroll 3
 	movaps		48(%r11), %xmm12
 
-	pshufd		$0xff, %xmm8, %xmm14
+	pshufd		$ 0xff, %xmm8, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm0
 
-	pshufd		$0xff, %xmm9, %xmm14
+	pshufd		$ 0xff, %xmm9, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm1
 
-	pshufd		$0xff, %xmm10, %xmm14
+	pshufd		$ 0xff, %xmm10, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm2
 
-	pshufd		$0xff, %xmm11, %xmm14
+	pshufd		$ 0xff, %xmm11, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm3
 
 
-	subl	$4, %r10d
-	addq	$64, %r11 // B += ...
+	subl	$ 4, %r10d
+	addq	$ 64, %r11 // B += ...
 	addq	%r13, %r12 // B += ...
 
-	cmpl		$4, %r10d
+	cmpl		$ 4, %r10d
 	jg		1b // main loop 
 
 
 0: // consider clean4-up
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
 	movaps		0(%r11), %xmm12
 
 	movaps		0(%r12), %xmm8
-	pshufd		$0x00, %xmm8, %xmm14
+	pshufd		$ 0x00, %xmm8, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm0
 
 	movaps		16(%r12), %xmm9
-	pshufd		$0x00, %xmm9, %xmm14
+	pshufd		$ 0x00, %xmm9, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm1
 
 	movaps		32(%r12), %xmm10
-	pshufd		$0x00, %xmm10, %xmm14
+	pshufd		$ 0x00, %xmm10, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm2
 
 	movaps		48(%r12), %xmm11
-	pshufd		$0x00, %xmm11, %xmm14
+	pshufd		$ 0x00, %xmm11, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm3
 
@@ -681,19 +681,19 @@ NAME:
 	// unroll 1
 	movaps		16(%r11), %xmm12
 
-	pshufd		$0x55, %xmm8, %xmm14
+	pshufd		$ 0x55, %xmm8, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm0
 
-	pshufd		$0x55, %xmm9, %xmm14
+	pshufd		$ 0x55, %xmm9, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm1
 
-	pshufd		$0x55, %xmm10, %xmm14
+	pshufd		$ 0x55, %xmm10, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm2
 
-	pshufd		$0x55, %xmm11, %xmm14
+	pshufd		$ 0x55, %xmm11, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm3
 
@@ -701,19 +701,19 @@ NAME:
 	// unroll 2
 	movaps		32(%r11), %xmm12
 
-	pshufd		$0xaa, %xmm8, %xmm14
+	pshufd		$ 0xaa, %xmm8, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm0
 
-	pshufd		$0xaa, %xmm9, %xmm14
+	pshufd		$ 0xaa, %xmm9, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm1
 
-	pshufd		$0xaa, %xmm10, %xmm14
+	pshufd		$ 0xaa, %xmm10, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm2
 
-	pshufd		$0xaa, %xmm11, %xmm14
+	pshufd		$ 0xaa, %xmm11, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm3
 
@@ -721,25 +721,25 @@ NAME:
 	// unroll 3
 	movaps		48(%r11), %xmm12
 
-	pshufd		$0xff, %xmm8, %xmm14
+	pshufd		$ 0xff, %xmm8, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm0
 
-	pshufd		$0xff, %xmm9, %xmm14
+	pshufd		$ 0xff, %xmm9, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm1
 
-	pshufd		$0xff, %xmm10, %xmm14
+	pshufd		$ 0xff, %xmm10, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm2
 
-	pshufd		$0xff, %xmm11, %xmm14
+	pshufd		$ 0xff, %xmm11, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm3
 
 
-	subl	$4, %r10d
-	addq	$64, %r11 // B += ...
+	subl	$ 4, %r10d
+	addq	$ 64, %r11 // B += ...
 	addq	%r13, %r12 // B += ...
 
 	// clean accumulators
@@ -750,7 +750,7 @@ NAME:
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -761,31 +761,31 @@ NAME:
 	movaps		0(%r11), %xmm12
 
 	movss		0(%r12), %xmm8
-	pshufd		$0x00, %xmm8, %xmm14
+	pshufd		$ 0x00, %xmm8, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm0
 
 	movss		16(%r12), %xmm9
-	pshufd		$0x00, %xmm9, %xmm14
+	pshufd		$ 0x00, %xmm9, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm1
 
 	movss		32(%r12), %xmm10
-	pshufd		$0x00, %xmm10, %xmm14
+	pshufd		$ 0x00, %xmm10, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm2
 
 	movss		48(%r12), %xmm11
-	pshufd		$0x00, %xmm11, %xmm14
+	pshufd		$ 0x00, %xmm11, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm3
 
 
-	subl	$1, %r10d
-	addq	$16, %r11
-	addq	$4, %r12
+	subl	$ 1, %r10d
+	addq	$ 16, %r11
+	addq	$ 4, %r12
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 
@@ -841,13 +841,13 @@ NAME:
 	FUN_START(inner_edge_sgemm_nn_4x4_lib4)
 #endif
 	
-	cmpl			$0, %r14d // offset==0
+	cmpl			$ 0, %r14d // offset==0
 	jle				2f // end
 
-	cmpl			$0, %r10d // k==0
+	cmpl			$ 0, %r10d // k==0
 	jle				2f // end
 
-	movl			$4, %r15d
+	movl			$ 4, %r15d
 	subl			%r14d, %r15d // 4-offsetB
 	cmpl			%r10d, %r15d
 //	jle				0f
@@ -856,46 +856,46 @@ NAME:
 	cmovgl			%r10d, %r15d // kend=min(k,4-offsetB)
 
 	movl			%r14d, %eax
-	sall			$2, %eax // offsetB*sizeof(float)
+	sall			$ 2, %eax // offsetB*sizeof(float)
 	addq			%rax, %r12 // B+offsetB*sizeof(float)
 
 1:
 	movaps		0(%r11), %xmm12
 
 	movss		0(%r12), %xmm8
-	pshufd		$0x00, %xmm8, %xmm14
+	pshufd		$ 0x00, %xmm8, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm0
 
 	movss		16(%r12), %xmm9
-	pshufd		$0x00, %xmm9, %xmm14
+	pshufd		$ 0x00, %xmm9, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm1
 
 	movss		32(%r12), %xmm10
-	pshufd		$0x00, %xmm10, %xmm14
+	pshufd		$ 0x00, %xmm10, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm2
 
 	movss		48(%r12), %xmm11
-	pshufd		$0x00, %xmm11, %xmm14
+	pshufd		$ 0x00, %xmm11, %xmm14
 	mulps		%xmm12, %xmm14
 	addps		%xmm14, %xmm3
 
 
-	subl			$1, %r10d // k-1
-	subl			$1, %r15d // kend-1
-	addq			$16, %r11 // A+1*bs*sizeof(float)
-	addq			$4, %r12 // B+1*sizeof(float)
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 16, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
 
-	cmpl			$0, %r15d
+	cmpl			$ 0, %r15d
 	jg				1b
 
-	cmpl			$0, %r10d
+	cmpl			$ 0, %r10d
 	jle				2f // end
 
 	addq			%r13, %r12
-	subq			$16, %r12 // B+bs*(sdb-1)*sizeof(float)
+	subq			$ 16, %r12 // B+bs*(sdb-1)*sizeof(float)
 
 2:
 
@@ -941,21 +941,21 @@ NAME:
 #endif
 
 	movaps		%xmm1, %xmm12
-	shufps		$0xd8, %xmm0, %xmm1
-	shufps		$0xd8, %xmm3, %xmm0
-	shufps		$0xd8, %xmm2, %xmm3
-	shufps		$0xd8, %xmm12, %xmm2
+	shufps		$ 0xd8, %xmm0, %xmm1
+	shufps		$ 0xd8, %xmm3, %xmm0
+	shufps		$ 0xd8, %xmm2, %xmm3
+	shufps		$ 0xd8, %xmm12, %xmm2
 
 	movaps		%xmm0, %xmm12
-	shufps		$0xd8, %xmm2, %xmm0
-	shufps		$0xd8, %xmm12, %xmm2
+	shufps		$ 0xd8, %xmm2, %xmm0
+	shufps		$ 0xd8, %xmm12, %xmm2
 	movaps		%xmm1, %xmm12
-	shufps		$0xd8, %xmm3, %xmm1
-	shufps		$0xd8, %xmm12, %xmm3
+	shufps		$ 0xd8, %xmm3, %xmm1
+	shufps		$ 0xd8, %xmm12, %xmm3
 
 	// alpha
 	movss		0(%r10), %xmm15
-	shufps		$0x00, %xmm15, %xmm15
+	shufps		$ 0x00, %xmm15, %xmm15
 
 	mulps		%xmm15, %xmm0
 	mulps		%xmm15, %xmm1
@@ -964,7 +964,7 @@ NAME:
 
 	// beta
 	movss		0(%r11), %xmm14
-	shufps		$0x00, %xmm14, %xmm14
+	shufps		$ 0x00, %xmm14, %xmm14
 
 	xorps		%xmm15, %xmm15 // 0.0
 	ucomiss		%xmm15, %xmm14 // beta==0.0 ?
@@ -1028,7 +1028,7 @@ NAME:
 
 	// alpha
 	movss		0(%r10), %xmm15
-	shufps		$0x00, %xmm15, %xmm15
+	shufps		$ 0x00, %xmm15, %xmm15
 
 	mulps		%xmm15, %xmm0
 	mulps		%xmm15, %xmm1
@@ -1037,7 +1037,7 @@ NAME:
 
 	// beta
 	movss		0(%r11), %xmm14
-	shufps		$0x00, %xmm14, %xmm14
+	shufps		$ 0x00, %xmm14, %xmm14
 
 	xorps		%xmm15, %xmm15 // 0.0
 	ucomiss		%xmm15, %xmm14 // beta==0.0 ?
@@ -1191,7 +1191,7 @@ NAME:
 	movq	ARG3, %r11  // A
 	movq	ARG5, %r12  // B
 	movq	ARG6, %r13 // sdb
-	sall	$4, %r13d // 4*sdb*sizeof(float)
+	sall	$ 4, %r13d // 4*sdb*sizeof(float)
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1

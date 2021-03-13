@@ -71,13 +71,13 @@ inner_kernel_gemm_add_nt_8x4_lib:
 #endif
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -159,15 +159,15 @@ inner_kernel_gemm_add_nt_8x4_lib:
 	addq	%r12, %r11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -242,14 +242,14 @@ inner_kernel_gemm_add_nt_8x4_lib:
 	addq	%r12, %r11
 	addq	%r14, %r13
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -273,9 +273,9 @@ inner_kernel_gemm_add_nt_8x4_lib:
 	addq	%r12, %r11
 	addq	%r14, %r13
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -329,7 +329,7 @@ inner_kernel_gemm_add_nn_8x4_lib:
 #endif
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	movq	%r13, %r15
@@ -339,7 +339,7 @@ inner_kernel_gemm_add_nn_8x4_lib:
 	// preload
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -417,17 +417,17 @@ inner_kernel_gemm_add_nn_8x4_lib:
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	addq	%r12, %r11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// unroll 0
@@ -498,16 +498,16 @@ inner_kernel_gemm_add_nn_8x4_lib:
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	addq	%r12, %r11
 
-	subl	$4, %r10d
-	addq	$32, %r13
-	addq	$32, %r15
+	subl	$ 4, %r10d
+	addq	$ 32, %r13
+	addq	$ 32, %r15
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -530,11 +530,11 @@ inner_kernel_gemm_add_nn_8x4_lib:
 	vfmadd231pd		%ymm14, %ymm12, %ymm7
 	addq	%r12, %r11
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$8, %r15
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 8, %r15
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -590,10 +590,10 @@ kernel_dgemm_nt_8x4_lib:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB
@@ -612,7 +612,7 @@ kernel_dgemm_nt_8x4_lib:
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X4_LIB
@@ -629,7 +629,7 @@ kernel_dgemm_nt_8x4_lib:
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_LIB
@@ -690,10 +690,10 @@ kernel_dgemm_nt_8x4_vs_lib:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB
@@ -712,7 +712,7 @@ kernel_dgemm_nt_8x4_vs_lib:
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -731,7 +731,7 @@ kernel_dgemm_nt_8x4_vs_lib:
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 
@@ -794,10 +794,10 @@ kernel_dgemm_nn_8x4_lib:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NN_8X4_LIB
@@ -816,7 +816,7 @@ kernel_dgemm_nn_8x4_lib:
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X4_LIB
@@ -833,7 +833,7 @@ kernel_dgemm_nn_8x4_lib:
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X4_LIB
@@ -898,10 +898,10 @@ kernel_dgemm_nn_8x4_vs_lib:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NN_8X4_LIB
@@ -920,7 +920,7 @@ kernel_dgemm_nn_8x4_vs_lib:
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n1
 
@@ -939,7 +939,7 @@ kernel_dgemm_nn_8x4_vs_lib:
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 	movq	ARG12, %r12 // m1
 	movq	ARG13, %r13 // n1
 

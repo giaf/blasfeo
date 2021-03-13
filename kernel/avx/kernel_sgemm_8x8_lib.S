@@ -77,25 +77,25 @@
 	FUN_START(inner_blend_scale_ab_8x8_lib)
 #endif
 	
-	vblendps	$0xaa, %ymm1, %ymm0, %ymm8 // 1010 1010
-	vblendps	$0x55, %ymm1, %ymm0, %ymm9 // 0101 0101
-	vblendps	$0xaa, %ymm3, %ymm2, %ymm10
-	vblendps	$0x55, %ymm3, %ymm2, %ymm11
+	vblendps	$ 0xaa, %ymm1, %ymm0, %ymm8 // 1010 1010
+	vblendps	$ 0x55, %ymm1, %ymm0, %ymm9 // 0101 0101
+	vblendps	$ 0xaa, %ymm3, %ymm2, %ymm10
+	vblendps	$ 0x55, %ymm3, %ymm2, %ymm11
 
-	vblendps	$0xcc, %ymm11, %ymm8, %ymm0 // 1100 1100
-	vblendps	$0x33, %ymm11, %ymm8, %ymm2 // 0011 0011
-	vblendps	$0xcc, %ymm10, %ymm9, %ymm1
-	vblendps	$0x33, %ymm10, %ymm9, %ymm3
+	vblendps	$ 0xcc, %ymm11, %ymm8, %ymm0 // 1100 1100
+	vblendps	$ 0x33, %ymm11, %ymm8, %ymm2 // 0011 0011
+	vblendps	$ 0xcc, %ymm10, %ymm9, %ymm1
+	vblendps	$ 0x33, %ymm10, %ymm9, %ymm3
 
-	vblendps	$0xaa, %ymm5, %ymm4, %ymm8 // 1010 1010
-	vblendps	$0x55, %ymm5, %ymm4, %ymm9 // 0101 0101
-	vblendps	$0xaa, %ymm7, %ymm6, %ymm10
-	vblendps	$0x55, %ymm7, %ymm6, %ymm11
+	vblendps	$ 0xaa, %ymm5, %ymm4, %ymm8 // 1010 1010
+	vblendps	$ 0x55, %ymm5, %ymm4, %ymm9 // 0101 0101
+	vblendps	$ 0xaa, %ymm7, %ymm6, %ymm10
+	vblendps	$ 0x55, %ymm7, %ymm6, %ymm11
 
-	vblendps	$0xcc, %ymm11, %ymm8, %ymm4 // 1100 1100
-	vblendps	$0x33, %ymm11, %ymm8, %ymm6 // 0011 0011
-	vblendps	$0xcc, %ymm10, %ymm9, %ymm5
-	vblendps	$0x33, %ymm10, %ymm9, %ymm7
+	vblendps	$ 0xcc, %ymm11, %ymm8, %ymm4 // 1100 1100
+	vblendps	$ 0x33, %ymm11, %ymm8, %ymm6 // 0011 0011
+	vblendps	$ 0xcc, %ymm10, %ymm9, %ymm5
+	vblendps	$ 0x33, %ymm10, %ymm9, %ymm7
 
 	// alpha
 	vbroadcastss	0(%r10), %ymm15
@@ -189,25 +189,25 @@
 	FUN_START(inner_blend_scale_ab_8x8_vs_lib)
 #endif
 
-	vblendps	$0xaa, %ymm1, %ymm0, %ymm8 // 1010 1010
-	vblendps	$0x55, %ymm1, %ymm0, %ymm9 // 0101 0101
-	vblendps	$0xaa, %ymm3, %ymm2, %ymm10
-	vblendps	$0x55, %ymm3, %ymm2, %ymm11
+	vblendps	$ 0xaa, %ymm1, %ymm0, %ymm8 // 1010 1010
+	vblendps	$ 0x55, %ymm1, %ymm0, %ymm9 // 0101 0101
+	vblendps	$ 0xaa, %ymm3, %ymm2, %ymm10
+	vblendps	$ 0x55, %ymm3, %ymm2, %ymm11
 
-	vblendps	$0xcc, %ymm11, %ymm8, %ymm0 // 1100 1100
-	vblendps	$0x33, %ymm11, %ymm8, %ymm2 // 0011 0011
-	vblendps	$0xcc, %ymm10, %ymm9, %ymm1
-	vblendps	$0x33, %ymm10, %ymm9, %ymm3
+	vblendps	$ 0xcc, %ymm11, %ymm8, %ymm0 // 1100 1100
+	vblendps	$ 0x33, %ymm11, %ymm8, %ymm2 // 0011 0011
+	vblendps	$ 0xcc, %ymm10, %ymm9, %ymm1
+	vblendps	$ 0x33, %ymm10, %ymm9, %ymm3
 
-	vblendps	$0xaa, %ymm5, %ymm4, %ymm12
-	vblendps	$0x55, %ymm5, %ymm4, %ymm13
-	vblendps	$0xaa, %ymm7, %ymm6, %ymm14
-	vblendps	$0x55, %ymm7, %ymm6, %ymm15
+	vblendps	$ 0xaa, %ymm5, %ymm4, %ymm12
+	vblendps	$ 0x55, %ymm5, %ymm4, %ymm13
+	vblendps	$ 0xaa, %ymm7, %ymm6, %ymm14
+	vblendps	$ 0x55, %ymm7, %ymm6, %ymm15
 
-	vblendps	$0xcc, %ymm15, %ymm12, %ymm4
-	vblendps	$0x33, %ymm15, %ymm12, %ymm6
-	vblendps	$0xcc, %ymm14, %ymm13, %ymm5
-	vblendps	$0x33, %ymm14, %ymm13, %ymm7
+	vblendps	$ 0xcc, %ymm15, %ymm12, %ymm4
+	vblendps	$ 0x33, %ymm15, %ymm12, %ymm6
+	vblendps	$ 0xcc, %ymm14, %ymm13, %ymm5
+	vblendps	$ 0x33, %ymm14, %ymm13, %ymm7
 
 	// alpha
 	vbroadcastss	0(%r10), %ymm15
@@ -235,8 +235,8 @@
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm13
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm13, %ymm13
 
 
@@ -244,43 +244,43 @@
 	vmulps		%ymm15, %ymm14, %ymm15
 	vaddps		%ymm0, %ymm15, %ymm0
 	addq		%r13, %r12
-	cmpl		$2, %r15d
+	cmpl		$ 2, %r15d
 	jl			0f // end
 	vmaskmovps	0(%r12), %ymm13, %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
 	vaddps		%ymm1, %ymm15, %ymm1
 	addq		%r13, %r12
-	cmpl		$3, %r15d
+	cmpl		$ 3, %r15d
 	jl			0f // end
 	vmaskmovps	0(%r12), %ymm13, %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
 	vaddps		%ymm2, %ymm15, %ymm2
 	addq		%r13, %r12
-	cmpl		$4, %r15d
+	cmpl		$ 4, %r15d
 	jl			0f // end
 	vmaskmovps	0(%r12), %ymm13, %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
 	vaddps		%ymm3, %ymm15, %ymm3
 	addq		%r13, %r12
-	cmpl		$5, %r15d
+	cmpl		$ 5, %r15d
 	jl			0f // end
 	vmaskmovps	0(%r12), %ymm13, %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
 	vaddps		%ymm4, %ymm15, %ymm4
 	addq		%r13, %r12
-	cmpl		$6, %r15d
+	cmpl		$ 6, %r15d
 	jl			0f // end
 	vmaskmovps	0(%r12), %ymm13, %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
 	vaddps		%ymm5, %ymm15, %ymm5
 	addq		%r13, %r12
-	cmpl		$7, %r15d
+	cmpl		$ 7, %r15d
 	jl			0f // end
 	vmaskmovps	0(%r12), %ymm13, %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
 	vaddps		%ymm6, %ymm15, %ymm6
 	addq		%r13, %r12
-	cmpl		$7, %r15d
+	cmpl		$ 7, %r15d
 	je			0f // end
 	vmaskmovps	0(%r12), %ymm13, %ymm15
 	vmulps		%ymm15, %ymm14, %ymm15
@@ -386,38 +386,38 @@
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm14, %xmm14, %xmm14
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vshufps		$ 0x00, %xmm14, %xmm14, %xmm14
+	vinsertf128	$ 0x1, %xmm14, %ymm14, %ymm14
 	vsubps		%ymm14, %ymm12, %ymm14
 
 	// offset==0
 	vmaskmovps	%ymm0, %ymm14, 0(%r10)
 	addq		%r11, %r10
-	cmpl		$2, %r13d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmaskmovps	%ymm1, %ymm14, 0(%r10)
 	addq		%r11, %r10
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmaskmovps	%ymm2, %ymm14, 0(%r10)
 	addq		%r11, %r10
-	cmpl		$4, %r13d
+	cmpl		$ 4, %r13d
 	jl			0f // end
 	vmaskmovps	%ymm3, %ymm14, 0(%r10)
 	addq		%r11, %r10
-	cmpl		$5, %r13d
+	cmpl		$ 5, %r13d
 	jl			0f // end
 	vmaskmovps	%ymm4, %ymm14, 0(%r10)
 	addq		%r11, %r10
-	cmpl		$6, %r13d
+	cmpl		$ 6, %r13d
 	jl			0f // end
 	vmaskmovps	%ymm5, %ymm14, 0(%r10)
 	addq		%r11, %r10
-	cmpl		$7, %r13d
+	cmpl		$ 7, %r13d
 	jl			0f // end
 	vmaskmovps	%ymm6, %ymm14, 0(%r10)
 	addq		%r11, %r10
-	cmpl		$7, %r13d
+	cmpl		$ 7, %r13d
 	je			0f // end
 	vmaskmovps	%ymm7, %ymm14, 0(%r10)
 //	addq		%r11, %r10
@@ -467,7 +467,7 @@
 	movq	ARG5, %r11 // beta
 	movq	ARG6, %r12   // C
 	movq	ARG7, %r13   // ldc
-	sall	$2, %r13d
+	sall	$ 2, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_8X8_LIB
@@ -480,7 +480,7 @@
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X8_LIB
@@ -531,7 +531,7 @@
 	movq	ARG5, %r11 // beta
 	movq	ARG6, %r12   // C
 	movq	ARG7, %r13   // ldc
-	sall	$2, %r13d
+	sall	$ 2, %r13d
 	movq	ARG10, %r14 // m1
 	movq	ARG11, %r15 // n1
 
@@ -546,7 +546,7 @@
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 	movq	ARG10, %r12 // m1
 	movq	ARG11, %r13 // n1
 

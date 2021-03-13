@@ -247,12 +247,12 @@ NAME:
 
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	leaq	0(%r12, %r12, 2), %r14
 
-	cmpl	$8, %r10d
+	cmpl	$ 8, %r10d
 	jle		2f // clean-up loop
 
 
@@ -269,29 +269,29 @@ NAME:
 
 	vmovupd		0(%r11), %xmm0
 	vmovupd		0(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
 	vmovupd		0(%r11, %r12), %xmm1
 	vmovupd		0(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vinsertf128	$ 0x1, %xmm15, %ymm1, %ymm1
 	vmovupd		16(%r11), %xmm2
 	vmovupd		16(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vinsertf128	$ 0x1, %xmm15, %ymm2, %ymm2
 	vmovupd		16(%r11, %r12), %xmm3
 	vmovupd		16(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+	vinsertf128	$ 0x1, %xmm15, %ymm3, %ymm3
 
 	vmovupd		32+0(%r11), %xmm4
 	vmovupd		32+0(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm4, %ymm4
+	vinsertf128	$ 0x1, %xmm15, %ymm4, %ymm4
 	vmovupd		32+0(%r11, %r12), %xmm5
 	vmovupd		32+0(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm5, %ymm5
+	vinsertf128	$ 0x1, %xmm15, %ymm5, %ymm5
 	vmovupd		32+16(%r11), %xmm6
 	vmovupd		32+16(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm6, %ymm6
+	vinsertf128	$ 0x1, %xmm15, %ymm6, %ymm6
 	vmovupd		32+16(%r11, %r12), %xmm7
 	vmovupd		32+16(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm7, %ymm7
+	vinsertf128	$ 0x1, %xmm15, %ymm7, %ymm7
 
 	prefetcht0	1*256(%r13) // software prefetch
 	prefetcht0	1*256+64(%r13) // software prefetch
@@ -317,44 +317,44 @@ NAME:
 	vunpckhpd	%ymm7, %ymm6, %ymm11
 	vmovapd		%ymm11, 128+96(%r13)
 
-	subl	$8, %r10d
-	addq	$64, %r11
-	addq	$256, %r13
+	subl	$ 8, %r10d
+	addq	$ 64, %r11
+	addq	$ 256, %r13
 
-	cmpl	$7, %r10d
+	cmpl	$ 7, %r10d
 	jg		1b
 
 2: // consider clean-up
 
-	cmpl	$7, %r10d
+	cmpl	$ 7, %r10d
 	jle		2f // consider clean-up loop
 
 
 	vmovupd		0(%r11), %xmm0
 	vmovupd		0(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
 	vmovupd		0(%r11, %r12), %xmm1
 	vmovupd		0(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vinsertf128	$ 0x1, %xmm15, %ymm1, %ymm1
 	vmovupd		16(%r11), %xmm2
 	vmovupd		16(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vinsertf128	$ 0x1, %xmm15, %ymm2, %ymm2
 	vmovupd		16(%r11, %r12), %xmm3
 	vmovupd		16(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+	vinsertf128	$ 0x1, %xmm15, %ymm3, %ymm3
 
 	vmovupd		32+0(%r11), %xmm4
 	vmovupd		32+0(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm4, %ymm4
+	vinsertf128	$ 0x1, %xmm15, %ymm4, %ymm4
 	vmovupd		32+0(%r11, %r12), %xmm5
 	vmovupd		32+0(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm5, %ymm5
+	vinsertf128	$ 0x1, %xmm15, %ymm5, %ymm5
 	vmovupd		32+16(%r11), %xmm6
 	vmovupd		32+16(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm6, %ymm6
+	vinsertf128	$ 0x1, %xmm15, %ymm6, %ymm6
 	vmovupd		32+16(%r11, %r12), %xmm7
 	vmovupd		32+16(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm7, %ymm7
+	vinsertf128	$ 0x1, %xmm15, %ymm7, %ymm7
 
 	vunpcklpd	%ymm1, %ymm0, %ymm8
 	vmovapd		%ymm8, 0(%r13)
@@ -374,17 +374,17 @@ NAME:
 	vunpckhpd	%ymm7, %ymm6, %ymm11
 	vmovapd		%ymm11, 128+96(%r13)
 
-	subl	$8, %r10d
-	addq	$64, %r11
-	addq	$256, %r13
+	subl	$ 8, %r10d
+	addq	$ 64, %r11
+	addq	$ 256, %r13
 
-//	cmpl	$0, %r10d
+//	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
 2: // consider clean-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // consider clean-up loop
 
 	leaq	0(%r11, %r12, 4), %r15
@@ -396,16 +396,16 @@ NAME:
 
 	vmovupd		0(%r11), %xmm0
 	vmovupd		0(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
 	vmovupd		0(%r11, %r12), %xmm1
 	vmovupd		0(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vinsertf128	$ 0x1, %xmm15, %ymm1, %ymm1
 	vmovupd		16(%r11), %xmm2
 	vmovupd		16(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vinsertf128	$ 0x1, %xmm15, %ymm2, %ymm2
 	vmovupd		16(%r11, %r12), %xmm3
 	vmovupd		16(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+	vinsertf128	$ 0x1, %xmm15, %ymm3, %ymm3
 
 	vunpcklpd	%ymm1, %ymm0, %ymm4
 	vmovapd		%ymm4, 0(%r13)
@@ -416,14 +416,14 @@ NAME:
 	vunpckhpd	%ymm3, %ymm2, %ymm7
 	vmovapd		%ymm7, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
+	addq	$ 128, %r13
 
 
 2: // consider clean-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -438,11 +438,11 @@ NAME:
 	vmovsd		0(%r11, %r14), %xmm0
 	vmovsd		%xmm0, 24(%r13)
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		1b
 
 
@@ -478,12 +478,12 @@ NAME:
 
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	leaq	0(%r12, %r12, 2), %r14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -493,16 +493,16 @@ NAME:
 	
 	vmovupd		0(%r11), %xmm0
 	vmovupd		0(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
 	vmovupd		0(%r11, %r12), %xmm1
 	vmovupd		0(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vinsertf128	$ 0x1, %xmm15, %ymm1, %ymm1
 	vmovupd		16(%r11), %xmm2
 	vmovupd		16(%r11, %r12, 2), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vinsertf128	$ 0x1, %xmm15, %ymm2, %ymm2
 	vmovupd		16(%r11, %r12), %xmm3
 	vmovupd		16(%r11, %r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+	vinsertf128	$ 0x1, %xmm15, %ymm3, %ymm3
 
 	vunpcklpd	%ymm1, %ymm0, %ymm4
 	vmovapd		%ymm4, 0(%r13)
@@ -513,15 +513,15 @@ NAME:
 	vunpckhpd	%ymm3, %ymm2, %ymm7
 	vmovapd		%ymm7, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -536,11 +536,11 @@ NAME:
 	vmovsd		0(%r11, %r14), %xmm0
 	vmovsd		%xmm0, 24(%r13)
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -567,7 +567,7 @@ NAME:
 	FUN_START(inner_kernel_dpack_tn_3_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -576,7 +576,7 @@ NAME:
 	addq	%r12, %r14
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -586,11 +586,11 @@ NAME:
 	
 	vmovupd		0(%r11), %xmm0
 	vmovupd		0(%r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
 	vmovupd		0(%r11, %r12, 1), %xmm1
 	vmovupd		16(%r11), %xmm2
 	vmovupd		16(%r14), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vinsertf128	$ 0x1, %xmm15, %ymm2, %ymm2
 	vmovupd		16(%r11, %r12, 1), %xmm3
 
 	vunpcklpd	%ymm1, %ymm0, %ymm4
@@ -602,16 +602,16 @@ NAME:
 	vunpckhpd	%ymm3, %ymm2, %ymm7
 	vmovapd		%ymm7, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	$32, %r14
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r14
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -624,12 +624,12 @@ NAME:
 	vmovsd		0(%r14), %xmm0
 	vmovsd		%xmm0, 16(%r13)
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r14
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -654,7 +654,7 @@ NAME:
 	FUN_START(inner_kernel_dpack_tn_2_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -663,7 +663,7 @@ NAME:
 	addq	%r12, %r14
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -685,16 +685,16 @@ NAME:
 	vunpckhpd	%ymm3, %ymm2, %ymm7
 	vmovapd		%ymm7, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	$32, %r14
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r14
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -705,12 +705,12 @@ NAME:
 	vmovsd		0(%r11, %r12, 1), %xmm0
 	vmovsd		%xmm0, 8(%r13)
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r14
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -735,11 +735,11 @@ NAME:
 	FUN_START(inner_kernel_dpack_tn_1_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -756,15 +756,15 @@ NAME:
 	vmovsd		24(%r11), %xmm0
 	vmovsd		%xmm0, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -773,12 +773,12 @@ NAME:
 	vmovsd		0(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r13)
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r14
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r14
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -817,12 +817,12 @@ NAME:
 
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	leaq	0(%r12, %r12, 2), %r15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -848,15 +848,15 @@ NAME:
 	vmovapd		%ymm2, 64(%r13)
 	vmovapd		%ymm3, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$32, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -874,11 +874,11 @@ NAME:
 	vmovsd		0(%r11, %r15), %xmm0
 	vmovsd		%xmm0, 96(%r13)
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -891,12 +891,12 @@ NAME:
 
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	leaq	0(%r12, %r12, 2), %r15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -904,9 +904,9 @@ NAME:
 
 3:
 	movl	%ecx, %r10d
-	movl	$512, %edx
-//	movl	$256, %edx
-//	movl	$8, %edx
+	movl	$ 512, %edx
+//	movl	$ 256, %edx
+//	movl	$ 8, %edx
 	cmpl	%edx, %r10d
 	cmovgl	%edx, %r10d
 
@@ -924,10 +924,10 @@ NAME:
 	prefetchnta	0(%rbx, %r12, 2)
 	prefetchnta	0(%rbx, %r14)
 
-	addq	$32, %rbx
-	subl	$8, %eax
+	addq	$ 32, %rbx
+	subl	$ 8, %eax
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jg		1b
 
 
@@ -949,15 +949,15 @@ NAME:
 	vmovapd		%ymm2, 64(%r13)
 	vmovapd		%ymm3, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$32, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 //	jle		0f // return
 	jle		4f // return
 
@@ -976,19 +976,19 @@ NAME:
 	vmovsd		0(%r11, %r15), %xmm0
 	vmovsd		%xmm0, 96(%r13)
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
 4:
-	subl	$512, %ecx
-//	subl	$256, %ecx
-//	subl	$8, %ecx
-	cmpl	$0, %ecx
+	subl	$ 512, %ecx
+//	subl	$ 256, %ecx
+//	subl	$ 8, %ecx
+	cmpl	$ 0, %ecx
 	jg		3b
 
 
@@ -1019,11 +1019,11 @@ NAME:
 	FUN_START(inner_kernel_dpack_tt_3_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1045,15 +1045,15 @@ NAME:
 	vmovapd		%ymm0, 64(%r13)
 	addq	%r12, %r15
 
-	subl	$4, %r10d
-	addq	$32, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1073,11 +1073,11 @@ NAME:
 	vmovsd		%xmm0, 64(%r13)
 	addq	%r12, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1102,11 +1102,11 @@ NAME:
 	FUN_START(inner_kernel_dpack_tt_2_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1124,15 +1124,15 @@ NAME:
 	vmovapd		%ymm0, 32(%r13)
 	addq	%r12, %r15
 
-	subl	$4, %r10d
-	addq	$32, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1148,11 +1148,11 @@ NAME:
 	vmovsd		%xmm0, 32(%r13)
 	addq	%r12, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1177,11 +1177,11 @@ NAME:
 	FUN_START(inner_kernel_dpack_tt_1_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1195,15 +1195,15 @@ NAME:
 	vmovapd		%ymm0, 0(%r13)
 	addq	%r12, %r15
 
-	subl	$4, %r10d
-	addq	$32, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1215,11 +1215,11 @@ NAME:
 	vmovsd		%xmm0, 0(%r13)
 	addq	%r12, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1244,7 +1244,7 @@ NAME:
 	FUN_START(inner_kernel_dunpack_nt_4_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1253,7 +1253,7 @@ NAME:
 	addq	%r13, %r14
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1263,16 +1263,16 @@ NAME:
 	
 	vmovapd		0(%r11), %xmm0
 	vmovapd		64(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
 	vmovapd		32(%r11), %xmm1
 	vmovapd		96(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vinsertf128	$ 0x1, %xmm15, %ymm1, %ymm1
 	vmovapd		16(%r11), %xmm2
 	vmovapd		80(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vinsertf128	$ 0x1, %xmm15, %ymm2, %ymm2
 	vmovapd		48(%r11), %xmm3
 	vmovapd		112(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+	vinsertf128	$ 0x1, %xmm15, %ymm3, %ymm3
 
 	vunpcklpd	%ymm1, %ymm0, %ymm4
 	vmovupd		%ymm4, 0(%r12)
@@ -1283,16 +1283,16 @@ NAME:
 	vunpckhpd	%ymm3, %ymm2, %ymm7
 	vmovupd		%ymm7, 0(%r14, %r13, 1)
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$32, %r14
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %r14
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1307,12 +1307,12 @@ NAME:
 	vmovsd		24(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r14, %r13, 1)
 
-	subl	$1, %r10d
-	addq	$8, %r12
-	addq	$8, %r14
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r12
+	addq	$ 8, %r14
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1337,11 +1337,11 @@ NAME:
 	FUN_START(inner_kernel_dunpack_nt_3_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1351,16 +1351,16 @@ NAME:
 	
 	vmovapd		0(%r11), %xmm0
 	vmovapd		64(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
 	vmovapd		32(%r11), %xmm1
 	vmovapd		96(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vinsertf128	$ 0x1, %xmm15, %ymm1, %ymm1
 	vmovapd		16(%r11), %xmm2
 	vmovapd		80(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vinsertf128	$ 0x1, %xmm15, %ymm2, %ymm2
 	vmovapd		48(%r11), %xmm3
 	vmovapd		112(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+	vinsertf128	$ 0x1, %xmm15, %ymm3, %ymm3
 
 	vunpcklpd	%ymm1, %ymm0, %ymm4
 	vmovupd		%ymm4, 0(%r12)
@@ -1369,15 +1369,15 @@ NAME:
 	vunpcklpd	%ymm3, %ymm2, %ymm6
 	vmovupd		%ymm6, 0(%r12, %r13, 2)
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1390,11 +1390,11 @@ NAME:
 	vmovsd		16(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r12, %r13, 2)
 
-	subl	$1, %r10d
-	addq	$8, %r12
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r12
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1419,11 +1419,11 @@ NAME:
 	FUN_START(inner_kernel_dunpack_nt_2_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1433,25 +1433,25 @@ NAME:
 	
 	vmovapd		0(%r11), %xmm0
 	vmovapd		64(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
 	vmovapd		32(%r11), %xmm1
 	vmovapd		96(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vinsertf128	$ 0x1, %xmm15, %ymm1, %ymm1
 
 	vunpcklpd	%ymm1, %ymm0, %ymm4
 	vmovupd		%ymm4, 0(%r12)
 	vunpckhpd	%ymm1, %ymm0, %ymm5
 	vmovupd		%ymm5, 0(%r12, %r13, 1)
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1462,11 +1462,11 @@ NAME:
 	vmovsd		8(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r12, %r13, 1)
 
-	subl	$1, %r10d
-	addq	$8, %r12
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r12
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1491,11 +1491,11 @@ NAME:
 	FUN_START(inner_kernel_dunpack_nt_1_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1512,15 +1512,15 @@ NAME:
 	vmovsd		96(%r11), %xmm0
 	vmovsd		%xmm0, 24(%r12)
 
-	subl	$4, %r10d
-	addq	$32, %r12
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r12
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1529,11 +1529,11 @@ NAME:
 	vmovsd		0(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r12)
 
-	subl	$1, %r10d
-	addq	$8, %r12
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r12
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1558,19 +1558,19 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nt_4_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$0, %r11d
+	cmpl	$ 0, %r11d
 	jle		3f // offset==0
 
-	movl			$4, %r15d				// load 4
+	movl			$ 4, %r15d				// load 4
 	subl			%r12d, %r15d			// 4-offsetC
 	cmpl			%r10d, %r15d			// k > 4-offsetC
 	cmovgl			%r10d, %r15d			// kend=min(k,4-offsetC)
 
 	movl			%r12d, %eax				// load offsetC
-	sall			$3, %eax				// offsetC*sizeof(double)
+	sall			$ 3, %eax				// offsetC*sizeof(double)
 	addq			%rax, %r13				// C+offsetC*sizeof(double)
 
 4:
@@ -1583,23 +1583,23 @@ NAME:
 	vmovsd		24(%r11), %xmm0
 	vmovsd		%xmm0, 96(%r13)
 
-	subl			$1, %r10d				// k=-1
-	subl			$1, %r15d				// k_panel=-1
-	addq			$8, %r13				// C=+1
-	addq			$32, %r11				// A=+bs
+	subl			$ 1, %r10d				// k=-1
+	subl			$ 1, %r15d				// k_panel=-1
+	addq			$ 8, %r13				// C=+1
+	addq			$ 32, %r11				// A=+bs
 
-	cmpl			$0, %r15d				// if k_panel=0
+	cmpl			$ 0, %r15d				// if k_panel=0
 	jg				4b						// loop 1
 
-	cmpl			$0, %r10d				// if k=0
+	cmpl			$ 0, %r10d				// if k=0
 	jle				0f						// end
 
 	addq			%r14, %r13				// C=Coff+sdc*bs
-	subq			$32, %r13				// C-=4*sizeof(double) (loop+offsetC)
+	subq			$ 32, %r13				// C-=4*sizeof(double) (loop+offsetC)
 
 
 3:
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1612,16 +1612,16 @@ NAME:
 
 	vmovapd		0(%r11), %xmm0
 	vmovapd		64(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
 	vmovapd		32(%r11), %xmm1
 	vmovapd		96(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vinsertf128	$ 0x1, %xmm15, %ymm1, %ymm1
 	vmovapd		16(%r11), %xmm2
 	vmovapd		80(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vinsertf128	$ 0x1, %xmm15, %ymm2, %ymm2
 	vmovapd		48(%r11), %xmm3
 	vmovapd		112(%r11), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+	vinsertf128	$ 0x1, %xmm15, %ymm3, %ymm3
 
 	vunpcklpd	%ymm1, %ymm0, %ymm4
 	vmovapd		%ymm4, 0(%r13)
@@ -1632,15 +1632,15 @@ NAME:
 	vunpckhpd	%ymm3, %ymm2, %ymm7
 	vmovapd		%ymm7, 96(%r13)
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	addq	%r14, %r13
-	addq	$128, %r11
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1655,11 +1655,11 @@ NAME:
 	vmovsd		24(%r11), %xmm0
 	vmovsd		%xmm0, 96(%r13)
 
-	subl	$1, %r10d
-	addq	$8, %r13
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 8, %r13
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1686,19 +1686,19 @@ NAME:
 	FUN_START(inner_kernel_dpacp_tn_4_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$0, %r11d
+	cmpl	$ 0, %r11d
 	jle		3f // offset==0
 
-	movl			$4, %r15d				// load 4
+	movl			$ 4, %r15d				// load 4
 	subl			%r11d, %r15d			// 4-offsetA
 	cmpl			%r10d, %r15d			// k > 4-offsetA
 	cmovgl			%r10d, %r15d			// kend=min(k,4-offsetA)
 
 	movl			%r11d, %eax				// load offsetA
-	sall			$3, %eax				// offsetA*sizeof(double)
+	sall			$ 3, %eax				// offsetA*sizeof(double)
 	addq			%rax, %r12				// B+offsetB*sizeof(double)
 
 4:
@@ -1711,23 +1711,23 @@ NAME:
 	vmovsd		96(%r12), %xmm0
 	vmovsd		%xmm0, 24(%r14)
 
-	subl			$1, %r10d				// k=-1
-	subl			$1, %r15d				// k_panel=-1
-	addq			$8, %r12				// A=+1
-	addq			$32, %r14				// C=+bs
+	subl			$ 1, %r10d				// k=-1
+	subl			$ 1, %r15d				// k_panel=-1
+	addq			$ 8, %r12				// A=+1
+	addq			$ 32, %r14				// C=+bs
 
-	cmpl			$0, %r15d				// if k_panel=0
+	cmpl			$ 0, %r15d				// if k_panel=0
 	jg				4b						// loop 1
 
-	cmpl			$0, %r10d				// if k=0
+	cmpl			$ 0, %r10d				// if k=0
 	jle				0f						// end
 
 	addq			%r13, %r12				// A=Boff+sdb*bs
-	subq			$32, %r12				// A-=4*sizeof(double) (loop+offsetA)
+	subq			$ 32, %r12				// A-=4*sizeof(double) (loop+offsetA)
 
 
 3:
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -1740,16 +1740,16 @@ NAME:
 
 	vmovapd		0(%r12), %xmm0
 	vmovapd		64(%r12), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm0, %ymm0
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
 	vmovapd		32(%r12), %xmm1
 	vmovapd		96(%r12), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm1, %ymm1
+	vinsertf128	$ 0x1, %xmm15, %ymm1, %ymm1
 	vmovapd		16(%r12), %xmm2
 	vmovapd		80(%r12), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm2, %ymm2
+	vinsertf128	$ 0x1, %xmm15, %ymm2, %ymm2
 	vmovapd		48(%r12), %xmm3
 	vmovapd		112(%r12), %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm3, %ymm3
+	vinsertf128	$ 0x1, %xmm15, %ymm3, %ymm3
 
 	vunpcklpd	%ymm1, %ymm0, %ymm4
 	vmovapd		%ymm4, 0(%r14)
@@ -1760,15 +1760,15 @@ NAME:
 	vunpckhpd	%ymm3, %ymm2, %ymm7
 	vmovapd		%ymm7, 96(%r14)
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	addq	%r13, %r12
-	addq	$128, %r14
+	addq	$ 128, %r14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1783,11 +1783,11 @@ NAME:
 	vmovsd		96(%r12), %xmm0
 	vmovsd		%xmm0, 24(%r14)
 
-	subl	$1, %r10d
-	addq	$8, %r12
-	addq	$32, %r14
+	subl	$ 1, %r10d
+	addq	$ 8, %r12
+	addq	$ 32, %r14
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1812,10 +1812,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_12_0_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -1850,15 +1850,15 @@ NAME:
 	vmovapd		96(%r11, %r12, 2), %ymm0
 	vmovapd		%ymm0, 96(%r13, %r14, 2)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1871,11 +1871,11 @@ NAME:
 	vmovapd		0(%r11, %r12, 2), %ymm0
 	vmovapd		%ymm0, 0(%r13, %r14, 2)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1900,7 +1900,7 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_12_0_vs_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -1910,10 +1910,10 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -1948,15 +1948,15 @@ NAME:
 	vmovapd		96(%r11, %r12, 2), %ymm0
 	vmaskmovpd	%ymm0, %ymm15, 96(%r13, %r14, 2)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -1969,11 +1969,11 @@ NAME:
 	vmovapd		0(%r11, %r12, 2), %ymm0
 	vmaskmovpd	%ymm0, %ymm15, 0(%r13, %r14, 2)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -1998,13 +1998,13 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_12_1_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	movq	%r11, %rax
 	addq	%r12, %rax
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -2015,12 +2015,12 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
-	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$ 0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14, 1)
 	vmovapd		%ymm2, 0(%r13, %r14, 2)
@@ -2029,12 +2029,12 @@ NAME:
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
 	vmovapd		32(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
-	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$ 0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 32(%r13)
 	vmovapd		%ymm1, 32(%r13, %r14)
 	vmovapd		%ymm2, 32(%r13, %r14, 2)
@@ -2043,12 +2043,12 @@ NAME:
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
 	vmovapd		64(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
-	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$ 0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 64(%r13)
 	vmovapd		%ymm1, 64(%r13, %r14)
 	vmovapd		%ymm2, 64(%r13, %r14, 2)
@@ -2057,26 +2057,26 @@ NAME:
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
 	vmovapd		96(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
-	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$ 0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 96(%r13)
 	vmovapd		%ymm1, 96(%r13, %r14)
 	vmovapd		%ymm2, 96(%r13, %r14, 2)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %rax
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %rax
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -2086,22 +2086,22 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
-	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$ 0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14)
 	vmovapd		%ymm2, 0(%r13, %r14, 2)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %rax
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %rax
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -2126,7 +2126,7 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_12_1_vs_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -2136,13 +2136,13 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	movq	%r11, %rax
 	addq	%r12, %rax
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -2153,12 +2153,12 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
-	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$ 0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14, 1)
 	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
@@ -2167,12 +2167,12 @@ NAME:
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
 	vmovapd		32(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
-	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$ 0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 32(%r13)
 	vmovapd		%ymm1, 32(%r13, %r14)
 	vmaskmovpd	%ymm2, %ymm15, 32(%r13, %r14, 2)
@@ -2181,12 +2181,12 @@ NAME:
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
 	vmovapd		64(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
-	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$ 0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 64(%r13)
 	vmovapd		%ymm1, 64(%r13, %r14)
 	vmaskmovpd	%ymm2, %ymm15, 64(%r13, %r14, 2)
@@ -2195,26 +2195,26 @@ NAME:
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
 	vmovapd		96(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
-	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$ 0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 96(%r13)
 	vmovapd		%ymm1, 96(%r13, %r14)
 	vmaskmovpd	%ymm2, %ymm15, 96(%r13, %r14, 2)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %rax
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %rax
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -2224,22 +2224,22 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm4
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm5
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm3
-	vshufpd		$0x5, %ymm4, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm5, %ymm1, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm4
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm5
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm3
+	vshufpd		$ 0x5, %ymm4, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm5, %ymm1, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14)
 	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %rax
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %rax
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -2264,13 +2264,13 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_12_2_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	movq	%r11, %rax
 	addq	%r12, %rax
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -2281,9 +2281,9 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14)
 	vmovapd		%ymm2, 0(%r13, %r14, 2)
@@ -2292,9 +2292,9 @@ NAME:
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
 	vmovapd		32(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 32(%r13)
 	vmovapd		%ymm1, 32(%r13, %r14)
 	vmovapd		%ymm2, 32(%r13, %r14, 2)
@@ -2303,9 +2303,9 @@ NAME:
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
 	vmovapd		64(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 64(%r13)
 	vmovapd		%ymm1, 64(%r13, %r14)
 	vmovapd		%ymm2, 64(%r13, %r14, 2)
@@ -2314,23 +2314,23 @@ NAME:
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
 	vmovapd		96(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 96(%r13)
 	vmovapd		%ymm1, 96(%r13, %r14)
 	vmovapd		%ymm2, 96(%r13, %r14, 2)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %rax
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %rax
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -2340,19 +2340,19 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14)
 	vmovapd		%ymm2, 0(%r13, %r14, 2)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %rax
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %rax
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -2377,7 +2377,7 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_12_2_vs_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -2387,13 +2387,13 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	movq	%r11, %rax
 	addq	%r12, %rax
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -2404,9 +2404,9 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14)
 	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
@@ -2415,9 +2415,9 @@ NAME:
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
 	vmovapd		32(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 32(%r13)
 	vmovapd		%ymm1, 32(%r13, %r14)
 	vmaskmovpd	%ymm2, %ymm15, 32(%r13, %r14, 2)
@@ -2426,9 +2426,9 @@ NAME:
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
 	vmovapd		64(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 64(%r13)
 	vmovapd		%ymm1, 64(%r13, %r14)
 	vmaskmovpd	%ymm2, %ymm15, 64(%r13, %r14, 2)
@@ -2437,23 +2437,23 @@ NAME:
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
 	vmovapd		96(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 96(%r13)
 	vmovapd		%ymm1, 96(%r13, %r14)
 	vmaskmovpd	%ymm2, %ymm15, 96(%r13, %r14, 2)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %rax
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %rax
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -2463,19 +2463,19 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14)
 	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %rax
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %rax
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -2500,13 +2500,13 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_12_3_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	movq	%r11, %rax
 	addq	%r12, %rax
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -2517,12 +2517,12 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm5, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14, 1)
 	vmovapd		%ymm2, 0(%r13, %r14, 2)
@@ -2531,12 +2531,12 @@ NAME:
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
 	vmovapd		32(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm5, %ymm2
 	vmovapd		%ymm0, 32(%r13)
 	vmovapd		%ymm1, 32(%r13, %r14, 1)
 	vmovapd		%ymm2, 32(%r13, %r14, 2)
@@ -2545,12 +2545,12 @@ NAME:
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
 	vmovapd		64(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm5, %ymm2
 	vmovapd		%ymm0, 64(%r13)
 	vmovapd		%ymm1, 64(%r13, %r14, 1)
 	vmovapd		%ymm2, 64(%r13, %r14, 2)
@@ -2559,26 +2559,26 @@ NAME:
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
 	vmovapd		96(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm5, %ymm2
 	vmovapd		%ymm0, 96(%r13)
 	vmovapd		%ymm1, 96(%r13, %r14, 1)
 	vmovapd		%ymm2, 96(%r13, %r14, 2)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %rax
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %rax
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -2588,22 +2588,22 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm5, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14, 1)
 	vmovapd		%ymm2, 0(%r13, %r14, 2)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %rax
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %rax
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -2628,7 +2628,7 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_12_3_vs_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	movq	%r11, %rax
@@ -2641,10 +2641,10 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -2655,12 +2655,12 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm5, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14, 1)
 	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
@@ -2669,12 +2669,12 @@ NAME:
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
 	vmovapd		32(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm5, %ymm2
 	vmovapd		%ymm0, 32(%r13)
 	vmovapd		%ymm1, 32(%r13, %r14, 1)
 	vmaskmovpd	%ymm2, %ymm15, 32(%r13, %r14, 2)
@@ -2683,12 +2683,12 @@ NAME:
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
 	vmovapd		64(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm5, %ymm2
 	vmovapd		%ymm0, 64(%r13)
 	vmovapd		%ymm1, 64(%r13, %r14, 1)
 	vmaskmovpd	%ymm2, %ymm15, 64(%r13, %r14, 2)
@@ -2697,26 +2697,26 @@ NAME:
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
 	vmovapd		96(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm5, %ymm2
 	vmovapd		%ymm0, 96(%r13)
 	vmovapd		%ymm1, 96(%r13, %r14, 1)
 	vmaskmovpd	%ymm2, %ymm15, 96(%r13, %r14, 2)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %rax
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %rax
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -2726,22 +2726,22 @@ NAME:
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
 	vmovapd		0(%rax, %r12, 2), %ymm3
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm4
-	vperm2f128	$0x21, %ymm3, %ymm2, %ymm5
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm4, %ymm1
-	vshufpd		$0x5, %ymm3, %ymm5, %ymm2
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm4
+	vperm2f128	$ 0x21, %ymm3, %ymm2, %ymm5
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm4, %ymm1
+	vshufpd		$ 0x5, %ymm3, %ymm5, %ymm2
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14, 1)
 	vmaskmovpd	%ymm2, %ymm15, 0(%r13, %r14, 2)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %rax
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %rax
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -2766,10 +2766,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_8_0_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -2796,15 +2796,15 @@ NAME:
 	vmovapd		96(%r11, %r12), %ymm0
 	vmovapd		%ymm0, 96(%r13, %r14)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -2815,11 +2815,11 @@ NAME:
 	vmovapd		0(%r11, %r12), %ymm0
 	vmovapd		%ymm0, 0(%r13, %r14)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -2844,7 +2844,7 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_8_0_vs_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -2854,10 +2854,10 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -2884,15 +2884,15 @@ NAME:
 	vmovapd		96(%r11, %r12), %ymm0
 	vmaskmovpd	%ymm0, %ymm15, 96(%r13, %r14)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -2903,11 +2903,11 @@ NAME:
 	vmovapd		0(%r11, %r12), %ymm0
 	vmaskmovpd	%ymm0, %ymm15, 0(%r13, %r14)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -2932,10 +2932,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_8_1_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -2945,52 +2945,52 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
-	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$ 0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14)
 	//
 	vmovapd		32(%r11), %ymm0
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
-	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$ 0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 32(%r13)
 	vmovapd		%ymm1, 32(%r13, %r14)
 	//
 	vmovapd		64(%r11), %ymm0
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
-	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$ 0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 64(%r13)
 	vmovapd		%ymm1, 64(%r13, %r14)
 	//
 	vmovapd		96(%r11), %ymm0
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
-	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$ 0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 96(%r13)
 	vmovapd		%ymm1, 96(%r13, %r14)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -2999,18 +2999,18 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
-	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$ 0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3035,7 +3035,7 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_8_1_vs_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -3045,10 +3045,10 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3058,52 +3058,52 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
-	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$ 0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14)
 	//
 	vmovapd		32(%r11), %ymm0
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
-	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$ 0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 32(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 32(%r13, %r14)
 	//
 	vmovapd		64(%r11), %ymm0
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
-	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$ 0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 64(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 64(%r13, %r14)
 	//
 	vmovapd		96(%r11), %ymm0
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
-	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$ 0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 96(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 96(%r13, %r14)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3112,18 +3112,18 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm3
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm2
-	vshufpd		$0x5, %ymm3, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm3
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm2
+	vshufpd		$ 0x5, %ymm3, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3148,10 +3148,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_8_2_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3161,44 +3161,44 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14)
 	//
 	vmovapd		32(%r11), %ymm0
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 32(%r13)
 	vmovapd		%ymm1, 32(%r13, %r14)
 	//
 	vmovapd		64(%r11), %ymm0
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 64(%r13)
 	vmovapd		%ymm1, 64(%r13, %r14)
 	//
 	vmovapd		96(%r11), %ymm0
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 96(%r13)
 	vmovapd		%ymm1, 96(%r13, %r14)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3207,16 +3207,16 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3241,7 +3241,7 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_8_2_vs_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -3251,10 +3251,10 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3264,44 +3264,44 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14)
 	//
 	vmovapd		32(%r11), %ymm0
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 32(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 32(%r13, %r14)
 	//
 	vmovapd		64(%r11), %ymm0
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 64(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 64(%r13, %r14)
 	//
 	vmovapd		96(%r11), %ymm0
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 96(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 96(%r13, %r14)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3310,16 +3310,16 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3344,10 +3344,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_8_3_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3357,52 +3357,52 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm3, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14, 1)
 	//
 	vmovapd		32(%r11), %ymm0
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm3, %ymm1
 	vmovapd		%ymm0, 32(%r13)
 	vmovapd		%ymm1, 32(%r13, %r14, 1)
 	//
 	vmovapd		64(%r11), %ymm0
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm3, %ymm1
 	vmovapd		%ymm0, 64(%r13)
 	vmovapd		%ymm1, 64(%r13, %r14, 1)
 	//
 	vmovapd		96(%r11), %ymm0
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm3, %ymm1
 	vmovapd		%ymm0, 96(%r13)
 	vmovapd		%ymm1, 96(%r13, %r14, 1)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3411,18 +3411,18 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm3, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmovapd		%ymm1, 0(%r13, %r14, 1)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3447,7 +3447,7 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_8_3_vs_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	vcvtsi2sd	%r15d, %xmm15, %xmm15
@@ -3457,10 +3457,10 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3470,52 +3470,52 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm3, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14, 1)
 	//
 	vmovapd		32(%r11), %ymm0
 	vmovapd		32(%r11, %r12, 1), %ymm1
 	vmovapd		32(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm3, %ymm1
 	vmovapd		%ymm0, 32(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 32(%r13, %r14, 1)
 	//
 	vmovapd		64(%r11), %ymm0
 	vmovapd		64(%r11, %r12, 1), %ymm1
 	vmovapd		64(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm3, %ymm1
 	vmovapd		%ymm0, 64(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 64(%r13, %r14, 1)
 	//
 	vmovapd		96(%r11), %ymm0
 	vmovapd		96(%r11, %r12, 1), %ymm1
 	vmovapd		96(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm3, %ymm1
 	vmovapd		%ymm0, 96(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 96(%r13, %r14, 1)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3524,18 +3524,18 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
 	vmovapd		0(%r11, %r12, 2), %ymm2
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vperm2f128	$0x21, %ymm2, %ymm1, %ymm3
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm2, %ymm3, %ymm1
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm2, %ymm1, %ymm3
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm2, %ymm3, %ymm1
 	vmovapd		%ymm0, 0(%r13)
 	vmaskmovpd	%ymm1, %ymm15, 0(%r13, %r14, 1)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3560,10 +3560,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_4_0_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3582,15 +3582,15 @@ NAME:
 	vmovapd		96(%r11), %ymm0
 	vmovapd		%ymm0, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3599,11 +3599,11 @@ NAME:
 	vmovapd		0(%r11), %ymm0
 	vmovapd		%ymm0, 0(%r13)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3628,10 +3628,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_4_1_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3640,37 +3640,37 @@ NAME:
 	//
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm1
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm1
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 0(%r13)
 	//
 	vmovapd		32(%r11), %ymm0
 	vmovapd		32(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm1
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm1
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 32(%r13)
 	//
 	vmovapd		64(%r11), %ymm0
 	vmovapd		64(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm1
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm1
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 64(%r13)
 	//
 	vmovapd		96(%r11), %ymm0
 	vmovapd		96(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm1
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm1
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3678,15 +3678,15 @@ NAME:
 	
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm1
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm1
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 0(%r13)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3711,10 +3711,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_4_2_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3723,33 +3723,33 @@ NAME:
 	//
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 0(%r13)
 	//
 	vmovapd		32(%r11), %ymm0
 	vmovapd		32(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 32(%r13)
 	//
 	vmovapd		64(%r11), %ymm0
 	vmovapd		64(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 64(%r13)
 	//
 	vmovapd		96(%r11), %ymm0
 	vmovapd		96(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3757,14 +3757,14 @@ NAME:
 	
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 0(%r13)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3789,10 +3789,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_4_3_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3801,37 +3801,37 @@ NAME:
 	//
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 0(%r13)
 	//
 	vmovapd		32(%r11), %ymm0
 	vmovapd		32(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 32(%r13)
 	//
 	vmovapd		64(%r11), %ymm0
 	vmovapd		64(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 64(%r13)
 	//
 	vmovapd		96(%r11), %ymm0
 	vmovapd		96(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3839,15 +3839,15 @@ NAME:
 	
 	vmovapd		0(%r11), %ymm0
 	vmovapd		0(%r11, %r12, 1), %ymm1
-	vperm2f128	$0x21, %ymm1, %ymm0, %ymm0
-	vshufpd		$0x5, %ymm1, %ymm0, %ymm0
+	vperm2f128	$ 0x21, %ymm1, %ymm0, %ymm0
+	vshufpd		$ 0x5, %ymm1, %ymm0, %ymm0
 	vmovapd		%ymm0, 0(%r13)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3872,10 +3872,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_3_0_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3902,15 +3902,15 @@ NAME:
 	vmovupd		%xmm0, 96(%r13)
 	vmovsd		%xmm1, 112(%r13)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3921,11 +3921,11 @@ NAME:
 	vmovupd		%xmm0, 0(%r13)
 	vmovsd		%xmm1, 16(%r13)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -3950,10 +3950,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_3_2_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -3980,15 +3980,15 @@ NAME:
 	vmovupd		%xmm0, 96(%r13)
 	vmovsd		%xmm1, 112(%r13)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -3999,11 +3999,11 @@ NAME:
 	vmovupd		%xmm0, 0(%r13)
 	vmovsd		%xmm1, 16(%r13)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4028,10 +4028,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_3_3_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -4058,15 +4058,15 @@ NAME:
 	vmovsd		%xmm0, 96(%r13)
 	vmovupd		%xmm1, 104(%r13)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4077,11 +4077,11 @@ NAME:
 	vmovsd		%xmm0, 0(%r13)
 	vmovupd		%xmm1, 8(%r13)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4106,10 +4106,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_2_0_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -4128,15 +4128,15 @@ NAME:
 	vmovupd		96(%r11), %xmm0
 	vmovupd		%xmm0, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4145,11 +4145,11 @@ NAME:
 	vmovupd		0(%r11), %xmm0
 	vmovupd		%xmm0, 0(%r13)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4174,10 +4174,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_2_1_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -4200,15 +4200,15 @@ NAME:
 	vmovhpd		96(%r11, %r12), %xmm0, %xmm0
 	vmovapd		%xmm0, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4218,11 +4218,11 @@ NAME:
 	vmovhpd		0(%r11, %r12), %xmm0, %xmm0
 	vmovapd		%xmm0, 0(%r13)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4247,10 +4247,10 @@ NAME:
 	FUN_START(inner_kernel_dpacp_nn_1_0_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 	// main loop
@@ -4269,15 +4269,15 @@ NAME:
 	vmovsd		96(%r11), %xmm0
 	vmovsd		%xmm0, 96(%r13)
 
-	subl	$4, %r10d
-	addq	$128, %r11
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4286,11 +4286,11 @@ NAME:
 	vmovsd		0(%r11), %xmm0
 	vmovsd		%xmm0, 0(%r13)
 
-	subl	$1, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4320,17 +4320,17 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -4378,14 +4378,14 @@ NAME:
 	vmovapd		%ymm0, 96(%r13, %r14, 2)
 	addq	%r12, %r11
 
-	subl	$4, %r10d
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4399,10 +4399,10 @@ NAME:
 	vmovapd		%ymm0, 0(%r13, %r14, 2)
 	addq	%r12, %r11
 
-	subl	$1, %r10d
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4430,14 +4430,14 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	movq	ARG6, %r15 // m1
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4448,11 +4448,11 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -4492,14 +4492,14 @@ NAME:
 	vmovapd		%ymm0, 96(%r13, %r14, 2)
 	addq	%r12, %r11
 
-	subl	$4, %r10d
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4513,10 +4513,10 @@ NAME:
 	vmovapd		%ymm0, 0(%r13, %r14, 2)
 	addq	%r12, %r11
 
-	subl	$1, %r10d
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4544,17 +4544,17 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -4594,14 +4594,14 @@ NAME:
 	vmovapd		%ymm0, 96(%r13, %r14)
 	addq	%r12, %r11
 
-	subl	$4, %r10d
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4613,10 +4613,10 @@ NAME:
 	vmovapd		%ymm0, 0(%r13, %r14)
 	addq	%r12, %r11
 
-	subl	$1, %r10d
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4644,14 +4644,14 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	movq	ARG6, %r15 // m1
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4662,11 +4662,11 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -4698,14 +4698,14 @@ NAME:
 	vmovapd		%ymm0, 96(%r13, %r14)
 	addq	%r12, %r11
 
-	subl	$4, %r10d
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4717,10 +4717,10 @@ NAME:
 	vmovapd		%ymm0, 0(%r13, %r14)
 	addq	%r12, %r11
 
-	subl	$1, %r10d
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4748,15 +4748,15 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -4784,14 +4784,14 @@ NAME:
 	vmovapd		%ymm0, 96(%r13)
 	addq	%r12, %r11
 
-	subl	$4, %r10d
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4801,10 +4801,10 @@ NAME:
 	vmovapd		%ymm0, 0(%r13)
 	addq	%r12, %r11
 
-	subl	$1, %r10d
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4832,12 +4832,12 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // m1
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4848,11 +4848,11 @@ NAME:
 	vmovupd		LC00(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -4876,14 +4876,14 @@ NAME:
 	vmovapd		%ymm0, 96(%r13)
 	addq	%r12, %r11
 
-	subl	$4, %r10d
-	addq	$128, %r13
+	subl	$ 4, %r10d
+	addq	$ 128, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -4893,10 +4893,10 @@ NAME:
 	vmovapd		%ymm0, 0(%r13)
 	addq	%r12, %r11
 
-	subl	$1, %r10d
-	addq	$32, %r13
+	subl	$ 1, %r10d
+	addq	$ 32, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -4924,7 +4924,7 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 
 
@@ -4957,7 +4957,7 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 
 
@@ -4990,11 +4990,11 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 
 	movq	ARG5, %r14 // m1
-	cmpl	$1, %r14d
+	cmpl	$ 1, %r14d
 	jg		100f
 
 #if MACRO_LEVEL>=1
@@ -5008,7 +5008,7 @@ NAME:
 100:
 
 	movq	ARG5, %r14 // m1
-	cmpl	$2, %r14d
+	cmpl	$ 2, %r14d
 	jg		101f
 
 #if MACRO_LEVEL>=1
@@ -5022,7 +5022,7 @@ NAME:
 101:
 
 	movq	ARG5, %r14 // m1
-	cmpl	$3, %r14d
+	cmpl	$ 3, %r14d
 	jg		102f
 
 #if MACRO_LEVEL>=1
@@ -5066,17 +5066,17 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -5134,15 +5134,15 @@ NAME:
 	vmovapd		%ymm0, 352(%r13)
 	addq	%r12, %r15
 
-	subl	$4, %r10d
-	addq	$32, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -5198,11 +5198,11 @@ NAME:
 	vmovsd		%xmm0, 352(%r13)
 	addq	%r12, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -5230,17 +5230,17 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -5282,15 +5282,15 @@ NAME:
 	vmovapd		%ymm0, 224(%r13)
 	addq	%r12, %r15
 
-	subl	$4, %r10d
-	addq	$32, %r11
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -5330,11 +5330,11 @@ NAME:
 	vmovsd		%xmm0, 224(%r13)
 	addq	%r12, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -5362,10 +5362,10 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 
 
 #if MACRO_LEVEL>=1
@@ -5397,13 +5397,13 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 
 	movq	ARG6, %r15 // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=1
@@ -5417,7 +5417,7 @@ NAME:
 100:
 
 	movq	ARG6, %r15 // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=1
@@ -5431,7 +5431,7 @@ NAME:
 101:
 
 	movq	ARG6, %r15 // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=1
@@ -5475,17 +5475,17 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // ldc
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -5525,14 +5525,14 @@ NAME:
 	vmovupd		%ymm0, 64(%r13)
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -5546,10 +5546,10 @@ NAME:
 	vmovupd		%ymm0, 64(%r13)
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -5577,14 +5577,14 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // ldc
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 	movq	ARG6, %r15 // m1
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -5595,11 +5595,11 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -5639,14 +5639,14 @@ NAME:
 	vmaskmovpd	%ymm0, %ymm15, 64(%r13)
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -5660,10 +5660,10 @@ NAME:
 	vmaskmovpd	%ymm0, %ymm15, 64(%r13)
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -5691,17 +5691,17 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // ldc
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -5733,14 +5733,14 @@ NAME:
 	vmovupd		%ymm0, 32(%r13)
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -5752,10 +5752,10 @@ NAME:
 	vmovupd		%ymm0, 32(%r13)
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -5783,14 +5783,14 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // ldc
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 	movq	ARG6, %r15 // m1
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -5801,11 +5801,11 @@ NAME:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -5837,14 +5837,14 @@ NAME:
 	vmaskmovpd	%ymm0, %ymm15, 32(%r13)
 	addq	%r14, %r13
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -5856,10 +5856,10 @@ NAME:
 	vmaskmovpd	%ymm0, %ymm15, 32(%r13)
 	addq	%r14, %r13
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -5888,14 +5888,14 @@ NAME:
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // C
 	movq	ARG4, %r13 // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -5919,14 +5919,14 @@ NAME:
 	vmovupd		%ymm0, 0(%r12)
 	addq	%r13, %r12
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -5936,10 +5936,10 @@ NAME:
 	vmovupd		%ymm0, 0(%r12)
 	addq	%r13, %r12
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -5968,11 +5968,11 @@ NAME:
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // C
 	movq	ARG4, %r13 // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 	movq	ARG5, %r14 // m1
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -5983,11 +5983,11 @@ NAME:
 	vmovupd		LC00(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -6011,14 +6011,14 @@ NAME:
 	vmaskmovpd	%ymm0, %ymm15, 0(%r12)
 	addq	%r13, %r12
 
-	subl	$4, %r10d
-	addq	$128, %r11
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -6028,10 +6028,10 @@ NAME:
 	vmaskmovpd	%ymm0, %ymm15, 0(%r12)
 	addq	%r13, %r12
 
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -6060,7 +6060,7 @@ NAME:
 	movq	ARG2, %r11 // C
 	movq	ARG3, %r12 // A
 	movq	ARG4, %r13 // lda
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 
 #if MACRO_LEVEL>=1
@@ -6093,10 +6093,10 @@ NAME:
 	movq	ARG2, %r11 // C
 	movq	ARG3, %r12 // A
 	movq	ARG4, %r13 // lda
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 	movq	ARG5, %r14 // m1
-	cmpl	$1, %r14d
+	cmpl	$ 1, %r14d
 	jg		100f
 
 #if MACRO_LEVEL>=1
@@ -6110,7 +6110,7 @@ NAME:
 100:
 
 	movq	ARG5, %r14 // m1
-	cmpl	$2, %r14d
+	cmpl	$ 2, %r14d
 	jg		101f
 
 #if MACRO_LEVEL>=1
@@ -6124,7 +6124,7 @@ NAME:
 101:
 
 	movq	ARG5, %r14 // m1
-	cmpl	$3, %r14d
+	cmpl	$ 3, %r14d
 	jg		102f
 
 #if MACRO_LEVEL>=1
@@ -6168,17 +6168,17 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // ldc
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -6236,15 +6236,15 @@ NAME:
 	vmovupd		%ymm0, 0(%r15)
 	addq	%r14, %r15
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	addq	%r12, %r11
-	addq	$32, %r13
+	addq	$ 32, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -6300,11 +6300,11 @@ NAME:
 	vmovsd		%xmm0, 0(%r15)
 	addq	%r14, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -6332,17 +6332,17 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // ldc
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -6384,15 +6384,15 @@ NAME:
 	vmovupd		%ymm0, 0(%r15)
 	addq	%r14, %r15
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	addq	%r12, %r11
-	addq	$32, %r13
+	addq	$ 32, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -6432,11 +6432,11 @@ NAME:
 	vmovsd		%xmm0, 0(%r15)
 	addq	%r14, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -6464,17 +6464,17 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // ldc
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // clean-up loop
 
 
@@ -6503,15 +6503,15 @@ NAME:
 	vmovupd		%ymm0, 0(%r15)
 	addq	%r14, %r15
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	addq	%r12, %r11
-	addq	$32, %r13
+	addq	$ 32, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -6535,11 +6535,11 @@ NAME:
 	vmovsd		%xmm0, 0(%r15)
 	addq	%r14, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -6569,7 +6569,7 @@ NAME:
 	movq	ARG3, %r12 // offsetC
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NT_4_LIB4
@@ -6601,7 +6601,7 @@ NAME:
 	movq	ARG2, %r11 // offsetA
 	movq	ARG3, %r12 // A
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d
+	sall	$ 5, %r13d
 	movq	ARG5, %r14 // C
 
 #if MACRO_LEVEL>=1
@@ -6633,19 +6633,19 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG5, %r13 // C
 	movq	ARG6, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 
 
-	cmpl	$0, ARG2L
+	cmpl	$ 0, ARG2L
 	je		100f
-	cmpl	$1, ARG2L
+	cmpl	$ 1, ARG2L
 	je		101f
-	cmpl	$2, ARG2L
+	cmpl	$ 2, ARG2L
 	je		102f
-	cmpl	$3, ARG2L
+	cmpl	$ 3, ARG2L
 	je		103f
 
 	jmp		200f
@@ -6706,20 +6706,20 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG5, %r13 // C
 	movq	ARG6, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	movq	ARG7, %r15 // m1
 
 
-	cmpl	$0, ARG2L
+	cmpl	$ 0, ARG2L
 	je		100f
-	cmpl	$1, ARG2L
+	cmpl	$ 1, ARG2L
 	je		101f
-	cmpl	$2, ARG2L
+	cmpl	$ 2, ARG2L
 	je		102f
-	cmpl	$3, ARG2L
+	cmpl	$ 3, ARG2L
 	je		103f
 
 	jmp		200f
@@ -6780,19 +6780,19 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG5, %r13 // C
 	movq	ARG6, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 
 
-	cmpl	$0, ARG2L
+	cmpl	$ 0, ARG2L
 	je		100f
-	cmpl	$1, ARG2L
+	cmpl	$ 1, ARG2L
 	je		101f
-	cmpl	$2, ARG2L
+	cmpl	$ 2, ARG2L
 	je		102f
-	cmpl	$3, ARG2L
+	cmpl	$ 3, ARG2L
 	je		103f
 
 	jmp		200f
@@ -6853,20 +6853,20 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG5, %r13 // C
 	movq	ARG6, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	movq	ARG7, %r15 // m1
 
 
-	cmpl	$0, ARG2L
+	cmpl	$ 0, ARG2L
 	je		100f
-	cmpl	$1, ARG2L
+	cmpl	$ 1, ARG2L
 	je		101f
-	cmpl	$2, ARG2L
+	cmpl	$ 2, ARG2L
 	je		102f
-	cmpl	$3, ARG2L
+	cmpl	$ 3, ARG2L
 	je		103f
 
 	jmp		200f
@@ -6927,17 +6927,17 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG5, %r13 // C
 
 
-	cmpl	$0, ARG2L
+	cmpl	$ 0, ARG2L
 	je		100f
-	cmpl	$1, ARG2L
+	cmpl	$ 1, ARG2L
 	je		101f
-	cmpl	$2, ARG2L
+	cmpl	$ 2, ARG2L
 	je		102f
-	cmpl	$3, ARG2L
+	cmpl	$ 3, ARG2L
 	je		103f
 
 	jmp		200f
@@ -6998,19 +6998,19 @@ NAME:
 	movq	ARG1, %r10 // kmax
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG5, %r13 // C
 
 
-	cmpl	$0, ARG6L
+	cmpl	$ 0, ARG6L
 	jle		200f
-	cmpl	$1, ARG6L
+	cmpl	$ 1, ARG6L
 	je		104f
-	cmpl	$2, ARG6L
+	cmpl	$ 2, ARG6L
 	je		105f
-	cmpl	$3, ARG6L
+	cmpl	$ 3, ARG6L
 	je		106f
-	cmpl	$4, ARG6L
+	cmpl	$ 4, ARG6L
 	jge		107f
 
 	jmp		200f
@@ -7018,14 +7018,14 @@ NAME:
 
 	// m1==1
 104:
-	cmpl	$3, ARG2L
+	cmpl	$ 3, ARG2L
 	jle		100f
 
 	jmp		200f
 
 100:
 	movq	ARG2, %r14
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 	addq	%r14, %r11
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_1_0_LIB4
@@ -7037,16 +7037,16 @@ NAME:
 
 	// m1==1
 105:
-	cmpl	$2, ARG2L
+	cmpl	$ 2, ARG2L
 	jle		100f
-	cmpl	$3, ARG2L
+	cmpl	$ 3, ARG2L
 	je		103f
 
 	jmp		200f
 
 100:
 	movq	ARG2, %r14
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 	addq	%r14, %r11
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_2_0_LIB4
@@ -7066,18 +7066,18 @@ NAME:
 
 	// m1==3
 106:
-	cmpl	$1, ARG2L
+	cmpl	$ 1, ARG2L
 	jle		100f
-	cmpl	$2, ARG2L
+	cmpl	$ 2, ARG2L
 	je		102f
-	cmpl	$3, ARG2L
+	cmpl	$ 3, ARG2L
 	je		103f
 
 	jmp		200f
 
 100:
 	movq	ARG2, %r14
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 	addq	%r14, %r11
 #if MACRO_LEVEL>=1
 	INNER_KERNEL_DPACP_NN_3_0_LIB4
@@ -7106,13 +7106,13 @@ NAME:
 
 	// m1==4
 107:
-	cmpl	$0, ARG2L
+	cmpl	$ 0, ARG2L
 	je		100f
-	cmpl	$1, ARG2L
+	cmpl	$ 1, ARG2L
 	je		101f
-	cmpl	$2, ARG2L
+	cmpl	$ 2, ARG2L
 	je		102f
-	cmpl	$3, ARG2L
+	cmpl	$ 3, ARG2L
 	je		103f
 
 	jmp		200f

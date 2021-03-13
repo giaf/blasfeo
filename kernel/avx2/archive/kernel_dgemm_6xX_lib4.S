@@ -188,12 +188,12 @@ inner_kernel_dgemm_add_nn_8x6_lib4:
 #endif
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // consider clean-up loop
 
 	// main loop
@@ -230,7 +230,7 @@ inner_kernel_dgemm_add_nn_8x6_lib4:
 	vbroadcastsd	160(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	// unroll 1
 	vmovapd 		32(%r11), %ymm12 // A
@@ -285,7 +285,7 @@ inner_kernel_dgemm_add_nn_8x6_lib4:
 	vbroadcastsd	176(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	// unroll 3
 	vmovapd 		-32(%r11), %ymm12 // A
@@ -315,13 +315,13 @@ inner_kernel_dgemm_add_nn_8x6_lib4:
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
 	addq	%r14, %r13
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jge		1b // main loop 
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -353,11 +353,11 @@ inner_kernel_dgemm_add_nn_8x6_lib4:
 	vbroadcastsd	160(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
-	addq	$32, %r11
-	addq	$8, %r13
-	subl	$1, %r10d
+	addq	$ 32, %r11
+	addq	$ 8, %r13
+	subl	$ 1, %r10d
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 
@@ -409,12 +409,12 @@ inner_kernel_dgemm_add_nn_6x8_lib4:
 #endif
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // consider clean-up loop
 
 	// main loop
@@ -432,31 +432,31 @@ inner_kernel_dgemm_add_nn_6x8_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	64(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	96(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	128(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	160(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
 	vbroadcastsd	192(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm6
 	vbroadcastsd	224(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm7
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	// unroll 0
 	vmovapd			32(%r11), %ymm12 // A
@@ -464,28 +464,28 @@ inner_kernel_dgemm_add_nn_6x8_lib4:
 	vbroadcastsd	8(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	40(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	72(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	104(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	136(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	168(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
 	vbroadcastsd	200(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm6
 	vbroadcastsd	232(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm7
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
 
@@ -495,31 +495,31 @@ inner_kernel_dgemm_add_nn_6x8_lib4:
 	vbroadcastsd	16(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	48(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	80(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	112(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	144(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	176(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
 	vbroadcastsd	208(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm6
 	vbroadcastsd	240(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm7
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	// unroll 0
 	vmovapd			-32(%r11), %ymm12 // A
@@ -527,39 +527,39 @@ inner_kernel_dgemm_add_nn_6x8_lib4:
 	vbroadcastsd	24(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	56(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	88(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	120(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	152(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	184(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
 	vbroadcastsd	216(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm6
 	vbroadcastsd	248(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm7
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
 	addq	%r14, %r13
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jge		1b // main loop 
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -571,36 +571,36 @@ inner_kernel_dgemm_add_nn_6x8_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	64(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	96(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	128(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	160(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
 	vbroadcastsd	192(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm6
 	vbroadcastsd	224(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm7
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
 
-	addq	$32, %r11
-	addq	$8, %r13
-	subl	$1, %r10d
+	addq	$ 32, %r11
+	addq	$ 8, %r13
+	subl	$ 1, %r10d
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 
@@ -652,12 +652,12 @@ inner_kernel_dgemm_add_nn_6x6_lib4:
 #endif
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // consider clean-up loop
 
 	// main loop
@@ -674,24 +674,24 @@ inner_kernel_dgemm_add_nn_6x6_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	64(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	96(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	128(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	160(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	// unroll 0
 	vmovapd			32(%r11), %ymm12 // A
@@ -699,21 +699,21 @@ inner_kernel_dgemm_add_nn_6x6_lib4:
 	vbroadcastsd	8(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	40(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	72(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	104(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	136(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	168(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
@@ -723,25 +723,25 @@ inner_kernel_dgemm_add_nn_6x6_lib4:
 	vbroadcastsd	16(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	48(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	80(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	112(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	144(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	176(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	// unroll 0
 	vmovapd			-32(%r11), %ymm12 // A
@@ -749,32 +749,32 @@ inner_kernel_dgemm_add_nn_6x6_lib4:
 	vbroadcastsd	24(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	56(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	88(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	120(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	152(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	184(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 	addq	%r14, %r13
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jge		1b // main loop 
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -786,29 +786,29 @@ inner_kernel_dgemm_add_nn_6x6_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	64(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	96(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	128(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	160(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
-	addq	$32, %r11
-	addq	$8, %r13
-	subl	$1, %r10d
+	addq	$ 32, %r11
+	addq	$ 8, %r13
+	subl	$ 1, %r10d
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 
@@ -860,12 +860,12 @@ inner_kernel_dgemm_add_nn_6x4_lib4:
 #endif
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // consider clean-up loop
 
 	// main loop
@@ -881,17 +881,17 @@ inner_kernel_dgemm_add_nn_6x4_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	64(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	96(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	// unroll 0
 	vmovapd			32(%r11), %ymm12 // A
@@ -899,14 +899,14 @@ inner_kernel_dgemm_add_nn_6x4_lib4:
 	vbroadcastsd	8(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	40(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	72(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	104(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
@@ -916,17 +916,17 @@ inner_kernel_dgemm_add_nn_6x4_lib4:
 	vbroadcastsd	16(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	48(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	80(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	112(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	// unroll 0
 	vmovapd			-32(%r11), %ymm12 // A
@@ -934,25 +934,25 @@ inner_kernel_dgemm_add_nn_6x4_lib4:
 	vbroadcastsd	24(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	56(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	88(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	120(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 	addq	%r14, %r13
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jge		1b // main loop 
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -964,22 +964,22 @@ inner_kernel_dgemm_add_nn_6x4_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	64(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	96(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
-	addq	$32, %r11
-	addq	$8, %r13
-	subl	$1, %r10d
+	addq	$ 32, %r11
+	addq	$ 8, %r13
+	subl	$ 1, %r10d
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 
@@ -1031,12 +1031,12 @@ inner_kernel_dgemm_add_nn_6x2_lib4:
 #endif
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // consider clean-up loop
 
 	// main loop
@@ -1051,10 +1051,10 @@ inner_kernel_dgemm_add_nn_6x2_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	// unroll 0
 	vmovapd			32(%r11), %ymm12 // A
@@ -1062,7 +1062,7 @@ inner_kernel_dgemm_add_nn_6x2_lib4:
 	vbroadcastsd	8(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	40(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
@@ -1072,10 +1072,10 @@ inner_kernel_dgemm_add_nn_6x2_lib4:
 	vbroadcastsd	16(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	48(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
-	addq	$128, %r11
+	addq	$ 128, %r11
 
 	// unroll 0
 	vmovapd			-32(%r11), %ymm12 // A
@@ -1083,18 +1083,18 @@ inner_kernel_dgemm_add_nn_6x2_lib4:
 	vbroadcastsd	24(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	56(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 	addq	%r14, %r13
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jge		1b // main loop 
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -1106,15 +1106,15 @@ inner_kernel_dgemm_add_nn_6x2_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
-	addq	$32, %r11
-	addq	$8, %r13
-	subl	$1, %r10d
+	addq	$ 32, %r11
+	addq	$ 8, %r13
+	subl	$ 1, %r10d
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 
@@ -1171,13 +1171,13 @@ inner_edge_dgemm_add_nn_8x6_lib4:
 #endif
 #endif
 	
-	cmpl			$0, %r15d // offset==0
+	cmpl			$ 0, %r15d // offset==0
 	jle				2f // end
 
-	cmpl			$0, %r10d // k==0
+	cmpl			$ 0, %r10d // k==0
 	jle				2f // end
 
-	movl			$4, %ebx
+	movl			$ 4, %ebx
 	subl			%r15d, %ebx // 4-offsetB
 	cmpl			%r10d, %ebx
 //	jle				0f
@@ -1186,7 +1186,7 @@ inner_edge_dgemm_add_nn_8x6_lib4:
 	cmovgl			%r10d, %ebx // kend=min(k,4-offsetB)
 
 	movl			%r15d, %eax
-	sall			$3, %eax // offsetB*sizeof(double)
+	sall			$ 3, %eax // offsetB*sizeof(double)
 	addq			%rax, %r13 // B+offsetB*sizeof(double)
 
 1:
@@ -1216,19 +1216,19 @@ inner_edge_dgemm_add_nn_8x6_lib4:
 	vfmadd231pd		%ymm12, %ymm14, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
 
-	subl			$1, %r10d // k-1
-	subl			$1, %ebx // kend-1
-	addq			$32, %r11 // A0+1*bs*sizeof(float)
-	addq			$8, %r13 // B+1*sizeof(float)
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %ebx // kend-1
+	addq			$ 32, %r11 // A0+1*bs*sizeof(float)
+	addq			$ 8, %r13 // B+1*sizeof(float)
 
-	cmpl			$0, %ebx
+	cmpl			$ 0, %ebx
 	jg				1b
 
-	cmpl			$0, %r10d
+	cmpl			$ 0, %r10d
 	jle				2f // end
 
 	addq			%r14, %r13
-	subq			$32, %r13 // B+bs*(sdb-1)*sizeof(double)
+	subq			$ 32, %r13 // B+bs*(sdb-1)*sizeof(double)
 
 2:
 
@@ -1283,13 +1283,13 @@ inner_edge_dgemm_add_nn_6x8_lib4:
 #endif
 #endif
 	
-	cmpl			$0, %r15d // offset==0
+	cmpl			$ 0, %r15d // offset==0
 	jle				2f // end
 
-	cmpl			$0, %r10d // k==0
+	cmpl			$ 0, %r10d // k==0
 	jle				2f // end
 
-	movl			$4, %ebx
+	movl			$ 4, %ebx
 	subl			%r15d, %ebx // 4-offsetB
 	cmpl			%r10d, %ebx
 //	jle				0f
@@ -1298,7 +1298,7 @@ inner_edge_dgemm_add_nn_6x8_lib4:
 	cmovgl			%r10d, %ebx // kend=min(k,4-offsetB)
 
 	movl			%r15d, %eax
-	sall			$3, %eax // offsetB*sizeof(double)
+	sall			$ 3, %eax // offsetB*sizeof(double)
 	addq			%rax, %r13 // B+offsetB*sizeof(double)
 
 1:
@@ -1307,44 +1307,44 @@ inner_edge_dgemm_add_nn_6x8_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	64(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	96(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	128(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	160(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
 	vbroadcastsd	192(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm6
 	vbroadcastsd	224(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm7
 	vfmadd231pd		%ymm13, %ymm14, %ymm11
 
-	subl			$1, %r10d // k-1
-	subl			$1, %ebx // kend-1
-	addq			$32, %r11 // A0+1*bs*sizeof(float)
-	addq			$8, %r13 // B+1*sizeof(float)
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %ebx // kend-1
+	addq			$ 32, %r11 // A0+1*bs*sizeof(float)
+	addq			$ 8, %r13 // B+1*sizeof(float)
 
-	cmpl			$0, %ebx
+	cmpl			$ 0, %ebx
 	jg				1b
 
-	cmpl			$0, %r10d
+	cmpl			$ 0, %r10d
 	jle				2f // end
 
 	addq			%r14, %r13
-	subq			$32, %r13 // B+bs*(sdb-1)*sizeof(double)
+	subq			$ 32, %r13 // B+bs*(sdb-1)*sizeof(double)
 
 2:
 
@@ -1399,13 +1399,13 @@ inner_edge_dgemm_add_nn_6x6_lib4:
 #endif
 #endif
 	
-	cmpl			$0, %r15d // offset==0
+	cmpl			$ 0, %r15d // offset==0
 	jle				2f // end
 
-	cmpl			$0, %r10d // k==0
+	cmpl			$ 0, %r10d // k==0
 	jle				2f // end
 
-	movl			$4, %ebx
+	movl			$ 4, %ebx
 	subl			%r15d, %ebx // 4-offsetB
 	cmpl			%r10d, %ebx
 //	jle				0f
@@ -1414,7 +1414,7 @@ inner_edge_dgemm_add_nn_6x6_lib4:
 	cmovgl			%r10d, %ebx // kend=min(k,4-offsetB)
 
 	movl			%r15d, %eax
-	sall			$3, %eax // offsetB*sizeof(double)
+	sall			$ 3, %eax // offsetB*sizeof(double)
 	addq			%rax, %r13 // B+offsetB*sizeof(double)
 
 1:
@@ -1423,37 +1423,37 @@ inner_edge_dgemm_add_nn_6x6_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	64(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	96(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	128(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	160(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
-	subl			$1, %r10d // k-1
-	subl			$1, %ebx // kend-1
-	addq			$32, %r11 // A0+1*bs*sizeof(float)
-	addq			$8, %r13 // B+1*sizeof(float)
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %ebx // kend-1
+	addq			$ 32, %r11 // A0+1*bs*sizeof(float)
+	addq			$ 8, %r13 // B+1*sizeof(float)
 
-	cmpl			$0, %ebx
+	cmpl			$ 0, %ebx
 	jg				1b
 
-	cmpl			$0, %r10d
+	cmpl			$ 0, %r10d
 	jle				2f // end
 
 	addq			%r14, %r13
-	subq			$32, %r13 // B+bs*(sdb-1)*sizeof(double)
+	subq			$ 32, %r13 // B+bs*(sdb-1)*sizeof(double)
 
 2:
 
@@ -1508,13 +1508,13 @@ inner_edge_dgemm_add_nn_6x4_lib4:
 #endif
 #endif
 	
-	cmpl			$0, %r15d // offset==0
+	cmpl			$ 0, %r15d // offset==0
 	jle				2f // end
 
-	cmpl			$0, %r10d // k==0
+	cmpl			$ 0, %r10d // k==0
 	jle				2f // end
 
-	movl			$4, %ebx
+	movl			$ 4, %ebx
 	subl			%r15d, %ebx // 4-offsetB
 	cmpl			%r10d, %ebx
 //	jle				0f
@@ -1523,7 +1523,7 @@ inner_edge_dgemm_add_nn_6x4_lib4:
 	cmovgl			%r10d, %ebx // kend=min(k,4-offsetB)
 
 	movl			%r15d, %eax
-	sall			$3, %eax // offsetB*sizeof(double)
+	sall			$ 3, %eax // offsetB*sizeof(double)
 	addq			%rax, %r13 // B+offsetB*sizeof(double)
 
 1:
@@ -1532,30 +1532,30 @@ inner_edge_dgemm_add_nn_6x4_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	64(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	96(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
-	subl			$1, %r10d // k-1
-	subl			$1, %ebx // kend-1
-	addq			$32, %r11 // A0+1*bs*sizeof(float)
-	addq			$8, %r13 // B+1*sizeof(float)
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %ebx // kend-1
+	addq			$ 32, %r11 // A0+1*bs*sizeof(float)
+	addq			$ 8, %r13 // B+1*sizeof(float)
 
-	cmpl			$0, %ebx
+	cmpl			$ 0, %ebx
 	jg				1b
 
-	cmpl			$0, %r10d
+	cmpl			$ 0, %r10d
 	jle				2f // end
 
 	addq			%r14, %r13
-	subq			$32, %r13 // B+bs*(sdb-1)*sizeof(double)
+	subq			$ 32, %r13 // B+bs*(sdb-1)*sizeof(double)
 
 2:
 
@@ -1610,13 +1610,13 @@ inner_edge_dgemm_add_nn_6x2_lib4:
 #endif
 #endif
 	
-	cmpl			$0, %r15d // offset==0
+	cmpl			$ 0, %r15d // offset==0
 	jle				2f // end
 
-	cmpl			$0, %r10d // k==0
+	cmpl			$ 0, %r10d // k==0
 	jle				2f // end
 
-	movl			$4, %ebx
+	movl			$ 4, %ebx
 	subl			%r15d, %ebx // 4-offsetB
 	cmpl			%r10d, %ebx
 //	jle				0f
@@ -1625,7 +1625,7 @@ inner_edge_dgemm_add_nn_6x2_lib4:
 	cmovgl			%r10d, %ebx // kend=min(k,4-offsetB)
 
 	movl			%r15d, %eax
-	sall			$3, %eax // offsetB*sizeof(double)
+	sall			$ 3, %eax // offsetB*sizeof(double)
 	addq			%rax, %r13 // B+offsetB*sizeof(double)
 
 1:
@@ -1634,37 +1634,37 @@ inner_edge_dgemm_add_nn_6x2_lib4:
 	vbroadcastsd	0(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm0
 	vbroadcastsd	32(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm1
 	vfmadd231pd		%ymm13, %ymm14, %ymm8
 
 	vbroadcastsd	64(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm2
 	vbroadcastsd	96(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm3
 	vfmadd231pd		%ymm13, %ymm14, %ymm9
 
 	vbroadcastsd	128(%r13), %ymm14 // B
 	vfmadd231pd		%ymm12, %ymm14, %ymm4
 	vbroadcastsd	160(%r13), %ymm15 // B
-	vblendpd		$0x3, %ymm14, %ymm15, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm15, %ymm14
 	vfmadd231pd		%ymm12, %ymm15, %ymm5
 	vfmadd231pd		%ymm13, %ymm14, %ymm10
 
-	subl			$1, %r10d // k-1
-	subl			$1, %ebx // kend-1
-	addq			$32, %r11 // A0+1*bs*sizeof(float)
-	addq			$8, %r13 // B+1*sizeof(float)
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %ebx // kend-1
+	addq			$ 32, %r11 // A0+1*bs*sizeof(float)
+	addq			$ 8, %r13 // B+1*sizeof(float)
 
-	cmpl			$0, %ebx
+	cmpl			$ 0, %ebx
 	jg				1b
 
-	cmpl			$0, %r10d
+	cmpl			$ 0, %r10d
 	jle				2f // end
 
 	addq			%r14, %r13
-	subq			$32, %r13 // B+bs*(sdb-1)*sizeof(double)
+	subq			$ 32, %r13 // B+bs*(sdb-1)*sizeof(double)
 
 2:
 
@@ -1862,19 +1862,19 @@ inner_scale_ab_6x8_lib4:
 
 	vmovapd		0(%r12, %r13, 1), %xmm15
 	vmovupd		16(%r12, %r13, 1), %ymm12
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm15
+	vblendpd	$ 0x3, %ymm15, %ymm12, %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm8
 	vmovapd		64(%r12, %r13, 1), %xmm15
 	vmovupd		80(%r12, %r13, 1), %ymm12
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm15
+	vblendpd	$ 0x3, %ymm15, %ymm12, %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm9
 	vmovapd		128(%r12, %r13, 1), %xmm15
 	vmovupd		144(%r12, %r13, 1), %ymm12
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm15
+	vblendpd	$ 0x3, %ymm15, %ymm12, %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm10
 	vmovapd		192(%r12, %r13, 1), %xmm15
 	vmovupd		208(%r12, %r13, 1), %ymm12
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm15
+	vblendpd	$ 0x3, %ymm15, %ymm12, %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm11
 
 0:
@@ -1965,15 +1965,15 @@ inner_scale_ab_6x6_lib4:
 
 	vmovapd		0(%r12, %r13, 1), %xmm15
 	vmovupd		16(%r12, %r13, 1), %ymm12
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm15
+	vblendpd	$ 0x3, %ymm15, %ymm12, %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm8
 	vmovapd		64(%r12, %r13, 1), %xmm15
 	vmovupd		80(%r12, %r13, 1), %ymm12
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm15
+	vblendpd	$ 0x3, %ymm15, %ymm12, %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm9
 	vmovapd		128(%r12, %r13, 1), %xmm15
 	vmovupd		144(%r12, %r13, 1), %ymm12
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm15
+	vblendpd	$ 0x3, %ymm15, %ymm12, %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm10
 0:
 
@@ -2054,11 +2054,11 @@ inner_scale_ab_6x4_lib4:
 
 	vmovapd		0(%r12, %r13, 1), %xmm15
 	vmovupd		16(%r12, %r13, 1), %ymm12
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm15
+	vblendpd	$ 0x3, %ymm15, %ymm12, %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm8
 	vmovapd		64(%r12, %r13, 1), %xmm15
 	vmovupd		80(%r12, %r13, 1), %ymm12
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm15
+	vblendpd	$ 0x3, %ymm15, %ymm12, %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm9
 
 0:
@@ -2133,7 +2133,7 @@ inner_scale_ab_6x2_lib4:
 
 	vmovapd		0(%r12, %r13, 1), %xmm15
 	vmovupd		16(%r12, %r13, 1), %ymm12
-	vblendpd	$0x3, %ymm15, %ymm12, %ymm15
+	vblendpd	$ 0x3, %ymm15, %ymm12, %ymm15
 	vfmadd231pd	%ymm15, %ymm14, %ymm8
 
 0:
@@ -2241,28 +2241,28 @@ inner_store_6x8_lib4:
 	vmovapd 		%ymm0, 0(%r10)
 	vmovapd 		%xmm8, 0(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm8, %xmm15
+	vextractf128	$ 0x1, %ymm8, %xmm15
 	vmovapd 		%ymm1, 32(%r10)
 	vmovapd 		%xmm15, 32(%r10, %r11, 1)
 
 	vmovapd 		%ymm2, 64(%r10)
 	vmovapd 		%xmm9, 64(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm9, %xmm15
+	vextractf128	$ 0x1, %ymm9, %xmm15
 	vmovapd 		%ymm3, 96(%r10)
 	vmovapd 		%xmm15, 96(%r10, %r11, 1)
 
 	vmovapd 		%ymm4, 128(%r10)
 	vmovapd 		%xmm10, 128(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm10, %xmm15
+	vextractf128	$ 0x1, %ymm10, %xmm15
 	vmovapd 		%ymm5, 160(%r10)
 	vmovapd 		%xmm15, 160(%r10, %r11, 1)
 
 	vmovapd 		%ymm6, 192(%r10)
 	vmovapd 		%xmm11, 192(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm11, %xmm15
+	vextractf128	$ 0x1, %ymm11, %xmm15
 	vmovapd 		%ymm7, 224(%r10)
 	vmovapd 		%xmm15, 224(%r10, %r11, 1)
 
@@ -2311,21 +2311,21 @@ inner_store_6x6_lib4:
 	vmovapd 		%ymm0, 0(%r10)
 	vmovapd 		%xmm8, 0(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm8, %xmm15
+	vextractf128	$ 0x1, %ymm8, %xmm15
 	vmovapd 		%ymm1, 32(%r10)
 	vmovapd 		%xmm15, 32(%r10, %r11, 1)
 
 	vmovapd 		%ymm2, 64(%r10)
 	vmovapd 		%xmm9, 64(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm9, %xmm15
+	vextractf128	$ 0x1, %ymm9, %xmm15
 	vmovapd 		%ymm3, 96(%r10)
 	vmovapd 		%xmm15, 96(%r10, %r11, 1)
 
 	vmovapd 		%ymm4, 128(%r10)
 	vmovapd 		%xmm10, 128(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm10, %xmm15
+	vextractf128	$ 0x1, %ymm10, %xmm15
 	vmovapd 		%ymm5, 160(%r10)
 	vmovapd 		%xmm15, 160(%r10, %r11, 1)
 
@@ -2373,14 +2373,14 @@ inner_store_6x4_lib4:
 	vmovapd 		%ymm0, 0(%r10)
 	vmovapd 		%xmm8, 0(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm8, %xmm15
+	vextractf128	$ 0x1, %ymm8, %xmm15
 	vmovapd 		%ymm1, 32(%r10)
 	vmovapd 		%xmm15, 32(%r10, %r11, 1)
 
 	vmovapd 		%ymm2, 64(%r10)
 	vmovapd 		%xmm9, 64(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm9, %xmm15
+	vextractf128	$ 0x1, %ymm9, %xmm15
 	vmovapd 		%ymm3, 96(%r10)
 	vmovapd 		%xmm15, 96(%r10, %r11, 1)
 
@@ -2428,7 +2428,7 @@ inner_store_6x2_lib4:
 	vmovapd 		%ymm0, 0(%r10)
 	vmovapd 		%xmm8, 0(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm8, %xmm15
+	vextractf128	$ 0x1, %ymm8, %xmm15
 	vmovapd 		%ymm1, 32(%r10)
 	vmovapd 		%xmm15, 32(%r10, %r11, 1)
 
@@ -2484,7 +2484,7 @@ inner_store_8x6_vs_lib4:
 	vmovupd		LC03(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm14
 
 
@@ -2503,7 +2503,7 @@ inner_store_8x6_vs_lib4:
 	vmovapd 		%ymm4, 128(%r10)
 	vmaskmovpd 		%ymm10, %ymm14, 128(%r10, %r11, 1)
 
-	cmpl		$6, %r13d
+	cmpl		$ 6, %r13d
 	jl			0f // end
 
 	vmovapd 		%ymm5, 160(%r10)
@@ -2563,35 +2563,35 @@ inner_store_6x8_vs_lib4:
 	vmovupd		LC03(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm14
 
 
 	vmovapd 		%ymm0, 0(%r10)
 	vmaskmovpd		%xmm8, %xmm14, 0(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm8, %xmm15
+	vextractf128	$ 0x1, %ymm8, %xmm15
 	vmovapd 		%ymm1, 32(%r10)
 	vmaskmovpd		%xmm15, %xmm14, 32(%r10, %r11, 1)
 
 	vmovapd 		%ymm2, 64(%r10)
 	vmaskmovpd		%xmm9, %xmm14, 64(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm9, %xmm15
+	vextractf128	$ 0x1, %ymm9, %xmm15
 	vmovapd 		%ymm3, 96(%r10)
 	vmaskmovpd		%xmm15, %xmm14, 96(%r10, %r11, 1)
 
 	vmovapd 		%ymm4, 128(%r10)
 	vmaskmovpd		%xmm10, %xmm14, 128(%r10, %r11, 1)
 
-	cmpl		$6, %r13d
+	cmpl		$ 6, %r13d
 	jl			0f // end
 
-	vextractf128	$0x1, %ymm10, %xmm15
+	vextractf128	$ 0x1, %ymm10, %xmm15
 	vmovapd 		%ymm5, 160(%r10)
 	vmaskmovpd		%xmm15, %xmm14, 160(%r10, %r11, 1)
 
-	cmpl		$7, %r13d
+	cmpl		$ 7, %r13d
 	jl			0f // end
 
 	vmovapd 		%ymm6, 192(%r10)
@@ -2599,7 +2599,7 @@ inner_store_6x8_vs_lib4:
 
 	je			0f // end
 
-	vextractf128	$0x1, %ymm11, %xmm15
+	vextractf128	$ 0x1, %ymm11, %xmm15
 	vmovapd 		%ymm7, 224(%r10)
 	vmaskmovpd		%xmm15, %xmm14, 224(%r10, %r11, 1)
 
@@ -2657,31 +2657,31 @@ inner_store_6x6_vs_lib4:
 	vmovupd		LC03(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm14
 
 
 	vmovapd 		%ymm0, 0(%r10)
 	vmaskmovpd		%xmm8, %xmm14, 0(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm8, %xmm15
+	vextractf128	$ 0x1, %ymm8, %xmm15
 	vmovapd 		%ymm1, 32(%r10)
 	vmaskmovpd		%xmm15, %xmm14, 32(%r10, %r11, 1)
 
 	vmovapd 		%ymm2, 64(%r10)
 	vmaskmovpd		%xmm9, %xmm14, 64(%r10, %r11, 1)
 
-	vextractf128	$0x1, %ymm9, %xmm15
+	vextractf128	$ 0x1, %ymm9, %xmm15
 	vmovapd 		%ymm3, 96(%r10)
 	vmaskmovpd		%xmm15, %xmm14, 96(%r10, %r11, 1)
 
 	vmovapd 		%ymm4, 128(%r10)
 	vmaskmovpd		%xmm10, %xmm14, 128(%r10, %r11, 1)
 
-	cmpl		$6, %r13d
+	cmpl		$ 6, %r13d
 	jl			0f // end
 
-	vextractf128	$0x1, %ymm10, %xmm15
+	vextractf128	$ 0x1, %ymm10, %xmm15
 	vmovapd 		%ymm5, 160(%r10)
 	vmaskmovpd		%xmm15, %xmm14, 160(%r10, %r11, 1)
 
@@ -2739,26 +2739,26 @@ inner_store_6x4_vs_lib4:
 	vmovupd		LC03(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm14
 
 
 //	vxorpd		%ymm15, %ymm15, %ymm15
-//	vblendpd	$0x3, %ymm14, %ymm15, %ymm14
+//	vblendpd	$ 0x3, %ymm14, %ymm15, %ymm14
 
 
 
 	vmovapd 		%ymm0, 0(%r10)
 	vmaskmovpd		%xmm8, %xmm14, 0(%r10, %r11, 1)
 
-	cmpl		$2, %r13d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 
-	vextractf128	$0x1, %ymm8, %xmm15
+	vextractf128	$ 0x1, %ymm8, %xmm15
 	vmovapd 		%ymm1, 32(%r10)
 	vmaskmovpd		%xmm15, %xmm14, 32(%r10, %r11, 1)
 
-	cmpl		$3, %r13d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 
 	vmovapd 		%ymm2, 64(%r10)
@@ -2766,7 +2766,7 @@ inner_store_6x4_vs_lib4:
 
 	je			0f // end
 
-	vextractf128	$0x1, %ymm9, %xmm15
+	vextractf128	$ 0x1, %ymm9, %xmm15
 	vmovapd 		%ymm3, 96(%r10)
 	vmaskmovpd		%xmm15, %xmm14, 96(%r10, %r11, 1)
 
@@ -2824,22 +2824,22 @@ inner_store_6x2_vs_lib4:
 	vmovupd		LC03(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm14
 
 
 //	vxorpd		%ymm15, %ymm15, %ymm15
-//	vblendpd	$0x3, %ymm14, %ymm15, %ymm14
+//	vblendpd	$ 0x3, %ymm14, %ymm15, %ymm14
 
 
 
 	vmovapd 		%ymm0, 0(%r10)
 	vmaskmovpd		%xmm8, %xmm14, 0(%r10, %r11, 1)
 
-	cmpl		$2, %r13d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 
-	vextractf128	$0x1, %ymm8, %xmm15
+	vextractf128	$ 0x1, %ymm8, %xmm15
 	vmovapd 		%ymm1, 32(%r10)
 	vmaskmovpd		%xmm15, %xmm14, 32(%r10, %r11, 1)
 
@@ -2899,10 +2899,10 @@ kernel_dgemm_nn_8x6_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -2932,7 +2932,7 @@ kernel_dgemm_nn_8x6_lib4:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X6_LIB4
@@ -2949,7 +2949,7 @@ kernel_dgemm_nn_8x6_lib4:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X6_LIB4
@@ -3014,10 +3014,10 @@ kernel_dgemm_nn_6x8_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -3047,7 +3047,7 @@ kernel_dgemm_nn_6x8_lib4:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_6X8_LIB4
@@ -3064,7 +3064,7 @@ kernel_dgemm_nn_6x8_lib4:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_6X8_LIB4
@@ -3129,10 +3129,10 @@ kernel_dgemm_nn_6x6_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -3162,7 +3162,7 @@ kernel_dgemm_nn_6x6_lib4:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_6X6_LIB4
@@ -3179,7 +3179,7 @@ kernel_dgemm_nn_6x6_lib4:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_6X6_LIB4
@@ -3244,10 +3244,10 @@ kernel_dgemm_nn_6x4_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -3277,7 +3277,7 @@ kernel_dgemm_nn_6x4_lib4:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_6X4_LIB4
@@ -3294,7 +3294,7 @@ kernel_dgemm_nn_6x4_lib4:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_6X4_LIB4
@@ -3359,10 +3359,10 @@ kernel_dgemm_nn_6x2_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -3392,7 +3392,7 @@ kernel_dgemm_nn_6x2_lib4:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_6X2_LIB4
@@ -3409,7 +3409,7 @@ kernel_dgemm_nn_6x2_lib4:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_6X2_LIB4
@@ -3474,10 +3474,10 @@ kernel_dgemm_nn_8x6_vs_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -3507,7 +3507,7 @@ kernel_dgemm_nn_8x6_vs_lib4:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X6_LIB4
@@ -3524,7 +3524,7 @@ kernel_dgemm_nn_8x6_vs_lib4:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 	movq	ARG13, %r12 // m1
 	movq	ARG14, %r13 // n1
 
@@ -3592,10 +3592,10 @@ kernel_dgemm_nn_6x8_vs_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -3625,7 +3625,7 @@ kernel_dgemm_nn_6x8_vs_lib4:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_6X8_LIB4
@@ -3642,7 +3642,7 @@ kernel_dgemm_nn_6x8_vs_lib4:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 	movq	ARG13, %r12 // m1
 	movq	ARG14, %r13 // n1
 
@@ -3710,10 +3710,10 @@ kernel_dgemm_nn_6x6_vs_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -3743,7 +3743,7 @@ kernel_dgemm_nn_6x6_vs_lib4:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_6X6_LIB4
@@ -3760,7 +3760,7 @@ kernel_dgemm_nn_6x6_vs_lib4:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 	movq	ARG13, %r12 // m1
 	movq	ARG14, %r13 // n1
 
@@ -3828,10 +3828,10 @@ kernel_dgemm_nn_6x4_vs_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -3861,7 +3861,7 @@ kernel_dgemm_nn_6x4_vs_lib4:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_6X4_LIB4
@@ -3878,7 +3878,7 @@ kernel_dgemm_nn_6x4_vs_lib4:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 	movq	ARG13, %r12 // m1
 	movq	ARG14, %r13 // n1
 
@@ -3946,10 +3946,10 @@ kernel_dgemm_nn_6x2_vs_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 4*sdb*sizeof(double)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -3979,7 +3979,7 @@ kernel_dgemm_nn_6x2_vs_lib4:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
 	movq	ARG10, %r13 // sdc
-	sall	$5, %r13d // 4*sdc*sizeof(double)
+	sall	$ 5, %r13d // 4*sdc*sizeof(double)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_6X2_LIB4
@@ -3996,7 +3996,7 @@ kernel_dgemm_nn_6x2_vs_lib4:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 4*sdd*sizeof(double)
 	movq	ARG13, %r12 // m1
 	movq	ARG14, %r13 // n1
 

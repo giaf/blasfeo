@@ -50,7 +50,7 @@
 #if 1
 
 #define PROLOGUE \
-	subl	$16, %esp; \
+	subl	$ 16, %esp; \
 	movl	%ebx, 0(%esp); \
 	movl	%esi, 4(%esp); \
 	movl	%edi, 8(%esp); \
@@ -60,7 +60,7 @@
 	movl	4(%esp), %esi; \
 	movl	8(%esp), %edi; \
 	movl	12(%esp), %ebp; \
-	addl	$16, %esp;
+	addl	$ 16, %esp;
 
 #else
 
@@ -134,10 +134,10 @@ NAME:
 inner_kernel_gemv_add_n_4_lib4:
 #endif
 	
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jl		0f // clean-up loop
 
 	// main loop
@@ -176,16 +176,16 @@ inner_kernel_gemv_add_n_4_lib4:
 	mulpd		%xmm5, %xmm4
 	addpd		%xmm4, %xmm3
 
-	subl	$4, %eax
-	addl	$128, %ebx
-	addl	$32, %ecx
+	subl	$ 4, %eax
+	addl	$ 128, %ebx
+	addl	$ 32, %ecx
 	
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 0: // clean-up
@@ -198,11 +198,11 @@ inner_kernel_gemv_add_n_4_lib4:
 	mulpd		%xmm5, %xmm4
 	addpd		%xmm4, %xmm1
 
-	subl	$1, %eax
-	addl	$32, %ebx
-	addl	$8, %ecx
+	subl	$ 1, %eax
+	addl	$ 32, %ebx
+	addl	$ 8, %ecx
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jg		0b // clean
 
 2: // return
@@ -242,10 +242,10 @@ inner_kernel_gemv_add_n_4_lib4:
 inner_kernel_gemv_add_t_4_lib4:
 #endif
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jl		0f // clean-up loop
 
 	// main loop
@@ -291,16 +291,16 @@ inner_kernel_gemv_add_t_4_lib4:
 	mulpd		%xmm4, %xmm5
 	addpd		%xmm5, %xmm3
 
-	subl	$4, %eax
+	subl	$ 4, %eax
 	addl	%ecx, %ebx
-	addl	$32, %edx
+	addl	$ 32, %edx
 	
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 0: // clean-up
@@ -323,11 +323,11 @@ inner_kernel_gemv_add_t_4_lib4:
 	mulsd		%xmm4, %xmm5
 	addsd		%xmm5, %xmm3
 	
-	subl	$1, %eax
-	addl	$8, %ebx
-	addl	$8, %edx
+	subl	$ 1, %eax
+	addl	$ 8, %ebx
+	addl	$ 8, %edx
 	
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jg		0b // main loop 
 
 	
@@ -380,19 +380,19 @@ inner_kernel_gemv_add_t_4_lib4:
 	FUN_START(inner_edge_gemv_add_t_4_lib4)
 #endif
 
-	cmpl			$0, %esi				// offset==0
+	cmpl			$ 0, %esi				// offset==0
 	jle				2f						// end
 
-	cmpl			$0, %eax				// k==0
+	cmpl			$ 0, %eax				// k==0
 	jle				2f						// end
 
-	movl			$4, %edi				// load 4
+	movl			$ 4, %edi				// load 4
 	subl			%esi, %edi			// 4-offsetA
 	cmpl			%eax, %edi			// k > 4-offsetA
 	cmovgl			%eax, %edi			// kend=min(k,4-offsetA)
 
 //	movl			%esi, %ebp				// load offsetA
-//	sall			$3, %ebp				// offsetA*sizeof(double)
+//	sall			$ 3, %ebp				// offsetA*sizeof(double)
 //	addl			%ebp, %ebx				// A+offsetA*sizeof(double)
 
 1:
@@ -401,7 +401,7 @@ inner_kernel_gemv_add_t_4_lib4:
 	movsd	0(%ebx), %xmm6
 	mulsd	%xmm7, %xmm6
 	addsd	%xmm6, %xmm0
-	subl	$1, %eax
+	subl	$ 1, %eax
 
 	movsd	32(%ebx), %xmm6
 	mulsd	%xmm7, %xmm6
@@ -415,19 +415,19 @@ inner_kernel_gemv_add_t_4_lib4:
 	mulsd	%xmm7, %xmm6
 	addsd	%xmm6, %xmm3
 
-	subl	$1, %eax				// k=-1
-	subl	$1, %edi				// k_panel=-1
-	addl	$8, %ebx				// A=+bs
-	addl	$8, %edx				// x=+1
+	subl	$ 1, %eax				// k=-1
+	subl	$ 1, %edi				// k_panel=-1
+	addl	$ 8, %ebx				// A=+bs
+	addl	$ 8, %edx				// x=+1
 
-	cmpl	$0, %edi				// if k_panel=0
+	cmpl	$ 0, %edi				// if k_panel=0
 	jg		1b						// loop 1
 
-	cmpl	$0, %eax				// if k=0
+	cmpl	$ 0, %eax				// if k=0
 	jle		2f						// end
 
 	addl	%ecx, %ebx				// B=Boff+sdb*bs
-	subl	$32, %ebx				// B-=4*sizeof(double) (loop+offsetB)
+	subl	$ 32, %ebx				// B-=4*sizeof(double) (loop+offsetB)
 
 2:
 
@@ -614,22 +614,22 @@ inner_store_4_lib4:
 inner_store_4_vs_lib4:
 #endif
 	
-	cmpl	$0, %ebx
+	cmpl	$ 0, %ebx
 	jle		0f // return
 
 	movsd 	%xmm0, 0(%eax)
 
-	cmpl	$1, %ebx
+	cmpl	$ 1, %ebx
 	jle		0f // return
 
 	movhpd 	%xmm0, 8(%eax)
 
-	cmpl	$2, %ebx
+	cmpl	$ 2, %ebx
 	jle		0f // return
 
 	movsd 	%xmm1, 16(%eax)
 
-	cmpl	$3, %ebx
+	cmpl	$ 3, %ebx
 	jle		0f // return
 
 	movhpd 	%xmm1, 24(%eax)
@@ -806,7 +806,7 @@ kernel_dgemv_t_4_lib4:
 	movl	ARG1, %eax // k
 	movl	ARG4, %ebx  // A
 	movl	ARG5, %ecx // sda
-	sall	$5, %ecx // 4*sda*sizeof(double)
+	sall	$ 5, %ecx // 4*sda*sizeof(double)
 	movl	ARG6, %edx  // x
 	movl	ARG3, %esi  // offA
 
@@ -880,7 +880,7 @@ kernel_dgemv_t_4_vs_lib4:
 	movl	ARG1, %eax // k
 	movl	ARG4, %ebx  // A
 	movl	ARG5, %ecx // sda
-	sall	$5, %ecx // 4*sda*sizeof(double)
+	sall	$ 5, %ecx // 4*sda*sizeof(double)
 	movl	ARG6, %edx  // x
 	movl	ARG3, %esi  // offA
 

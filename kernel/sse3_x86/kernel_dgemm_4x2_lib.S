@@ -182,7 +182,7 @@ kernel_dgemm_nt_4x2_lib44cc:
 	movl	ARG5, %ebx // beta
 	movl	ARG6, %ecx   // C
 	movl	ARG7, %edx   // ldc
-	sall	$3, %edx
+	sall	$ 3, %edx
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X2_LIB
@@ -195,7 +195,7 @@ kernel_dgemm_nt_4x2_lib44cc:
 
 	movl	ARG8, %eax // D
 	movl	ARG9, %ebx // ldd
-	sall	$3, %ebx
+	sall	$ 3, %ebx
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X2_LIB

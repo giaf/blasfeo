@@ -216,10 +216,10 @@ inner_kernel_dgemv_add_nt_6_lib4:
 #endif
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jl		0f // clean-up loop
 
 	// main loop
@@ -235,7 +235,7 @@ inner_kernel_dgemv_add_nt_6_lib4:
 	vmulpd	%ymm14, %ymm6, %ymm15
 	vaddpd	%ymm13, %ymm15, %ymm13
 	
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vmovapd	32(%r11), %ymm14
 	vmulpd	%ymm14, %ymm12, %ymm15
@@ -270,16 +270,16 @@ inner_kernel_dgemv_add_nt_6_lib4:
 	vmovupd	%ymm13, 0(%r14) 
 
 	addq	%r12, %r11
-	addq	$32, %r13
-	addq	$32, %r14
+	addq	$ 32, %r13
+	addq	$ 32, %r14
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 0: // clean-up
@@ -291,7 +291,7 @@ inner_kernel_dgemv_add_nt_6_lib4:
 	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm14, %xmm14
-	vinsertf128	$1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
 	vsubpd		%ymm14, %ymm13, %ymm14
 
 	vmaskmovpd	0(%r13), %ymm14, %ymm12
@@ -344,7 +344,7 @@ inner_kernel_dgemv_add_nt_6_lib4:
 	vmovupd	-32(%rsp), %ymm14 // load mask form stack
 	vmaskmovpd	%ymm13, %ymm14, 0(%r14)
 
-	sall	$3, %r10d
+	sall	$ 3, %r10d
 	addq	%r10, %r11
 	addq	%r10, %r13
 	addq	%r10, %r14
@@ -438,47 +438,47 @@ inner_edge_dsymv_add_nt_4_lib4:
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm0, %ymm15, %ymm0
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x1, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm6, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 	
 	vmovapd		32(%r11), %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x1, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm1, %ymm15, %ymm1
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x3, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm7, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 	
 	vmovapd		64(%r11), %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x3, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm2, %ymm15, %ymm2
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x7, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x7, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm8, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 
 	vmovapd		96(%r11), %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x7, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x7, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm3, %ymm15, %ymm3
 //	vxorpd		%ymm15, %ymm15, %ymm15
-//	vblendpd	$0x0, %ymm14, %ymm15, %ymm14
+//	vblendpd	$ 0x0, %ymm14, %ymm15, %ymm14
 //	vmulpd		%ymm14, %ymm9, %ymm15
 //	vaddpd		%ymm13, %ymm15, %ymm13
 	
 	vmovupd		%ymm13, 0(%r14) 
 
 	addq	%r12, %r11
-	addq	$32, %r13
-	addq	$32, %r14
+	addq	$ 32, %r13
+	addq	$ 32, %r14
 	
-	subq	$4, %r10
+	subq	$ 4, %r10
 
 #if MACRO_LEVEL>=2
 	.endm
@@ -551,9 +551,9 @@ inner_blend_t_scale_ab_6_lib4:
 	vhaddpd			%ymm3, %ymm2, %ymm2
 	vhaddpd			%ymm5, %ymm4, %ymm4
 //	vhaddpd			%ymm3, %ymm2, %ymm2
-	vperm2f128		$0x2, %ymm0, %ymm2, %ymm1
-	vperm2f128		$0x13, %ymm0, %ymm2, %ymm0
-	vextractf128	$0x1, %ymm4, %xmm5
+	vperm2f128		$ 0x2, %ymm0, %ymm2, %ymm1
+	vperm2f128		$ 0x13, %ymm0, %ymm2, %ymm0
+	vextractf128	$ 0x1, %ymm4, %xmm5
 	vaddpd			%ymm0, %ymm1, %ymm0
 	vaddpd			%ymm4, %ymm5, %ymm4
 
@@ -572,7 +572,7 @@ inner_blend_t_scale_ab_6_lib4:
 	vaddpd			%ymm1, %ymm13, %ymm1
 	
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x3, %ymm1, %ymm15, %ymm1
+	vblendpd		$ 0x3, %ymm1, %ymm15, %ymm1
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -639,8 +639,8 @@ inner_blend_t_scale_a1_4_lib4:
 	// reduction
 	vhaddpd	%ymm1, %ymm0, %ymm0
 	vhaddpd	%ymm3, %ymm2, %ymm2
-	vperm2f128	$0x2, %ymm0, %ymm2, %ymm1
-	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
+	vperm2f128	$ 0x2, %ymm0, %ymm2, %ymm1
+	vperm2f128	$ 0x13, %ymm0, %ymm2, %ymm0
 	vaddpd	%ymm0, %ymm1, %ymm0
 
 	// alpha
@@ -763,7 +763,7 @@ kernel_dgemv_nt_6_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG7, %r13  // x_t
 	movq	ARG10, %r14  // z_n
@@ -872,7 +872,7 @@ kernel_dsymv_l_4_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG6, %r13  // x_t
 	movq	ARG7, %r14  // z_n

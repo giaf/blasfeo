@@ -263,10 +263,10 @@ NAME:
 	FUN_START(inner_kernel_dgemv_add_n_4_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jl		0f // clean-up loop
 
 	// main loop
@@ -280,7 +280,7 @@ NAME:
 	movapd	16(%r11), %xmm8
 	mulpd	%xmm12, %xmm8
 	addpd	%xmm8, %xmm1
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	movddup	8(%r12), %xmm12
 	movapd	32(%r11), %xmm8
@@ -306,16 +306,16 @@ NAME:
 	mulpd	%xmm12, %xmm8
 	addpd	%xmm8, %xmm3
 	
-	addq	$128, %r11
-	addq	$32, %r12
+	addq	$ 128, %r11
+	addq	$ 32, %r12
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 0: // clean-up
@@ -328,11 +328,11 @@ NAME:
 	mulpd	%xmm12, %xmm8
 	addpd	%xmm8, %xmm1
 
-	addq	$32, %r11
-	addq	$8, %r12
+	addq	$ 32, %r11
+	addq	$ 8, %r12
 	
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 
 	jg		0b // clean
 
@@ -380,10 +380,10 @@ NAME:
 	FUN_START(inner_kernel_dgemv_add_t_4_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jl		0f // clean-up loop
 
 	// main loop
@@ -395,7 +395,7 @@ NAME:
 	movapd	0(%r11), %xmm8
 	mulpd	%xmm12, %xmm8
 	addpd	%xmm8, %xmm0
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	movapd	32(%r11), %xmm8
 	mulpd	%xmm12, %xmm8
@@ -428,14 +428,14 @@ NAME:
 	addpd	%xmm8, %xmm3
 
 	addq	%r12, %r11
-	addq	$32, %r13
+	addq	$ 32, %r13
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 0: // clean-up
@@ -445,7 +445,7 @@ NAME:
 	movsd	0(%r11), %xmm8
 	mulsd	%xmm12, %xmm8
 	addsd	%xmm8, %xmm0
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	movsd	32(%r11), %xmm8
 	mulsd	%xmm12, %xmm8
@@ -459,10 +459,10 @@ NAME:
 	mulsd	%xmm12, %xmm8
 	addsd	%xmm8, %xmm3
 
-	addq	$8, %r11
-	addq	$8, %r13
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		0b // main loop 
 
 	
@@ -520,10 +520,10 @@ NAME:
 	FUN_START(inner_kernel_dgemv_add_nt_4_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jl		0f // clean-up loop
 
 	// main loop
@@ -535,7 +535,7 @@ NAME:
 	movupd	0(%r14), %xmm11
 	movupd	16(%r14), %xmm12
 
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	movapd	0(%r11), %xmm14
 	movapd	%xmm14, %xmm15
@@ -597,15 +597,15 @@ NAME:
 	movupd	%xmm12, 16(%r14) 
 
 	addq	%r12, %r11
-	addq	$32, %r13
-	addq	$32, %r14
+	addq	$ 32, %r13
+	addq	$ 32, %r14
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 0: // clean-up
@@ -613,7 +613,7 @@ NAME:
 	movsd	0(%r13), %xmm9
 	movsd	0(%r14), %xmm11
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	movsd	0(%r11), %xmm14
 	movsd	%xmm14, %xmm15
@@ -645,11 +645,11 @@ NAME:
 
 	movsd	%xmm11, 0(%r14) 
 
-	addq	$8, %r11
-	addq	$8, %r13
-	addq	$8, %r14
+	addq	$ 8, %r11
+	addq	$ 8, %r13
+	addq	$ 8, %r14
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		0b // main loop 
 
 2: // return
@@ -698,19 +698,19 @@ NAME:
 	FUN_START(inner_edge_dgemv_add_t_4_lib4)
 #endif
 
-	cmpl			$0, %r14d				// offset==0
+	cmpl			$ 0, %r14d				// offset==0
 	jle				2f						// end
 
-	cmpl			$0, %r10d				// k==0
+	cmpl			$ 0, %r10d				// k==0
 	jle				2f						// end
 
-	movl			$4, %r15d				// load 4
+	movl			$ 4, %r15d				// load 4
 	subl			%r14d, %r15d			// 4-offsetA
 	cmpl			%r10d, %r15d			// k > 4-offsetA
 	cmovgl			%r10d, %r15d			// kend=min(k,4-offsetA)
 
 //	movl			%r14d, %eax				// load offsetA
-//	sall			$3, %eax				// offsetA*sizeof(double)
+//	sall			$ 3, %eax				// offsetA*sizeof(double)
 //	addq			%rax, %r11				// A+offsetA*sizeof(double)
 
 1:
@@ -719,7 +719,7 @@ NAME:
 	movsd	0(%r11), %xmm8
 	mulsd	%xmm12, %xmm8
 	addsd	%xmm8, %xmm0
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
 	movsd	32(%r11), %xmm8
 	mulsd	%xmm12, %xmm8
@@ -733,19 +733,19 @@ NAME:
 	mulsd	%xmm12, %xmm8
 	addsd	%xmm8, %xmm3
 
-	subl	$1, %r10d				// k=-1
-	subl	$1, %r15d				// k_panel=-1
-	addq	$8, %r11				// A=+bs
-	addq	$8, %r13				// x=+1
+	subl	$ 1, %r10d				// k=-1
+	subl	$ 1, %r15d				// k_panel=-1
+	addq	$ 8, %r11				// A=+bs
+	addq	$ 8, %r13				// x=+1
 
-	cmpl	$0, %r15d				// if k_panel=0
+	cmpl	$ 0, %r15d				// if k_panel=0
 	jg		1b						// loop 1
 
-	cmpl	$0, %r10d				// if k=0
+	cmpl	$ 0, %r10d				// if k=0
 	jle		2f						// end
 
 	addq	%r12, %r11				// B=Boff+sdb*bs
-	subq	$32, %r11				// B-=4*sizeof(double) (loop+offsetB)
+	subq	$ 32, %r11				// B-=4*sizeof(double) (loop+offsetB)
 
 2:
 
@@ -882,10 +882,10 @@ NAME:
 	movupd	%xmm12, 16(%r14) 
 
 	addq	%r12, %r11
-	addq	$32, %r13
-	addq	$32, %r14
+	addq	$ 32, %r13
+	addq	$ 32, %r14
 	
-	subq	$4, %r10
+	subq	$ 4, %r10
 
 #if MACRO_LEVEL>=2
 	.endm
@@ -941,24 +941,24 @@ NAME:
 	movhpd			%xmm12, %xmm0
 
 	movapd			32(%r10), %ymm13
-	vblendpd		$0x3, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x3, %ymm0, %ymm12
-	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x3, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x3, %ymm0, %ymm12
+	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	16(%r11), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm1
-	vblendpd		$0x4, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x4, %ymm1, %ymm0, %ymm0
 
 	vmovapd			64(%r10), %ymm13
-	vblendpd		$0x7, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x7, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	24(%r11), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm1
-	vblendpd		$0x8, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x8, %ymm1, %ymm0, %ymm0
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -1201,22 +1201,22 @@ NAME:
 	FUN_START(inner_store_4_vs_lib4)
 #endif
 	
-	cmpl	$0, %r11d
+	cmpl	$ 0, %r11d
 	jle		0f // return
 
 	movsd 	%xmm0, 0(%r10)
 
-	cmpl	$1, %r11d
+	cmpl	$ 1, %r11d
 	jle		0f // return
 
 	movhpd 	%xmm0, 8(%r10)
 
-	cmpl	$2, %r11d
+	cmpl	$ 2, %r11d
 	jle		0f // return
 
 	movsd 	%xmm1, 16(%r10)
 
-	cmpl	$3, %r11d
+	cmpl	$ 3, %r11d
 	jle		0f // return
 
 	movhpd 	%xmm1, 24(%r10)
@@ -1374,7 +1374,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG6, %r13  // x
 	movq	ARG3, %r14 // offA
@@ -1444,7 +1444,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG6, %r13  // x
 	movq	ARG3, %r14 // offA
@@ -1530,7 +1530,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG7, %r13  // x_t
 	movq	ARG10, %r14  // z_n
@@ -1605,11 +1605,11 @@ NAME:
 
 	movddup 0(%r10), %xmm4
 	mulpd	%xmm15, %xmm4
-	cmpl	$2, %r11d
+	cmpl	$ 2, %r11d
 	jl		0f
 	movddup 8(%r10), %xmm5
 	mulpd	%xmm15, %xmm5
-	cmpl	$3, %r11d
+	cmpl	$ 3, %r11d
 	jl		0f
 	movddup 16(%r10), %xmm6
 	mulpd	%xmm15, %xmm6
@@ -1623,7 +1623,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG7, %r13  // x_t
 	movq	ARG10, %r14  // z_n
@@ -1703,7 +1703,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // x_t
 	movq	ARG6, %r14  // z_n
 

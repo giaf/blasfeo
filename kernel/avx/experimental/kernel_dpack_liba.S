@@ -9,11 +9,11 @@
 	FUN_START(inner_kernel_dpack_tt_4_lib12)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$11, %r10d
+	cmpl	$ 11, %r10d
 	jle		2f // clean-up loop
 
 
@@ -55,15 +55,15 @@
 	vmovapd		%ymm0, 352(%r13)
 	addq	%r12, %r15
 
-	subl	$12, %r10d
-	addq	$96, %r11
+	subl	$ 12, %r10d
+	addq	$ 96, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -87,11 +87,11 @@
 	vmovsd		%xmm0, 96(%r13)
 	addq	%r12, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -116,11 +116,11 @@
 	FUN_START(inner_kernel_dpack_tt_3_lib12)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$11, %r10d
+	cmpl	$ 11, %r10d
 	jle		2f // clean-up loop
 
 
@@ -162,15 +162,15 @@
 //	vmovapd		%ymm0, 352(%r13)
 //	addq	%r12, %r15
 
-	subl	$12, %r10d
-	addq	$96, %r11
+	subl	$ 12, %r10d
+	addq	$ 96, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -194,11 +194,11 @@
 //	vmovsd		%xmm0, 96(%r13)
 //	addq	%r12, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -223,11 +223,11 @@
 	FUN_START(inner_kernel_dpack_tt_2_lib12)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$11, %r10d
+	cmpl	$ 11, %r10d
 	jle		2f // clean-up loop
 
 
@@ -269,15 +269,15 @@
 //	vmovapd		%ymm0, 352(%r13)
 //	addq	%r12, %r15
 
-	subl	$12, %r10d
-	addq	$96, %r11
+	subl	$ 12, %r10d
+	addq	$ 96, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -301,11 +301,11 @@
 //	vmovsd		%xmm0, 96(%r13)
 //	addq	%r12, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -330,11 +330,11 @@
 	FUN_START(inner_kernel_dpack_tt_1_lib12)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
-	cmpl	$11, %r10d
+	cmpl	$ 11, %r10d
 	jle		2f // clean-up loop
 
 
@@ -376,15 +376,15 @@
 //	vmovapd		%ymm0, 352(%r13)
 //	addq	%r12, %r15
 
-	subl	$12, %r10d
-	addq	$96, %r11
+	subl	$ 12, %r10d
+	addq	$ 96, %r11
 	addq	%r14, %r13
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b
 
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 
@@ -408,11 +408,11 @@
 //	vmovsd		%xmm0, 96(%r13)
 //	addq	%r12, %r15
 
-	subl	$1, %r10d
-	addq	$8, %r11
-	addq	$8, %r13
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b
 
 
@@ -442,10 +442,10 @@
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	leal	0(%r14d, %r14d, 2), %r14d
 
 
@@ -478,14 +478,14 @@
 	movq	ARG1, %r10 // kmax
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG4, %r13 // C
 	movq	ARG5, %r14 // sdc
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	leal	0(%r14d, %r14d, 2), %r14d
 
 	movq	ARG6, %r15 // m1
-	cmpl	$1, %r15d
+	cmpl	$ 1, %r15d
 	jg		100f
 
 #if MACRO_LEVEL>=1
@@ -499,7 +499,7 @@
 100:
 
 	movq	ARG6, %r15 // m1
-	cmpl	$2, %r15d
+	cmpl	$ 2, %r15d
 	jg		101f
 
 #if MACRO_LEVEL>=1
@@ -513,7 +513,7 @@
 101:
 
 	movq	ARG6, %r15 // m1
-	cmpl	$3, %r15d
+	cmpl	$ 3, %r15d
 	jg		102f
 
 #if MACRO_LEVEL>=1

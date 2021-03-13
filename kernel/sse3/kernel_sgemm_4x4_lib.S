@@ -68,21 +68,21 @@
 #endif
 
 	movaps		%xmm1, %xmm12
-	shufps		$0xd8, %xmm0, %xmm1
-	shufps		$0xd8, %xmm3, %xmm0
-	shufps		$0xd8, %xmm2, %xmm3
-	shufps		$0xd8, %xmm12, %xmm2
+	shufps		$ 0xd8, %xmm0, %xmm1
+	shufps		$ 0xd8, %xmm3, %xmm0
+	shufps		$ 0xd8, %xmm2, %xmm3
+	shufps		$ 0xd8, %xmm12, %xmm2
 
 	movaps		%xmm0, %xmm12
-	shufps		$0xd8, %xmm2, %xmm0
-	shufps		$0xd8, %xmm12, %xmm2
+	shufps		$ 0xd8, %xmm2, %xmm0
+	shufps		$ 0xd8, %xmm12, %xmm2
 	movaps		%xmm1, %xmm12
-	shufps		$0xd8, %xmm3, %xmm1
-	shufps		$0xd8, %xmm12, %xmm3
+	shufps		$ 0xd8, %xmm3, %xmm1
+	shufps		$ 0xd8, %xmm12, %xmm3
 
 	// alpha
 	movss		0(%r10), %xmm15
-	shufps		$0x00, %xmm15, %xmm15
+	shufps		$ 0x00, %xmm15, %xmm15
 
 	mulps		%xmm15, %xmm0
 	mulps		%xmm15, %xmm1
@@ -91,7 +91,7 @@
 
 	// beta
 	movss		0(%r11), %xmm14
-	shufps		$0x00, %xmm14, %xmm14
+	shufps		$ 0x00, %xmm14, %xmm14
 
 	xorps		%xmm15, %xmm15 // 0.0
 	ucomiss		%xmm15, %xmm14 // beta==0.0 ?
@@ -208,7 +208,7 @@
 	movq	ARG5, %r11 // beta
 	movq	ARG6, %r12   // C
 	movq	ARG7, %r13   // ldc
-	sall	$2, %r13d
+	sall	$ 2, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_SCALE_AB_4X4_LIB
@@ -221,7 +221,7 @@
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$2, %r11d
+	sall	$ 2, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB

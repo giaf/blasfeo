@@ -51,7 +51,7 @@
 #if 1
 
 #define PROLOGUE \
-	subl	$16, %esp; \
+	subl	$ 16, %esp; \
 	movl	%ebx, 0(%esp); \
 	movl	%esi, 4(%esp); \
 	movl	%edi, 8(%esp); \
@@ -61,7 +61,7 @@
 	movl	4(%esp), %esi; \
 	movl	8(%esp), %edi; \
 	movl	12(%esp), %ebp; \
-	addl	$16, %esp;
+	addl	$ 16, %esp;
 
 #else
 
@@ -110,12 +110,12 @@
 inner_kernel_gemm_add_nt_2x2_lib4:
 #endif
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -163,17 +163,17 @@ inner_kernel_gemm_add_nt_2x2_lib4:
 	addpd		%xmm4, %xmm1
 
 
-	subl	$4, %eax
-	addl	$128, %ecx
-	addl	$128, %ebx
+	subl	$ 4, %eax
+	addl	$ 128, %ecx
+	addl	$ 128, %ebx
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jle		4f // clean1
 
 	// unroll 0
@@ -216,17 +216,17 @@ inner_kernel_gemm_add_nt_2x2_lib4:
 	mulpd		%xmm5, %xmm4
 	addpd		%xmm4, %xmm1
 
-	subl	$4, %eax
-	addl	$128, %ecx
-	addl	$128, %ebx
+	subl	$ 4, %eax
+	addl	$ 128, %ecx
+	addl	$ 128, %ebx
 
-//	cmpl	$3, %eax
+//	cmpl	$ 3, %eax
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// clean-up loop
@@ -242,11 +242,11 @@ inner_kernel_gemm_add_nt_2x2_lib4:
 	mulpd		%xmm5, %xmm4
 	addpd		%xmm4, %xmm1
 
-	subl	$1, %eax
-	addl	$32, %ecx
-	addl	$32, %ebx
+	subl	$ 1, %eax
+	addl	$ 32, %ecx
+	addl	$ 32, %ebx
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jg		3b // clean up loop
 
 2: // return
@@ -283,12 +283,12 @@ inner_kernel_gemm_add_nt_2x2_lib4:
 inner_kernel_gemm_sub_nt_2x2_lib4:
 #endif
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -336,17 +336,17 @@ inner_kernel_gemm_sub_nt_2x2_lib4:
 	subpd		%xmm4, %xmm1
 
 
-	subl	$4, %eax
-	addl	$128, %ecx
-	addl	$128, %ebx
+	subl	$ 4, %eax
+	addl	$ 128, %ecx
+	addl	$ 128, %ebx
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jle		4f // clean1
 
 	// unroll 0
@@ -389,17 +389,17 @@ inner_kernel_gemm_sub_nt_2x2_lib4:
 	mulpd		%xmm5, %xmm4
 	subpd		%xmm4, %xmm1
 
-	subl	$4, %eax
-	addl	$128, %ecx
-	addl	$128, %ebx
+	subl	$ 4, %eax
+	addl	$ 128, %ecx
+	addl	$ 128, %ebx
 
-//	cmpl	$3, %eax
+//	cmpl	$ 3, %eax
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// clean-up loop
@@ -415,11 +415,11 @@ inner_kernel_gemm_sub_nt_2x2_lib4:
 	mulpd		%xmm5, %xmm4
 	subpd		%xmm4, %xmm1
 
-	subl	$1, %eax
-	addl	$32, %ecx
-	addl	$32, %ebx
+	subl	$ 1, %eax
+	addl	$ 32, %ecx
+	addl	$ 32, %ebx
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jg		3b // clean up loop
 
 2: // return
@@ -465,7 +465,7 @@ inner_edge_potrf_2x2_vs_lib4:
 	movsd			.LC00, %xmm5 // 1.0
 	divsd			%xmm6, %xmm5
 2:
-	cmpl			$2, %ebx
+	cmpl			$ 2, %ebx
 	movsd			%xmm5, 0(%eax)
 	movddup			%xmm5, %xmm5
 	mulpd			%xmm5, %xmm0
@@ -473,12 +473,12 @@ inner_edge_potrf_2x2_vs_lib4:
 	jl				0f // ret
 
 	movapd			%xmm0, %xmm6
-	shufpd			$0x3, %xmm6, %xmm6
+	shufpd			$ 0x3, %xmm6, %xmm6
 	movapd			%xmm6, %xmm5
 	mulpd			%xmm0, %xmm6
 	subpd			%xmm6, %xmm1
 	movapd			%xmm1, %xmm6
-	shufpd			$0x3, %xmm6, %xmm6 // 0x1 ???
+	shufpd			$ 0x3, %xmm6, %xmm6 // 0x1 ???
 	ucomisd			%xmm7, %xmm6 // d_11 > 0.0 ?
 	jbe				3f
 	sqrtsd			%xmm6, %xmm6
@@ -660,12 +660,12 @@ inner_store_2x2_lib4:
 inner_store_2x2_vs_lib4:
 #endif
 
-	cmpl		$2, %ebx
+	cmpl		$ 2, %ebx
 	jge			0f
 
 	// km==1
 	movsd		%xmm0,  0(%eax)
-	cmpl		$2, %ecx
+	cmpl		$ 2, %ecx
 	jl			4f // end
 	movsd		%xmm1, 32(%eax)
 
@@ -674,7 +674,7 @@ inner_store_2x2_vs_lib4:
 0:
 	// km==2
 	movapd		%xmm0,  0(%eax)
-	cmpl		$2, %ecx
+	cmpl		$ 2, %ecx
 	jl			4f // end
 	movapd		%xmm1, 32(%eax)
 
@@ -749,7 +749,7 @@ inner_store_l_2x2_lib4:
 inner_store_l_2x2_vs_lib4:
 #endif
 
-	cmpl		$2, %ebx
+	cmpl		$ 2, %ebx
 	jge			0f
 
 	// km==1
@@ -760,7 +760,7 @@ inner_store_l_2x2_vs_lib4:
 0:
 	// km==2
 	movapd		%xmm0,  0(%eax)
-	cmpl		$2, %ecx
+	cmpl		$ 2, %ecx
 	jl			4f // end
 	movhpd		%xmm1, 40(%eax)
 
@@ -949,7 +949,7 @@ kernel_dpotrf_nt_l_2x2_lib4:
 	// factorization
 
 	movl	ARG6, %eax  // inv_diag_D 
-	movl	$4, %ebx // kn 
+	movl	$ 4, %ebx // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_POTRF_2X2_VS_LIB4
@@ -1110,7 +1110,7 @@ kernel_dsyrk_dpotrf_nt_l_2x2_lib4:
 	// factorization
 
 	movl	ARG9, %eax  // inv_diag_D 
-	movl	$4, %ebx
+	movl	$ 4, %ebx
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_POTRF_2X2_VS_LIB4

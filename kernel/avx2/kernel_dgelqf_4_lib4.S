@@ -189,21 +189,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 
 	movq	ARG2, %r11 // D
 	movq	ARG3, %r14 // sdd
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	movq	ARG4, %r12 // dD
 	movq	ARG5, %r13 // T
-	movq	$384, %r15 // sdt !!!!!!!!!!!!!!!!!!!!!!!!!
+	movq	$ 384, %r15 // sdt !!!!!!!!!!!!!!!!!!!!!!!!!
 
 	vxorpd			%xmm15, %xmm15, %xmm15
 	movq	ARG1, %r10 // n
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 100:
 	vmovsd			0(%r11), %xmm14
 	vfmadd231sd		%xmm14, %xmm14, %xmm15
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		100b
 
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -241,7 +241,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 0(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vmovapd			0(%r11, %r14, 1), %ymm1
@@ -265,9 +265,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 64(%r11)
 	vmovsd			%xmm10, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11), %ymm8
@@ -294,12 +294,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 32(%r11)
 	vmovsd			%xmm10, 64(%r11)
 	vmovsd			%xmm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11), %ymm8
@@ -308,9 +308,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -320,7 +320,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmulpd			%ymm15, %ymm2, %ymm2
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm15, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -369,9 +369,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -422,12 +422,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -442,12 +442,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // beta
+	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
 102:
@@ -486,7 +486,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 40(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vmovapd			32(%r11, %r14, 1), %ymm1
@@ -504,9 +504,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 72(%r11)
 	vmovsd			%xmm10, 104(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11), %ymm8
@@ -533,12 +533,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 40(%r11)
 	vmovsd			%xmm10, 72(%r11)
 	vmovsd			%xmm11, 104(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11), %ymm8
@@ -547,9 +547,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 8(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -559,7 +559,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			LC02(%rip), %ymm12
 #endif
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vbroadcastsd	40(%r13), %ymm15
 	vmulpd			%ymm15, %ymm0, %ymm0
@@ -568,7 +568,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm0, 32(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x3, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x3, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -605,9 +605,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -658,12 +658,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -677,12 +677,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
 102:
@@ -721,7 +721,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 80(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vmovapd			64(%r11, %r14, 1), %ymm1
@@ -733,9 +733,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		96(%r11, %r14, 2), %ymm10, %ymm2
 	vmovsd			%xmm10, 112(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11), %ymm8
@@ -762,12 +762,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 48(%r11)
 	vmovsd			%xmm10, 80(%r11)
 	vmovsd			%xmm11, 112(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11), %ymm8
@@ -776,21 +776,21 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 16(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
-	vblendpd		$0x7, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm15, %ymm0, %ymm0
 	vbroadcastsd	80(%r13), %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vmulpd			%ymm14, %ymm1, %ymm1
@@ -798,7 +798,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%xmm0, 64(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x7, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -824,9 +824,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -877,12 +877,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -896,12 +896,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// fourth column
 102:
@@ -940,15 +940,15 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 120(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	vmovapd			96(%r11, %r14, 1), %ymm1
 	vmovapd			96(%r11, %r14, 2), %ymm2
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11), %ymm8
@@ -975,12 +975,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 56(%r11)
 	vmovsd			%xmm10, 88(%r11)
 	vmovsd			%xmm11, 120(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11), %ymm8
@@ -989,26 +989,26 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 24(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vbroadcastsd	120(%r13), %ymm14
@@ -1016,7 +1016,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			96(%r13), %ymm0
-	vblendpd		$0x7, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm15, %ymm0, %ymm0
 	vmovapd			%ymm0, 96(%r13)
 
 	movq	ARG2, %r11 // D
@@ -1028,9 +1028,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			0(%r11, %r14, 1), %ymm9
@@ -1067,9 +1067,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -1108,12 +1108,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11, %r14, 1), %ymm9
@@ -1124,12 +1124,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-//	vpermpd	$0x00, %ymm15, %ymm15  // beta
+//	vpermpd	$ 0x00, %ymm15, %ymm15  // beta
 
 	// fifth column
 102:
@@ -1142,7 +1142,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vmovsd			0(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -1169,7 +1169,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 128(%r13, %r15, 1) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vmovapd			0(%r11, %r14, 1), %ymm1
@@ -1193,9 +1193,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 64(%r11, %r14, 1)
 	vmovsd			%xmm10, 96(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$8, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 8, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11, %r14, 1), %ymm8
@@ -1222,12 +1222,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 32(%r11, %r14, 1)
 	vmovsd			%xmm10, 64(%r11, %r14, 1)
 	vmovsd			%xmm11, 96(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11, %r14, 1), %ymm8
@@ -1236,30 +1236,30 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 0(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			96(%r13), %ymm14
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vbroadcastsd	128(%r13, %r15, 1), %ymm14
@@ -1267,18 +1267,18 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 //	vmovapd			128(%r13), %ymm0
-//	vblendpd		$0xf, %ymm15, %ymm0, %ymm15
+//	vblendpd		$ 0xf, %ymm15, %ymm0, %ymm15
 	vmovapd			%ymm15, 128(%r13)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm1, %ymm1
+	vblendpd		$ 0x1, %ymm15, %ymm1, %ymm1
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			0(%r11, %r14, 1), %ymm9
@@ -1313,9 +1313,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -1354,12 +1354,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -1371,12 +1371,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // beta
+	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// sixth column
 102:
@@ -1389,7 +1389,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vmovsd			40(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -1416,7 +1416,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 168(%r13, %r15, 1) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vmovapd			32(%r11, %r14, 1), %ymm1
@@ -1434,9 +1434,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 72(%r11, %r14, 1)
 	vmovsd			%xmm10, 104(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$8, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 8, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11, %r14, 1), %ymm8
@@ -1463,12 +1463,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 40(%r11, %r14, 1)
 	vmovsd			%xmm10, 72(%r11, %r14, 1)
 	vmovsd			%xmm11, 104(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11, %r14, 1), %ymm8
@@ -1477,36 +1477,36 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 8(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			96(%r13), %ymm14
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			128(%r13), %ymm14
 	vmovapd			128(%r13, %r15, 1), %ymm11
-	vblendpd		$0x1, %ymm11, %ymm12, %ymm11
-	vpermpd			$0x00, %ymm1, %ymm13 // vv
+	vblendpd		$ 0x1, %ymm11, %ymm12, %ymm11
+	vpermpd			$ 0x00, %ymm1, %ymm13 // vv
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmulpd			%ymm11, %ymm13, %ymm11
 	//
@@ -1516,19 +1516,19 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			160(%r13, %r15, 1), %ymm0
-	vblendpd		$0x1, %ymm11, %ymm0, %ymm11
+	vblendpd		$ 0x1, %ymm11, %ymm0, %ymm11
 	vmovapd			%ymm15, 160(%r13)
 	vmovapd			%ymm11, 160(%r13, %r15, 1)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x3, %ymm15, %ymm1, %ymm1
+	vblendpd		$ 0x3, %ymm15, %ymm1, %ymm1
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			32(%r11, %r14, 1), %ymm9
@@ -1554,9 +1554,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmulpd			%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -1595,12 +1595,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -1612,12 +1612,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// seventh column
 102:
@@ -1630,7 +1630,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vmovsd			80(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -1657,7 +1657,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 208(%r13, %r15, 1) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vmovapd			64(%r11, %r14, 1), %ymm1
@@ -1669,9 +1669,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		96(%r11, %r14, 2), %ymm10, %ymm2
 	vmovsd			%xmm10, 112(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$8, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 8, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11, %r14, 1), %ymm8
@@ -1698,12 +1698,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 48(%r11, %r14, 1)
 	vmovsd			%xmm10, 80(%r11, %r14, 1)
 	vmovsd			%xmm11, 112(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11, %r14, 1), %ymm8
@@ -1712,45 +1712,45 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 16(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13 // vv
+	vpermpd			$ 0x00, %ymm1, %ymm13 // vv
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13 // vv
+	vpermpd			$ 0x55, %ymm1, %ymm13 // vv
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
 	vbroadcastsd	208(%r13, %r15, 1), %ymm14
@@ -1759,19 +1759,19 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			192(%r13, %r15, 1), %ymm0
-	vblendpd		$0x3, %ymm11, %ymm0, %ymm11
+	vblendpd		$ 0x3, %ymm11, %ymm0, %ymm11
 	vmovapd			%ymm15, 192(%r13)
 	vmovapd			%ymm11, 192(%r13, %r15, 1)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x7, %ymm15, %ymm1, %ymm1
+	vblendpd		$ 0x7, %ymm15, %ymm1, %ymm1
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			64(%r11, %r14, 1), %ymm9
@@ -1789,9 +1789,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -1830,12 +1830,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -1847,12 +1847,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// eight column
 102:
@@ -1865,7 +1865,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vmovsd			120(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -1892,15 +1892,15 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 248(%r13, %r15, 1) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	vmovapd			96(%r11, %r14, 1), %ymm1
 	vmovapd			96(%r11, %r14, 2), %ymm2
 	movq	ARG1, %r10 // n
-	subl	$8, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 8, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11, %r14, 1), %ymm8
@@ -1927,12 +1927,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 56(%r11, %r14, 1)
 	vmovsd			%xmm10, 88(%r11, %r14, 1)
 	vmovsd			%xmm11, 120(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11, %r14, 1), %ymm8
@@ -1941,52 +1941,52 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 24(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vmovapd			192(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			192(%r13, %r15, 1), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
 	vbroadcastsd	248(%r13, %r15, 1), %ymm14
@@ -1995,27 +1995,27 @@ kernel_dgelqf_dlarft12_12_lib4:
 //	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			224(%r13, %r15, 1), %ymm0
-	vblendpd		$0x7, %ymm11, %ymm0, %ymm11
+	vblendpd		$ 0x7, %ymm11, %ymm0, %ymm11
 	vmovapd			%ymm15, 224(%r13)
 	vmovapd			%ymm11, 224(%r13, %r15, 1)
 
 //	vxorpd			%ymm15, %ymm15, %ymm15
-//	vblendpd		$0xf, %ymm15, %ymm1, %ymm1
+//	vblendpd		$ 0xf, %ymm15, %ymm1, %ymm1
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			96(%r11, %r14, 2), %ymm10
 	vaddpd			%ymm2, %ymm10, %ymm10
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			0(%r11, %r14, 2), %ymm10
@@ -2040,9 +2040,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -2069,12 +2069,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -2083,12 +2083,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-//	vpermpd	$0x00, %ymm15, %ymm15  // beta
+//	vpermpd	$ 0x00, %ymm15, %ymm15  // beta
 
 	// ninth column
 102:
@@ -2101,7 +2101,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$256, %r11
+	addq	$ 256, %r11
 	vmovsd			0(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -2128,7 +2128,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 256(%r13, %r15, 2) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vmovapd			0(%r11, %r14, 1), %ymm1
@@ -2152,9 +2152,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 64(%r11, %r14, 2)
 	vmovsd			%xmm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$12, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 12, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11, %r14, 2), %ymm8
@@ -2181,12 +2181,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 32(%r11, %r14, 2)
 	vmovsd			%xmm10, 64(%r11, %r14, 2)
 	vmovsd			%xmm11, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11, %r14, 2), %ymm8
@@ -2195,59 +2195,59 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vmovapd			192(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			192(%r13, %r15, 1), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vmovapd			224(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			224(%r13, %r15, 1), %ymm14
-//	vblendpd		$0xf, %ymm14, %ymm12, %ymm14
+//	vblendpd		$ 0xf, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
 	vbroadcastsd	256(%r13, %r15, 2), %ymm14
@@ -2256,24 +2256,24 @@ kernel_dgelqf_dlarft12_12_lib4:
 //	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 //	vmovapd			224(%r13, %r15, 1), %ymm0
-//	vblendpd		$0xf, %ymm11, %ymm0, %ymm11
+//	vblendpd		$ 0xf, %ymm11, %ymm0, %ymm11
 	vmovapd			%ymm15, 256(%r13)
 	vmovapd			%ymm11, 256(%r13, %r15, 1)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm2, %ymm2
+	vblendpd		$ 0x1, %ymm15, %ymm2, %ymm2
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			0(%r11, %r14, 2), %ymm10
@@ -2296,9 +2296,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -2325,12 +2325,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -2339,12 +2339,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // beta
+	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// tenth column
 102:
@@ -2357,7 +2357,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$256, %r11
+	addq	$ 256, %r11
 	vmovsd			40(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -2384,7 +2384,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 296(%r13, %r15, 2) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vmovapd			32(%r11, %r14, 1), %ymm1
@@ -2402,9 +2402,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 72(%r11, %r14, 2)
 	vmovsd			%xmm10, 104(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$12, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 12, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11, %r14, 2), %ymm8
@@ -2431,12 +2431,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 40(%r11, %r14, 2)
 	vmovsd			%xmm10, 72(%r11, %r14, 2)
 	vmovsd			%xmm11, 104(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11, %r14, 2), %ymm8
@@ -2445,68 +2445,68 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 8(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vmovapd			192(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			192(%r13, %r15, 1), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vmovapd			224(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			224(%r13, %r15, 1), %ymm14
-//	vblendpd		$0xf, %ymm14, %ymm12, %ymm14
+//	vblendpd		$ 0xf, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x00, %ymm2, %ymm13
+	vpermpd			$ 0x00, %ymm2, %ymm13
 	vmovapd			256(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			256(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			256(%r13, %r15, 2), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm10
 	//
 	vbroadcastsd	296(%r13, %r15, 2), %ymm14
@@ -2515,25 +2515,25 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm10, %ymm10
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			288(%r13, %r15, 2), %ymm0
-	vblendpd		$0x1, %ymm10, %ymm0, %ymm10
+	vblendpd		$ 0x1, %ymm10, %ymm0, %ymm10
 	vmovapd			%ymm15, 288(%r13)
 	vmovapd			%ymm11, 288(%r13, %r15, 1)
 	vmovapd			%ymm10, 288(%r13, %r15, 2)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x3, %ymm15, %ymm2, %ymm2
+	vblendpd		$ 0x3, %ymm15, %ymm2, %ymm2
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			32(%r11, %r14, 2), %ymm10
@@ -2550,9 +2550,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vmulpd			%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -2579,12 +2579,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -2593,12 +2593,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// eleventh column
 102:
@@ -2611,7 +2611,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$256, %r11
+	addq	$ 256, %r11
 	vmovsd			80(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -2638,7 +2638,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 336(%r13, %r15, 2) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vmovapd			64(%r11, %r14, 1), %ymm1
@@ -2650,9 +2650,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		96(%r11, %r14, 2), %ymm10, %ymm2
 	vmovsd			%xmm10, 112(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$12, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 12, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11, %r14, 2), %ymm8
@@ -2679,12 +2679,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 48(%r11, %r14, 2)
 	vmovsd			%xmm10, 80(%r11, %r14, 2)
 	vmovsd			%xmm11, 112(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11, %r14, 2), %ymm8
@@ -2693,77 +2693,77 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 16(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vmovapd			192(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			192(%r13, %r15, 1), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vmovapd			224(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			224(%r13, %r15, 1), %ymm14
-//	vblendpd		$0xf, %ymm14, %ymm12, %ymm14
+//	vblendpd		$ 0xf, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x00, %ymm2, %ymm13
+	vpermpd			$ 0x00, %ymm2, %ymm13
 	vmovapd			256(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			256(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			256(%r13, %r15, 2), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm10
 	//
-	vpermpd			$0x55, %ymm2, %ymm13
+	vpermpd			$ 0x55, %ymm2, %ymm13
 	vmovapd			288(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			288(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			288(%r13, %r15, 2), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm10
 	//
 	vbroadcastsd	336(%r13, %r15, 2), %ymm14
@@ -2772,25 +2772,25 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm10, %ymm10
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			320(%r13, %r15, 2), %ymm0
-	vblendpd		$0x3, %ymm10, %ymm0, %ymm10
+	vblendpd		$ 0x3, %ymm10, %ymm0, %ymm10
 	vmovapd			%ymm15, 320(%r13)
 	vmovapd			%ymm11, 320(%r13, %r15, 1)
 	vmovapd			%ymm10, 320(%r13, %r15, 2)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x7, %ymm15, %ymm2, %ymm2
+	vblendpd		$ 0x7, %ymm15, %ymm2, %ymm2
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			64(%r11, %r14, 2), %ymm10
@@ -2802,9 +2802,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -2831,12 +2831,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -2845,12 +2845,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// twelveth
 102:
@@ -2863,7 +2863,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$256, %r11
+	addq	$ 256, %r11
 	vmovsd			120(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -2890,15 +2890,15 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 376(%r13, %r15, 2) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	vmovapd			96(%r11, %r14, 1), %ymm1
 	vmovapd			96(%r11, %r14, 2), %ymm2
 	movq	ARG1, %r10 // n
-	subl	$12, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 12, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11, %r14, 2), %ymm8
@@ -2925,12 +2925,12 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmovsd			%xmm9, 56(%r11, %r14, 2)
 	vmovsd			%xmm10, 88(%r11, %r14, 2)
 	vmovsd			%xmm11, 120(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11, %r14, 2), %ymm8
@@ -2939,86 +2939,86 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 24(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vmovapd			192(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			192(%r13, %r15, 1), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vmovapd			224(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			224(%r13, %r15, 1), %ymm14
-//	vblendpd		$0xf, %ymm14, %ymm12, %ymm14
+//	vblendpd		$ 0xf, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x00, %ymm2, %ymm13
+	vpermpd			$ 0x00, %ymm2, %ymm13
 	vmovapd			256(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			256(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			256(%r13, %r15, 2), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm10
 	//
-	vpermpd			$0x55, %ymm2, %ymm13
+	vpermpd			$ 0x55, %ymm2, %ymm13
 	vmovapd			288(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			288(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			288(%r13, %r15, 2), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm10
 	//
-	vpermpd			$0xaa, %ymm2, %ymm13
+	vpermpd			$ 0xaa, %ymm2, %ymm13
 	vmovapd			320(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			320(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			320(%r13, %r15, 2), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm10
 	//
 	vbroadcastsd	376(%r13, %r15, 2), %ymm14
@@ -3027,7 +3027,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm10, %ymm10
 //	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			352(%r13, %r15, 2), %ymm0
-	vblendpd		$0x7, %ymm10, %ymm0, %ymm10
+	vblendpd		$ 0x7, %ymm10, %ymm0, %ymm10
 	vmovapd			%ymm15, 352(%r13)
 	vmovapd			%ymm11, 352(%r13, %r15, 1)
 	vmovapd			%ymm10, 352(%r13, %r15, 2)
@@ -3079,20 +3079,20 @@ kernel_dgelqf_dlarft4_12_lib4:
 
 	movq	ARG2, %r11 // D
 	movq	ARG3, %r14 // sdd
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	movq	ARG4, %r12 // dD
 	movq	ARG5, %r13 // T
 
 	vxorpd			%xmm15, %xmm15, %xmm15
 	movq	ARG1, %r10 // n
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 100:
 	vmovsd			0(%r11), %xmm14
 	vfmadd231sd		%xmm14, %xmm14, %xmm15
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		100b
 
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -3130,7 +3130,7 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 0(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vmovapd			0(%r11, %r14, 1), %ymm1
@@ -3154,9 +3154,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			%xmm9, 64(%r11)
 	vmovsd			%xmm10, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11), %ymm8
@@ -3183,12 +3183,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			%xmm9, 32(%r11)
 	vmovsd			%xmm10, 64(%r11)
 	vmovsd			%xmm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11), %ymm8
@@ -3197,9 +3197,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -3209,7 +3209,7 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmulpd			%ymm15, %ymm2, %ymm2
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm15, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -3258,9 +3258,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -3311,12 +3311,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -3331,12 +3331,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // beta
+	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
 102:
@@ -3375,7 +3375,7 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 40(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vmovapd			32(%r11, %r14, 1), %ymm1
@@ -3393,9 +3393,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			%xmm9, 72(%r11)
 	vmovsd			%xmm10, 104(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11), %ymm8
@@ -3422,12 +3422,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			%xmm9, 40(%r11)
 	vmovsd			%xmm10, 72(%r11)
 	vmovsd			%xmm11, 104(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11), %ymm8
@@ -3436,9 +3436,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 8(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -3448,7 +3448,7 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			LC02(%rip), %ymm12
 #endif
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vbroadcastsd	40(%r13), %ymm15
 	vmulpd			%ymm15, %ymm0, %ymm0
@@ -3457,7 +3457,7 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			%xmm0, 32(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x3, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x3, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -3494,9 +3494,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -3547,12 +3547,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -3566,12 +3566,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
 102:
@@ -3610,7 +3610,7 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 80(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vmovapd			64(%r11, %r14, 1), %ymm1
@@ -3622,9 +3622,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vfmadd231pd		96(%r11, %r14, 2), %ymm10, %ymm2
 	vmovsd			%xmm10, 112(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11), %ymm8
@@ -3651,12 +3651,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			%xmm9, 48(%r11)
 	vmovsd			%xmm10, 80(%r11)
 	vmovsd			%xmm11, 112(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11), %ymm8
@@ -3665,21 +3665,21 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 16(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
-	vblendpd		$0x7, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm15, %ymm0, %ymm0
 	vbroadcastsd	80(%r13), %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vmulpd			%ymm14, %ymm1, %ymm1
@@ -3687,7 +3687,7 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%xmm0, 64(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x7, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -3713,9 +3713,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -3766,12 +3766,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -3785,12 +3785,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 102:
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -3828,15 +3828,15 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 120(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	vmovapd			96(%r11, %r14, 1), %ymm1
 	vmovapd			96(%r11, %r14, 2), %ymm2
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11), %ymm8
@@ -3863,12 +3863,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovsd			%xmm9, 56(%r11)
 	vmovsd			%xmm10, 88(%r11)
 	vmovsd			%xmm11, 120(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11), %ymm8
@@ -3877,26 +3877,26 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 24(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 
 	vbroadcastsd	120(%r13), %ymm14
@@ -3904,7 +3904,7 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			96(%r13), %ymm0
-	vblendpd		$0x7, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm15, %ymm0, %ymm0
 	vmovapd			%ymm0, 96(%r13)
 
 	movq	ARG2, %r11 // D
@@ -3916,9 +3916,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -3953,12 +3953,12 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11, %r14, 1), %ymm9
@@ -3968,9 +3968,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
 
@@ -4021,20 +4021,20 @@ kernel_dgelqf_dlarft4_8_lib4:
 
 	movq	ARG2, %r11 // D
 	movq	ARG3, %r14 // sdd
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	movq	ARG4, %r12 // dD
 	movq	ARG5, %r13 // T
 
 	vxorpd			%xmm15, %xmm15, %xmm15
 	movq	ARG1, %r10 // n
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 100:
 	vmovsd			0(%r11), %xmm14
 	vfmadd231sd		%xmm14, %xmm14, %xmm15
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		100b
 
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -4072,7 +4072,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 0(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vmovapd			0(%r11, %r14, 1), %ymm1
@@ -4092,9 +4092,9 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			%xmm9, 64(%r11)
 	vmovsd			%xmm10, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11), %ymm8
@@ -4117,12 +4117,12 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			%xmm9, 32(%r11)
 	vmovsd			%xmm10, 64(%r11)
 	vmovsd			%xmm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11), %ymm8
@@ -4130,9 +4130,9 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vmovsd			%xmm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -4141,7 +4141,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmulpd			%ymm15, %ymm1, %ymm1
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm15, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -4178,9 +4178,9 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -4219,12 +4219,12 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -4236,12 +4236,12 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // beta
+	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
 102:
@@ -4280,7 +4280,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 40(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vmovapd			32(%r11, %r14, 1), %ymm1
@@ -4295,9 +4295,9 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			%xmm9, 72(%r11)
 	vmovsd			%xmm10, 104(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11), %ymm8
@@ -4320,12 +4320,12 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			%xmm9, 40(%r11)
 	vmovsd			%xmm10, 72(%r11)
 	vmovsd			%xmm11, 104(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11), %ymm8
@@ -4333,9 +4333,9 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vmovsd			%xmm8, 8(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -4345,7 +4345,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovapd			LC02(%rip), %ymm12
 #endif
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vbroadcastsd	40(%r13), %ymm15
 	vmulpd			%ymm15, %ymm0, %ymm0
@@ -4353,7 +4353,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			%xmm0, 32(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x3, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x3, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -4381,9 +4381,9 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -4422,12 +4422,12 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -4438,12 +4438,12 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
 102:
@@ -4482,7 +4482,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 80(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vmovapd			64(%r11, %r14, 1), %ymm1
@@ -4492,9 +4492,9 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		96(%r11, %r14, 1), %ymm10, %ymm1
 	vmovsd			%xmm10, 112(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11), %ymm8
@@ -4517,12 +4517,12 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			%xmm9, 48(%r11)
 	vmovsd			%xmm10, 80(%r11)
 	vmovsd			%xmm11, 112(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11), %ymm8
@@ -4530,28 +4530,28 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vmovsd			%xmm8, 16(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
-	vblendpd		$0x7, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm15, %ymm0, %ymm0
 	vbroadcastsd	80(%r13), %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmovapd			%xmm0, 64(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x7, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -4571,9 +4571,9 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -4612,12 +4612,12 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -4628,12 +4628,12 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 102:
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -4671,14 +4671,14 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 120(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	vmovapd			96(%r11, %r14, 1), %ymm1
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11), %ymm8
@@ -4701,12 +4701,12 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vmovsd			%xmm9, 56(%r11)
 	vmovsd			%xmm10, 88(%r11)
 	vmovsd			%xmm11, 120(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11), %ymm8
@@ -4714,33 +4714,33 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vmovsd			%xmm8, 24(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 
 	vbroadcastsd	120(%r13), %ymm14
 	vmulpd			%ymm14, %ymm15, %ymm15
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmovapd			96(%r13), %ymm0
-	vblendpd		$0x7, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm15, %ymm0, %ymm0
 	vmovapd			%ymm0, 96(%r13)
 
 	movq	ARG2, %r11 // D
@@ -4749,9 +4749,9 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vaddpd			%ymm1, %ymm9, %ymm9
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -4774,21 +4774,21 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vbroadcastsd	120(%r11), %ymm14
 	vfmadd231pd		%ymm1, %ymm14, %ymm9
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11, %r14, 1), %ymm9
 	vbroadcastsd	24(%r11), %ymm14
 	vfmadd231pd		%ymm1, %ymm14, %ymm9
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
 
@@ -4843,14 +4843,14 @@ kernel_dgelqf_dlarft4_4_lib4:
 
 	vxorpd			%xmm15, %xmm15, %xmm15
 	movq	ARG1, %r10 // n
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 100:
 	vmovsd			0(%r11), %xmm14
 	vfmadd231sd		%xmm14, %xmm14, %xmm15
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		100b
 
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -4888,7 +4888,7 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 0(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vbroadcastsd	32(%r11), %ymm8
@@ -4904,9 +4904,9 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovsd			%xmm9, 64(%r11)
 	vmovsd			%xmm10, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11), %ymm8
@@ -4925,21 +4925,21 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovsd			%xmm9, 32(%r11)
 	vmovsd			%xmm10, 64(%r11)
 	vmovsd			%xmm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11), %ymm8
 	vmulpd			%ymm15, %ymm8, %ymm8
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vmovsd			%xmm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -4947,7 +4947,7 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmulpd			%ymm15, %ymm0, %ymm0
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm15, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	vmovapd			0(%r11), %ymm8
@@ -4968,9 +4968,9 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	vmovapd			0(%r11), %ymm8
@@ -4993,12 +4993,12 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovapd			%ymm9, 32(%r11)
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -5006,12 +5006,12 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vfmadd231pd		%ymm0, %ymm14, %ymm8
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // beta
+	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
 102:
@@ -5050,7 +5050,7 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 40(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vbroadcastsd	72(%r11), %ymm9
@@ -5062,9 +5062,9 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovsd			%xmm9, 72(%r11)
 	vmovsd			%xmm10, 104(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11), %ymm8
@@ -5083,21 +5083,21 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovsd			%xmm9, 40(%r11)
 	vmovsd			%xmm10, 72(%r11)
 	vmovsd			%xmm11, 104(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11), %ymm8
 	vmulpd			%ymm15, %ymm8, %ymm8
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vmovsd			%xmm8, 8(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -5107,14 +5107,14 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovapd			LC02(%rip), %ymm12
 #endif
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vbroadcastsd	40(%r13), %ymm15
 	vmulpd			%ymm15, %ymm0, %ymm0
 	vmovsd			%xmm0, 32(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x3, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x3, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	vmovapd			32(%r11), %ymm9
@@ -5130,9 +5130,9 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	vmovapd			0(%r11), %ymm8
@@ -5155,12 +5155,12 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovapd			%ymm9, 32(%r11)
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -5168,12 +5168,12 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vfmadd231pd		%ymm0, %ymm14, %ymm8
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
 102:
@@ -5212,7 +5212,7 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 80(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vbroadcastsd	112(%r11), %ymm10
@@ -5220,9 +5220,9 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vfmadd231pd		96(%r11), %ymm10, %ymm0
 	vmovsd			%xmm10, 112(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11), %ymm8
@@ -5241,39 +5241,39 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovsd			%xmm9, 48(%r11)
 	vmovsd			%xmm10, 80(%r11)
 	vmovsd			%xmm11, 112(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11), %ymm8
 	vmulpd			%ymm15, %ymm8, %ymm8
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vmovsd			%xmm8, 16(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm1
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm1
-	vblendpd		$0x7, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm1, %ymm0, %ymm0
 	vbroadcastsd	80(%r13), %ymm15
 	vmulpd			%ymm15, %ymm0, %ymm0
 	vmovapd			%xmm0, 64(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x7, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	vmovapd			64(%r11), %ymm10
@@ -5285,9 +5285,9 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	vmovapd			0(%r11), %ymm8
@@ -5310,12 +5310,12 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovapd			%ymm9, 32(%r11)
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -5323,12 +5323,12 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vfmadd231pd		%ymm0, %ymm14, %ymm8
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 102:
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -5366,13 +5366,13 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vxorpd			%xmm13, %xmm14, %xmm12
 	vmovsd			%xmm12, 120(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11), %ymm8
@@ -5391,44 +5391,44 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vmovsd			%xmm9, 56(%r11)
 	vmovsd			%xmm10, 88(%r11)
 	vmovsd			%xmm11, 120(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11), %ymm8
 	vmulpd			%ymm15, %ymm8, %ymm8
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vmovsd			%xmm8, 24(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm1
 
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm1
 
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm1
 
 	vbroadcastsd	120(%r13), %ymm15
 	vmulpd			%ymm15, %ymm1, %ymm1
 	vmovapd			96(%r13), %ymm0
-	vblendpd		$0x7, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm1, %ymm0, %ymm0
 	vmovapd			%ymm0, 96(%r13)
 
 102:
@@ -5466,7 +5466,7 @@ kernel_dlarfb_12_lib4:
 
 	movq	ARG1, %r10 // K
 	movq	ARG2, %r11 // T
-	movq	$384, %r12 // sdt !!!!!!!!!!!!!!!!!!!!!!!!!
+	movq	$ 384, %r12 // sdt !!!!!!!!!!!!!!!!!!!!!!!!!
 
 	//
 	vmovapd			352(%r10), %ymm12
@@ -5707,21 +5707,21 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 
 	movq	ARG2, %r11 // D
 	movq	ARG3, %r14 // sdd
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	movq	ARG4, %r12 // dD
 	movq	ARG5, %r13 // T
-	movq	$384, %r15 // sdt !!!!!!!!!!!!!!!!!!!!!!!!!
+	movq	$ 384, %r15 // sdt !!!!!!!!!!!!!!!!!!!!!!!!!
 
 	vxorpd			%xmm15, %xmm15, %xmm15
 	movq	ARG1, %r10 // n
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 100:
 	vmovsd			0(%r11), %xmm14
 	vfmadd231sd		%xmm14, %xmm14, %xmm15
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		100b
 
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -5777,7 +5777,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 0(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vmovapd			0(%r11, %r14, 1), %ymm1
@@ -5801,9 +5801,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 64(%r11)
 	vmovsd			%xmm10, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11), %ymm8
@@ -5830,12 +5830,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 32(%r11)
 	vmovsd			%xmm10, 64(%r11)
 	vmovsd			%xmm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11), %ymm8
@@ -5844,9 +5844,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -5856,7 +5856,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmulpd			%ymm15, %ymm2, %ymm2
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm15, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -5905,9 +5905,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -5958,12 +5958,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -5978,12 +5978,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // beta
+	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
 102:
@@ -6040,7 +6040,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 40(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vmovapd			32(%r11, %r14, 1), %ymm1
@@ -6058,9 +6058,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 72(%r11)
 	vmovsd			%xmm10, 104(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11), %ymm8
@@ -6087,12 +6087,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 40(%r11)
 	vmovsd			%xmm10, 72(%r11)
 	vmovsd			%xmm11, 104(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11), %ymm8
@@ -6101,9 +6101,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 8(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -6113,7 +6113,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			LC02(%rip), %ymm12
 #endif
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vbroadcastsd	40(%r13), %ymm15
 	vmulpd			%ymm15, %ymm0, %ymm0
@@ -6122,7 +6122,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm0, 32(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x3, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x3, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -6159,9 +6159,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -6212,12 +6212,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -6231,12 +6231,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
 102:
@@ -6293,7 +6293,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 80(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vmovapd			64(%r11, %r14, 1), %ymm1
@@ -6305,9 +6305,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		96(%r11, %r14, 2), %ymm10, %ymm2
 	vmovsd			%xmm10, 112(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11), %ymm8
@@ -6334,12 +6334,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 48(%r11)
 	vmovsd			%xmm10, 80(%r11)
 	vmovsd			%xmm11, 112(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11), %ymm8
@@ -6348,21 +6348,21 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 16(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
-	vblendpd		$0x7, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm15, %ymm0, %ymm0
 	vbroadcastsd	80(%r13), %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vmulpd			%ymm14, %ymm1, %ymm1
@@ -6370,7 +6370,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%xmm0, 64(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x7, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -6396,9 +6396,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -6449,12 +6449,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -6468,12 +6468,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// fourth column
 102:
@@ -6530,15 +6530,15 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 120(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	vmovapd			96(%r11, %r14, 1), %ymm1
 	vmovapd			96(%r11, %r14, 2), %ymm2
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11), %ymm8
@@ -6565,12 +6565,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 56(%r11)
 	vmovsd			%xmm10, 88(%r11)
 	vmovsd			%xmm11, 120(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11), %ymm8
@@ -6579,26 +6579,26 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 24(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vbroadcastsd	120(%r13), %ymm14
@@ -6606,7 +6606,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			96(%r13), %ymm0
-	vblendpd		$0x7, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm15, %ymm0, %ymm0
 	vmovapd			%ymm0, 96(%r13)
 
 	movq	ARG2, %r11 // D
@@ -6618,9 +6618,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			0(%r11, %r14, 1), %ymm9
@@ -6657,9 +6657,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -6698,12 +6698,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11, %r14, 1), %ymm9
@@ -6714,12 +6714,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-//	vpermpd	$0x00, %ymm15, %ymm15  // beta
+//	vpermpd	$ 0x00, %ymm15, %ymm15  // beta
 
 	// fifth column
 102:
@@ -6732,7 +6732,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vmovsd			0(%r11, %r14, 1), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -6777,7 +6777,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 128(%r13, %r15, 1) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vmovapd			0(%r11, %r14, 1), %ymm1
@@ -6801,9 +6801,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 64(%r11, %r14, 1)
 	vmovsd			%xmm10, 96(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$8, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 8, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11, %r14, 1), %ymm8
@@ -6830,12 +6830,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 32(%r11, %r14, 1)
 	vmovsd			%xmm10, 64(%r11, %r14, 1)
 	vmovsd			%xmm11, 96(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11, %r14, 1), %ymm8
@@ -6844,30 +6844,30 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 0(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			96(%r13), %ymm14
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vbroadcastsd	128(%r13, %r15, 1), %ymm14
@@ -6875,18 +6875,18 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 //	vmovapd			128(%r13), %ymm0
-//	vblendpd		$0xf, %ymm15, %ymm0, %ymm15
+//	vblendpd		$ 0xf, %ymm15, %ymm0, %ymm15
 	vmovapd			%ymm15, 128(%r13)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm1, %ymm1
+	vblendpd		$ 0x1, %ymm15, %ymm1, %ymm1
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			0(%r11, %r14, 1), %ymm9
@@ -6921,9 +6921,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -6962,12 +6962,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -6979,12 +6979,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // beta
+	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// sixth column
 102:
@@ -6997,7 +6997,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vmovsd			40(%r11, %r14, 1), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -7042,7 +7042,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 168(%r13, %r15, 1) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vmovapd			32(%r11, %r14, 1), %ymm1
@@ -7060,9 +7060,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 72(%r11, %r14, 1)
 	vmovsd			%xmm10, 104(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$8, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 8, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11, %r14, 1), %ymm8
@@ -7089,12 +7089,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 40(%r11, %r14, 1)
 	vmovsd			%xmm10, 72(%r11, %r14, 1)
 	vmovsd			%xmm11, 104(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11, %r14, 1), %ymm8
@@ -7103,36 +7103,36 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 8(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			96(%r13), %ymm14
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
 	vmovapd			128(%r13), %ymm14
 	vmovapd			128(%r13, %r15, 1), %ymm11
-	vblendpd		$0x1, %ymm11, %ymm12, %ymm11
-	vpermpd			$0x00, %ymm1, %ymm13 // vv
+	vblendpd		$ 0x1, %ymm11, %ymm12, %ymm11
+	vpermpd			$ 0x00, %ymm1, %ymm13 // vv
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmulpd			%ymm11, %ymm13, %ymm11
 	//
@@ -7142,19 +7142,19 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			160(%r13, %r15, 1), %ymm0
-	vblendpd		$0x1, %ymm11, %ymm0, %ymm11
+	vblendpd		$ 0x1, %ymm11, %ymm0, %ymm11
 	vmovapd			%ymm15, 160(%r13)
 	vmovapd			%ymm11, 160(%r13, %r15, 1)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x3, %ymm15, %ymm1, %ymm1
+	vblendpd		$ 0x3, %ymm15, %ymm1, %ymm1
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			32(%r11, %r14, 1), %ymm9
@@ -7180,9 +7180,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmulpd			%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -7221,12 +7221,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -7238,12 +7238,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// seventh column
 102:
@@ -7256,7 +7256,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vmovsd			80(%r11, %r14, 1), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -7301,7 +7301,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 208(%r13, %r15, 1) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vmovapd			64(%r11, %r14, 1), %ymm1
@@ -7313,9 +7313,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		96(%r11, %r14, 2), %ymm10, %ymm2
 	vmovsd			%xmm10, 112(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$8, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 8, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11, %r14, 1), %ymm8
@@ -7342,12 +7342,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 48(%r11, %r14, 1)
 	vmovsd			%xmm10, 80(%r11, %r14, 1)
 	vmovsd			%xmm11, 112(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11, %r14, 1), %ymm8
@@ -7356,45 +7356,45 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 16(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13 // vv
+	vpermpd			$ 0x00, %ymm1, %ymm13 // vv
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13 // vv
+	vpermpd			$ 0x55, %ymm1, %ymm13 // vv
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
 	vbroadcastsd	208(%r13, %r15, 1), %ymm14
@@ -7403,19 +7403,19 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			192(%r13, %r15, 1), %ymm0
-	vblendpd		$0x3, %ymm11, %ymm0, %ymm11
+	vblendpd		$ 0x3, %ymm11, %ymm0, %ymm11
 	vmovapd			%ymm15, 192(%r13)
 	vmovapd			%ymm11, 192(%r13, %r15, 1)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x7, %ymm15, %ymm1, %ymm1
+	vblendpd		$ 0x7, %ymm15, %ymm1, %ymm1
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			64(%r11, %r14, 1), %ymm9
@@ -7433,9 +7433,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -7474,12 +7474,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -7491,12 +7491,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm9, %ymm9, %ymm15
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// eight column
 102:
@@ -7509,7 +7509,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vmovsd			120(%r11, %r14, 1), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -7554,15 +7554,15 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 248(%r13, %r15, 1) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	vmovapd			96(%r11, %r14, 1), %ymm1
 	vmovapd			96(%r11, %r14, 2), %ymm2
 	movq	ARG1, %r10 // n
-	subl	$8, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 8, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11, %r14, 1), %ymm8
@@ -7589,12 +7589,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 56(%r11, %r14, 1)
 	vmovsd			%xmm10, 88(%r11, %r14, 1)
 	vmovsd			%xmm11, 120(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11, %r14, 1), %ymm8
@@ -7603,52 +7603,52 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 24(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vmovapd			192(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			192(%r13, %r15, 1), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
 	vbroadcastsd	248(%r13, %r15, 1), %ymm14
@@ -7657,27 +7657,27 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 //	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			224(%r13, %r15, 1), %ymm0
-	vblendpd		$0x7, %ymm11, %ymm0, %ymm11
+	vblendpd		$ 0x7, %ymm11, %ymm0, %ymm11
 	vmovapd			%ymm15, 224(%r13)
 	vmovapd			%ymm11, 224(%r13, %r15, 1)
 
 //	vxorpd			%ymm15, %ymm15, %ymm15
-//	vblendpd		$0xf, %ymm15, %ymm1, %ymm1
+//	vblendpd		$ 0xf, %ymm15, %ymm1, %ymm1
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			96(%r11, %r14, 2), %ymm10
 	vaddpd			%ymm2, %ymm10, %ymm10
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			0(%r11, %r14, 2), %ymm10
@@ -7702,9 +7702,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -7731,12 +7731,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -7745,12 +7745,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-//	vpermpd	$0x00, %ymm15, %ymm15  // beta
+//	vpermpd	$ 0x00, %ymm15, %ymm15  // beta
 
 	// ninth column
 102:
@@ -7763,7 +7763,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$256, %r11
+	addq	$ 256, %r11
 	vmovsd			0(%r11, %r14, 2), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -7808,7 +7808,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 256(%r13, %r15, 2) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vmovapd			0(%r11, %r14, 1), %ymm1
@@ -7832,9 +7832,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 64(%r11, %r14, 2)
 	vmovsd			%xmm10, 96(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$12, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 12, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11, %r14, 2), %ymm8
@@ -7861,12 +7861,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 32(%r11, %r14, 2)
 	vmovsd			%xmm10, 64(%r11, %r14, 2)
 	vmovsd			%xmm11, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11, %r14, 2), %ymm8
@@ -7875,59 +7875,59 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vmovapd			192(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			192(%r13, %r15, 1), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vmovapd			224(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			224(%r13, %r15, 1), %ymm14
-//	vblendpd		$0xf, %ymm14, %ymm12, %ymm14
+//	vblendpd		$ 0xf, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
 	vbroadcastsd	256(%r13, %r15, 2), %ymm14
@@ -7936,24 +7936,24 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 //	vmulpd			%ymm14, %ymm1, %ymm1
 	vmulpd			%ymm14, %ymm2, %ymm2
 //	vmovapd			224(%r13, %r15, 1), %ymm0
-//	vblendpd		$0xf, %ymm11, %ymm0, %ymm11
+//	vblendpd		$ 0xf, %ymm11, %ymm0, %ymm11
 	vmovapd			%ymm15, 256(%r13)
 	vmovapd			%ymm11, 256(%r13, %r15, 1)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm2, %ymm2
+	vblendpd		$ 0x1, %ymm15, %ymm2, %ymm2
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			0(%r11, %r14, 2), %ymm10
@@ -7976,9 +7976,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -8005,12 +8005,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -8019,12 +8019,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // beta
+	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// tenth column
 102:
@@ -8037,7 +8037,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$256, %r11
+	addq	$ 256, %r11
 	vmovsd			40(%r11, %r14, 2), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -8082,7 +8082,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 296(%r13, %r15, 2) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vmovapd			32(%r11, %r14, 1), %ymm1
@@ -8100,9 +8100,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 72(%r11, %r14, 2)
 	vmovsd			%xmm10, 104(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$12, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 12, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11, %r14, 2), %ymm8
@@ -8129,12 +8129,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 40(%r11, %r14, 2)
 	vmovsd			%xmm10, 72(%r11, %r14, 2)
 	vmovsd			%xmm11, 104(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11, %r14, 2), %ymm8
@@ -8143,68 +8143,68 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 8(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vmovapd			192(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			192(%r13, %r15, 1), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vmovapd			224(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			224(%r13, %r15, 1), %ymm14
-//	vblendpd		$0xf, %ymm14, %ymm12, %ymm14
+//	vblendpd		$ 0xf, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x00, %ymm2, %ymm13
+	vpermpd			$ 0x00, %ymm2, %ymm13
 	vmovapd			256(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			256(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			256(%r13, %r15, 2), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm10
 	//
 	vbroadcastsd	296(%r13, %r15, 2), %ymm14
@@ -8213,25 +8213,25 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm10, %ymm10
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			288(%r13, %r15, 2), %ymm0
-	vblendpd		$0x1, %ymm10, %ymm0, %ymm10
+	vblendpd		$ 0x1, %ymm10, %ymm0, %ymm10
 	vmovapd			%ymm15, 288(%r13)
 	vmovapd			%ymm11, 288(%r13, %r15, 1)
 	vmovapd			%ymm10, 288(%r13, %r15, 2)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x3, %ymm15, %ymm2, %ymm2
+	vblendpd		$ 0x3, %ymm15, %ymm2, %ymm2
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			32(%r11, %r14, 2), %ymm10
@@ -8248,9 +8248,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vmulpd			%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -8277,12 +8277,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -8291,12 +8291,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// eleventh column
 102:
@@ -8309,7 +8309,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$256, %r11
+	addq	$ 256, %r11
 	vmovsd			80(%r11, %r14, 2), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -8354,7 +8354,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 336(%r13, %r15, 2) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vmovapd			64(%r11, %r14, 1), %ymm1
@@ -8366,9 +8366,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		96(%r11, %r14, 2), %ymm10, %ymm2
 	vmovsd			%xmm10, 112(%r11, %r14, 2)
 	movq	ARG1, %r10 // n
-	subl	$12, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 12, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11, %r14, 2), %ymm8
@@ -8395,12 +8395,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 48(%r11, %r14, 2)
 	vmovsd			%xmm10, 80(%r11, %r14, 2)
 	vmovsd			%xmm11, 112(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11, %r14, 2), %ymm8
@@ -8409,77 +8409,77 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 16(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vmovapd			192(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			192(%r13, %r15, 1), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vmovapd			224(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			224(%r13, %r15, 1), %ymm14
-//	vblendpd		$0xf, %ymm14, %ymm12, %ymm14
+//	vblendpd		$ 0xf, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x00, %ymm2, %ymm13
+	vpermpd			$ 0x00, %ymm2, %ymm13
 	vmovapd			256(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			256(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			256(%r13, %r15, 2), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm10
 	//
-	vpermpd			$0x55, %ymm2, %ymm13
+	vpermpd			$ 0x55, %ymm2, %ymm13
 	vmovapd			288(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			288(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			288(%r13, %r15, 2), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm10
 	//
 	vbroadcastsd	336(%r13, %r15, 2), %ymm14
@@ -8488,25 +8488,25 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm10, %ymm10
 	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			320(%r13, %r15, 2), %ymm0
-	vblendpd		$0x3, %ymm10, %ymm0, %ymm10
+	vblendpd		$ 0x3, %ymm10, %ymm0, %ymm10
 	vmovapd			%ymm15, 320(%r13)
 	vmovapd			%ymm11, 320(%r13, %r15, 1)
 	vmovapd			%ymm10, 320(%r13, %r15, 2)
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x7, %ymm15, %ymm2, %ymm2
+	vblendpd		$ 0x7, %ymm15, %ymm2, %ymm2
 
 	movq	ARG2, %r11 // D
 	//
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 	//
 	vmovapd			64(%r11, %r14, 2), %ymm10
@@ -8518,9 +8518,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vxorpd			%ymm15, %ymm15, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -8547,12 +8547,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 96(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -8561,12 +8561,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		%ymm2, %ymm14, %ymm10
 	vfmadd231pd		%ymm10, %ymm10, %ymm15
 	vmovapd			%ymm10, 0(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// twelveth
 102:
@@ -8579,7 +8579,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 
 101:
 	movq	ARG2, %r11 // D
-	addq	$256, %r11
+	addq	$ 256, %r11
 	vmovsd			120(%r11, %r14, 2), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -8624,15 +8624,15 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 376(%r13, %r15, 2) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	vmovapd			96(%r11, %r14, 1), %ymm1
 	vmovapd			96(%r11, %r14, 2), %ymm2
 	movq	ARG1, %r10 // n
-	subl	$12, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 12, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11, %r14, 2), %ymm8
@@ -8659,12 +8659,12 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovsd			%xmm9, 56(%r11, %r14, 2)
 	vmovsd			%xmm10, 88(%r11, %r14, 2)
 	vmovsd			%xmm11, 120(%r11, %r14, 2)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11, %r14, 2), %ymm8
@@ -8673,86 +8673,86 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vfmadd231pd		0(%r11, %r14, 2), %ymm8, %ymm2
 	vmovsd			%xmm8, 24(%r11, %r14, 2)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	//
-//	vpermpd			$0x00, %ymm0, %ymm13
+//	vpermpd			$ 0x00, %ymm0, %ymm13
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	//
-	vpermpd			$0x55, %ymm0, %ymm13
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0xff, %ymm0, %ymm13
+	vpermpd			$ 0xff, %ymm0, %ymm13
 	vmovapd			96(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	//
-	vpermpd			$0x00, %ymm1, %ymm13
+	vpermpd			$ 0x00, %ymm1, %ymm13
 	vmovapd			128(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			128(%r13, %r15, 1), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x55, %ymm1, %ymm13
+	vpermpd			$ 0x55, %ymm1, %ymm13
 	vmovapd			160(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			160(%r13, %r15, 1), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xaa, %ymm1, %ymm13
+	vpermpd			$ 0xaa, %ymm1, %ymm13
 	vmovapd			192(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			192(%r13, %r15, 1), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0xff, %ymm1, %ymm13
+	vpermpd			$ 0xff, %ymm1, %ymm13
 	vmovapd			224(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			224(%r13, %r15, 1), %ymm14
-//	vblendpd		$0xf, %ymm14, %ymm12, %ymm14
+//	vblendpd		$ 0xf, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	//
-	vpermpd			$0x00, %ymm2, %ymm13
+	vpermpd			$ 0x00, %ymm2, %ymm13
 	vmovapd			256(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			256(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			256(%r13, %r15, 2), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm13, %ymm10
 	//
-	vpermpd			$0x55, %ymm2, %ymm13
+	vpermpd			$ 0x55, %ymm2, %ymm13
 	vmovapd			288(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			288(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			288(%r13, %r15, 2), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm10
 	//
-	vpermpd			$0xaa, %ymm2, %ymm13
+	vpermpd			$ 0xaa, %ymm2, %ymm13
 	vmovapd			320(%r13), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 	vmovapd			320(%r13, %r15, 1), %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm11
 	vmovapd			320(%r13, %r15, 2), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
 	vfmadd231pd		%ymm14, %ymm13, %ymm10
 	//
 	vbroadcastsd	376(%r13, %r15, 2), %ymm14
@@ -8761,7 +8761,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmulpd			%ymm14, %ymm10, %ymm10
 //	vmulpd			%ymm14, %ymm2, %ymm2
 	vmovapd			352(%r13, %r15, 2), %ymm0
-	vblendpd		$0x7, %ymm10, %ymm0, %ymm10
+	vblendpd		$ 0x7, %ymm10, %ymm0, %ymm10
 	vmovapd			%ymm15, 352(%r13)
 	vmovapd			%ymm11, 352(%r13, %r15, 1)
 	vmovapd			%ymm10, 352(%r13, %r15, 2)
@@ -8813,20 +8813,20 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 
 	movq	ARG2, %r11 // D
 	movq	ARG3, %r14 // sdd
-	sall	$5, %r14d
+	sall	$ 5, %r14d
 	movq	ARG4, %r12 // dD
 	movq	ARG5, %r13 // T
 
 	vxorpd			%xmm15, %xmm15, %xmm15
 	movq	ARG1, %r10 // n
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 100:
 	vmovsd			0(%r11), %xmm14
 	vfmadd231sd		%xmm14, %xmm14, %xmm15
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		100b
 
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -8882,7 +8882,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 0(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vmovapd			0(%r11, %r14, 1), %ymm1
@@ -8902,9 +8902,9 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovsd			%xmm9, 64(%r11)
 	vmovsd			%xmm10, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11), %ymm8
@@ -8927,12 +8927,12 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovsd			%xmm9, 32(%r11)
 	vmovsd			%xmm10, 64(%r11)
 	vmovsd			%xmm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11), %ymm8
@@ -8940,9 +8940,9 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vmovsd			%xmm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -8951,7 +8951,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmulpd			%ymm15, %ymm1, %ymm1
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm15, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -8988,9 +8988,9 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -9029,12 +9029,12 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	//
@@ -9046,12 +9046,12 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // beta
+	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
 102:
@@ -9108,7 +9108,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 40(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vmovapd			32(%r11, %r14, 1), %ymm1
@@ -9123,9 +9123,9 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovsd			%xmm9, 72(%r11)
 	vmovsd			%xmm10, 104(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11), %ymm8
@@ -9148,12 +9148,12 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovsd			%xmm9, 40(%r11)
 	vmovsd			%xmm10, 72(%r11)
 	vmovsd			%xmm11, 104(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11), %ymm8
@@ -9161,9 +9161,9 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vmovsd			%xmm8, 8(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -9173,7 +9173,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovapd			LC02(%rip), %ymm12
 #endif
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vbroadcastsd	40(%r13), %ymm15
 	vmulpd			%ymm15, %ymm0, %ymm0
@@ -9181,7 +9181,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovsd			%xmm0, 32(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x3, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x3, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -9209,9 +9209,9 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -9250,12 +9250,12 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -9266,12 +9266,12 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
 102:
@@ -9328,7 +9328,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 80(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vmovapd			64(%r11, %r14, 1), %ymm1
@@ -9338,9 +9338,9 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		96(%r11, %r14, 1), %ymm10, %ymm1
 	vmovsd			%xmm10, 112(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11), %ymm8
@@ -9363,12 +9363,12 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovsd			%xmm9, 48(%r11)
 	vmovsd			%xmm10, 80(%r11)
 	vmovsd			%xmm11, 112(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11), %ymm8
@@ -9376,28 +9376,28 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vmovsd			%xmm8, 16(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
-	vblendpd		$0x7, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm15, %ymm0, %ymm0
 	vbroadcastsd	80(%r13), %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmovapd			%xmm0, 64(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x7, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	//
@@ -9417,9 +9417,9 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -9458,12 +9458,12 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 96(%r11)
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -9474,12 +9474,12 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // beta
+	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 102:
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -9535,14 +9535,14 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 120(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	vmovapd			96(%r11, %r14, 1), %ymm1
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11), %ymm8
@@ -9565,12 +9565,12 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vmovsd			%xmm9, 56(%r11)
 	vmovsd			%xmm10, 88(%r11)
 	vmovsd			%xmm11, 120(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11), %ymm8
@@ -9578,33 +9578,33 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vfmadd231pd		0(%r11, %r14, 1), %ymm8, %ymm1
 	vmovsd			%xmm8, 24(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm15
 
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm15
 
 	vbroadcastsd	120(%r13), %ymm14
 	vmulpd			%ymm14, %ymm15, %ymm15
 	vmulpd			%ymm14, %ymm1, %ymm1
 	vmovapd			96(%r13), %ymm0
-	vblendpd		$0x7, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm15, %ymm0, %ymm0
 	vmovapd			%ymm0, 96(%r13)
 
 	movq	ARG2, %r11 // D
@@ -9613,9 +9613,9 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vaddpd			%ymm1, %ymm9, %ymm9
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	//
@@ -9638,21 +9638,21 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vbroadcastsd	120(%r11), %ymm14
 	vfmadd231pd		%ymm1, %ymm14, %ymm9
 	vmovapd			%ymm9, 96(%r11, %r14, 1)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11, %r14, 1), %ymm9
 	vbroadcastsd	24(%r11), %ymm14
 	vfmadd231pd		%ymm1, %ymm14, %ymm9
 	vmovapd			%ymm9, 0(%r11, %r14, 1)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
 
@@ -9707,14 +9707,14 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 
 	vxorpd			%xmm15, %xmm15, %xmm15 // sigma
 	movq	ARG1, %r10 // n
-	subl	$1, %r10d
-	addq	$32, %r11
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
 100:
 	vmovsd			0(%r11), %xmm14
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // sigma
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		100b
 
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -9770,7 +9770,7 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 0(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			0(%r11), %ymm0
 	vbroadcastsd	32(%r11), %ymm8
@@ -9786,9 +9786,9 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovsd			%xmm9, 64(%r11)
 	vmovsd			%xmm10, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	0(%r11), %ymm8
@@ -9807,21 +9807,21 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovsd			%xmm9, 32(%r11)
 	vmovsd			%xmm10, 64(%r11)
 	vmovsd			%xmm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	0(%r11), %ymm8
 	vmulpd			%ymm15, %ymm8, %ymm8
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vmovsd			%xmm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -9829,7 +9829,7 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmulpd			%ymm15, %ymm0, %ymm0
 
 	vxorpd			%ymm15, %ymm15, %ymm15
-	vblendpd		$0x1, %ymm15, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm15, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	vmovapd			0(%r11), %ymm8
@@ -9850,9 +9850,9 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	vmovapd			0(%r11), %ymm8
@@ -9875,12 +9875,12 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovapd			%ymm9, 32(%r11)
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -9888,12 +9888,12 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vfmadd231pd		%ymm0, %ymm14, %ymm8
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0x55, %ymm15, %ymm15  // sigma
+	vpermpd	$ 0x55, %ymm15, %ymm15  // sigma
 
 	// second column
 102:
@@ -9950,7 +9950,7 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 40(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			32(%r11), %ymm0
 	vbroadcastsd	72(%r11), %ymm9
@@ -9962,9 +9962,9 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovsd			%xmm9, 72(%r11)
 	vmovsd			%xmm10, 104(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	8(%r11), %ymm8
@@ -9983,21 +9983,21 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovsd			%xmm9, 40(%r11)
 	vmovsd			%xmm10, 72(%r11)
 	vmovsd			%xmm11, 104(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	8(%r11), %ymm8
 	vmulpd			%ymm15, %ymm8, %ymm8
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vmovsd			%xmm8, 8(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
@@ -10007,14 +10007,14 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovapd			LC02(%rip), %ymm12
 #endif
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm0
 	vbroadcastsd	40(%r13), %ymm15
 	vmulpd			%ymm15, %ymm0, %ymm0
 	vmovsd			%xmm0, 32(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x3, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x3, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	vmovapd			32(%r11), %ymm9
@@ -10030,9 +10030,9 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	vmovapd			0(%r11), %ymm8
@@ -10055,12 +10055,12 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovapd			%ymm9, 32(%r11)
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -10068,12 +10068,12 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vfmadd231pd		%ymm0, %ymm14, %ymm8
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xaa, %ymm15, %ymm15  // sigma
+	vpermpd	$ 0xaa, %ymm15, %ymm15  // sigma
 
 	// third column
 102:
@@ -10130,7 +10130,7 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 80(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			64(%r11), %ymm0
 	vbroadcastsd	112(%r11), %ymm10
@@ -10138,9 +10138,9 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vfmadd231pd		96(%r11), %ymm10, %ymm0
 	vmovsd			%xmm10, 112(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	16(%r11), %ymm8
@@ -10159,39 +10159,39 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovsd			%xmm9, 48(%r11)
 	vmovsd			%xmm10, 80(%r11)
 	vmovsd			%xmm11, 112(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	16(%r11), %ymm8
 	vmulpd			%ymm15, %ymm8, %ymm8
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vmovsd			%xmm8, 16(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm1
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm1
-	vblendpd		$0x7, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm1, %ymm0, %ymm0
 	vbroadcastsd	80(%r13), %ymm15
 	vmulpd			%ymm15, %ymm0, %ymm0
 	vmovapd			%xmm0, 64(%r13)
 
 	vxorpd			%ymm12, %ymm12, %ymm12
-	vblendpd		$0x7, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm12, %ymm0, %ymm0
 
 	movq	ARG2, %r11 // D
 	vmovapd			64(%r11), %ymm10
@@ -10203,9 +10203,9 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		110f
 106:
 	vmovapd			0(%r11), %ymm8
@@ -10228,12 +10228,12 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovapd			%ymm9, 32(%r11)
 	vmovapd			%ymm10, 64(%r11)
 	vmovapd			%ymm11, 96(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		106b
 110:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		107f
 108:
 	vmovapd			0(%r11), %ymm8
@@ -10241,12 +10241,12 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vfmadd231pd		%ymm0, %ymm14, %ymm8
 	vfmadd231pd		%ymm8, %ymm8, %ymm15
 	vmovapd			%ymm8, 0(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		108b
 107:
-	vpermpd	$0xff, %ymm15, %ymm15  // sigma
+	vpermpd	$ 0xff, %ymm15, %ymm15  // sigma
 
 102:
 	vxorpd			%xmm14, %xmm14, %xmm14
@@ -10302,13 +10302,13 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vxorpd			%xmm12, %xmm15, %xmm15
 	vmovsd			%xmm15, 120(%r13) // pT[0+ps*0]
 
-	vpermpd			$0x55, %ymm14, %ymm15 // tmp
+	vpermpd			$ 0x55, %ymm14, %ymm15 // tmp
 
 	vmovapd			96(%r11), %ymm0
 	movq	ARG1, %r10 // n
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jle		109f
 103:
 	vbroadcastsd	24(%r11), %ymm8
@@ -10327,44 +10327,44 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vmovsd			%xmm9, 56(%r11)
 	vmovsd			%xmm10, 88(%r11)
 	vmovsd			%xmm11, 120(%r11)
-	subl	$4, %r10d
-	addq	$128, %r11
-	cmpl	$3, %r10d
+	subl	$ 4, %r10d
+	addq	$ 128, %r11
+	cmpl	$ 3, %r10d
 	jg		103b
 109:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		104f
 105:
 	vbroadcastsd	24(%r11), %ymm8
 	vmulpd			%ymm15, %ymm8, %ymm8
 	vfmadd231pd		0(%r11), %ymm8, %ymm0
 	vmovsd			%xmm8, 24(%r11)
-	subl	$1, %r10d
-	addq	$32, %r11
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	addq	$ 32, %r11
+	cmpl	$ 0, %r10d
 	jg		105b
 104:
 
 	vxorpd			%xmm12, %xmm12, %xmm12
 
 	vmovapd			0(%r13), %ymm14
-	vblendpd		$0x1, %ymm14, %ymm12, %ymm14
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm14
 	vmulpd			%ymm14, %ymm0, %ymm1
 
 	vmovapd			32(%r13), %ymm14
-	vblendpd		$0x3, %ymm14, %ymm12, %ymm14
-	vpermpd			$0x55, %ymm0, %ymm13
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0x55, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm1
 
 	vmovapd			64(%r13), %ymm14
-	vblendpd		$0x7, %ymm14, %ymm12, %ymm14
-	vpermpd			$0xaa, %ymm0, %ymm13
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm14
+	vpermpd			$ 0xaa, %ymm0, %ymm13
 	vfmadd231pd		%ymm14, %ymm13, %ymm1
 
 	vbroadcastsd	120(%r13), %ymm15
 	vmulpd			%ymm15, %ymm1, %ymm1
 	vmovapd			96(%r13), %ymm0
-	vblendpd		$0x7, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x7, %ymm1, %ymm0, %ymm0
 	vmovapd			%ymm0, 96(%r13)
 
 102:

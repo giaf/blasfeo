@@ -192,7 +192,7 @@ inner_kernel_sgecpsc_8_0_lib8:
 
 	vbroadcastss	0(%r11), %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -202,7 +202,7 @@ inner_kernel_sgecpsc_8_0_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmulps		%ymm15, %ymm0, %ymm0
@@ -212,18 +212,18 @@ inner_kernel_sgecpsc_8_0_lib8:
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 64(%r13)
 
-	addq		$128, %r12
-	addq		$128, %r13
+	addq		$ 128, %r12
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r12), %ymm0
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$ 4, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
@@ -231,11 +231,11 @@ inner_kernel_sgecpsc_8_0_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -277,7 +277,7 @@ inner_kernel_sgecp_8_0_lib8:
 #endif
 #endif
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -286,7 +286,7 @@ inner_kernel_sgecp_8_0_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		%ymm0, 0(%r12)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		%ymm0, 32(%r12)
@@ -294,29 +294,29 @@ inner_kernel_sgecp_8_0_lib8:
 	vmovaps		64(%r11), %ymm0
 	vmovaps		%ymm0, 64(%r12)
 
-	addq		$128, %r11
-	addq		$128, %r12
+	addq		$ 128, %r11
+	addq		$ 128, %r12
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		%ymm0, -32(%r12)
 
-	cmpl		$4, %r10d
+	cmpl		$ 4, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		%ymm0, 0(%r12)
-	subl		$1, %r10d
+	subl		$ 1, %r10d
 
-	addq		$32, %r11
-	addq		$32, %r12
+	addq		$ 32, %r11
+	addq		$ 32, %r12
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -369,7 +369,7 @@ inner_kernel_sgecpsc_8_1_lib8:
 
 	vbroadcastss	0(%r11), %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -379,59 +379,59 @@ inner_kernel_sgecpsc_8_1_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
 
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 32(%r14)
 
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
 
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 64(%r14)
 
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
 
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
@@ -439,20 +439,20 @@ inner_kernel_sgecpsc_8_1_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -499,7 +499,7 @@ inner_kernel_sgecp_8_1_lib8:
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -513,93 +513,93 @@ inner_kernel_sgecp_8_1_lib8:
 	vmovaps		0(%rax), %ymm1
 
 	// magic
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 
 	// copy in B
 	vmovaps		%ymm0, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
 
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 
 	vmovaps		%ymm0, 32(%r13)
 
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
 
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 #else
 	vmovups		4(%r11), %ymm0
 	vmovups		-28(%rax), %ymm1
-	vblendps	$0x80, %ymm1, %ymm0, %ymm0
+	vblendps	$ 0x80, %ymm1, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovups		36(%r11), %ymm0
 	vmovups		4(%rax), %ymm1
-	vblendps	$0x80, %ymm1, %ymm0, %ymm0
+	vblendps	$ 0x80, %ymm1, %ymm0, %ymm0
 	vmovaps		%ymm0, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovups		-60(%r11), %ymm0
 	vmovups		-92(%rax), %ymm1
-	vblendps	$0x80, %ymm1, %ymm0, %ymm0
+	vblendps	$ 0x80, %ymm1, %ymm0, %ymm0
 	vmovaps		%ymm0, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovups		-28(%r11), %ymm0
 	vmovups		-60(%rax), %ymm1
-	vblendps	$0x80, %ymm1, %ymm0, %ymm0
+	vblendps	$ 0x80, %ymm1, %ymm0, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 #endif
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -649,7 +649,7 @@ inner_kernel_sgecpsc_8_2_lib8:
 
 	vbroadcastss	0(%r11), %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -659,59 +659,59 @@ inner_kernel_sgecpsc_8_2_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
 
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 32(%r14)
 
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
 
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 64(%r14)
 
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
 
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
@@ -719,20 +719,20 @@ inner_kernel_sgecpsc_8_2_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -779,7 +779,7 @@ inner_kernel_sgecp_8_2_lib8:
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -788,62 +788,62 @@ inner_kernel_sgecp_8_2_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -893,7 +893,7 @@ inner_kernel_sgecpsc_8_3_lib8:
 
 	vbroadcastss	0(%r11), %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -903,59 +903,59 @@ inner_kernel_sgecpsc_8_3_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
 
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 32(%r14)
 
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
 
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 64(%r14)
 
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
 
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
@@ -963,20 +963,20 @@ inner_kernel_sgecpsc_8_3_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -1023,7 +1023,7 @@ inner_kernel_sgecp_8_3_lib8:
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -1032,62 +1032,62 @@ inner_kernel_sgecp_8_3_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -1137,7 +1137,7 @@ inner_kernel_sgecpsc_8_4_lib8:
 
 	vbroadcastss	0(%r11), %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -1146,56 +1146,56 @@ inner_kernel_sgecpsc_8_4_lib8:
 
 	vmovaps		16(%r12), %xmm0
 	vmovaps		0(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		48(%r12), %xmm0
 	vmovaps		32(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 32(%r14)
 
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-48(%r12), %xmm0
 	vmovaps	-64(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 64(%r14)
 
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-16(%r12), %xmm0
 	vmovaps		-32(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		16(%r12), %xmm0
 	vmovaps		0(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -1243,7 +1243,7 @@ inner_kernel_sgecp_8_4_lib8:
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -1252,51 +1252,51 @@ inner_kernel_sgecp_8_4_lib8:
 
 	vmovaps		16(%r11), %xmm0
 	vmovaps		0(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r13)
 
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		48(%r11), %xmm0
 	vmovaps		32(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmovaps		%ymm0, 32(%r13)
 
-	addq		$128, %r11
+	addq		$ 128, %r11
 
 	vmovaps		-48(%r11), %xmm0
 	vmovaps		64(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmovaps		%ymm0, 64(%r13)
 
-	addq		$128, %rax
+	addq		$ 128, %rax
 
 	vmovaps		-16(%r11), %xmm0
 	vmovaps		-32(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmovaps		%ymm0, 96(%r13)
 
-	addq		$128, %r13
+	addq		$ 128, %r13
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		16(%r11), %xmm0
 	vmovaps		0(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -1346,7 +1346,7 @@ inner_kernel_sgecpsc_8_5_lib8:
 
 	vbroadcastss	0(%r11), %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -1356,59 +1356,59 @@ inner_kernel_sgecpsc_8_5_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
 
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 32(%r14)
 
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
 
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 64(%r14)
 
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
 
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
@@ -1416,20 +1416,20 @@ inner_kernel_sgecpsc_8_5_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -1476,7 +1476,7 @@ inner_kernel_sgecp_8_5_lib8:
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -1485,62 +1485,62 @@ inner_kernel_sgecp_8_5_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -1590,7 +1590,7 @@ inner_kernel_sgecpsc_8_6_lib8:
 
 	vbroadcastss	0(%r11), %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -1600,59 +1600,59 @@ inner_kernel_sgecpsc_8_6_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
 
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 32(%r14)
 
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
 
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 64(%r14)
 
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
 
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
@@ -1660,20 +1660,20 @@ inner_kernel_sgecpsc_8_6_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -1721,7 +1721,7 @@ inner_kernel_sgecp_8_6_lib8:
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -1730,62 +1730,62 @@ inner_kernel_sgecp_8_6_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -1835,7 +1835,7 @@ inner_kernel_sgecpsc_8_7_lib8:
 
 	vbroadcastss	0(%r11), %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -1845,59 +1845,59 @@ inner_kernel_sgecpsc_8_7_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
 
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 32(%r14)
 
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
 
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 64(%r14)
 
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
 
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
@@ -1905,20 +1905,20 @@ inner_kernel_sgecpsc_8_7_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 
 	vmulps		%ymm15, %ymm0, %ymm0
 	vmovaps		%ymm0, 0(%r14)
 
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -1966,7 +1966,7 @@ inner_kernel_sgecp_8_7_lib8:
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -1975,62 +1975,62 @@ inner_kernel_sgecp_8_7_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmovaps		%ymm0, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -2086,13 +2086,13 @@ inner_kernel_sgecpsc_8_0_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	vbroadcastss	0(%r11), %ymm14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -2102,7 +2102,7 @@ inner_kernel_sgecpsc_8_0_gen_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15,  0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
@@ -2112,18 +2112,18 @@ inner_kernel_sgecpsc_8_0_gen_lib8:
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15,  64(%r13)
 
-	addq		$128, %r12
-	addq		$128, %r13
+	addq		$ 128, %r12
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r12), %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15,  -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$ 4, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
@@ -2131,12 +2131,12 @@ inner_kernel_sgecpsc_8_0_gen_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15,  0(%r13)
-	subl		$1, %r10d
+	subl		$ 1, %r10d
 
-	addq		$32, %r12
-	addq		$32, %r13
+	addq		$ 32, %r12
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -2189,13 +2189,13 @@ inner_kernel_sgecpsc_8_0_gen_u_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	vbroadcastss	0(%r11), %ymm14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -2205,7 +2205,7 @@ inner_kernel_sgecpsc_8_0_gen_u_lib8:
 	vmovups		0(%r12), %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15,  0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovups		32(%r12), %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
@@ -2215,18 +2215,18 @@ inner_kernel_sgecpsc_8_0_gen_u_lib8:
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15,  64(%r13)
 
-	addq		$128, %r12
-	addq		$128, %r13
+	addq		$ 128, %r12
+	addq		$ 128, %r13
 
 	vmovups		-32(%r12), %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15,  -32(%r13)
 
-	cmpl		$4, %r10d
+	cmpl		$ 4, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
@@ -2234,12 +2234,12 @@ inner_kernel_sgecpsc_8_0_gen_u_lib8:
 	vmovups		0(%r12), %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15,  0(%r13)
-	subl		$1, %r10d
+	subl		$ 1, %r10d
 
-	addq		$32, %r12
-	addq		$32, %r13
+	addq		$ 32, %r12
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -2291,11 +2291,11 @@ inner_kernel_sgecp_8_0_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -2304,7 +2304,7 @@ inner_kernel_sgecp_8_0_gen_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  0(%r12)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  32(%r12)
@@ -2312,29 +2312,29 @@ inner_kernel_sgecp_8_0_gen_lib8:
 	vmovaps		64(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  64(%r12)
 
-	addq		$128, %r12
-	addq		$128, %r11
+	addq		$ 128, %r12
+	addq		$ 128, %r11
 
 	vmovaps		-32(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  -32(%r12)
 
-	cmpl		$4, %r10d
+	cmpl		$ 4, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  0(%r12)
-	subl		$1, %r10d
+	subl		$ 1, %r10d
 
-	addq		$32, %r11
-	addq		$32, %r12
+	addq		$ 32, %r11
+	addq		$ 32, %r12
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -2386,11 +2386,11 @@ inner_kernel_sgecp_8_0_gen_u_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -2399,7 +2399,7 @@ inner_kernel_sgecp_8_0_gen_u_lib8:
 
 	vmovups		0(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  0(%r12)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovups		32(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  32(%r12)
@@ -2407,29 +2407,29 @@ inner_kernel_sgecp_8_0_gen_u_lib8:
 	vmovups		64(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  64(%r12)
 
-	addq		$128, %r12
-	addq		$128, %r11
+	addq		$ 128, %r12
+	addq		$ 128, %r11
 
 	vmovups		-32(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  -32(%r12)
 
-	cmpl		$4, %r10d
+	cmpl		$ 4, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovups		0(%r11), %ymm0
 	vmaskmovps	%ymm0, %ymm15,  0(%r12)
-	subl		$1, %r10d
+	subl		$ 1, %r10d
 
-	addq		$32, %r11
-	addq		$32, %r12
+	addq		$ 32, %r11
+	addq		$ 32, %r12
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -2483,8 +2483,8 @@ inner_kernel_sgecpsc_8_1_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r12, %rax // A1 <- A0
@@ -2492,7 +2492,7 @@ inner_kernel_sgecpsc_8_1_gen_lib8:
 
 	vbroadcastss	0(%r11), %ymm14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -2501,67 +2501,67 @@ inner_kernel_sgecpsc_8_1_gen_lib8:
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r14)
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r14)
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -2613,14 +2613,14 @@ inner_kernel_sgecp_8_1_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -2629,62 +2629,62 @@ inner_kernel_sgecp_8_1_gen_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x01, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x77, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x01, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x77, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -2737,8 +2737,8 @@ inner_kernel_sgecpsc_8_2_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r12, %rax // A1 <- A0
@@ -2746,7 +2746,7 @@ inner_kernel_sgecpsc_8_2_gen_lib8:
 
 	vbroadcastss	0(%r11), %ymm14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -2756,67 +2756,67 @@ inner_kernel_sgecpsc_8_2_gen_lib8:
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
 
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r14)
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r14)
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -2868,14 +2868,14 @@ inner_kernel_sgecp_8_2_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -2884,62 +2884,62 @@ inner_kernel_sgecp_8_2_gen_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x03, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x33, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x03, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x33, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -2992,8 +2992,8 @@ inner_kernel_sgecpsc_8_3_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r12, %rax // A1 <- A0
@@ -3001,7 +3001,7 @@ inner_kernel_sgecpsc_8_3_gen_lib8:
 
 	vbroadcastss	0(%r11), %ymm14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -3010,67 +3010,67 @@ inner_kernel_sgecpsc_8_3_gen_lib8:
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r14)
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r14)
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -3123,14 +3123,14 @@ inner_kernel_sgecp_8_3_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -3139,62 +3139,62 @@ inner_kernel_sgecp_8_3_gen_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x07, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x11, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x07, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x11, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -3247,8 +3247,8 @@ inner_kernel_sgecpsc_8_4_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r12, %rax // A1 <- A0
@@ -3256,7 +3256,7 @@ inner_kernel_sgecpsc_8_4_gen_lib8:
 
 	vbroadcastss	0(%r11), %ymm14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -3265,52 +3265,52 @@ inner_kernel_sgecpsc_8_4_gen_lib8:
 
 	vmovaps		16(%r12), %xmm0
 	vmovaps		0(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		48(%r12), %xmm0
 	vmovaps		32(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r14)
-	addq		$128, %r12
+	addq		$ 128, %r12
 
 	vmovaps		-48(%r12), %xmm0
 	vmovaps		64(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r14)
-	addq		$128, %rax
+	addq		$ 128, %rax
 
 	vmovaps		-16(%r12), %xmm0
 	vmovaps		-32(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 96(%r14)
-	addq		$128, %r14
+	addq		$ 128, %r14
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		16(%r12), %xmm0
 	vmovaps		0(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -3363,14 +3363,14 @@ inner_kernel_sgecp_8_4_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -3379,47 +3379,47 @@ inner_kernel_sgecp_8_4_gen_lib8:
 
 	vmovaps		16(%r11), %xmm0
 	vmovaps		0(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		48(%r11), %xmm0
 	vmovaps		32(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r13)
-	addq		$128, %r11
+	addq		$ 128, %r11
 
 	vmovaps		-48(%r11), %xmm0
 	vmovaps		64(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r13)
-	addq		$128, %rax
+	addq		$ 128, %rax
 
 	vmovaps		-16(%r11), %xmm0
 	vmovaps		-32(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 96(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		16(%r11), %xmm0
 	vmovaps		0(%rax), %xmm1
-	vinsertf128	$0x01, %xmm1, %ymm0, %ymm0
+	vinsertf128	$ 0x01, %xmm1, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -3472,8 +3472,8 @@ inner_kernel_sgecpsc_8_5_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r12, %rax // A1 <- A0
@@ -3481,7 +3481,7 @@ inner_kernel_sgecpsc_8_5_gen_lib8:
 
 	vbroadcastss	0(%r11), %ymm14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -3490,67 +3490,67 @@ inner_kernel_sgecpsc_8_5_gen_lib8:
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r14)
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r14)
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -3603,14 +3603,14 @@ inner_kernel_sgecp_8_5_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -3619,62 +3619,62 @@ inner_kernel_sgecp_8_5_gen_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x1f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x39, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0x88, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x1f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x39, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0x88, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -3727,8 +3727,8 @@ inner_kernel_sgecpsc_8_6_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r12, %rax // A1 <- A0
@@ -3736,7 +3736,7 @@ inner_kernel_sgecpsc_8_6_gen_lib8:
 
 	vbroadcastss	0(%r11), %ymm14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -3745,67 +3745,67 @@ inner_kernel_sgecpsc_8_6_gen_lib8:
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r14)
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r14)
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -3858,14 +3858,14 @@ inner_kernel_sgecp_8_6_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -3874,62 +3874,62 @@ inner_kernel_sgecp_8_6_gen_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x3f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x4e, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xcc, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x3f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x4e, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xcc, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -3982,8 +3982,8 @@ inner_kernel_sgecpsc_8_7_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r12, %rax // A1 <- A0
@@ -3991,7 +3991,7 @@ inner_kernel_sgecpsc_8_7_gen_lib8:
 
 	vbroadcastss	0(%r11), %ymm14
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -4000,67 +4000,67 @@ inner_kernel_sgecpsc_8_7_gen_lib8:
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r12), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r14)
-	addq		$128, %r12
-	addq		$128, %rax
+	addq		$ 128, %r12
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r12), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r14)
-	addq		$128, %r14
+	addq		$ 128, %r14
 
 	vmovaps		-32(%r12), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r14)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r12), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmulps		%ymm14, %ymm0, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r14)
-	subl		$1, %r10d
-	addq		$32, %r12
-	addq		$32, %rax
-	addq		$32, %r14
+	subl		$ 1, %r10d
+	addq		$ 32, %r12
+	addq		$ 32, %rax
+	addq		$ 32, %r14
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -4113,14 +4113,14 @@ inner_kernel_sgecp_8_7_gen_lib8:
 #elif defined(OS_MAC)
 	vmovups		LC00(%rip), %ymm12
 #endif
-	vshufps		$0x00, %xmm15, %xmm15, %xmm15
-	vinsertf128	$0x1, %xmm15, %ymm15, %ymm15
+	vshufps		$ 0x00, %xmm15, %xmm15, %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm15, %ymm15
 	vsubps		%ymm15, %ymm12, %ymm15
 
 	movq	%r11, %rax // A1 <- A0
 	addq	%r12, %rax // A1 <- A0 + 8*sda*sizeof(float)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		0f // consider clean-up
 
 	// main loop
@@ -4129,62 +4129,62 @@ inner_kernel_sgecp_8_7_gen_lib8:
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$4, %r10d
+	subl		$ 4, %r10d
 
 	vmovaps		32(%r11), %ymm0
 	vmovaps		32(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 32(%r13)
-	addq		$128, %r11
-	addq		$128, %rax
+	addq		$ 128, %r11
+	addq		$ 128, %rax
 
 	vmovaps		-64(%r11), %ymm0
 	vmovaps		-64(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 64(%r13)
-	addq		$128, %r13
+	addq		$ 128, %r13
 
 	vmovaps		-32(%r11), %ymm0
 	vmovaps		-32(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, -32(%r13)
 
-	cmpl		$3, %r10d
+	cmpl		$ 3, %r10d
 	jg			1b // main loop
 
 0: // consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 3: // clean-up loop
 
 	vmovaps		0(%r11), %ymm0
 	vmovaps		0(%rax), %ymm1
-	vblendps	$0x7f, %ymm1, %ymm0, %ymm0
-	vpermilps	$0x93, %ymm0, %ymm0
-	vperm2f128	$0x01, %ymm0, %ymm0, %ymm1
-	vblendps	$0xee, %ymm0, %ymm1, %ymm0
+	vblendps	$ 0x7f, %ymm1, %ymm0, %ymm0
+	vpermilps	$ 0x93, %ymm0, %ymm0
+	vperm2f128	$ 0x01, %ymm0, %ymm0, %ymm1
+	vblendps	$ 0xee, %ymm0, %ymm1, %ymm0
 	vmaskmovps	%ymm0, %ymm15, 0(%r13)
-	subl		$1, %r10d
-	addq		$32, %r11
-	addq		$32, %rax
-	addq		$32, %r13
+	subl		$ 1, %r10d
+	addq		$ 32, %r11
+	addq		$ 32, %rax
+	addq		$ 32, %r13
 
-	cmpl		$0, %r10d
+	cmpl		$ 0, %r10d
 	jg			3b // clean-up loop
 
 2: // return
@@ -4384,7 +4384,7 @@ kernel_sgecpsc_8_1_lib8:
 	movq	ARG3, %r12 // A
 
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda *= 32
+	sall	$ 5, %r13d  // sda *= 32
 	movq	ARG5, %r14 // B
 
 #if MACRO_LEVEL>=1
@@ -4435,7 +4435,7 @@ kernel_sgecp_8_1_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 
 #if MACRO_LEVEL>=1
@@ -4488,7 +4488,7 @@ kernel_sgecpsc_8_2_lib8:
 	movq	ARG3, %r12 // A
 
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda *= 32~~8*sizeof(float)
+	sall	$ 5, %r13d  // sda *= 32~~8*sizeof(float)
 
 	movq	ARG5, %r14 // B
 
@@ -4539,7 +4539,7 @@ kernel_sgecp_8_2_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12  // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13  // B
 
 #if MACRO_LEVEL>=1
@@ -4592,7 +4592,7 @@ kernel_sgecpsc_8_3_lib8:
 	movq	ARG3, %r12 // A
 
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda *= 32
+	sall	$ 5, %r13d  // sda *= 32
 	movq	ARG5, %r14 // B
 
 #if MACRO_LEVEL>=1
@@ -4643,7 +4643,7 @@ kernel_sgecp_8_3_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d  // 8*sda*sizeof(float)
+	sall	$ 5, %r12d  // 8*sda*sizeof(float)
 	movq	ARG4, %r13 // B
 
 #if MACRO_LEVEL>=1
@@ -4696,7 +4696,7 @@ kernel_sgecpsc_8_4_lib8:
 	movq	ARG3, %r12 // A
 
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda *= 32
+	sall	$ 5, %r13d  // sda *= 32
 	movq	ARG5, %r14 // B
 
 #if MACRO_LEVEL>=1
@@ -4746,7 +4746,7 @@ kernel_sgecp_8_4_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12  // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13  // B
 
 #if MACRO_LEVEL>=1
@@ -4799,7 +4799,7 @@ kernel_sgecpsc_8_5_lib8:
 	movq	ARG3, %r12 // A
 
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda *= 32
+	sall	$ 5, %r13d  // sda *= 32
 	movq	ARG5, %r14 // B
 
 #if MACRO_LEVEL>=1
@@ -4849,7 +4849,7 @@ kernel_sgecp_8_5_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12  // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13  // B
 
 #if MACRO_LEVEL>=1
@@ -4902,7 +4902,7 @@ kernel_sgecpsc_8_6_lib8:
 	movq	ARG3, %r12 // A
 
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda *= 32
+	sall	$ 5, %r13d  // sda *= 32
 	movq	ARG5, %r14 // B
 
 #if MACRO_LEVEL>=1
@@ -4953,7 +4953,7 @@ kernel_sgecp_8_6_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12  // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13  // B
 
 #if MACRO_LEVEL>=1
@@ -5006,7 +5006,7 @@ kernel_sgecpsc_8_7_lib8:
 	movq	ARG3, %r12 // A
 
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda *= 32
+	sall	$ 5, %r13d  // sda *= 32
 	movq	ARG5, %r14 // B
 
 #if MACRO_LEVEL>=1
@@ -5057,7 +5057,7 @@ kernel_sgecp_8_7_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12  // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13  // B
 
 #if MACRO_LEVEL>=1
@@ -5407,7 +5407,7 @@ kernel_sgecpsc_8_1_gen_lib8:
 	movq	ARG2, %r11 // alpha
 	movq	ARG3, %r12 // A
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda *= 32
+	sall	$ 5, %r13d  // sda *= 32
 	movq	ARG5, %r14 // B
 	movq	ARG6, %r15 // m1
 
@@ -5459,7 +5459,7 @@ kernel_sgecp_8_1_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12  // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14 // m1
 
@@ -5511,7 +5511,7 @@ kernel_sgecpsc_8_2_gen_lib8:
 	movq	ARG2, %r11 // alpha
 	movq	ARG3, %r12 // A
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda*8*sizeof(float)
+	sall	$ 5, %r13d  // sda*8*sizeof(float)
 	movq	ARG5, %r14 // B
 	movq	ARG6, %r15 // m1
 
@@ -5563,7 +5563,7 @@ kernel_sgecp_8_2_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // m1
 
@@ -5615,7 +5615,7 @@ kernel_sgecpsc_8_3_gen_lib8:
 	movq	ARG2, %r11 // alpha
 	movq	ARG3, %r12 // A
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda*8*sizeof(float)
+	sall	$ 5, %r13d  // sda*8*sizeof(float)
 	movq	ARG5, %r14 // B
 	movq	ARG6, %r15 // m1
 
@@ -5667,7 +5667,7 @@ kernel_sgecp_8_3_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d  // 8*sda*sizeof(float)
+	sall	$ 5, %r12d  // 8*sda*sizeof(float)
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // m1
 
@@ -5719,7 +5719,7 @@ kernel_sgecpsc_8_4_gen_lib8:
 	movq	ARG2, %r11 // alpha
 	movq	ARG3, %r12 // A
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda*8*sizeof(float)
+	sall	$ 5, %r13d  // sda*8*sizeof(float)
 	movq	ARG5, %r14 // B
 	movq	ARG6, %r15 // m1
 
@@ -5770,7 +5770,7 @@ kernel_sgecp_8_4_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12  // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14 // m1
 
@@ -5822,7 +5822,7 @@ kernel_sgecpsc_8_5_gen_lib8:
 	movq	ARG2, %r11 // alpha
 	movq	ARG3, %r12 // A
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda*8*sizeof(float)
+	sall	$ 5, %r13d  // sda*8*sizeof(float)
 	movq	ARG5, %r14 // B
 	movq	ARG6, %r15 // m1
 
@@ -5873,7 +5873,7 @@ kernel_sgecp_8_5_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12  // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14 // m1
 
@@ -5925,7 +5925,7 @@ kernel_sgecpsc_8_6_gen_lib8:
 	movq	ARG2, %r11 // alpha
 	movq	ARG3, %r12 // A
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda*8*sizeof(float)
+	sall	$ 5, %r13d  // sda*8*sizeof(float)
 	movq	ARG5, %r14 // B
 	movq	ARG6, %r15 // m1
 
@@ -5977,7 +5977,7 @@ kernel_sgecp_8_6_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12  // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14 // m1
 
@@ -6029,7 +6029,7 @@ kernel_sgecpsc_8_7_gen_lib8:
 	movq	ARG2, %r11 // alpha
 	movq	ARG3, %r12 // A
 	movq	ARG4, %r13 // sda
-	sall	$5, %r13d  // sda*8*sizeof(float)
+	sall	$ 5, %r13d  // sda*8*sizeof(float)
 	movq	ARG5, %r14 // B
 	movq	ARG6, %r15 // m1
 
@@ -6080,7 +6080,7 @@ kernel_sgecp_8_7_gen_lib8:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12  // 8*sda*sizeof(float)
-	sall	$5, %r12d
+	sall	$ 5, %r12d
 	movq	ARG4, %r13  // B
 	movq	ARG5, %r14 // m1
 

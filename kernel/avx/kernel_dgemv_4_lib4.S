@@ -271,10 +271,10 @@ NAME:
 	FUN_START(inner_kernel_gemv_add_n_4_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jl		0f // clean-up loop
 
 	// main loop
@@ -286,7 +286,7 @@ NAME:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm0, %ymm15, %ymm0
 	
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vmovapd	32(%r11), %ymm8
 	vbroadcastsd	8(%r12), %ymm12
@@ -303,16 +303,16 @@ NAME:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	
-	addq	$128, %r11
-	addq	$32, %r12
+	addq	$ 128, %r11
+	addq	$ 32, %r12
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 0: // clean-up
@@ -322,11 +322,11 @@ NAME:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm0, %ymm15, %ymm0
 	
-	addq	$32, %r11
-	addq	$8, %r12
+	addq	$ 32, %r11
+	addq	$ 8, %r12
 	
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 
 	jg		0b // clean
 
@@ -390,10 +390,10 @@ NAME:
 	FUN_START(inner_kernel_gemv_add_t_4_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jl		0f // clean-up loop
 
 	// main loop
@@ -406,7 +406,7 @@ NAME:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm0, %ymm15, %ymm0
 	
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vmovapd	32(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
@@ -421,15 +421,15 @@ NAME:
 	vaddpd	%ymm3, %ymm15, %ymm3
 	
 	addq	%r12, %r11
-	addq	$32, %r13
+	addq	$ 32, %r13
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 0: // clean-up
@@ -441,7 +441,7 @@ NAME:
 	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm14, %xmm14
-	vinsertf128	$1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
 	vsubpd		%ymm14, %ymm13, %ymm14
 
 	vmaskmovpd	0(%r13), %ymm14, %ymm12
@@ -462,7 +462,7 @@ NAME:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 		
-	sall	$3, %r10d
+	sall	$ 3, %r10d
 //	movslq	%r10d, %r10
 	addq	%r10, %r11
 	addq	%r10, %r13
@@ -535,10 +535,10 @@ NAME:
 	FUN_START(inner_kernel_gemv_add_nt_4_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jl		0f // clean-up loop
 
 	// main loop
@@ -554,7 +554,7 @@ NAME:
 	vmulpd	%ymm14, %ymm6, %ymm15
 	vaddpd	%ymm13, %ymm15, %ymm13
 	
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vmovapd	32(%r11), %ymm14
 	vmulpd	%ymm14, %ymm12, %ymm15
@@ -577,16 +577,16 @@ NAME:
 	vmovupd	%ymm13, 0(%r14) 
 
 	addq	%r12, %r11
-	addq	$32, %r13
-	addq	$32, %r14
+	addq	$ 32, %r13
+	addq	$ 32, %r14
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 0: // clean-up
@@ -598,7 +598,7 @@ NAME:
 	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm14, %xmm14
-	vinsertf128	$1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
 	vsubpd		%ymm14, %ymm13, %ymm11
 
 	vmaskmovpd	0(%r13), %ymm11, %ymm12
@@ -637,7 +637,7 @@ NAME:
 //	vmovupd	-32(%rsp), %ymm14 // load mask form stack
 	vmaskmovpd	%ymm13, %ymm11, 0(%r14)
 
-	sall	$3, %r10d // *sizeof(double)
+	sall	$ 3, %r10d // *sizeof(double)
 	addq	%r10, %r11
 	addq	%r10, %r13
 	addq	%r10, %r14
@@ -707,11 +707,11 @@ NAME:
 	FUN_START(inner_edge_gemv_add_t_4_lib4)
 #endif
 
-	cmpl	$0, %r14d
+	cmpl	$ 0, %r14d
 	jle		0f // return
 
 	movl	%r14d, %r15d
-	sall	$3, %r15d // offA*sizeof(double)
+	sall	$ 3, %r15d // offA*sizeof(double)
 
 	subq	%r15, %r11 // A - offA
 	subq	%r15, %r13 // x - offA
@@ -728,8 +728,8 @@ NAME:
 #endif
 	vmovddup	%xmm14, %xmm14
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm14, %ymm14, %ymm14
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm13, %ymm14, %ymm14
 	vsubpd		%ymm15, %ymm13, %ymm15
 	vandpd		%ymm15, %ymm14, %ymm14
@@ -752,11 +752,11 @@ NAME:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 
-	addq	$32, %r13 // x + 4
+	addq	$ 32, %r13 // x + 4
 	addq	%r12, %r11 // A + bs*sda
 		
 	addl	%r14d, %r10d
-	subl	$4, %r10d // kmax - (4-offA)
+	subl	$ 4, %r10d // kmax - (4-offA)
 	
 0: // return
 
@@ -831,47 +831,47 @@ NAME:
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm0, %ymm15, %ymm0
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x1, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm6, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 	
 	vmovupd		32(%r11), %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x1, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm1, %ymm15, %ymm1
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x3, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm7, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 	
 	vmovupd		64(%r11), %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x3, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm2, %ymm15, %ymm2
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x7, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x7, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm8, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 
 	vmovupd		96(%r11), %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x7, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x7, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm3, %ymm15, %ymm3
 //	vxorpd		%ymm15, %ymm15, %ymm15
-//	vblendpd	$0x0, %ymm14, %ymm15, %ymm14
+//	vblendpd	$ 0x0, %ymm14, %ymm15, %ymm14
 //	vmulpd		%ymm14, %ymm9, %ymm15
 //	vaddpd		%ymm13, %ymm15, %ymm13
 	
 	vmovupd		%ymm13, 0(%r14) 
 
 	addq	%r12, %r11
-	addq	$32, %r13
-	addq	$32, %r14
+	addq	$ 32, %r13
+	addq	$ 32, %r14
 	
-	subq	$4, %r10
+	subq	$ 4, %r10
 
 #if MACRO_LEVEL>=2
 	.endm
@@ -940,7 +940,7 @@ NAME:
 	FUN_START(inner_edge_dsymv_add_nt_4_gen_lib4)
 #endif
 
-	movl	$4, %eax
+	movl	$ 4, %eax
 	cmpl	%eax, %r10d
 	jge		0f
 	movl	%r10d, %eax
@@ -954,16 +954,16 @@ NAME:
 	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm14, %xmm14
-	vinsertf128	$0x1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$ 0x1, %xmm14, %ymm14, %ymm14
 	vsubpd		%ymm14, %ymm13, %ymm11
 
-	cmp		$3, %eax
+	cmp		$ 3, %eax
 	jg		0f
 	vxorpd		%ymm9, %ymm9, %ymm9
-	cmp		$2, %eax
+	cmp		$ 2, %eax
 	jg		0f
 	vxorpd		%ymm8, %ymm8, %ymm8
-	cmp		$1, %eax
+	cmp		$ 1, %eax
 	jg		0f
 	vxorpd		%ymm7, %ymm7, %ymm7
 0:
@@ -975,37 +975,37 @@ NAME:
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm0, %ymm15, %ymm0
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x1, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm6, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 	
 	vmaskmovpd	32(%r11), %ymm11, %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x1, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x1, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm1, %ymm15, %ymm1
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x3, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm7, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 	
 	vmaskmovpd	64(%r11), %ymm11, %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x3, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x3, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm2, %ymm15, %ymm2
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x7, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x7, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm8, %ymm15
 	vaddpd		%ymm13, %ymm15, %ymm13
 
 	vmaskmovpd	96(%r11), %ymm11, %ymm14
 	vxorpd		%ymm15, %ymm15, %ymm15
-	vblendpd	$0x7, %ymm15, %ymm14, %ymm14
+	vblendpd	$ 0x7, %ymm15, %ymm14, %ymm14
 	vmulpd		%ymm14, %ymm12, %ymm15
 	vaddpd		%ymm3, %ymm15, %ymm3
 //	vxorpd		%ymm15, %ymm15, %ymm15
-//	vblendpd	$0x0, %ymm14, %ymm15, %ymm14
+//	vblendpd	$ 0x0, %ymm14, %ymm15, %ymm14
 //	vmulpd		%ymm14, %ymm9, %ymm15
 //	vaddpd		%ymm13, %ymm15, %ymm13
 	
@@ -1013,9 +1013,9 @@ NAME:
 
 	subl	%eax, %r10d
 
-	salq	$3, %rax // *sizeof(double)
+	salq	$ 3, %rax // *sizeof(double)
 	addq	%rax, %r11
-	subq	$32, %r11
+	subq	$ 32, %r11
 	addq	%r12, %r11
 	addq	%rax, %r13
 	addq	%rax, %r14
@@ -1119,8 +1119,8 @@ NAME:
 	// reduction
 	vhaddpd	%ymm1, %ymm0, %ymm0
 	vhaddpd	%ymm3, %ymm2, %ymm2
-	vperm2f128	$0x2, %ymm0, %ymm2, %ymm1
-	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
+	vperm2f128	$ 0x2, %ymm0, %ymm2, %ymm1
+	vperm2f128	$ 0x13, %ymm0, %ymm2, %ymm0
 	vaddpd	%ymm0, %ymm1, %ymm0
 
 #if MACRO_LEVEL>=1
@@ -1299,8 +1299,8 @@ NAME:
 	// reduction
 	vhaddpd	%ymm1, %ymm0, %ymm0
 	vhaddpd	%ymm3, %ymm2, %ymm2
-	vperm2f128	$0x2, %ymm0, %ymm2, %ymm1
-	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
+	vperm2f128	$ 0x2, %ymm0, %ymm2, %ymm1
+	vperm2f128	$ 0x13, %ymm0, %ymm2, %ymm0
 	vaddpd	%ymm0, %ymm1, %ymm0
 
 	// alpha
@@ -1365,8 +1365,8 @@ NAME:
 	// reduction
 	vhaddpd	%ymm1, %ymm0, %ymm0
 	vhaddpd	%ymm3, %ymm2, %ymm2
-	vperm2f128	$0x2, %ymm0, %ymm2, %ymm1
-	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
+	vperm2f128	$ 0x2, %ymm0, %ymm2, %ymm1
+	vperm2f128	$ 0x13, %ymm0, %ymm2, %ymm0
 	vaddpd	%ymm0, %ymm1, %ymm0
 
 	// alpha
@@ -1429,8 +1429,8 @@ NAME:
 	// reduction
 	vhaddpd	%ymm1, %ymm0, %ymm0
 	vhaddpd	%ymm3, %ymm2, %ymm2
-	vperm2f128	$0x2, %ymm0, %ymm2, %ymm1
-	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
+	vperm2f128	$ 0x2, %ymm0, %ymm2, %ymm1
+	vperm2f128	$ 0x13, %ymm0, %ymm2, %ymm0
 	vaddpd	%ymm0, %ymm1, %ymm0
 
 	vmovupd		0(%r10), %ymm14
@@ -1477,37 +1477,37 @@ NAME:
 
 	vbroadcastsd	0(%r11), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm1
-	vblendpd		$0x1, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm1, %ymm0, %ymm0
 
 	vmovapd			0(%r10), %ymm13
-	vblendpd		$0x1, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x1, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	8(%r11), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm1
-	vblendpd		$0x2, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x2, %ymm1, %ymm0, %ymm0
 
 	vmovapd			32(%r10), %ymm13
-	vblendpd		$0x3, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x3, %ymm0, %ymm12
-	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x3, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x3, %ymm0, %ymm12
+	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	16(%r11), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm1
-	vblendpd		$0x4, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x4, %ymm1, %ymm0, %ymm0
 
 	vmovapd			64(%r10), %ymm13
-	vblendpd		$0x7, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x7, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	24(%r11), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm1
-	vblendpd		$0x8, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x8, %ymm1, %ymm0, %ymm0
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -1552,46 +1552,46 @@ NAME:
 
 	vbroadcastsd	0(%r11), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm1
-	vblendpd		$0x1, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm1, %ymm0, %ymm0
 	vmovapd			0(%r10), %ymm13
-	vblendpd		$0x1, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x1, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
-	cmpl			$2, %r12d
+	cmpl			$ 2, %r12d
 	jl				0f // ret
 
 	vbroadcastsd	8(%r11), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm1
-	vblendpd		$0x2, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x2, %ymm1, %ymm0, %ymm0
 	vmovapd			32(%r10), %ymm13
-	vblendpd		$0x3, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x3, %ymm0, %ymm12
-	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x3, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x3, %ymm0, %ymm12
+	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
-	cmpl			$3, %r12d
+	cmpl			$ 3, %r12d
 	jl				0f // ret
 
 	vbroadcastsd	16(%r11), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm1
-	vblendpd		$0x4, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x4, %ymm1, %ymm0, %ymm0
 	vmovapd			64(%r10), %ymm13
-	vblendpd		$0x7, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x7, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
-	cmpl			$4, %r12d
+	cmpl			$ 4, %r12d
 	jl				0f // ret
 
 	vbroadcastsd	24(%r11), %ymm12
 	vmulpd			%ymm0, %ymm12, %ymm1
-	vblendpd		$0x8, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x8, %ymm1, %ymm0, %ymm0
 
 	// return
 0:
@@ -1630,23 +1630,23 @@ NAME:
 	vxorpd			%ymm14, %ymm14, %ymm14
 
 	vmovapd			0(%r10), %ymm13
-	vblendpd		$0x1, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x1, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
 	vmovapd			32(%r10), %ymm13
-	vblendpd		$0x3, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x3, %ymm0, %ymm12
-	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x3, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x3, %ymm0, %ymm12
+	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
 	vmovapd			64(%r10), %ymm13
-	vblendpd		$0x7, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x7, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
@@ -1686,29 +1686,29 @@ NAME:
 	vxorpd			%ymm14, %ymm14, %ymm14
 
 	vmovapd			0(%r10), %ymm13
-	vblendpd		$0x1, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x1, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
-	cmpl			$2, %r11d
+	cmpl			$ 2, %r11d
 	jl				0f // ret
 
 	vmovapd			32(%r10), %ymm13
-	vblendpd		$0x3, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x3, %ymm0, %ymm12
-	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x3, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x3, %ymm0, %ymm12
+	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
-	cmpl			$3, %r11d
+	cmpl			$ 3, %r11d
 	jl				0f // ret
 
 	vmovapd			64(%r10), %ymm13
-	vblendpd		$0x7, %ymm14, %ymm13, %ymm13
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0x7, %ymm14, %ymm13, %ymm13
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm13, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
@@ -1757,42 +1757,42 @@ NAME:
 	vmovapd			16(%r10), %xmm12
 	vmovapd			48(%r10), %xmm13
 	vunpcklpd		%xmm13, %xmm12, %xmm9
-	vblendpd		$0xc, %ymm14, %ymm9, %ymm9
+	vblendpd		$ 0xc, %ymm14, %ymm9, %ymm9
 	vunpckhpd		%xmm13, %xmm12, %xmm10
 	vmovsd			8(%r10), %xmm8
-	vblendpd		$0xe, %ymm14, %ymm8, %ymm8
+	vblendpd		$ 0xe, %ymm14, %ymm8, %ymm8
 	vmovsd			88(%r10), %xmm11
-	vinsertf128		$0x1, %xmm11, %ymm10, %ymm10
-	vblendpd		$0x8, %ymm14, %ymm10, %ymm10
+	vinsertf128		$ 0x1, %xmm11, %ymm10, %ymm10
+	vblendpd		$ 0x8, %ymm14, %ymm10, %ymm10
 
 	vbroadcastsd	24(%r11), %ymm12
 	vmulpd			%ymm12, %ymm0, %ymm1
-	vblendpd		$0x8, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x8, %ymm1, %ymm0, %ymm0
 
-	vpermilpd		$0xf, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0xf, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	16(%r11), %ymm12
 	vmulpd			%ymm12, %ymm0, %ymm1
-	vblendpd		$0x4, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x4, %ymm1, %ymm0, %ymm0
 
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	8(%r11), %ymm12
 	vmulpd			%ymm12, %ymm0, %ymm1
-	vblendpd		$0x2, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x2, %ymm1, %ymm0, %ymm0
 
-	vpermilpd		$0x3, %ymm0, %ymm12
-//	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0x3, %ymm0, %ymm12
+//	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 //	vbroadcastsd	8(%r11), %ymm12
 	vmovsd			0(%r11), %xmm12
 	vmulpd			%ymm12, %ymm0, %ymm1
-	vblendpd		$0x1, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm1, %ymm0, %ymm0
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -1840,49 +1840,49 @@ NAME:
 	vmovapd			16(%r10), %xmm12
 	vmovapd			48(%r10), %xmm13
 	vunpcklpd		%xmm13, %xmm12, %xmm9
-	vblendpd		$0xc, %ymm14, %ymm9, %ymm9
+	vblendpd		$ 0xc, %ymm14, %ymm9, %ymm9
 	vunpckhpd		%xmm13, %xmm12, %xmm10
 	vmovsd			8(%r10), %xmm8
-	vblendpd		$0xe, %ymm14, %ymm8, %ymm8
+	vblendpd		$ 0xe, %ymm14, %ymm8, %ymm8
 	vmovsd			88(%r10), %xmm11
-	vinsertf128		$0x1, %xmm11, %ymm10, %ymm10
-	vblendpd		$0x8, %ymm14, %ymm10, %ymm10
+	vinsertf128		$ 0x1, %xmm11, %ymm10, %ymm10
+	vblendpd		$ 0x8, %ymm14, %ymm10, %ymm10
 
 //	vbroadcastsd	24(%r11), %ymm12
 //	vmulpd			%ymm12, %ymm0, %ymm1
-//	vblendpd		$0x8, %ymm1, %ymm0, %ymm0
+//	vblendpd		$ 0x8, %ymm1, %ymm0, %ymm0
 
 	vmovupd			0(%r13), %ymm12
-	vblendpd		$0x8, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x8, %ymm12, %ymm0, %ymm0
 	
-	cmpl			$4, %r12d
+	cmpl			$ 4, %r12d
 	jl				0f
 
-	vpermilpd		$0xf, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0xf, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 0:
 	vbroadcastsd	16(%r11), %ymm12
 	vmulpd			%ymm12, %ymm0, %ymm1
-	vblendpd		$0x4, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x4, %ymm1, %ymm0, %ymm0
 
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 	vbroadcastsd	8(%r11), %ymm12
 	vmulpd			%ymm12, %ymm0, %ymm1
-	vblendpd		$0x2, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x2, %ymm1, %ymm0, %ymm0
 
-	vpermilpd		$0x3, %ymm0, %ymm12
-//	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0x3, %ymm0, %ymm12
+//	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 //	vbroadcastsd	8(%r11), %ymm12
 	vmovsd			0(%r11), %xmm12
 	vmulpd			%ymm12, %ymm0, %ymm1
-	vblendpd		$0x1, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm1, %ymm0, %ymm0
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -1927,32 +1927,32 @@ NAME:
 	
 	vxorpd			%ymm14, %ymm14, %ymm14
 
-	cmpl			$3, %r12d
+	cmpl			$ 3, %r12d
 
 	vmovapd			16(%r10), %xmm12
 	vmovapd			48(%r10), %xmm13
 	vunpcklpd		%xmm13, %xmm12, %xmm9
-	vblendpd		$0xc, %ymm14, %ymm9, %ymm9
+	vblendpd		$ 0xc, %ymm14, %ymm9, %ymm9
 	vunpckhpd		%xmm13, %xmm12, %xmm10
 	vmovsd			8(%r10), %xmm8
-	vblendpd		$0xe, %ymm14, %ymm8, %ymm8
+	vblendpd		$ 0xe, %ymm14, %ymm8, %ymm8
 //	vmovsd			88(%r10), %xmm11
-//	vinsertf128		$0x1, %xmm11, %ymm10, %ymm10
-//	vblendpd		$0x8, %ymm14, %ymm10, %ymm10
-	vblendpd		$0xc, %ymm14, %ymm10, %ymm10
+//	vinsertf128		$ 0x1, %xmm11, %ymm10, %ymm10
+//	vblendpd		$ 0x8, %ymm14, %ymm10, %ymm10
+	vblendpd		$ 0xc, %ymm14, %ymm10, %ymm10
 
 //	vbroadcastsd	24(%r11), %ymm12
 //	vmulpd			%ymm12, %ymm0, %ymm1
-//	vblendpd		$0x8, %ymm1, %ymm0, %ymm0
+//	vblendpd		$ 0x8, %ymm1, %ymm0, %ymm0
 
 	vmovupd			0(%r13), %ymm12
-	vblendpd		$0xc, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0xc, %ymm12, %ymm0, %ymm0
 	
 	je				0f
 	jl				1f
 
-	vpermilpd		$0xf, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0xf, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
@@ -1960,10 +1960,10 @@ NAME:
 
 //	vbroadcastsd	16(%r11), %ymm12
 //	vmulpd			%ymm12, %ymm0, %ymm1
-//	vblendpd		$0x4, %ymm1, %ymm0, %ymm0
+//	vblendpd		$ 0x4, %ymm1, %ymm0, %ymm0
 
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
@@ -1971,17 +1971,17 @@ NAME:
 
 	vbroadcastsd	8(%r11), %ymm12
 	vmulpd			%ymm12, %ymm0, %ymm1
-	vblendpd		$0x2, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x2, %ymm1, %ymm0, %ymm0
 
-	vpermilpd		$0x3, %ymm0, %ymm12
-//	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0x3, %ymm0, %ymm12
+//	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 //	vbroadcastsd	8(%r11), %ymm12
 
 	vmovsd			0(%r11), %xmm12
 	vmulpd			%ymm12, %ymm0, %ymm1
-	vblendpd		$0x1, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm1, %ymm0, %ymm0
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -2027,37 +2027,37 @@ NAME:
 	vxorpd			%ymm14, %ymm14, %ymm14
 
 	vmovupd			0(%r13), %ymm12
-	vblendpd		$0xe, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0xe, %ymm12, %ymm0, %ymm0
 	
-	cmpl			$3, %r12d
+	cmpl			$ 3, %r12d
 	je				0f
 
-	cmpl			$2, %r12d
+	cmpl			$ 2, %r12d
 	je				1f
 	jl				2f
 
 	vmovsd			24(%r10), %xmm10
-	vblendpd		$0xe, %ymm14, %ymm10, %ymm10
-	vpermilpd		$0xf, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0xe, %ymm14, %ymm10, %ymm10
+	vpermilpd		$ 0xf, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm10, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
 0:
 
 	vmovsd			16(%r10), %xmm9
-	vblendpd		$0xe, %ymm14, %ymm9, %ymm9
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0xe, %ymm14, %ymm9, %ymm9
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm9, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
 1:
 
 	vmovsd			8(%r10), %xmm8
-	vblendpd		$0xe, %ymm14, %ymm8, %ymm8
-	vpermilpd		$0x3, %ymm0, %ymm12
-//	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vblendpd		$ 0xe, %ymm14, %ymm8, %ymm8
+	vpermilpd		$ 0x3, %ymm0, %ymm12
+//	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 //	vbroadcastsd	8(%r11), %ymm12
@@ -2066,7 +2066,7 @@ NAME:
 
 	vmovsd			0(%r11), %xmm12
 	vmulpd			%ymm12, %ymm0, %ymm1
-	vblendpd		$0x1, %ymm1, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm1, %ymm0, %ymm0
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -2103,39 +2103,39 @@ NAME:
 	
 	vxorpd			%ymm14, %ymm14, %ymm14
 
-	vpermilpd		$0xf, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0xf, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vbroadcastsd	24(%r11), %ymm13
 	vmulpd			%ymm13, %ymm12, %ymm12
-	vblendpd		$0x8, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x8, %ymm12, %ymm0, %ymm0
 	vmovapd			96(%r10), %ymm13
-	vblendpd		$0x8, %ymm14, %ymm13, %ymm13
+	vblendpd		$ 0x8, %ymm14, %ymm13, %ymm13
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
-	vpermilpd		$0x0, %ymm0, %ymm12
-	vperm2f128		$0x11, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0x0, %ymm0, %ymm12
+	vperm2f128		$ 0x11, %ymm12, %ymm12, %ymm12
 	vbroadcastsd	16(%r11), %ymm13
 	vmulpd			%ymm13, %ymm12, %ymm12
-	vblendpd		$0x4, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x4, %ymm12, %ymm0, %ymm0
 	vmovapd			64(%r10), %ymm13
-	vblendpd		$0xc, %ymm14, %ymm13, %ymm13
+	vblendpd		$ 0xc, %ymm14, %ymm13, %ymm13
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
-	vpermilpd		$0xf, %ymm0, %ymm12
-//	vperm2f128		$0x00, %ymm12, %ymm12, %ymm12
+	vpermilpd		$ 0xf, %ymm0, %ymm12
+//	vperm2f128		$ 0x00, %ymm12, %ymm12, %ymm12
 	vbroadcastsd	8(%r11), %ymm13
 	vmulpd			%ymm13, %ymm12, %ymm12
-	vblendpd		$0x2, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x2, %ymm12, %ymm0, %ymm0
 	vmovapd			32(%r10), %ymm13
-	vblendpd		$0xe, %ymm14, %ymm13, %ymm13
+	vblendpd		$ 0xe, %ymm14, %ymm13, %ymm13
 	vmulpd			%ymm12, %ymm13, %ymm15
 	vsubpd			%ymm15, %ymm0, %ymm0
 
 	vmovsd			(%r11), %xmm13
 	vmulsd			%xmm13, %xmm0, %xmm12
-	vblendpd		$0x1, %ymm12, %ymm0, %ymm0
+	vblendpd		$ 0x1, %ymm12, %ymm0, %ymm0
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -2196,21 +2196,21 @@ NAME:
 	vxorpd			%ymm14, %ymm14, %ymm14
 
 	vmovapd			0(%r11), %ymm8
-	vblendpd		$0x1, %ymm8, %ymm14, %ymm8
+	vblendpd		$ 0x1, %ymm8, %ymm14, %ymm8
 	vbroadcastsd	0(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm0, %ymm15, %ymm0
 	
-	subl			$4, %r10d
+	subl			$ 4, %r10d
 
 	vmovapd			32(%r11), %ymm8
-	vblendpd		$0x3, %ymm8, %ymm14, %ymm8
+	vblendpd		$ 0x3, %ymm8, %ymm14, %ymm8
 	vbroadcastsd	8(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm1, %ymm15, %ymm1
 	
 	vmovapd			64(%r11), %ymm8
-	vblendpd		$0x7, %ymm8, %ymm14, %ymm8
+	vblendpd		$ 0x7, %ymm8, %ymm14, %ymm8
 	vbroadcastsd	16(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm2, %ymm15, %ymm2
@@ -2220,8 +2220,8 @@ NAME:
 	vmulpd			%ymm8, %ymm12, %ymm15
 	vaddpd			%ymm3, %ymm15, %ymm3
 	
-	addq			$128, %r11
-	addq			$32, %r12
+	addq			$ 128, %r11
+	addq			$ 32, %r12
 	
 #if MACRO_LEVEL>=1
 	.endm
@@ -2281,10 +2281,10 @@ NAME:
 	FUN_START(inner_kernel_dtrmv_ut_4_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // clean-up loop
 
 	// main loop
@@ -2297,7 +2297,7 @@ NAME:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm0, %ymm15, %ymm0
 	
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vmovapd	32(%r11), %ymm8
 	vmulpd	%ymm8, %ymm12, %ymm15
@@ -2312,15 +2312,15 @@ NAME:
 	vaddpd	%ymm3, %ymm15, %ymm3
 	
 	addq	%r12, %r11
-	addq	$32, %r13
+	addq	$ 32, %r13
 	
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 0: // clean-up
@@ -2332,7 +2332,7 @@ NAME:
 //	vmovupd		LC02(%rip), %ymm13
 #endif
 //	vmovddup	%xmm14, %xmm14
-//	vinsertf128	$1, %xmm14, %ymm14, %ymm14
+//	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
 //	vsubpd		%ymm14, %ymm13, %ymm14
 //
 //	vmaskmovpd	0(%r13), %ymm14, %ymm12
@@ -2342,17 +2342,17 @@ NAME:
 	vxorpd		%ymm14, %ymm14, %ymm14
 
 	vmovapd		0(%r11), %ymm8
-	vblendpd	$0x1, %ymm8, %ymm14, %ymm8
+	vblendpd	$ 0x1, %ymm8, %ymm14, %ymm8
 	vmulpd		%ymm8, %ymm12, %ymm15
 	vaddpd		%ymm0, %ymm15, %ymm0
 	
 	vmovapd	32(%r11), %ymm8
-	vblendpd	$0x3, %ymm8, %ymm14, %ymm8
+	vblendpd	$ 0x3, %ymm8, %ymm14, %ymm8
 	vmulpd		%ymm8, %ymm12, %ymm15
 	vaddpd		%ymm1, %ymm15, %ymm1
 	
 	vmovapd		64(%r11), %ymm8
-	vblendpd	$0x7, %ymm8, %ymm14, %ymm8
+	vblendpd	$ 0x7, %ymm8, %ymm14, %ymm8
 	vmulpd		%ymm8, %ymm12, %ymm15
 	vaddpd		%ymm2, %ymm15, %ymm2
 
@@ -2360,7 +2360,7 @@ NAME:
 	vmulpd		%ymm8, %ymm12, %ymm15
 	vaddpd		%ymm3, %ymm15, %ymm3
 		
-	sall		$3, %r10d
+	sall		$ 3, %r10d
 //	movslq		%r10d, %r10
 	addq		%r10, %r11
 	addq		%r10, %r13
@@ -2446,7 +2446,7 @@ NAME:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	vmaskmovpd	%ymm0, %ymm15,  0(%r10)
@@ -2500,8 +2500,8 @@ NAME:
 #endif
 	vmovddup	%xmm14, %xmm14
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm14, %ymm14, %ymm14
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm12, %ymm14, %ymm14
 	vsubpd		%ymm15, %ymm12, %ymm15
 	vandpd		%ymm14, %ymm15, %ymm15
@@ -2733,7 +2733,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG6, %r13  // x
 	movq	ARG3, %r14 // offA
@@ -2806,7 +2806,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG6, %r13  // x
 	movq	ARG3, %r14 // offA
@@ -3180,13 +3180,13 @@ NAME:
 	// call inner dgemv kernel n
 
 	movq	ARG1, %r10 // k
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	addq	%r12, %r11 // A+4*sda*sizeof(double)
 	movq	ARG5, %r13 // x
-	addq	$32, %r13 // x+4 
+	addq	$ 32, %r13 // x+4 
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_4_LIB4
@@ -3258,13 +3258,13 @@ NAME:
 	// call inner dgemv kernel n
 
 	movq	ARG1, %r10 // k
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	addq	%r12, %r11 // A+4*sda*sizeof(double)
 	movq	ARG5, %r13 // x
-	addq	$32, %r13 // x+4 
+	addq	$ 32, %r13 // x+4 
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_4_LIB4
@@ -3301,7 +3301,7 @@ NAME:
 	// store
 
 	movq	ARG7, %r10 // z 
-	movq	$3, %r11
+	movq	$ 3, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
@@ -3339,14 +3339,14 @@ NAME:
 	// call inner dgemv kernel n
 
 	movq	ARG1, %r10 // k
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movslq	%r12d, %r12
 	addq	%r12, %r11 // A+4*sda*sizeof(double)
 	movq	ARG5, %r13 // x
-	addq	$32, %r13 // x+4 
+	addq	$ 32, %r13 // x+4 
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_4_LIB4
@@ -3383,7 +3383,7 @@ NAME:
 	// store
 
 	movq	ARG7, %r10 // z 
-	movq	$2, %r11
+	movq	$ 2, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
@@ -3421,14 +3421,14 @@ NAME:
 	// call inner dgemv kernel n
 
 	movq	ARG1, %r10 // k
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movslq	%r12d, %r12
 	addq	%r12, %r11 // A+4*sda*sizeof(double)
 	movq	ARG5, %r13 // x
-	addq	$32, %r13 // x+4 
+	addq	$ 32, %r13 // x+4 
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_T_4_LIB4
@@ -3465,7 +3465,7 @@ NAME:
 	// store
 
 	movq	ARG7, %r10 // z 
-	movq	$1, %r11
+	movq	$ 1, %r11
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
@@ -3503,11 +3503,11 @@ NAME:
 	// call inner dgemv kernel n
 
 	movq	ARG1, %r10 // k
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	movq	ARG2, %r11 // A
-	addq	$128, %r11 // A+4*ps*sizeof(double)
+	addq	$ 128, %r11 // A+4*ps*sizeof(double)
 	movq	ARG4, %r12 // x
-	addq	$32, %r12 // x+4 
+	addq	$ 32, %r12 // x+4 
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_ADD_N_4_LIB4
@@ -3646,7 +3646,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movslq	%r12d, %r12
 	movq	ARG4, %r13  // x
 
@@ -3708,7 +3708,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11  // A
 	movq	ARG3, %r12
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movslq	%r12d, %r12
 	movq	ARG4, %r13  // x
 
@@ -3786,7 +3786,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG7, %r13  // x_t
 	movq	ARG10, %r14  // z_n
@@ -3861,11 +3861,11 @@ NAME:
 
 	vbroadcastsd 0(%r10), %ymm6
 	vmulpd		%ymm15, %ymm6, %ymm6
-	cmpl	$2, %r11d
+	cmpl	$ 2, %r11d
 	jl		0f
 	vbroadcastsd 8(%r10), %ymm7
 	vmulpd		%ymm15, %ymm7, %ymm7
-	cmpl	$3, %r11d
+	cmpl	$ 3, %r11d
 	jl		0f
 	vbroadcastsd 16(%r10), %ymm8
 	vmulpd		%ymm15, %ymm8, %ymm8
@@ -3879,7 +3879,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG7, %r13  // x_t
 	movq	ARG10, %r14  // z_n
@@ -3962,7 +3962,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG5, %r13  // x_t
 	movq	ARG6, %r14  // z_n
 
@@ -4048,7 +4048,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // x_t
 	movq	ARG7, %r14  // z_n
 	movq	ARG3, %r15 // offA

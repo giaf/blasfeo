@@ -291,12 +291,12 @@ NAME:
 	FUN_START(inner_kernel_gemm_add_nt_16x8_lib8)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -316,14 +316,14 @@ NAME:
 	vmovaps			%ymm15, 0(%r14)
 
 //	vbroadcastss	(4+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm1, %ymm15, %ymm1
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm8, %ymm15, %ymm8
 
 //	vbroadcastss	(8+0*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm2, %ymm15, %ymm2
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -331,7 +331,7 @@ NAME:
 	vmovaps			%ymm15, 32(%r14)
 
 //	vbroadcastss	(12+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm3, %ymm15, %ymm3
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -346,14 +346,14 @@ NAME:
 	vmovaps			%ymm15, 64(%r14)
 
 //	vbroadcastss	(20+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm5, %ymm15, %ymm5
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm10, %ymm15, %ymm10
 
 //	vbroadcastss	(24+0*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm6, %ymm15, %ymm6
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -361,7 +361,7 @@ NAME:
 	vmovaps			%ymm15, 96(%r14)
 
 //	vbroadcastss	(28+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm7, %ymm15, %ymm7
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -381,14 +381,14 @@ NAME:
 	vmovaps			%ymm15, 0(%r14)
 
 //	vbroadcastss	(4+1*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm1, %ymm15, %ymm1
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm8, %ymm15, %ymm8
 
 //	vbroadcastss	(8+1*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm2, %ymm15, %ymm2
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -396,7 +396,7 @@ NAME:
 	vmovaps			%ymm15, 32(%r14)
 
 //	vbroadcastss	(12+1*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm3, %ymm15, %ymm3
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -411,14 +411,14 @@ NAME:
 	vmovaps			%ymm15, 64(%r14)
 
 //	vbroadcastss	(20+1*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm5, %ymm15, %ymm5
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm10, %ymm15, %ymm10
 
 //	vbroadcastss	(24+1*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm6, %ymm15, %ymm6
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -426,7 +426,7 @@ NAME:
 	vmovaps			%ymm15, 96(%r14)
 
 //	vbroadcastss	(28+1*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm7, %ymm15, %ymm7
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -446,14 +446,14 @@ NAME:
 	vmovaps			%ymm15, 0(%r14)
 
 //	vbroadcastss	(4+2*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm1, %ymm15, %ymm1
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm8, %ymm15, %ymm8
 
 //	vbroadcastss	(8+2*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm2, %ymm15, %ymm2
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -461,7 +461,7 @@ NAME:
 	vmovaps			%ymm15, 32(%r14)
 
 //	vbroadcastss	(12+2*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm3, %ymm15, %ymm3
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -476,14 +476,14 @@ NAME:
 	vmovaps			%ymm15, 64(%r14)
 
 //	vbroadcastss	(20+2*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm5, %ymm15, %ymm5
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm10, %ymm15, %ymm10
 
 //	vbroadcastss	(24+2*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm6, %ymm15, %ymm6
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -491,7 +491,7 @@ NAME:
 	vmovaps			%ymm15, 96(%r14)
 
 //	vbroadcastss	(28+2*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm7, %ymm15, %ymm7
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -511,15 +511,15 @@ NAME:
 	vmovaps			%ymm15, 0(%r14)
 
 //	vbroadcastss	(4+3*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm1, %ymm15, %ymm1
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm8, %ymm15, %ymm8
 
 //	vbroadcastss	(8+3*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm2, %ymm15, %ymm2
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -527,10 +527,10 @@ NAME:
 	vmovaps			%ymm15, 32(%r14)
 
 //	vbroadcastss	(12+3*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm3, %ymm15, %ymm3
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm9, %ymm15, %ymm9
 
@@ -543,14 +543,14 @@ NAME:
 	vmovaps			%ymm15, 64(%r14)
 
 //	vbroadcastss	(20+3*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm5, %ymm15, %ymm5
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm10, %ymm15, %ymm10
 
 //	vbroadcastss	(24+3*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm6, %ymm15, %ymm6
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -558,21 +558,21 @@ NAME:
 	vmovaps			%ymm15, 96(%r14)
 
 //	vbroadcastss	(28+3*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm7, %ymm15, %ymm7
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm11, %ymm15, %ymm11
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop 
 
 
 0: // consider clean4-up
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	// 0
@@ -588,14 +588,14 @@ NAME:
 	vmovaps			%ymm15, 0(%r14)
 
 //	vbroadcastss	(4+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm1, %ymm15, %ymm1
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm8, %ymm15, %ymm8
 
 //	vbroadcastss	(8+0*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm2, %ymm15, %ymm2
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -603,7 +603,7 @@ NAME:
 	vmovaps			%ymm15, 32(%r14)
 
 //	vbroadcastss	(12+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm3, %ymm15, %ymm3
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -618,14 +618,14 @@ NAME:
 	vmovaps			%ymm15, 64(%r14)
 
 //	vbroadcastss	(20+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm5, %ymm15, %ymm5
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm10, %ymm15, %ymm10
 
 //	vbroadcastss	(24+0*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm6, %ymm15, %ymm6
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -633,7 +633,7 @@ NAME:
 	vmovaps			%ymm15, 96(%r14)
 
 //	vbroadcastss	(28+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm7, %ymm15, %ymm7
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -653,14 +653,14 @@ NAME:
 	vmovaps			%ymm15, 0(%r14)
 
 //	vbroadcastss	(4+1*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm1, %ymm15, %ymm1
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm8, %ymm15, %ymm8
 
 //	vbroadcastss	(8+1*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm2, %ymm15, %ymm2
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -668,7 +668,7 @@ NAME:
 	vmovaps			%ymm15, 32(%r14)
 
 //	vbroadcastss	(12+1*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm3, %ymm15, %ymm3
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -683,14 +683,14 @@ NAME:
 	vmovaps			%ymm15, 64(%r14)
 
 //	vbroadcastss	(20+1*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm5, %ymm15, %ymm5
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm10, %ymm15, %ymm10
 
 //	vbroadcastss	(24+1*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm6, %ymm15, %ymm6
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -698,7 +698,7 @@ NAME:
 	vmovaps			%ymm15, 96(%r14)
 
 //	vbroadcastss	(28+1*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm7, %ymm15, %ymm7
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -718,14 +718,14 @@ NAME:
 	vmovaps			%ymm15, 0(%r14)
 
 //	vbroadcastss	(4+2*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm1, %ymm15, %ymm1
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm8, %ymm15, %ymm8
 
 //	vbroadcastss	(8+2*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm2, %ymm15, %ymm2
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -733,7 +733,7 @@ NAME:
 	vmovaps			%ymm15, 32(%r14)
 
 //	vbroadcastss	(12+2*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm3, %ymm15, %ymm3
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -748,14 +748,14 @@ NAME:
 	vmovaps			%ymm15, 64(%r14)
 
 //	vbroadcastss	(20+2*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm5, %ymm15, %ymm5
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm10, %ymm15, %ymm10
 
 //	vbroadcastss	(24+2*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm6, %ymm15, %ymm6
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -763,7 +763,7 @@ NAME:
 	vmovaps			%ymm15, 96(%r14)
 
 //	vbroadcastss	(28+2*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm7, %ymm15, %ymm7
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -783,15 +783,15 @@ NAME:
 	vmovaps			%ymm15, 0(%r14)
 
 //	vbroadcastss	(4+3*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm1, %ymm15, %ymm1
-//	subl	$4, %r10d
+//	subl	$ 4, %r10d
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm8, %ymm15, %ymm8
 
 //	vbroadcastss	(8+3*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm2, %ymm15, %ymm2
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -799,10 +799,10 @@ NAME:
 	vmovaps			%ymm15, 32(%r14)
 
 //	vbroadcastss	(12+3*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm3, %ymm15, %ymm3
-	addq	$128, %r11
+	addq	$ 128, %r11
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm9, %ymm15, %ymm9
 
@@ -815,14 +815,14 @@ NAME:
 	vmovaps			%ymm15, 64(%r14)
 
 //	vbroadcastss	(20+3*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm5, %ymm15, %ymm5
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm10, %ymm15, %ymm10
 
 //	vbroadcastss	(24+3*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm6, %ymm15, %ymm6
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -830,21 +830,21 @@ NAME:
 	vmovaps			%ymm15, 96(%r14)
 
 //	vbroadcastss	(28+3*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm7, %ymm15, %ymm7
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm11, %ymm15, %ymm11
 
 
-//	cmpl	$4, %r10d
+//	cmpl	$ 4, %r10d
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -862,15 +862,15 @@ NAME:
 	vmovaps			%ymm15, 0(%r14)
 
 //	vbroadcastss	(4+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm1, %ymm15, %ymm1
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm8, %ymm15, %ymm8
 
 //	vbroadcastss	(8+0*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm2, %ymm15, %ymm2
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -878,7 +878,7 @@ NAME:
 	vmovaps			%ymm15, 32(%r14)
 
 //	vbroadcastss	(12+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm3, %ymm15, %ymm3
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -893,15 +893,15 @@ NAME:
 	vmovaps			%ymm15, 64(%r14)
 
 //	vbroadcastss	(20+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm5, %ymm15, %ymm5
-	addq	$32, %r11
+	addq	$ 32, %r11
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm10, %ymm15, %ymm10
 
 //	vbroadcastss	(24+0*32)(%r13), %ymm14 // B
-	vshufps			$0x4e, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0x4e, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm6, %ymm15, %ymm6
 	vmulps			%ymm13, %ymm14, %ymm15
@@ -909,14 +909,14 @@ NAME:
 	vmovaps			%ymm15, 96(%r14)
 
 //	vbroadcastss	(28+0*32)(%r13), %ymm14 // B
-	vshufps			$0xb1, %ymm14, %ymm14, %ymm14
+	vshufps			$ 0xb1, %ymm14, %ymm14, %ymm14
 	vmulps			%ymm12, %ymm14, %ymm15
 	vaddps			%ymm7, %ymm15, %ymm7
-	addq	$32, %r13
+	addq	$ 32, %r13
 	vmulps			%ymm13, %ymm14, %ymm15
 	vaddps			%ymm11, %ymm15, %ymm11
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop 
 
 
@@ -965,60 +965,60 @@ NAME:
 	FUN_START(inner_blend_16x8_lib8)
 #endif
 	
-	vblendps	$0x55, %ymm0, %ymm1, %ymm14
-	vblendps	$0x55, %ymm1, %ymm0, %ymm1
-	vblendps	$0x55, %ymm2, %ymm3, %ymm15
-	vblendps	$0x55, %ymm3, %ymm2, %ymm2
+	vblendps	$ 0x55, %ymm0, %ymm1, %ymm14
+	vblendps	$ 0x55, %ymm1, %ymm0, %ymm1
+	vblendps	$ 0x55, %ymm2, %ymm3, %ymm15
+	vblendps	$ 0x55, %ymm3, %ymm2, %ymm2
 	vmovaps		%ymm14, %ymm0
 	vmovaps		%ymm15, %ymm3
-	vblendps	$0x33, %ymm0, %ymm2, %ymm14
-	vblendps	$0x33, %ymm2, %ymm0, %ymm2
-	vblendps	$0x33, %ymm1, %ymm3, %ymm15
-	vblendps	$0x33, %ymm3, %ymm1, %ymm3
+	vblendps	$ 0x33, %ymm0, %ymm2, %ymm14
+	vblendps	$ 0x33, %ymm2, %ymm0, %ymm2
+	vblendps	$ 0x33, %ymm1, %ymm3, %ymm15
+	vblendps	$ 0x33, %ymm3, %ymm1, %ymm3
 	vmovaps		%ymm14, %ymm0
 	vmovaps		%ymm15, %ymm1
 
-	vblendps	$0x55, %ymm4, %ymm5, %ymm14
-	vblendps	$0x55, %ymm5, %ymm4, %ymm5
-	vblendps	$0x55, %ymm6, %ymm7, %ymm15
-	vblendps	$0x55, %ymm7, %ymm6, %ymm6
+	vblendps	$ 0x55, %ymm4, %ymm5, %ymm14
+	vblendps	$ 0x55, %ymm5, %ymm4, %ymm5
+	vblendps	$ 0x55, %ymm6, %ymm7, %ymm15
+	vblendps	$ 0x55, %ymm7, %ymm6, %ymm6
 	vmovaps		%ymm14, %ymm4
 	vmovaps		%ymm15, %ymm7
-	vblendps	$0x33, %ymm4, %ymm6, %ymm14
-	vblendps	$0x33, %ymm6, %ymm4, %ymm6
-	vblendps	$0x33, %ymm5, %ymm7, %ymm15
-	vblendps	$0x33, %ymm7, %ymm5, %ymm7
+	vblendps	$ 0x33, %ymm4, %ymm6, %ymm14
+	vblendps	$ 0x33, %ymm6, %ymm4, %ymm6
+	vblendps	$ 0x33, %ymm5, %ymm7, %ymm15
+	vblendps	$ 0x33, %ymm7, %ymm5, %ymm7
 	vmovaps		%ymm14, %ymm4
 	vmovaps		%ymm15, %ymm5
 
 	vmovaps		0(%r10), %ymm12
 	vmovaps		32(%r10), %ymm13
-	vblendps	$0x55, %ymm12, %ymm8, %ymm14
-	vblendps	$0x55, %ymm8, %ymm12, %ymm8
-	vblendps	$0x55, %ymm13, %ymm9, %ymm15
-	vblendps	$0x55, %ymm9, %ymm13, %ymm13
+	vblendps	$ 0x55, %ymm12, %ymm8, %ymm14
+	vblendps	$ 0x55, %ymm8, %ymm12, %ymm8
+	vblendps	$ 0x55, %ymm13, %ymm9, %ymm15
+	vblendps	$ 0x55, %ymm9, %ymm13, %ymm13
 	vmovaps		%ymm14, %ymm12
 	vmovaps		%ymm15, %ymm9
-	vblendps	$0x33, %ymm12, %ymm13, %ymm14
-	vblendps	$0x33, %ymm13, %ymm12, %ymm13
-	vblendps	$0x33, %ymm8, %ymm9, %ymm15
-	vblendps	$0x33, %ymm9, %ymm8, %ymm9
+	vblendps	$ 0x33, %ymm12, %ymm13, %ymm14
+	vblendps	$ 0x33, %ymm13, %ymm12, %ymm13
+	vblendps	$ 0x33, %ymm8, %ymm9, %ymm15
+	vblendps	$ 0x33, %ymm9, %ymm8, %ymm9
 	vmovaps		%ymm14, 0(%r10)
 	vmovaps		%ymm13, 32(%r10)
 	vmovaps		%ymm15, %ymm8
 
 	vmovaps		64(%r10), %ymm12
 	vmovaps		96(%r10), %ymm13
-	vblendps	$0x55, %ymm12, %ymm10, %ymm14
-	vblendps	$0x55, %ymm10, %ymm12, %ymm10
-	vblendps	$0x55, %ymm13, %ymm11, %ymm15
-	vblendps	$0x55, %ymm11, %ymm13, %ymm13
+	vblendps	$ 0x55, %ymm12, %ymm10, %ymm14
+	vblendps	$ 0x55, %ymm10, %ymm12, %ymm10
+	vblendps	$ 0x55, %ymm13, %ymm11, %ymm15
+	vblendps	$ 0x55, %ymm11, %ymm13, %ymm13
 	vmovaps		%ymm14, %ymm12
 	vmovaps		%ymm15, %ymm11
-	vblendps	$0x33, %ymm12, %ymm13, %ymm14
-	vblendps	$0x33, %ymm13, %ymm12, %ymm13
-	vblendps	$0x33, %ymm10, %ymm11, %ymm15
-	vblendps	$0x33, %ymm11, %ymm10, %ymm11
+	vblendps	$ 0x33, %ymm12, %ymm13, %ymm14
+	vblendps	$ 0x33, %ymm13, %ymm12, %ymm13
+	vblendps	$ 0x33, %ymm10, %ymm11, %ymm15
+	vblendps	$ 0x33, %ymm11, %ymm10, %ymm11
 	vmovaps		%ymm14, 64(%r10)
 	vmovaps		%ymm13, 96(%r10)
 	vmovaps		%ymm15, %ymm10
@@ -1257,7 +1257,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 8*sda*sizeof(float)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG5, %r13  // B
 	movq	ARG11, %r14  // spil
 
@@ -1282,7 +1282,7 @@ NAME:
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12   // C
 	movl	ARG8, %r13d // sdc
-	sall	$5, %r13d // 8*sdc*sizeof(float)
+	sall	$ 5, %r13d // 8*sdc*sizeof(float)
 	movq	ARG11, %r14  // spil
 
 #if MACRO_LEVEL>=1
@@ -1296,7 +1296,7 @@ NAME:
 
 	movq	ARG9, %r10 // D
 	movl	ARG10, %r11d // sdd
-	sall	$5, %r11d // 8*sdd*sizeof(float)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 	movq	ARG11, %r12  // spil
 
 #if MACRO_LEVEL>=1

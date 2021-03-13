@@ -177,13 +177,13 @@ kernel_dger4_sub_12r_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // C
 	movq	ARG6, %r15 // C
-	sall	$5, %r15d // 4*sdc*sizeof(double)
+	sall	$ 5, %r15d // 4*sdc*sizeof(double)
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// load block from A
@@ -202,7 +202,7 @@ kernel_dger4_sub_12r_lib4:
 	vmovapd	64(%r11, %r12, 2), %ymm10
 	vmovapd	96(%r11, %r12, 2), %ymm11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // cleanup loop
 
 	// main loop
@@ -216,7 +216,7 @@ kernel_dger4_sub_12r_lib4:
 	vfnmadd231pd	%ymm4, %ymm15, %ymm13
 	vfnmadd231pd	%ymm8, %ymm15, %ymm14
 	vbroadcastsd	8(%r13), %ymm15
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	vfnmadd231pd	%ymm1, %ymm15, %ymm12
 	vfnmadd231pd	%ymm5, %ymm15, %ymm13
 	vfnmadd231pd	%ymm9, %ymm15, %ymm14
@@ -282,7 +282,7 @@ kernel_dger4_sub_12r_lib4:
 	vmovapd			96(%r14, %r15, 1), %ymm13
 	vmovapd			96(%r14, %r15, 2), %ymm14
 	vbroadcastsd	96(%r13), %ymm15
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfnmadd231pd	%ymm0, %ymm15, %ymm12
 	vfnmadd231pd	%ymm4, %ymm15, %ymm13
 	vfnmadd231pd	%ymm8, %ymm15, %ymm14
@@ -295,7 +295,7 @@ kernel_dger4_sub_12r_lib4:
 	vfnmadd231pd	%ymm6, %ymm15, %ymm13
 	vfnmadd231pd	%ymm10, %ymm15, %ymm14
 	vbroadcastsd	-8(%r13), %ymm15
-	addq	$128, %r14
+	addq	$ 128, %r14
 	vfnmadd231pd	%ymm3, %ymm15, %ymm12
 	vfnmadd231pd	%ymm7, %ymm15, %ymm13
 	vfnmadd231pd	%ymm11, %ymm15, %ymm14
@@ -303,10 +303,10 @@ kernel_dger4_sub_12r_lib4:
 	vmovapd			%ymm13, -32(%r14, %r15, 1)
 	vmovapd			%ymm14, -32(%r14, %r15, 2)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// cleanup loop
@@ -334,11 +334,11 @@ kernel_dger4_sub_12r_lib4:
 	vmovapd			%ymm13, 0(%r14, %r15, 1)
 	vmovapd			%ymm14, 0(%r14, %r15, 2)
 
-	addq	$32, %r13
-	addq	$32, %r14
+	addq	$ 32, %r13
+	addq	$ 32, %r14
 
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b // main loop
 
 	// return
@@ -378,14 +378,14 @@ kernel_dger4_sub_12r_vs_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // C
 	movq	ARG6, %r15 // C
-	sall	$5, %r15d // 4*sdc*sizeof(double)
+	sall	$ 5, %r15d // 4*sdc*sizeof(double)
 	movq	ARG7, %rax // km
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	vcvtsi2sd	%eax, %xmm15, %xmm15
@@ -395,7 +395,7 @@ kernel_dger4_sub_12r_vs_lib4:
 	vmovupd		LC02(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	// load block from A
@@ -414,7 +414,7 @@ kernel_dger4_sub_12r_vs_lib4:
 	vmaskmovpd	64(%r11, %r12, 2), %ymm15, %ymm10
 	vmaskmovpd	96(%r11, %r12, 2), %ymm15, %ymm11
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // cleanup loop
 
 	// main loop
@@ -428,7 +428,7 @@ kernel_dger4_sub_12r_vs_lib4:
 	vfnmadd231pd	%ymm4, %ymm15, %ymm13
 	vfnmadd231pd	%ymm8, %ymm15, %ymm14
 	vbroadcastsd	8(%r13), %ymm15
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	vfnmadd231pd	%ymm1, %ymm15, %ymm12
 	vfnmadd231pd	%ymm5, %ymm15, %ymm13
 	vfnmadd231pd	%ymm9, %ymm15, %ymm14
@@ -494,7 +494,7 @@ kernel_dger4_sub_12r_vs_lib4:
 	vmovapd			96(%r14, %r15, 1), %ymm13
 	vmovapd			96(%r14, %r15, 2), %ymm14
 	vbroadcastsd	96(%r13), %ymm15
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfnmadd231pd	%ymm0, %ymm15, %ymm12
 	vfnmadd231pd	%ymm4, %ymm15, %ymm13
 	vfnmadd231pd	%ymm8, %ymm15, %ymm14
@@ -507,7 +507,7 @@ kernel_dger4_sub_12r_vs_lib4:
 	vfnmadd231pd	%ymm6, %ymm15, %ymm13
 	vfnmadd231pd	%ymm10, %ymm15, %ymm14
 	vbroadcastsd	-8(%r13), %ymm15
-	addq	$128, %r14
+	addq	$ 128, %r14
 	vfnmadd231pd	%ymm3, %ymm15, %ymm12
 	vfnmadd231pd	%ymm7, %ymm15, %ymm13
 	vfnmadd231pd	%ymm11, %ymm15, %ymm14
@@ -515,10 +515,10 @@ kernel_dger4_sub_12r_vs_lib4:
 	vmovapd			%ymm13, -32(%r14, %r15, 1)
 	vmovapd			%ymm14, -32(%r14, %r15, 2)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// cleanup loop
@@ -546,11 +546,11 @@ kernel_dger4_sub_12r_vs_lib4:
 	vmovapd			%ymm13, 0(%r14, %r15, 1)
 	vmovapd			%ymm14, 0(%r14, %r15, 2)
 
-	addq	$32, %r13
-	addq	$32, %r14
+	addq	$ 32, %r13
+	addq	$ 32, %r14
 
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b // main loop
 
 	// return
@@ -590,13 +590,13 @@ kernel_dger4_sub_8r_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // C
 	movq	ARG6, %r15 // C
-	sall	$5, %r15d // 4*sdc*sizeof(double)
+	sall	$ 5, %r15d // 4*sdc*sizeof(double)
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// load block from A
@@ -610,7 +610,7 @@ kernel_dger4_sub_8r_lib4:
 	vmovapd	64(%r11, %r12, 1), %ymm6
 	vmovapd	96(%r11, %r12, 1), %ymm7
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // cleanup loop
 
 	// main loop
@@ -622,7 +622,7 @@ kernel_dger4_sub_8r_lib4:
 	vfnmadd231pd	%ymm0, %ymm15, %ymm8
 	vfnmadd231pd	%ymm4, %ymm15, %ymm9
 	vbroadcastsd	8(%r13), %ymm15
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	vfnmadd231pd	%ymm1, %ymm15, %ymm8
 	vfnmadd231pd	%ymm5, %ymm15, %ymm9
 	vbroadcastsd	16(%r13), %ymm15
@@ -671,7 +671,7 @@ kernel_dger4_sub_8r_lib4:
 	vmovapd			96(%r14), %ymm8
 	vmovapd			96(%r14, %r15, 1), %ymm9
 	vbroadcastsd	96(%r13), %ymm15
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfnmadd231pd	%ymm0, %ymm15, %ymm8
 	vfnmadd231pd	%ymm4, %ymm15, %ymm9
 	vbroadcastsd	-24(%r13), %ymm15
@@ -681,16 +681,16 @@ kernel_dger4_sub_8r_lib4:
 	vfnmadd231pd	%ymm2, %ymm15, %ymm8
 	vfnmadd231pd	%ymm6, %ymm15, %ymm9
 	vbroadcastsd	-8(%r13), %ymm15
-	addq	$128, %r14
+	addq	$ 128, %r14
 	vfnmadd231pd	%ymm3, %ymm15, %ymm8
 	vfnmadd231pd	%ymm7, %ymm15, %ymm9
 	vmovapd			%ymm8, -32(%r14)
 	vmovapd			%ymm9, -32(%r14, %r15, 1)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// cleanup loop
@@ -712,11 +712,11 @@ kernel_dger4_sub_8r_lib4:
 	vmovapd			%ymm8, 0(%r14)
 	vmovapd			%ymm9, 0(%r14, %r15, 1)
 
-	addq	$32, %r13
-	addq	$32, %r14
+	addq	$ 32, %r13
+	addq	$ 32, %r14
 
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b // main loop
 
 	// return
@@ -756,14 +756,14 @@ kernel_dger4_sub_8r_vs_lib4:
 	movq	ARG1, %r10 // k
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG4, %r13 // B
 	movq	ARG5, %r14 // C
 	movq	ARG6, %r15 // C
-	sall	$5, %r15d // 4*sdc*sizeof(double)
+	sall	$ 5, %r15d // 4*sdc*sizeof(double)
 	movq	ARG7, %rax // km
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	vcvtsi2sd	%eax, %xmm15, %xmm15
@@ -773,7 +773,7 @@ kernel_dger4_sub_8r_vs_lib4:
 	vmovupd		LC01(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	// load block from A
@@ -787,7 +787,7 @@ kernel_dger4_sub_8r_vs_lib4:
 	vmaskmovpd	64(%r11, %r12, 1), %ymm15, %ymm6
 	vmaskmovpd	96(%r11, %r12, 1), %ymm15, %ymm7
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // cleanup loop
 
 	// main loop
@@ -799,7 +799,7 @@ kernel_dger4_sub_8r_vs_lib4:
 	vfnmadd231pd	%ymm0, %ymm15, %ymm8
 	vfnmadd231pd	%ymm4, %ymm15, %ymm9
 	vbroadcastsd	8(%r13), %ymm15
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	vfnmadd231pd	%ymm1, %ymm15, %ymm8
 	vfnmadd231pd	%ymm5, %ymm15, %ymm9
 	vbroadcastsd	16(%r13), %ymm15
@@ -848,7 +848,7 @@ kernel_dger4_sub_8r_vs_lib4:
 	vmovapd			96(%r14), %ymm8
 	vmovapd			96(%r14, %r15, 1), %ymm9
 	vbroadcastsd	96(%r13), %ymm15
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfnmadd231pd	%ymm0, %ymm15, %ymm8
 	vfnmadd231pd	%ymm4, %ymm15, %ymm9
 	vbroadcastsd	-24(%r13), %ymm15
@@ -858,16 +858,16 @@ kernel_dger4_sub_8r_vs_lib4:
 	vfnmadd231pd	%ymm2, %ymm15, %ymm8
 	vfnmadd231pd	%ymm6, %ymm15, %ymm9
 	vbroadcastsd	-8(%r13), %ymm15
-	addq	$128, %r14
+	addq	$ 128, %r14
 	vfnmadd231pd	%ymm3, %ymm15, %ymm8
 	vfnmadd231pd	%ymm7, %ymm15, %ymm9
 	vmovapd			%ymm8, -32(%r14)
 	vmovapd			%ymm9, -32(%r14, %r15, 1)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// cleanup loop
@@ -889,11 +889,11 @@ kernel_dger4_sub_8r_vs_lib4:
 	vmovapd			%ymm8, 0(%r14)
 	vmovapd			%ymm9, 0(%r14, %r15, 1)
 
-	addq	$32, %r13
-	addq	$32, %r14
+	addq	$ 32, %r13
+	addq	$ 32, %r14
 
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b // main loop
 
 	// return
@@ -934,13 +934,13 @@ kernel_dger12_add_4r_lib4:
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // B
 	movq	ARG4, %r13 // sdb
-	sall	$5, %r13d
+	sall	$ 5, %r13d
 	movq	ARG5, %r14 // C
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$11, %r10d
+	cmpl	$ 11, %r10d
 	jle		2f // cleanup loop
 
 	// main loop
@@ -1298,15 +1298,15 @@ kernel_dger12_add_4r_lib4:
 	vmovapd	%ymm10, 320(%r14)
 	vmovapd	%ymm11, 352(%r14)
 
-	addq	$384, %r12
-	addq	$384, %r14
-	subl	$12, %r10d
+	addq	$ 384, %r12
+	addq	$ 384, %r14
+	subl	$ 12, %r10d
 
-	cmpl	$11, %r10d
+	cmpl	$ 11, %r10d
 	jg		1b // main loop
 
 2:
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // return
 
 	// cleanup loop
@@ -1455,15 +1455,15 @@ kernel_dger12_add_4r_lib4:
 	vmovapd	%ymm2, 64(%r14)
 	vmovapd	%ymm3, 96(%r14)
 
-	addq	$128, %r12
-	addq	$128, %r14
-	subl	$4, %r10d
+	addq	$ 128, %r12
+	addq	$ 128, %r14
+	subl	$ 4, %r10d
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop
 
 2:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// cleanup loop
@@ -1534,11 +1534,11 @@ kernel_dger12_add_4r_lib4:
 	// store block to C
 	vmovapd	%ymm0, 0(%r14)
 
-	addq	$32, %r12
-	addq	$32, %r14
-	subl	$1, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %r14
+	subl	$ 1, %r10d
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		1b // main loop
 
 	// return
@@ -1579,13 +1579,13 @@ kernel_dger8_add_4r_lib4:
 	movq	ARG2, %r11 // A
 	movq	ARG3, %r12 // B
 	movq	ARG4, %r13 // sdb
-	sall	$5, %r13d
+	sall	$ 5, %r13d
 	movq	ARG5, %r14 // C
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
-	cmpl	$11, %r10d
+	cmpl	$ 11, %r10d
 	jle		2f // cleanup loop
 
 	// main loop
@@ -1835,15 +1835,15 @@ kernel_dger8_add_4r_lib4:
 	vmovapd	%ymm10, 320(%r14)
 	vmovapd	%ymm11, 352(%r14)
 
-	addq	$384, %r12
-	addq	$384, %r14
-	subl	$12, %r10d
+	addq	$ 384, %r12
+	addq	$ 384, %r14
+	subl	$ 12, %r10d
 
-	cmpl	$11, %r10d
+	cmpl	$ 11, %r10d
 	jg		1b // main loop
 
 2:
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // return
 
 	// cleanup loop
@@ -1948,15 +1948,15 @@ kernel_dger8_add_4r_lib4:
 	vmovapd	%ymm2, 64(%r14)
 	vmovapd	%ymm3, 96(%r14)
 
-	addq	$128, %r12
-	addq	$128, %r14
-	subl	$4, %r10d
+	addq	$ 128, %r12
+	addq	$ 128, %r14
+	subl	$ 4, %r10d
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop
 
 2:
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// cleanup loop
@@ -2007,11 +2007,11 @@ kernel_dger8_add_4r_lib4:
 	// store block to C
 	vmovapd	%ymm0, 0(%r14)
 
-	addq	$32, %r12
-	addq	$32, %r14
-	subl	$1, %r10d
+	addq	$ 32, %r12
+	addq	$ 32, %r14
+	subl	$ 1, %r10d
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		1b // main loop
 
 	// return
@@ -2053,10 +2053,10 @@ kernel_dger8_add_4r_lib4:
 	movq	ARG2, %r11
 	movq	ARG3, %r12
 	movq	ARG4, %r13
-	sall	$5, %r13d
+	sall	$ 5, %r13d
 	movq	ARG5, %r14
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// load block from A
@@ -2069,7 +2069,7 @@ kernel_dger8_add_4r_lib4:
 	vmovapd	192(%r11), %ymm6
 	vmovapd	224(%r11), %ymm7
 
-	cmpl	$7, %r10d
+	cmpl	$ 7, %r10d
 	jle		2f // cleanup loop
 
 	// main loop
@@ -2267,14 +2267,14 @@ kernel_dger8_add_4r_lib4:
 	vfmadd231pd		%ymm7, %ymm15, %ymm12
 	vmovapd			%ymm12, 224(%r14)
 
-	addq	$256, %r12
-	addq	$256, %r14
-	subl	$8, %r10d
+	addq	$ 256, %r12
+	addq	$ 256, %r14
+	subl	$ 8, %r10d
 
-	cmpl	$7, %r10d
+	cmpl	$ 7, %r10d
 	jg		1b // main loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// cleanup loop
@@ -2298,11 +2298,11 @@ kernel_dger8_add_4r_lib4:
 	vfmadd231pd		%ymm7, %ymm15, %ymm12
 	vmovapd			%ymm12, 0(%r14)
 
-	addq	$32, %r12
-	addq	$32, %r14
+	addq	$ 32, %r12
+	addq	$ 32, %r14
 
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b // main loop
 
 	// return
@@ -2345,7 +2345,7 @@ kernel_dger4_sub_4r_lib4:
 	movq	ARG3, %r12
 	movq	ARG4, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// load block from A
@@ -2354,7 +2354,7 @@ kernel_dger4_sub_4r_lib4:
 	vmovapd	64(%r11), %ymm2
 	vmovapd	96(%r11), %ymm3
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // cleanup loop
 
 	// main loop
@@ -2364,7 +2364,7 @@ kernel_dger4_sub_4r_lib4:
 	vbroadcastsd	0(%r12), %ymm15
 	vfnmadd231pd	%ymm0, %ymm15, %ymm4
 	vbroadcastsd	8(%r12), %ymm15
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	vfnmadd231pd	%ymm1, %ymm15, %ymm4
 	vbroadcastsd	16(%r12), %ymm15
 	vfnmadd231pd	%ymm2, %ymm15, %ymm4
@@ -2396,21 +2396,21 @@ kernel_dger4_sub_4r_lib4:
 
 	vmovapd			96(%r13), %ymm4
 	vbroadcastsd	96(%r12), %ymm15
-	addq	$128, %r12
+	addq	$ 128, %r12
 	vfnmadd231pd	%ymm0, %ymm15, %ymm4
 	vbroadcastsd	-24(%r12), %ymm15
 	vfnmadd231pd	%ymm1, %ymm15, %ymm4
 	vbroadcastsd	-16(%r12), %ymm15
 	vfnmadd231pd	%ymm2, %ymm15, %ymm4
 	vbroadcastsd	-8(%r12), %ymm15
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfnmadd231pd	%ymm3, %ymm15, %ymm4
 	vmovapd			%ymm4, -32(%r13)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// cleanup loop
@@ -2426,11 +2426,11 @@ kernel_dger4_sub_4r_lib4:
 	vfnmadd231pd	%ymm3, %ymm15, %ymm4
 	vmovapd			%ymm4, 0(%r13)
 
-	addq	$32, %r12
-	addq	$32, %r13
+	addq	$ 32, %r12
+	addq	$ 32, %r13
 
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b // main loop
 
 	// return
@@ -2472,14 +2472,14 @@ kernel_dger2_sub_4r_lib4:
 	movq	ARG3, %r12
 	movq	ARG4, %r13
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// load block from A
 	vmovapd	0(%r11), %ymm0
 	vmovapd	32(%r11), %ymm1
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // cleanup loop
 
 	// main loop
@@ -2489,7 +2489,7 @@ kernel_dger2_sub_4r_lib4:
 	vbroadcastsd	0(%r12), %ymm15
 	vfnmadd231pd	%ymm0, %ymm15, %ymm4
 	vbroadcastsd	8(%r12), %ymm15
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	vfnmadd231pd	%ymm1, %ymm15, %ymm4
 	vmovapd			%ymm4, 0(%r13)
 
@@ -2509,17 +2509,17 @@ kernel_dger2_sub_4r_lib4:
 
 	vmovapd			96(%r13), %ymm4
 	vbroadcastsd	96(%r12), %ymm15
-	addq	$128, %r12
+	addq	$ 128, %r12
 	vfnmadd231pd	%ymm0, %ymm15, %ymm4
 	vbroadcastsd	-24(%r12), %ymm15
 	vfnmadd231pd	%ymm1, %ymm15, %ymm4
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vmovapd			%ymm4, -32(%r13)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// cleanup loop
@@ -2531,11 +2531,11 @@ kernel_dger2_sub_4r_lib4:
 	vfnmadd231pd	%ymm1, %ymm15, %ymm4
 	vmovapd			%ymm4, 0(%r13)
 
-	addq	$32, %r12
-	addq	$32, %r13
+	addq	$ 32, %r12
+	addq	$ 32, %r13
 
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b // main loop
 
 	// return
@@ -2578,7 +2578,7 @@ kernel_dger4_sub_4r_vs_lib4:
 	movq	ARG4, %r13
 	movq	ARG5, %r14
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	vcvtsi2sd	%r14d, %xmm15, %xmm15
@@ -2588,7 +2588,7 @@ kernel_dger4_sub_4r_vs_lib4:
 	vmovupd		LC00(%rip), %ymm14
 #endif
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm15
 
 	// load block from A
@@ -2597,7 +2597,7 @@ kernel_dger4_sub_4r_vs_lib4:
 	vmaskmovpd	64(%r11), %ymm15, %ymm2
 	vmaskmovpd	96(%r11), %ymm15, %ymm3
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		2f // cleanup loop
 
 	// main loop
@@ -2607,7 +2607,7 @@ kernel_dger4_sub_4r_vs_lib4:
 	vbroadcastsd	0(%r12), %ymm15
 	vfnmadd231pd	%ymm0, %ymm15, %ymm4
 	vbroadcastsd	8(%r12), %ymm15
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 	vfnmadd231pd	%ymm1, %ymm15, %ymm4
 	vbroadcastsd	16(%r12), %ymm15
 	vfnmadd231pd	%ymm2, %ymm15, %ymm4
@@ -2639,21 +2639,21 @@ kernel_dger4_sub_4r_vs_lib4:
 
 	vmovapd			96(%r13), %ymm4
 	vbroadcastsd	96(%r12), %ymm15
-	addq	$128, %r12
+	addq	$ 128, %r12
 	vfnmadd231pd	%ymm0, %ymm15, %ymm4
 	vbroadcastsd	-24(%r12), %ymm15
 	vfnmadd231pd	%ymm1, %ymm15, %ymm4
 	vbroadcastsd	-16(%r12), %ymm15
 	vfnmadd231pd	%ymm2, %ymm15, %ymm4
 	vbroadcastsd	-8(%r12), %ymm15
-	addq	$128, %r13
+	addq	$ 128, %r13
 	vfnmadd231pd	%ymm3, %ymm15, %ymm4
 	vmovapd			%ymm4, -32(%r13)
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jg		1b // main loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		0f // return
 
 	// cleanup loop
@@ -2669,11 +2669,11 @@ kernel_dger4_sub_4r_vs_lib4:
 	vfnmadd231pd	%ymm3, %ymm15, %ymm4
 	vmovapd			%ymm4, 0(%r13)
 
-	addq	$32, %r12
-	addq	$32, %r13
+	addq	$ 32, %r12
+	addq	$ 32, %r13
 
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 	jg		2b // main loop
 
 	// return

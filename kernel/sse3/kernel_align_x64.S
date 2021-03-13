@@ -178,8 +178,8 @@ blasfeo_align_2MB:
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 
-	addq 	$2097151, %r10
-	movq	$2097151, %r12
+	addq 	$ 2097151, %r10
+	movq	$ 2097151, %r12
 	notq	%r12
 	andq	%r12, %r10
 	movq	%r10, (%r11)
@@ -218,8 +218,8 @@ blasfeo_align_4096_byte:
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 
-	addq 	$4095, %r10
-	movq	$4095, %r12
+	addq 	$ 4095, %r10
+	movq	$ 4095, %r12
 	notq	%r12
 	andq	%r12, %r10
 	movq	%r10, (%r11)
@@ -258,8 +258,8 @@ blasfeo_align_64_byte:
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 
-	addq 	$63, %r10
-	movq	$63, %r12
+	addq 	$ 63, %r10
+	movq	$ 63, %r12
 	notq	%r12
 	andq	%r12, %r10
 	movq	%r10, (%r11)

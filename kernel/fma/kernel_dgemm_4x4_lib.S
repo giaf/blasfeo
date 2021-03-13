@@ -230,7 +230,7 @@ kernel_dgemm_nt_4x4_lib44cc:
 	movq	ARG5, %r11 // beta
 	movq	ARG6, %r12   // C
 	movq	ARG7, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4X4_LIB
@@ -247,7 +247,7 @@ kernel_dgemm_nt_4x4_lib44cc:
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_LIB

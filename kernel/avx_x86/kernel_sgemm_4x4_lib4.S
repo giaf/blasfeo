@@ -50,7 +50,7 @@
 #if 1
 
 #define PROLOGUE \
-	subl	$16, %esp; \
+	subl	$ 16, %esp; \
 	movl	%ebx, 0(%esp); \
 	movl	%esi, 4(%esp); \
 	movl	%edi, 8(%esp); \
@@ -60,7 +60,7 @@
 	movl	4(%esp), %esi; \
 	movl	8(%esp), %edi; \
 	movl	12(%esp), %ebp; \
-	addl	$16, %esp;
+	addl	$ 16, %esp;
 
 #else
 
@@ -111,12 +111,12 @@
 inner_kernel_gemm_add_nt_4x4_lib4:
 #endif
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -126,11 +126,11 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	// unroll 0
 	vmovaps 		0(%ecx), %xmm5 // B
 	vmovaps 		0(%ebx), %xmm4 // A
-	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
+	vshufps			$ 0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
-	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vshufps			$ 0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$ 0x4e, %xmm5, %xmm5, %xmm5
 	vmulps			%xmm4, %xmm6, %xmm6
 	vaddps			%xmm1, %xmm6, %xmm1
 	vmulps			%xmm4, %xmm7, %xmm7
@@ -141,11 +141,11 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	// unroll 1
 	vmovaps 		16(%ecx), %xmm5 // B
 	vmovaps 		16(%ebx), %xmm4 // A
-	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
+	vshufps			$ 0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
-	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vshufps			$ 0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$ 0x4e, %xmm5, %xmm5, %xmm5
 	vmulps			%xmm4, %xmm6, %xmm6
 	vaddps			%xmm1, %xmm6, %xmm1
 	vmulps			%xmm4, %xmm7, %xmm7
@@ -156,11 +156,11 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	// unroll 2
 	vmovaps 		32(%ecx), %xmm5 // B
 	vmovaps 		32(%ebx), %xmm4 // A
-	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
+	vshufps			$ 0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
-	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vshufps			$ 0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$ 0x4e, %xmm5, %xmm5, %xmm5
 	vmulps			%xmm4, %xmm6, %xmm6
 	vaddps			%xmm1, %xmm6, %xmm1
 	vmulps			%xmm4, %xmm7, %xmm7
@@ -171,11 +171,11 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	// unroll 3
 	vmovaps 		48(%ecx), %xmm5 // B
 	vmovaps 		48(%ebx), %xmm4 // A
-	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
+	vshufps			$ 0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
-	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vshufps			$ 0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$ 0x4e, %xmm5, %xmm5, %xmm5
 	vmulps			%xmm4, %xmm6, %xmm6
 	vaddps			%xmm1, %xmm6, %xmm1
 	vmulps			%xmm4, %xmm7, %xmm7
@@ -183,27 +183,27 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	vmulps			%xmm4, %xmm5, %xmm5
 	vaddps			%xmm3, %xmm5, %xmm3
 
-	subl	$4, %eax
-	addl	$64, %ecx
-	addl	$64, %ebx
+	subl	$ 4, %eax
+	addl	$ 64, %ecx
+	addl	$ 64, %ebx
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jle		4f // clean1
 
 	// unroll 0
 	vmovaps 		0(%ecx), %xmm5 // B
 	vmovaps 		0(%ebx), %xmm4 // A
-	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
+	vshufps			$ 0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
-	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vshufps			$ 0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$ 0x4e, %xmm5, %xmm5, %xmm5
 	vmulps			%xmm4, %xmm6, %xmm6
 	vaddps			%xmm1, %xmm6, %xmm1
 	vmulps			%xmm4, %xmm7, %xmm7
@@ -214,11 +214,11 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	// unroll 1
 	vmovaps 		16(%ecx), %xmm5 // B
 	vmovaps 		16(%ebx), %xmm4 // A
-	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
+	vshufps			$ 0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
-	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vshufps			$ 0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$ 0x4e, %xmm5, %xmm5, %xmm5
 	vmulps			%xmm4, %xmm6, %xmm6
 	vaddps			%xmm1, %xmm6, %xmm1
 	vmulps			%xmm4, %xmm7, %xmm7
@@ -229,11 +229,11 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	// unroll 2
 	vmovaps 		32(%ecx), %xmm5 // B
 	vmovaps 		32(%ebx), %xmm4 // A
-	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
+	vshufps			$ 0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
-	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vshufps			$ 0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$ 0x4e, %xmm5, %xmm5, %xmm5
 	vmulps			%xmm4, %xmm6, %xmm6
 	vaddps			%xmm1, %xmm6, %xmm1
 	vmulps			%xmm4, %xmm7, %xmm7
@@ -244,11 +244,11 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	// unroll 3
 	vmovaps 		48(%ecx), %xmm5 // B
 	vmovaps 		48(%ebx), %xmm4 // A
-	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
+	vshufps			$ 0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
-	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vshufps			$ 0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$ 0x4e, %xmm5, %xmm5, %xmm5
 	vmulps			%xmm4, %xmm6, %xmm6
 	vaddps			%xmm1, %xmm6, %xmm1
 	vmulps			%xmm4, %xmm7, %xmm7
@@ -256,17 +256,17 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	vmulps			%xmm4, %xmm5, %xmm5
 	vaddps			%xmm3, %xmm5, %xmm3
 
-	subl	$4, %eax
-	addl	$64, %ecx
-	addl	$64, %ebx
+	subl	$ 4, %eax
+	addl	$ 64, %ecx
+	addl	$ 64, %ebx
 
-//	cmpl	$3, %eax
+//	cmpl	$ 3, %eax
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// clean-up loop
@@ -275,11 +275,11 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	// unroll 0
 	vmovaps 		0(%ecx), %xmm5 // B
 	vmovaps 		0(%ebx), %xmm4 // A
-	vshufps			$0xb1, %xmm5, %xmm5, %xmm6
+	vshufps			$ 0xb1, %xmm5, %xmm5, %xmm6
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm0, %xmm7, %xmm0
-	vshufps			$0x1b, %xmm5, %xmm5, %xmm7
-	vshufps			$0x4e, %xmm5, %xmm5, %xmm5
+	vshufps			$ 0x1b, %xmm5, %xmm5, %xmm7
+	vshufps			$ 0x4e, %xmm5, %xmm5, %xmm5
 	vmulps			%xmm4, %xmm6, %xmm6
 	vaddps			%xmm1, %xmm6, %xmm1
 	vmulps			%xmm4, %xmm7, %xmm7
@@ -287,11 +287,11 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 	vmulps			%xmm4, %xmm5, %xmm5
 	vaddps			%xmm3, %xmm5, %xmm3
 
-	subl	$1, %eax
-	addl	$16, %ecx
-	addl	$16, %ebx
+	subl	$ 1, %eax
+	addl	$ 16, %ecx
+	addl	$ 16, %ebx
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jg		3b // clean up loop
 
 2: // return
@@ -331,12 +331,12 @@ inner_kernel_gemm_add_nt_4x4_lib4:
 inner_kernel_gemm_add_nn_4x4_lib4:
 #endif
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// preload
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -405,17 +405,17 @@ inner_kernel_gemm_add_nn_4x4_lib4:
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm3, %xmm7, %xmm3
 
-	subl	$4, %eax
-	addl	$64, %ebx
+	subl	$ 4, %eax
+	addl	$ 64, %ebx
 	addl	%edx, %ecx
 
-	cmpl	$4, %eax
+	cmpl	$ 4, %eax
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %eax
+	cmpl	$ 3, %eax
 	jle		4f // clean1
 
 	// unroll 0
@@ -478,17 +478,17 @@ inner_kernel_gemm_add_nn_4x4_lib4:
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm3, %xmm7, %xmm3
 
-	subl	$4, %eax
-	addl	$64, %ebx
+	subl	$ 4, %eax
+	addl	$ 64, %ebx
 	addl	%edx, %ecx
 
-//	cmpl	$3, %eax
+//	cmpl	$ 3, %eax
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jle		2f // return
 
 	// clean-up loop
@@ -509,11 +509,11 @@ inner_kernel_gemm_add_nn_4x4_lib4:
 	vmulps			%xmm4, %xmm5, %xmm7
 	vaddps			%xmm3, %xmm7, %xmm3
 
-	subl	$1, %eax
-	addl	$16, %ebx
-	addl	$4, %ecx
+	subl	$ 1, %eax
+	addl	$ 16, %ebx
+	addl	$ 4, %ecx
 
-	cmpl	$0, %eax
+	cmpl	$ 0, %eax
 	jg		3b // clean up loop
 
 2: // return
@@ -557,17 +557,17 @@ inner_kernel_gemm_add_nn_4x4_lib4:
 inner_edge_gemm_add_nn_4x4_lib4:
 #endif
 
-	cmpl			$0, %esi				// offset==0
+	cmpl			$ 0, %esi				// offset==0
 	jle				2f						// end
 
-	cmpl			$0, %eax				// k==0
+	cmpl			$ 0, %eax				// k==0
 	jle				2f						// end
 
 	movl			%esi, %edi				// load offsetB
-	sall			$3, %edi				// offsetB*sizeof(float)
+	sall			$ 3, %edi				// offsetB*sizeof(float)
 	addl			%edi, %ecx				// B+offsetB*sizeof(float)
 
-	movl			$4, %edi				// load 4
+	movl			$ 4, %edi				// load 4
 	subl			%esi, %edi				// 4-offsetB
 	cmpl			%eax, %edi				// k > 4-offsetB
 	cmovgl			%eax, %edi				// kend=min(k,4-offsetB)
@@ -591,19 +591,19 @@ inner_edge_gemm_add_nn_4x4_lib4:
 	vmulps			%xmm5, %xmm4, %xmm7		// mul
 	vaddps			%xmm7, %xmm3, %xmm3		// store
 
-	subl			$1, %eax				// k=-1
-	subl			$1, %edi				// k_panel=-1
-	addl			$16, %ebx				// A=+bs
-	addl			$4, %ecx				// B=+1
+	subl			$ 1, %eax				// k=-1
+	subl			$ 1, %edi				// k_panel=-1
+	addl			$ 16, %ebx				// A=+bs
+	addl			$ 4, %ecx				// B=+1
 
-	cmpl			$0, %edi				// if k_panel=0
+	cmpl			$ 0, %edi				// if k_panel=0
 	jg				1b						// loop 1
 
-	cmpl			$0, %eax				// if k=0
+	cmpl			$ 0, %eax				// if k=0
 	jle				2f						// end
 
 	addl			%edx, %ecx				// B=Boff+sdb*bs
-	subl			$16, %ecx				// B-=4*sizeof(float) (loop+offsetB)
+	subl			$ 16, %ecx				// B-=4*sizeof(float) (loop+offsetB)
 
 2:
 
@@ -708,15 +708,15 @@ inner_scale_ab_4x4_lib4:
 inner_blend_scale_ab_4x4_lib4:
 #endif
 
-	vblendps	$0x5, %xmm0, %xmm1, %xmm4
-	vblendps	$0xa, %xmm0, %xmm1, %xmm5
-	vblendps	$0x5, %xmm2, %xmm3, %xmm6
-	vblendps	$0xa, %xmm2, %xmm3, %xmm7
+	vblendps	$ 0x5, %xmm0, %xmm1, %xmm4
+	vblendps	$ 0xa, %xmm0, %xmm1, %xmm5
+	vblendps	$ 0x5, %xmm2, %xmm3, %xmm6
+	vblendps	$ 0xa, %xmm2, %xmm3, %xmm7
 
-	vblendps	$0xc, %xmm7, %xmm4, %xmm0
-	vblendps	$0xc, %xmm4, %xmm7, %xmm2
-	vblendps	$0xc, %xmm6, %xmm5, %xmm1
-	vblendps	$0xc, %xmm5, %xmm6, %xmm3
+	vblendps	$ 0xc, %xmm7, %xmm4, %xmm0
+	vblendps	$ 0xc, %xmm4, %xmm7, %xmm2
+	vblendps	$ 0xc, %xmm6, %xmm5, %xmm1
+	vblendps	$ 0xc, %xmm5, %xmm6, %xmm3
 
 	// alpha
 	vbroadcastss	0(%eax), %xmm7
@@ -825,15 +825,15 @@ inner_store_4x4_vs_lib4:
 	// compute mask for rows
 	vcvtsi2ss	%ebx, %xmm7, %xmm7
 	vmovups		.LC00, %xmm6
-	vshufps		$0x00, %xmm7, %xmm7, %xmm7
+	vshufps		$ 0x00, %xmm7, %xmm7, %xmm7
 	vsubps		%xmm7, %xmm6, %xmm7
 
 	// offset==0
 	vmaskmovps	%xmm0, %xmm7,  0(%eax)
-	cmpl		$2, %ecx
+	cmpl		$ 2, %ecx
 	jl			0f // end
 	vmaskmovps	%xmm1, %xmm7, 16(%eax)
-	cmpl		$3, %ecx
+	cmpl		$ 3, %ecx
 	jl			0f // end
 	vmaskmovps	%xmm2, %xmm7, 32(%eax)
 	je			0f // end
@@ -1009,7 +1009,7 @@ kernel_sgemm_nn_4x4_lib4:
 	movl	ARG3, %ebx  // A
 	movl	ARG4, %ecx  // B
 	movl	ARG5, %edx // sdb
-	sall	$4, %edx // 4*sdb*sizeof(float)
+	sall	$ 4, %edx // 4*sdb*sizeof(float)
 
 // TODO add offset to interface
 //#if MACRO_LEVEL>=1
@@ -1083,7 +1083,7 @@ kernel_sgemm_nn_4x4_vs_lib4:
 	movl	ARG3, %ebx  // A
 	movl	ARG4, %ecx  // B
 	movl	ARG5, %edx // sdb
-	sall	$4, %edx // 4*sdb*sizeof(float)
+	sall	$ 4, %edx // 4*sdb*sizeof(float)
 
 // TODO add offset to interface
 //#if MACRO_LEVEL>=1

@@ -277,7 +277,7 @@ NAME:
 	FUN_START(inner_kernel_dgemv_add_n_12_lib4)
 #endif
 	
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	movq	%r11, %r14 // A1 <- A0
@@ -285,7 +285,7 @@ NAME:
 	movq	%r14, %r15 // A2 <- A1
 	addq	%r12, %r15 // A2 <- A1 + 4*sda*sizeof(double)
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 
 	prefetcht0	0(%r11) // software prefetch
 	prefetcht0	0(%r14) // software prefetch
@@ -315,7 +315,7 @@ NAME:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
 	
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vbroadcastsd	8(%r13), %ymm12
 	vmovapd	32(%r11), %ymm8
@@ -344,27 +344,27 @@ NAME:
 	vaddpd	%ymm2, %ymm15, %ymm2
 
 	vbroadcastsd	24(%r13), %ymm12
-	addq	$32, %r13 // x+4
+	addq	$ 32, %r13 // x+4
 	vmovapd	96(%r11), %ymm8
-	addq	$128, %r11 // A0+4*bs
+	addq	$ 128, %r11 // A0+4*bs
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vmovapd	96(%r14), %ymm8
-	addq	$128, %r14 // A1+4*bs
+	addq	$ 128, %r14 // A1+4*bs
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm4, %ymm15, %ymm4
 	vmovapd	96(%r15), %ymm8
-	addq	$128, %r15 // A2+4*bs
+	addq	$ 128, %r15 // A2+4*bs
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm5, %ymm15, %ymm5
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 0: // clean-up
@@ -380,13 +380,13 @@ NAME:
 	vmulpd	%ymm8, %ymm12, %ymm15
 	vaddpd	%ymm2, %ymm15, %ymm2
 	
-	addq	$32, %r11
-	addq	$32, %r14
-	addq	$32, %r15
-	addq	$8, %r13
+	addq	$ 32, %r11
+	addq	$ 32, %r14
+	addq	$ 32, %r15
+	addq	$ 8, %r13
 	
-	subl	$1, %r10d
-	cmpl	$0, %r10d
+	subl	$ 1, %r10d
+	cmpl	$ 0, %r10d
 
 	jg		0b // clean
 
@@ -459,10 +459,10 @@ NAME:
 	FUN_START(inner_kernel_dgemv_add_t_12_lib4)
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 
 	prefetcht0	0(%r11) // software prefetch
 	prefetcht0	64(%r11) // software prefetch
@@ -483,13 +483,13 @@ NAME:
 	prefetcht0	0(%r14) // software prefetch
 
 	vmovupd	0(%r13), %ymm12
-	addq	$32, %r13 // x+4
+	addq	$ 32, %r13 // x+4
 
 	vmovapd	0(%r11), %ymm13
 	vmulpd	%ymm13, %ymm12, %ymm15
 	vaddpd	%ymm0, %ymm15, %ymm0
 	
-	subl	$4, %r10d
+	subl	$ 4, %r10d
 
 	vmovapd	32(%r11), %ymm13
 	vmulpd	%ymm13, %ymm12, %ymm15
@@ -549,13 +549,13 @@ NAME:
 	movq	%r14, %r11 // A+bs*sda
 	addq	%r12, %r14 // A+bs*sda+bs*sda
 	
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 
 	jg		1b // main loop 
 
 
 	// consider clean-up
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 0: // clean-up
@@ -567,7 +567,7 @@ NAME:
 	vmovupd		LC02(%rip), %ymm13
 #endif
 	vmovddup	%xmm14, %xmm14
-	vinsertf128	$1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
 	vsubpd		%ymm14, %ymm13, %ymm14
 
 	vmaskmovpd	0(%r13), %ymm14, %ymm12
@@ -620,7 +620,7 @@ NAME:
 	vmulpd	%ymm13, %ymm12, %ymm15
 	vaddpd	%ymm11, %ymm15, %ymm11
 
-	sall	$3, %r10d
+	sall	$ 3, %r10d
 //	movslq	%r10d, %r10
 	addq	%r10, %r11
 	addq	%r10, %r13
@@ -689,11 +689,11 @@ NAME:
 	FUN_START(inner_edge_gemv_add_t_12_lib4)
 #endif
 
-	cmpl	$0, %r14d
+	cmpl	$ 0, %r14d
 	jle		0f // return
 
 	movl	%r14d, %r15d
-	sall	$3, %r15d // offA*sizeof(double)
+	sall	$ 3, %r15d // offA*sizeof(double)
 
 	subq	%r15, %r11 // A - offA
 	subq	%r15, %r13 // x - offA
@@ -710,8 +710,8 @@ NAME:
 #endif
 	vmovddup	%xmm14, %xmm14
 	vmovddup	%xmm15, %xmm15
-	vinsertf128	$1, %xmm14, %ymm14, %ymm14
-	vinsertf128	$1, %xmm15, %ymm15, %ymm15
+	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm13, %ymm14, %ymm14
 	vsubpd		%ymm15, %ymm13, %ymm15
 	vandpd		%ymm15, %ymm14, %ymm14
@@ -766,11 +766,11 @@ NAME:
 	vmulpd	%ymm13, %ymm12, %ymm15
 	vaddpd	%ymm11, %ymm15, %ymm11
 
-	addq	$32, %r13 // x + 4
+	addq	$ 32, %r13 // x + 4
 	addq	%r12, %r11 // A + bs*sda
 		
 	addl	%r14d, %r10d
-	subl	$4, %r10d // kmax - (4-offA)
+	subl	$ 4, %r10d // kmax - (4-offA)
 	
 0: // return
 
@@ -912,12 +912,12 @@ NAME:
 	vhaddpd	%ymm3, %ymm2, %ymm2
 	vhaddpd	%ymm7, %ymm6, %ymm6
 	vhaddpd	%ymm11, %ymm10, %ymm10
-	vperm2f128	$0x2, %ymm0, %ymm2, %ymm3
-	vperm2f128	$0x2, %ymm4, %ymm6, %ymm5
-	vperm2f128	$0x2, %ymm8, %ymm10, %ymm9
-	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
-	vperm2f128	$0x13, %ymm4, %ymm6, %ymm4
-	vperm2f128	$0x13, %ymm8, %ymm10, %ymm8
+	vperm2f128	$ 0x2, %ymm0, %ymm2, %ymm3
+	vperm2f128	$ 0x2, %ymm4, %ymm6, %ymm5
+	vperm2f128	$ 0x2, %ymm8, %ymm10, %ymm9
+	vperm2f128	$ 0x13, %ymm0, %ymm2, %ymm0
+	vperm2f128	$ 0x13, %ymm4, %ymm6, %ymm4
+	vperm2f128	$ 0x13, %ymm8, %ymm10, %ymm8
 	vaddpd	%ymm0, %ymm3, %ymm0
 	vaddpd	%ymm4, %ymm5, %ymm1
 	vaddpd	%ymm8, %ymm9, %ymm2
@@ -996,10 +996,10 @@ NAME:
 	vaddpd	%ymm1, %ymm4, %ymm1
 	vaddpd	%ymm2, %ymm5, %ymm2
 
-	cmpl	$0, %r10d // alg
+	cmpl	$ 0, %r10d // alg
 	je		0f // return
 
-	cmpl	$1, %r10d // alg
+	cmpl	$ 1, %r10d // alg
 	jne		1f // alg==-1
 
 	// alg==1
@@ -1084,20 +1084,20 @@ NAME:
 	vhaddpd	%ymm3, %ymm2, %ymm2
 	vhaddpd	%ymm7, %ymm6, %ymm6
 	vhaddpd	%ymm11, %ymm10, %ymm10
-	vperm2f128	$0x2, %ymm0, %ymm2, %ymm3
-	vperm2f128	$0x2, %ymm4, %ymm6, %ymm5
-	vperm2f128	$0x2, %ymm8, %ymm10, %ymm9
-	vperm2f128	$0x13, %ymm0, %ymm2, %ymm0
-	vperm2f128	$0x13, %ymm4, %ymm6, %ymm4
-	vperm2f128	$0x13, %ymm8, %ymm10, %ymm8
+	vperm2f128	$ 0x2, %ymm0, %ymm2, %ymm3
+	vperm2f128	$ 0x2, %ymm4, %ymm6, %ymm5
+	vperm2f128	$ 0x2, %ymm8, %ymm10, %ymm9
+	vperm2f128	$ 0x13, %ymm0, %ymm2, %ymm0
+	vperm2f128	$ 0x13, %ymm4, %ymm6, %ymm4
+	vperm2f128	$ 0x13, %ymm8, %ymm10, %ymm8
 	vaddpd	%ymm0, %ymm3, %ymm0
 	vaddpd	%ymm4, %ymm5, %ymm1
 	vaddpd	%ymm8, %ymm9, %ymm2
 
-	cmpl	$0, %r10d // alg
+	cmpl	$ 0, %r10d // alg
 	je		0f // return
 
-	cmpl	$1, %r10d // alg
+	cmpl	$ 1, %r10d // alg
 	jne		1f // alg==-1
 
 	// alg==1
@@ -1194,7 +1194,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG5, %r13  // x
 
@@ -1268,7 +1268,7 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 //	movslq	%r12d, %r12
 	movq	ARG6, %r13  // x
 	movq	ARG3, %r14 // offA

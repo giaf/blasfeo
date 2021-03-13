@@ -188,7 +188,7 @@ inner_kernel_gemm_add_tn_4x3_lib:
 #endif
 #endif
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// preload
@@ -199,7 +199,7 @@ inner_kernel_gemm_add_tn_4x3_lib:
 	addq	%r12, %r15
 
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
 	// main loop
@@ -233,18 +233,18 @@ inner_kernel_gemm_add_tn_4x3_lib:
 	vfmadd231pd		%ymm15, %ymm13, %ymm10
 	vfmadd231pd		%ymm15, %ymm14, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
-	addq	$32, %r15
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
+	addq	$ 32, %r15
 
-	cmpl	$4, %r10d
+	cmpl	$ 4, %r10d
 	jg		1b // main loop
 
 
 0: // consider clean4-up
 
-	cmpl	$3, %r10d
+	cmpl	$ 3, %r10d
 	jle		4f // clean1
 
 	vmovupd			0(%r13), %ymm12 // B
@@ -271,17 +271,17 @@ inner_kernel_gemm_add_tn_4x3_lib:
 	vfmadd231pd		%ymm15, %ymm13, %ymm10
 	vfmadd231pd		%ymm15, %ymm14, %ymm11
 
-	subl	$4, %r10d
-	addq	$32, %r11
-	addq	$32, %r13
-	addq	$32, %r15
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
+	addq	$ 32, %r13
+	addq	$ 32, %r15
 
 	jmp		2f // return
 
 
 4: // consider clean1-up loop
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jle		2f // return
 
 	// clean-up loop
@@ -289,9 +289,9 @@ inner_kernel_gemm_add_tn_4x3_lib:
 
 	// TODO
 
-	subl	$1, %r10d
+	subl	$ 1, %r10d
 
-	cmpl	$0, %r10d
+	cmpl	$ 0, %r10d
 	jg		3b // clean up loop
 
 
@@ -347,13 +347,13 @@ inner_blend_tn_scale_ab_4x3_lib:
 	vhaddpd		%ymm10, %ymm7, %ymm7
 	vhaddpd		%ymm11, %ymm8, %ymm8
 
-	vperm2f128	$0x2, %ymm0, %ymm6, %ymm3
-	vperm2f128	$0x2, %ymm1, %ymm7, %ymm4
-	vperm2f128	$0x2, %ymm2, %ymm8, %ymm5
+	vperm2f128	$ 0x2, %ymm0, %ymm6, %ymm3
+	vperm2f128	$ 0x2, %ymm1, %ymm7, %ymm4
+	vperm2f128	$ 0x2, %ymm2, %ymm8, %ymm5
 
-	vperm2f128	$0x13, %ymm0, %ymm6, %ymm0
-	vperm2f128	$0x13, %ymm1, %ymm7, %ymm1
-	vperm2f128	$0x13, %ymm2, %ymm8, %ymm2
+	vperm2f128	$ 0x13, %ymm0, %ymm6, %ymm0
+	vperm2f128	$ 0x13, %ymm1, %ymm7, %ymm1
+	vperm2f128	$ 0x13, %ymm2, %ymm8, %ymm2
 
 	vaddpd		%ymm0, %ymm3, %ymm0
 	vaddpd		%ymm1, %ymm4, %ymm1
@@ -483,10 +483,10 @@ kernel_dgemm_tn_4x3_lib:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // lda
-	sall	$3, %r12d
+	sall	$ 3, %r12d
 	movq	ARG5, %r13  // B
 	movq	ARG6, %r14  // ldb
-	sall	$3, %r14d
+	sall	$ 3, %r14d
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_TN_4X3_LIB
@@ -505,7 +505,7 @@ kernel_dgemm_tn_4x3_lib:
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 	movq	ARG9, %r13   // ldc
-	sall	$3, %r13d
+	sall	$ 3, %r13d
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_TN_SCALE_AB_4X3_LIB
@@ -522,7 +522,7 @@ kernel_dgemm_tn_4x3_lib:
 
 	movq	ARG10, %r10 // D
 	movq	ARG11, %r11 // ldd
-	sall	$3, %r11d
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X3_LIB
