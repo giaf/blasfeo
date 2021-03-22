@@ -1957,15 +1957,23 @@
 	vmaskmovps	0(%r12), %xmm13, %xmm15
 	vfmadd231ps	%xmm14, %xmm15, %xmm0
 	addq		%r13, %r12
+	cmpl		$ 2, %r15d
+	jl			0f // end
 	vmaskmovps	0(%r12), %xmm13, %xmm15
 	vfmadd231ps	%xmm14, %xmm15, %xmm1
 	addq		%r13, %r12
+	cmpl		$ 3, %r15d
+	jl			0f // end
 	vmaskmovps	0(%r12), %xmm13, %xmm15
 	vfmadd231ps	%xmm14, %xmm15, %xmm2
 	addq		%r13, %r12
+	cmpl		$ 4, %r15d
+	jl			0f // end
 	vmaskmovps	0(%r12), %xmm13, %xmm15
 	vfmadd231ps	%xmm14, %xmm15, %xmm3
 	addq		%r13, %r12
+	cmpl		$ 5, %r15d
+	jl			0f // end
 	vmaskmovps	0(%r12), %xmm13, %xmm15
 	vfmadd231ps	%xmm14, %xmm15, %xmm4
 	addq		%r13, %r12
@@ -1992,7 +2000,7 @@
 #else
 	ret
 
-	FUN_END(inner_scale_ab_8x4_vs_lib)
+	FUN_END(inner_scale_ab_4x8_vs_lib)
 #endif
 
 
