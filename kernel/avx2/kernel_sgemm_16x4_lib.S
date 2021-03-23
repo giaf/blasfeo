@@ -1996,11 +1996,6 @@
 	vunpcklpd	%ymm14, %ymm12, %ymm6
 	vunpckhpd	%ymm14, %ymm12, %ymm7
 
-//	vextractf128 $ 0x1, %ymm0, %xmm4
-//	vextractf128 $ 0x1, %ymm1, %xmm5
-//	vextractf128 $ 0x1, %ymm2, %xmm6
-//	vextractf128 $ 0x1, %ymm3, %xmm7
-
 #if MACRO_LEVEL>=1
 	.endm
 #else
