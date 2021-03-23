@@ -3539,7 +3539,7 @@ tn_m0:
 			C1 = ll==0 ? C : D;
 			ldc1 = ll==0 ? ldc : ldd;
 
-			blasfeo_hp_sgemm_tn_m0(m, n, kleft, alpha, A+ll*lda, lda, B+ll, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
+			blasfeo_hp_sgemm_tn_m0(m, n, kleft, alpha, A+ll, lda, B+ll, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
 			}
 		}
 
@@ -4289,7 +4289,7 @@ tt_m0:
 			C1 = ll==0 ? C : D;
 			ldc1 = ll==0 ? ldc : ldd;
 
-			blasfeo_hp_sgemm_tt_m0(m, n, kleft, alpha, A+ll*lda, lda, B+ll*ldb, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
+			blasfeo_hp_sgemm_tt_m0(m, n, kleft, alpha, A+ll, lda, B+ll*ldb, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
 			}
 		}
 
