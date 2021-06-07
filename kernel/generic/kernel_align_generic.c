@@ -34,7 +34,7 @@
 **************************************************************************************************/
 
 #ifdef __MABX2__
-// dSPACE MicroAutoBox II does not provide stdint
+// dSPACE MicroAutoBox II (32-bit) does not provide stdint
 typedef unsigned int uintptr_t;
 #else
 #include <stdint.h>
