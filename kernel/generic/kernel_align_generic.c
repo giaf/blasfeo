@@ -33,8 +33,12 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#ifdef __MABX2__
+// dSPACE MicroAutoBox II (32-bit) does not provide stdint
+typedef unsigned int uintptr_t;
+#else
 #include <stdint.h>
-
+#endif
 
 
 void blasfeo_align_4096_byte(void *ptr, void **ptr_align)
