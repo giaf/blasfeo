@@ -39,7 +39,7 @@
 /**
  * Flags to indicate the different processor features
  */
-enum
+enum BLASFEO_PROCESSOR_FEATURES
 {
     // x86-64 CPU features
     BLASFEO_PROCESSOR_FEATURE_AVX  = 0x0001,    /// AVX instruction set
@@ -52,7 +52,7 @@ enum
     BLASFEO_PROCESSOR_FEATURE_NEON   = 0x0100,  /// NEON instruction set
     BLASFEO_PROCESSOR_FEATURE_VFPv4  = 0x0100,  /// VFPv4 instruction set
     BLASFEO_PROCESSOR_FEATURE_NEONv2 = 0x0100,  /// NEONv2 instruction set
-} BLASFEO_PROCESSOR_FEATURES;
+};
 
 /**
  * Test the features that this processor provides against what the library was compiled with.

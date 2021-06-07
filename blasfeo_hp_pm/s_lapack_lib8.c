@@ -1112,7 +1112,7 @@ void blasfeo_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 
 int blasfeo_sgeqrf_worksize(int m, int n)
 	{
-	blasfeo_hp_sgeqrf_worksize(m, n);
+	return blasfeo_hp_sgeqrf_worksize(m, n);
 	}
 
 
@@ -1126,7 +1126,7 @@ void blasfeo_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 
 int blasfeo_sgelqf_worksize(int m, int n)
 	{
-	blasfeo_hp_sgelqf_worksize(m, n);
+	return blasfeo_hp_sgelqf_worksize(m, n);
 	}
 
 
@@ -1140,7 +1140,7 @@ void blasfeo_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struc
 
 int blasfeo_sorglq_worksize(int m, int n, int k)
 	{
-	blasfeo_hp_sorglq_worksize(m, n, k);
+	return blasfeo_hp_sorglq_worksize(m, n, k);
 	}
 
 
