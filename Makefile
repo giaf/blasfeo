@@ -158,9 +158,9 @@ REF_BLAS_OBJS += \
 ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
 
 ### BLASFEO HP, PANEL-MAJOR ###
-BLASFEO_HP_PM_OBJS = #\
-		blasfeo_hp_pm/d_blas1_lib4.o \
-		blasfeo_hp_pm/d_blas2_lib4.o \
+BLASFEO_HP_PM_OBJS = \
+		blasfeo_hp_pm/d_blas1_lib8.o \
+		#blasfeo_hp_pm/d_blas2_lib4.o \
 		blasfeo_hp_pm/d_blas2_diag_lib.o \
 		blasfeo_hp_pm/d_blas3_lib4.o \
 		blasfeo_hp_pm/d_blas3_diag_lib4.o \
@@ -176,8 +176,8 @@ BLASFEO_HP_PM_OBJS = #\
 ### AUXILIARY HP, PANEL-MAJOR ###
 AUX_HP_PM_OBJS = \
 		auxiliary/d_aux_lib8.o \
-		auxiliary/s_aux_lib16.o #\
-		auxiliary/m_aux_lib48.o \
+		auxiliary/s_aux_lib16.o \
+		#auxiliary/m_aux_lib48.o \
 
 endif
 ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
