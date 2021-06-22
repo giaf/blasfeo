@@ -691,6 +691,7 @@ void blasfeo_dgecpsc(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai
 
 
 
+#if 0
 // copy  and scale a lower triangular strmat into a lower triangular strmat
 void blasfeo_dtrcpsc_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj)
 	{
@@ -701,6 +702,7 @@ void blasfeo_dtrcpsc_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int
 	exit(1);
 #endif
 	}
+#endif
 
 
 
@@ -717,6 +719,7 @@ void blasfeo_dgesc(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, 
 
 
 
+#if 0
 // scale a triangular strmat
 void blasfeo_dtrsc_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj)
 	{
@@ -727,6 +730,7 @@ void blasfeo_dtrsc_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int a
 	exit(1);
 #endif
 	}
+#endif
 
 
 
