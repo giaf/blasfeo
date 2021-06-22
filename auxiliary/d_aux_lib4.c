@@ -372,28 +372,6 @@ void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int 
 
 
 
-// scales and adds a strvec into a strvec
-void blasfeo_dvecad(int m, double alpha, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci)
-	{
-	double *pa = sa->pa + ai;
-	double *pc = sc->pa + ci;
-	int ii;
-	ii = 0;
-	for(; ii<m-3; ii+=4)
-		{
-		pc[ii+0] += alpha*pa[ii+0];
-		pc[ii+1] += alpha*pa[ii+1];
-		pc[ii+2] += alpha*pa[ii+2];
-		pc[ii+3] += alpha*pa[ii+3];
-		}
-	for(; ii<m; ii++)
-		{
-		pc[ii+0] += alpha*pa[ii+0];
-		}
-	return;
-	}
-
-
 // --------- Transpose
 
 // transpose general matrix; m and n are referred to the original matrix
@@ -2576,7 +2554,7 @@ void blasfeo_dgein1(double a, struct blasfeo_dmat *sA, int ai, int aj)
 		sA->use_dA = 0;
 		}
 
-	const int bs = 4;
+	const int bs = D_PS;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	pA[0] = a;
@@ -2588,7 +2566,7 @@ void blasfeo_dgein1(double a, struct blasfeo_dmat *sA, int ai, int aj)
 // extract element from strmat
 double blasfeo_dgeex1(struct blasfeo_dmat *sA, int ai, int aj)
 	{
-	const int bs = 4;
+	const int bs = D_PS;
 	int sda = sA->cn;
 	double *pA = sA->pA + ai/bs*bs*sda + ai%bs + aj*bs;
 	return pA[0];
@@ -2599,7 +2577,6 @@ double blasfeo_dgeex1(struct blasfeo_dmat *sA, int ai, int aj)
 // insert element into strvec
 void blasfeo_dvecin1(double a, struct blasfeo_dvec *sx, int xi)
 	{
-	const int bs = 4;
 	double *x = sx->pa + xi;
 	x[0] = a;
 	return;
@@ -2610,7 +2587,6 @@ void blasfeo_dvecin1(double a, struct blasfeo_dvec *sx, int xi)
 // extract element from strvec
 double blasfeo_dvecex1(struct blasfeo_dvec *sx, int xi)
 	{
-	const int bs = 4;
 	double *x = sx->pa + xi;
 	return x[0];
 	}
@@ -2800,6 +2776,7 @@ void blasfeo_drowpe(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 	}
 
 
+
 // inverse permute the rows of a matrix struct
 void blasfeo_drowpei(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 	{
@@ -2815,6 +2792,7 @@ void blasfeo_drowpei(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 		}
 	return;
 	}
+
 
 
 // extract a row int a vector
@@ -4387,6 +4365,28 @@ void blasfeo_dgead(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, 
 
 
 
+// scales and adds a strvec into a strvec
+void blasfeo_dvecad(int m, double alpha, struct blasfeo_dvec *sa, int ai, struct blasfeo_dvec *sc, int ci)
+	{
+	double *pa = sa->pa + ai;
+	double *pc = sc->pa + ci;
+	int ii;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		pc[ii+0] += alpha*pa[ii+0];
+		pc[ii+1] += alpha*pa[ii+1];
+		pc[ii+2] += alpha*pa[ii+2];
+		pc[ii+3] += alpha*pa[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		pc[ii+0] += alpha*pa[ii+0];
+		}
+	return;
+	}
+
+
 // copy and transpose a generic strmat into a generic strmat
 void blasfeo_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
 	{
@@ -4444,7 +4444,7 @@ void blasfeo_ddiain_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, 
 	// invalidate stored inverse diagonal
 	sD->use_dA = 0;
 
-	const int bs = 4;
+	const int bs = D_PS;
 	double *x = sx->pa + xi;
 	int sdd = sD->cn;
 	double *pD = sD->pA;
@@ -4502,7 +4502,7 @@ void blasfeo_ddiaex(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int
 // extract the diagonal of a strmat to a strvec, sparse formulation
 void blasfeo_ddiaex_sp(int kmax, double alpha, int *idx, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dvec *sx, int xi)
 	{
-	const int bs = 4;
+	const int bs = D_PS;
 	double *x = sx->pa + xi;
 	int sdd = sD->cn;
 	double *pD = sD->pA;
@@ -4568,7 +4568,7 @@ void blasfeo_ddiaad_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, 
 	// invalidate stored inverse diagonal
 	sD->use_dA = 0;
 
-	const int bs = 4;
+	const int bs = D_PS;
 	double *x = sx->pa + xi;
 	int sdd = sD->cn;
 	double *pD = sD->pA;
@@ -4590,7 +4590,7 @@ void blasfeo_ddiaadin_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi
 	// invalidate stored inverse diagonal
 	sD->use_dA = 0;
 
-	const int bs = 4;
+	const int bs = D_PS;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	int sdd = sD->cn;
