@@ -49,7 +49,7 @@ ifeq ($(MF), PANELMAJ)
 
 ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
 OBJS += d_aux_lib8.o
-#OBJS += s_aux_lib8.o
+OBJS += s_aux_lib16.o
 #OBJS += m_aux_lib48.o
 endif
 

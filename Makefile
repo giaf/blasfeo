@@ -175,8 +175,8 @@ BLASFEO_HP_PM_OBJS = #\
 
 ### AUXILIARY HP, PANEL-MAJOR ###
 AUX_HP_PM_OBJS = \
-		auxiliary/d_aux_lib8.o #\
-		auxiliary/s_aux_lib8.o \
+		auxiliary/d_aux_lib8.o \
+		auxiliary/s_aux_lib16.o #\
 		auxiliary/m_aux_lib48.o \
 
 endif
