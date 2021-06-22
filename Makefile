@@ -863,6 +863,14 @@ endif
 # generate target header
 target:
 	touch ./include/blasfeo_target.h
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+	echo "#ifndef TARGET_X64_INTEL_SKYLAKE_X"  >  ./include/blasfeo_target.h
+	echo "#define TARGET_X64_INTEL_SKYLAKE_X"  >> ./include/blasfeo_target.h
+	echo "#endif"                              >> ./include/blasfeo_target.h
+#	echo "#ifndef TARGET_NEED_FEATURE_AVX512F" >> ./include/blasfeo_target.h
+#	echo "#define TARGET_NEED_FEATURE_AVX512F" >> ./include/blasfeo_target.h
+#	echo "#endif"                              >> ./include/blasfeo_target.h
+endif
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 	echo "#ifndef TARGET_X64_INTEL_HASWELL" >  ./include/blasfeo_target.h
 	echo "#define TARGET_X64_INTEL_HASWELL" >> ./include/blasfeo_target.h
