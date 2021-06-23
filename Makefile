@@ -160,14 +160,14 @@ ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
 ### BLASFEO HP, PANEL-MAJOR ###
 BLASFEO_HP_PM_OBJS = \
 		blasfeo_hp_pm/d_blas1_lib8.o \
-		#blasfeo_hp_pm/d_blas2_lib4.o \
-		blasfeo_hp_pm/d_blas2_diag_lib.o \
+		blasfeo_hp_pm/d_blas2_lib8.o \
+		#blasfeo_hp_pm/d_blas2_diag_lib.o \
 		blasfeo_hp_pm/d_blas3_lib4.o \
 		blasfeo_hp_pm/d_blas3_diag_lib4.o \
 		blasfeo_hp_pm/d_lapack_lib4.o \
 		\
-		blasfeo_hp_pm/s_blas1_lib8.o \
-		blasfeo_hp_pm/s_blas2_lib8.o \
+		blasfeo_hp_pm/s_blas1_lib16.o \
+		blasfeo_hp_pm/s_blas2_lib16.o \
 		blasfeo_hp_pm/s_blas2_diag_lib.o \
 		blasfeo_hp_pm/s_blas3_lib8.o \
 		blasfeo_hp_pm/s_blas3_diag_lib8.o \

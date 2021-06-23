@@ -41,14 +41,14 @@ HP_OBJS =
 ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
 #
 HP_OBJS += d_blas1_lib8.o
-#HP_OBJS += d_blas2_lib4.o
+HP_OBJS += d_blas2_lib8.o
 #HP_OBJS += d_blas2_diag_lib.o
 #HP_OBJS += d_blas3_lib4.o
 #HP_OBJS += d_blas3_diag_lib4.o
 #HP_OBJS += d_lapack_lib4.o
 #
 HP_OBJS += s_blas1_lib16.o
-#HP_OBJS += s_blas2_lib8.o
+HP_OBJS += s_blas2_lib16.o
 #HP_OBJS += s_blas2_diag_lib.o
 #HP_OBJS += s_blas3_lib8.o
 #HP_OBJS += s_blas3_diag_lib8.o

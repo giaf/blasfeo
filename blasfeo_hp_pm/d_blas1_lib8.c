@@ -48,7 +48,9 @@
 
 #include <blasfeo_common.h>
 //#include <blasfeo_d_kernel.h>
+#if defined(BLASFEO_REF_API)
 #include <blasfeo_d_blasfeo_ref_api.h>
+#endif
 
 
 
