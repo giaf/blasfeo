@@ -54,6 +54,18 @@ void blasfeo_align_4096_byte(void *ptr, void **ptr_align);
 void blasfeo_align_64_byte(void *ptr, void **ptr_align);
 
 
+//
+// lib8
+//
+
+// 8x8
+void kernel_dgemm_nt_8x8_lib8(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D); //
+
+
+
+//
+// lib4
+//
 
 // level 2 BLAS
 // 12

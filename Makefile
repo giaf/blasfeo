@@ -231,6 +231,14 @@ AUX_HP_PM_OBJS = \
 
 endif
 
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+
+### KERNELS ###
+KERNEL_OBJS = \
+		kernel/avx512/kernel_dgemm_8x8_lib8.o \
+		\
+
+endif
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 
 ### KERNELS ###
@@ -1283,6 +1291,9 @@ adb_push_tests_one:
 
 adb_run_tests_one:
 	make -C tests adb_run
+
+sde_run_tests_one:
+	make -C tests sde_run
 
 # aux test
 build_tests_aux:
