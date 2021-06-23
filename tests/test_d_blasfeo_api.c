@@ -986,16 +986,16 @@ int main()
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	return 0;
 
-	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx0, 0, &sx0, 0);
-	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx1, 0, &sx1, 0);
-	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx2, 0, &sx2, 0);
-	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx3, 0, &sx3, 0);
-	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx4, 0, &sx4, 0);
-	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx5, 0, &sx5, 0);
-	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx6, 0, &sx6, 0);
-	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx7, 0, &sx7, 0);
-//	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx8, 0, &sx8, 0);
-//	blasfeo_dtrmv_lnn(8, 8, &sA, 0, 0, &sx9, 0, &sx9, 0);
+	blasfeo_dtrmv_lnn(8, &sA, 0, 0, &sx0, 0, &sx0, 0);
+	blasfeo_dtrmv_lnn(8, &sA, 0, 0, &sx1, 0, &sx1, 0);
+	blasfeo_dtrmv_lnn(8, &sA, 0, 0, &sx2, 0, &sx2, 0);
+	blasfeo_dtrmv_lnn(8, &sA, 0, 0, &sx3, 0, &sx3, 0);
+	blasfeo_dtrmv_lnn(8, &sA, 0, 0, &sx4, 0, &sx4, 0);
+	blasfeo_dtrmv_lnn(8, &sA, 0, 0, &sx5, 0, &sx5, 0);
+	blasfeo_dtrmv_lnn(8, &sA, 0, 0, &sx6, 0, &sx6, 0);
+	blasfeo_dtrmv_lnn(8, &sA, 0, 0, &sx7, 0, &sx7, 0);
+//	blasfeo_dtrmv_lnn(8, &sA, 0, 0, &sx8, 0, &sx8, 0);
+//	blasfeo_dtrmv_lnn(8, &sA, 0, 0, &sx9, 0, &sx9, 0);
 	blasfeo_print_tran_dvec(n, &sx0, 0);
 	blasfeo_print_tran_dvec(n, &sx1, 0);
 	blasfeo_print_tran_dvec(n, &sx2, 0);

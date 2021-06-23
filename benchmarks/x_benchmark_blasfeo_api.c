@@ -416,9 +416,9 @@ int main()
 #elif defined(GEMV_T)
 				blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #elif defined(TRMV_LNN)
-				blasfeo_dtrmv_lnn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+				blasfeo_dtrmv_lnn(n, &sA, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRMV_LTN)
-				blasfeo_dtrmv_ltn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+				blasfeo_dtrmv_ltn(n, &sA, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRSV_LNN)
 				blasfeo_dtrsv_lnn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRSV_LTN)
@@ -521,9 +521,9 @@ int main()
 #elif defined(GEMV_T)
 				blasfeo_sgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
 #elif defined(TRMV_LNN)
-				blasfeo_strmv_lnn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+				blasfeo_strmv_lnn(n, &sA, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRMV_LTN)
-				blasfeo_strmv_ltn(n, n, &sA, 0, 0, &sx, 0, &sz, 0);
+				blasfeo_strmv_ltn(n, &sA, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRSV_LNN)
 				blasfeo_strsv_lnn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 #elif defined(TRSV_LTN)

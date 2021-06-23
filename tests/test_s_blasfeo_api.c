@@ -288,8 +288,8 @@ int main()
 //	blasfeo_print_smat(n, n, &sD, 0, 0);
 //	blasfeo_sgemv_n(6, 6, 1.0, &sA, 1, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
 //	blasfeo_sgemv_t(11, 8, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz0, 0, &sz0, 0);
-//	blasfeo_strmv_lnn(6, 6, &sA, 1, 0, &sx, 0, &sz0, 0);
-//	blasfeo_strmv_ltn(10, 10, &sA, 1, 0, &sx, 0, &sz0, 0);
+//	blasfeo_strmv_lnn(6, &sA, 1, 0, &sx, 0, &sz0, 0);
+//	blasfeo_strmv_ltn(10, &sA, 1, 0, &sx, 0, &sz0, 0);
 //	sA.pA[0] = 1.0;
 //	blasfeo_strsv_lnn(10, &sA, 0, 0, &sx, 0, &sz0, 0);
 //	for(ii=0; ii<8; ii++) sA.dA[ii] = 1.0/blasfeo_sgeex1(&sA, ii, ii);
