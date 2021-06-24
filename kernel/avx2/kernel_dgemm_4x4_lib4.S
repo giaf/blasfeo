@@ -6751,7 +6751,7 @@ NAME:
 
 
 
-//                                  rdi    rsi            rdx        rcx        r8            r9         rsp+8     rsp+16   rsp+24
+//                                  1      2              3          4          5             6          7          8       9
 // void kernel_dgemm_nt_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn);
 
 	.p2align 4,,15

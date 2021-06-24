@@ -254,7 +254,8 @@ int main()
 //	kernel_dgemm_nt_12x4_gen_lib4(n, &alpha, sA.pA, sA.cn, sB.pA, &beta, 0, sA.pA, sD.cn, 3, sD.pA, sD.cn, 0, 12, 0, 4);
 //	kernel_dgemm_nt_4x12_lib4ccc(n, &alpha, sA.pA, B, n, &beta, D, n, D, n);
 
-	kernel_dgemm_nt_8x8_lib8(8, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA);
+//	kernel_dgemm_nt_8x8_lib8(8, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA);
+	kernel_dgemm_nt_8x8_vs_lib8(8, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA, 5, 6);
 
 //	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
