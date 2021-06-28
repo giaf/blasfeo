@@ -235,8 +235,8 @@ int main()
 
 #if 1
 	// gemm_nt
-	alpha = 0.0;
-	beta = 1.0;
+	alpha = 1.0;
+	beta = 0.0;
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 //	d_print_mat(n, n, D, n);
@@ -256,9 +256,9 @@ int main()
 
 //	kernel_dgemm_nt_8x8_lib8(8, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA);
 //	kernel_dgemm_nt_8x8_vs_lib8(8, &alpha, sA.pA, sB.pA, &beta, sA.pA, sD.pA, 5, 6);
-	kernel_dgemm_nt_8x8_gen_lib8(8, &alpha, sA.pA, sB.pA, &beta, 0, sA.pA, sA.cn, 0, sD.pA, sD.cn, 0, 8, 0, 8);
+//	kernel_dgemm_nt_8x8_gen_lib8(8, &alpha, sA.pA, sB.pA, &beta, 0, sA.pA, sA.cn, 0, sD.pA, sD.cn, 0, 8, 0, 8);
 
-//	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 //	d_print_mat(n, n, D, n);
