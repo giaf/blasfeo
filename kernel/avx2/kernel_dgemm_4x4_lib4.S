@@ -2884,19 +2884,16 @@ NAME:
 
 0:
 
-	movq	%r13, %r15 // C0
-	addq	%r14, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
-
 	cmpl	$ 1, %r12d
 	jg		1f
 
 	// offset==1
 
 	vmovapd		0(%r13), %ymm12
-	vmovapd		0(%r15), %ymm14
+	vmovapd		0(%r13, %r14), %ymm14
 	vblendpd	$ 0x1, %ymm14, %ymm12, %ymm12
 	vmovapd		32(%r13), %ymm13
-	vmovapd		32(%r15), %ymm14
+	vmovapd		32(%r13, %r14), %ymm14
 	vblendpd	$ 0x1, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm14
 	vshufpd		$ 0x5, %ymm14, %ymm12, %ymm12
@@ -2905,10 +2902,10 @@ NAME:
 	vfmadd231pd	%ymm12, %ymm15, %ymm0
 	vfmadd231pd	%ymm13, %ymm15, %ymm1
 	vmovapd		64(%r13), %ymm12
-	vmovapd		64(%r15), %ymm14
+	vmovapd		64(%r13, %r14), %ymm14
 	vblendpd	$ 0x1, %ymm14, %ymm12, %ymm12
 	vmovapd		96(%r13), %ymm13
-	vmovapd		96(%r15), %ymm14
+	vmovapd		96(%r13, %r14), %ymm14
 	vblendpd	$ 0x1, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm14
 	vshufpd		$ 0x5, %ymm14, %ymm12, %ymm12
@@ -2927,20 +2924,20 @@ NAME:
 	// offset==2
 
 	vmovapd		0(%r13), %ymm12
-	vmovapd		0(%r15), %ymm14
+	vmovapd		0(%r13, %r14), %ymm14
 	vblendpd	$ 0x3, %ymm14, %ymm12, %ymm12
 	vmovapd		32(%r13), %ymm13
-	vmovapd		32(%r15), %ymm14
+	vmovapd		32(%r13, %r14), %ymm14
 	vblendpd	$ 0x3, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm12
 	vperm2f128	$ 0x01, %ymm13, %ymm13, %ymm13
 	vfmadd231pd	%ymm12, %ymm15, %ymm0
 	vfmadd231pd	%ymm13, %ymm15, %ymm1
 	vmovapd		64(%r13), %ymm12
-	vmovapd		64(%r15), %ymm14
+	vmovapd		64(%r13, %r14), %ymm14
 	vblendpd	$ 0x3, %ymm14, %ymm12, %ymm12
 	vmovapd		96(%r13), %ymm13
-	vmovapd		96(%r15), %ymm14
+	vmovapd		96(%r13, %r14), %ymm14
 	vblendpd	$ 0x3, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm12
 	vperm2f128	$ 0x01, %ymm13, %ymm13, %ymm13
@@ -2954,10 +2951,10 @@ NAME:
 	// offset==3
 
 	vmovapd		0(%r13), %ymm12
-	vmovapd		0(%r15), %ymm14
+	vmovapd		0(%r13, %r14), %ymm14
 	vblendpd	$ 0x7, %ymm14, %ymm12, %ymm12
 	vmovapd		32(%r13), %ymm13
-	vmovapd		32(%r15), %ymm14
+	vmovapd		32(%r13, %r14), %ymm14
 	vblendpd	$ 0x7, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm14
 	vshufpd		$ 0x5, %ymm12, %ymm14, %ymm12
@@ -2966,10 +2963,10 @@ NAME:
 	vfmadd231pd	%ymm12, %ymm15, %ymm0
 	vfmadd231pd	%ymm13, %ymm15, %ymm1
 	vmovapd		64(%r13), %ymm12
-	vmovapd		64(%r15), %ymm14
+	vmovapd		64(%r13, %r14), %ymm14
 	vblendpd	$ 0x7, %ymm14, %ymm12, %ymm12
 	vmovapd		96(%r13), %ymm13
-	vmovapd		96(%r15), %ymm14
+	vmovapd		96(%r13, %r14), %ymm14
 	vblendpd	$ 0x7, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm14
 	vshufpd		$ 0x5, %ymm12, %ymm14, %ymm12

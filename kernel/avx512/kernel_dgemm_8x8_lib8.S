@@ -615,8 +615,7 @@ NAME:
 // r10   <- alpha
 // r11   <- beta
 // r12   <- C
-// r13d  <- m1
-// r14d  <- n1
+// r13d  <- n1
 // zmm0 <- [d00 d11 d22 d33]
 // ...
 // ymm7 <- [d02 d13 d20 d31]
@@ -625,8 +624,7 @@ NAME:
 // r10   <- alpha
 // r11   <- beta
 // r12   <- C
-// r13d  <- m1
-// r14d  <- n1
+// r13d  <- n1
 // zmm0 <- [d00 d11 d22 d33]
 // ...
 // ymm7 <- [d02 d13 d20 d31]
@@ -660,27 +658,27 @@ NAME:
 
 	vmovapd		0(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm0
-	cmpl	$ 2, %r14d
+	cmpl	$ 2, %r13d
 	jl		0f // end
 	vmovapd		64(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm1
-	cmpl	$ 3, %r14d
+	cmpl	$ 3, %r13d
 	jl		0f // end
 	vmovapd		128(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm2
-	cmpl	$ 4, %r14d
+	cmpl	$ 4, %r13d
 	jl		0f // end
 	vmovapd		192(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm3
-	cmpl	$ 5, %r14d
+	cmpl	$ 5, %r13d
 	jl		0f // end
 	vmovapd		0+256(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm4
-	cmpl	$ 6, %r14d
+	cmpl	$ 6, %r13d
 	jl		0f // end
 	vmovapd		64+256(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm5
-	cmpl	$ 7, %r14d
+	cmpl	$ 7, %r13d
 	jl		0f // end
 	vmovapd		128+256(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm6
@@ -696,6 +694,355 @@ NAME:
 	ret
 
 	FUN_END(inner_scale_ab_8x8_vs_lib8)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend for generic alpha and beta
+//
+// input arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12  <- offset
+// r13   <- C
+// r14  <- 8*sdc*sizeof(double)
+// r15   <- n0
+// rax   <- n1
+// zmm0 <- [d00 d11 d22 d33]
+// ...
+// ymm7 <- [d02 d13 d20 d31]
+//
+// output arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12  <- offset
+// r13   <- C
+// r14  <- 8*sdc*sizeof(double)
+// r15   <- n0
+// rax   <- n1
+// zmm0 <- [d00 d11 d22 d33]
+// ...
+// ymm7 <- [d02 d13 d20 d31]
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_AB_8X8_GEN_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_scale_ab_8x8_gen_lib8)
+#endif
+	
+	// alpha
+	vbroadcastsd	0(%r10), %zmm24
+
+	vmulpd		%zmm0, %zmm24, %zmm0
+	vmulpd		%zmm1, %zmm24, %zmm1
+	vmulpd		%zmm2, %zmm24, %zmm2
+	vmulpd		%zmm3, %zmm24, %zmm3
+	vmulpd		%zmm4, %zmm24, %zmm4
+	vmulpd		%zmm5, %zmm24, %zmm5
+	vmulpd		%zmm6, %zmm24, %zmm6
+	vmulpd		%zmm7, %zmm24, %zmm7
+
+	// beta
+	vbroadcastsd	0(%r11), %zmm24
+
+	vxorpd		%zmm25, %zmm25, %zmm25 // 0.0
+
+	vucomisd	%xmm24, %xmm25 // beta==0.0 ?
+	je			8f // end
+
+	cmpl	$ 0, %r12d
+	jg		0f
+
+	// offset==0
+
+	cmpl	$ 0, %r15d
+	jg		1f // next
+	vmovapd		0(%r13), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm0
+	jmp		2f
+1:
+	cmpl	$ 1, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 2, %eax
+	jl		8f // end
+	vmovapd		64(%r13), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm1
+	jmp		2f
+1:
+	cmpl	$ 2, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 3, %eax
+	jl		8f // end
+	vmovapd		128(%r13), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm2
+	jmp		2f
+1:
+	cmpl	$ 3, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 4, %eax
+	jl		8f // end
+	vmovapd		192(%r13), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm3
+	jmp		2f
+1:
+	cmpl	$ 4, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 5, %eax
+	jl		8f // end
+	vmovapd		0+256(%r13), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm4
+	jmp		2f
+1:
+	cmpl	$ 5, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 6, %eax
+	jl		8f // end
+	vmovapd		64+256(%r13), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm5
+	jmp		2f
+1:
+	cmpl	$ 6, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 7, %eax
+	jl		8f // end
+	vmovapd		128+256(%r13), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm6
+	jmp		2f
+1:
+	cmpl	$ 7, %r15d
+	jg		8f // end 1f // next
+2:
+	cmpl	$ 7, %eax
+	je		8f // end
+	vmovapd		192+256(%r13), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm7
+//1:
+
+	jmp		8f
+
+0:
+
+	cmpl	$ 3, %r12d
+	jg		14f
+
+	cmpl	$ 1, %r12d
+	jg		11f
+
+	jmp		0f
+
+11: // 2 3
+
+	cmpl	$ 2, %r12d
+	jg		2f
+
+	jmp		1f
+
+14: // 4 5 6 7
+
+	cmpl	$ 5, %r12d
+	jg		16f
+
+	cmpl	$ 4, %r12d
+	jg		4f
+
+	jmp		3f
+
+16: // 6 7
+
+	cmpl	$ 6, %r12d
+	jg		6f
+
+	jmp		5f
+
+0: 	// offset==1
+
+	movl	$ 0x7f, %ebx
+	kmovd	%ebx, %k2
+//	kandd	%k2, %k1, %k2
+	movl	$ 0x80, %ebx
+	kmovd	%ebx, %k3
+//	kandd	%k3, %k1, %k3
+
+	leaq	8(%r13), %rbx
+
+	jmp		7f
+
+1:  // offset==2
+
+	movl	$ 0x3f, %ebx
+	kmovd	%ebx, %k2
+//	kandd	%k2, %k1, %k2
+	movl	$ 0xc0, %ebx
+	kmovd	%ebx, %k3
+//	kandd	%k3, %k1, %k3
+
+	leaq	16(%r13), %rbx
+
+	jmp		7f
+
+2:  // offset==3
+
+	movl	$ 0x1f, %ebx
+	kmovd	%ebx, %k2
+//	kandd	%k2, %k1, %k2
+	movl	$ 0xe0, %ebx
+	kmovd	%ebx, %k3
+//	kandd	%k3, %k1, %k3
+
+	leaq	24(%r13), %rbx
+
+	jmp		7f
+
+3:  // offset==4
+
+	movl	$ 0x0f, %ebx
+	kmovd	%ebx, %k2
+//	kandd	%k2, %k1, %k2
+	movl	$ 0xf0, %ebx
+	kmovd	%ebx, %k3
+//	kandd	%k3, %k1, %k3
+
+	leaq	32(%r13), %rbx
+
+	jmp		7f
+
+4:  // offset==5
+
+	movl	$ 0x07, %ebx
+	kmovd	%ebx, %k2
+//	kandd	%k2, %k1, %k2
+	movl	$ 0xf8, %ebx
+	kmovd	%ebx, %k3
+//	kandd	%k3, %k1, %k3
+
+	leaq	40(%r13), %rbx
+
+	jmp		7f
+
+5:  // offset==6
+
+	movl	$ 0x03, %ebx
+	kmovd	%ebx, %k2
+//	kandd	%k2, %k1, %k2
+	movl	$ 0xfc, %ebx
+	kmovd	%ebx, %k3
+//	kandd	%k3, %k1, %k3
+
+	leaq	48(%r13), %rbx
+
+	jmp		7f
+
+6:  // offset==7
+
+	movl	$ 0x01, %ebx
+	kmovd	%ebx, %k2
+//	kandd	%k2, %k1, %k2
+	movl	$ 0xfe, %ebx
+	kmovd	%ebx, %k3
+//	kandd	%k3, %k1, %k3
+
+	leaq	56(%r13), %rbx
+
+//	jmp		7f
+
+7:
+
+	cmpl	$ 0, %r15d
+	jg		1f // next
+	vmovupd 0(%rbx), %zmm25 {%k2}
+	vmovupd 0-64(%rbx, %r14), %zmm25 {%k3}
+	vfmadd231pd	%zmm24, %zmm25, %zmm0
+	jmp		2f
+1:
+	cmpl	$ 1, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 2, %eax
+	jl		8f // end
+	vmovupd 64(%rbx), %zmm25 {%k2}
+	vmovupd 64-64(%rbx, %r14), %zmm25 {%k3}
+	vfmadd231pd	%zmm24, %zmm25, %zmm1
+	jmp		2f
+1:
+	cmpl	$ 2, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 3, %eax
+	jl		8f // end
+	vmovupd 128(%rbx), %zmm25 {%k2}
+	vmovupd 128-64(%rbx, %r14), %zmm25 {%k3}
+	vfmadd231pd	%zmm24, %zmm25, %zmm2
+	jmp		2f
+1:
+	cmpl	$ 3, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 4, %eax
+	jl		8f // end
+	vmovupd 192(%rbx), %zmm25 {%k2}
+	vmovupd 192-64(%rbx, %r14), %zmm25 {%k3}
+	vfmadd231pd	%zmm24, %zmm25, %zmm3
+	jmp		2f
+1:
+	cmpl	$ 4, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 5, %eax
+	jl		8f // end
+	vmovupd 0+256(%rbx), %zmm25 {%k2}
+	vmovupd 0+256-64(%rbx, %r14), %zmm25 {%k3}
+	vfmadd231pd	%zmm24, %zmm25, %zmm4
+	jmp		2f
+1:
+	cmpl	$ 5, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 6, %eax
+	jl		8f // end
+	vmovupd 64+256(%rbx), %zmm25 {%k2}
+	vmovupd 64+256-64(%rbx, %r14), %zmm25 {%k3}
+	vfmadd231pd	%zmm24, %zmm25, %zmm5
+	jmp		2f
+1:
+	cmpl	$ 6, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 7, %eax
+	jl		8f // end
+	vmovupd 128+256(%rbx), %zmm25 {%k2}
+	vmovupd 128+256-64(%rbx, %r14), %zmm25 {%k3}
+	vfmadd231pd	%zmm24, %zmm25, %zmm6
+	jmp		2f
+1:
+	cmpl	$ 7, %r15d
+	jg		8f // end 1f // next
+2:
+	cmpl	$ 7, %eax
+	je		8f // end
+	vmovupd 192+256(%rbx), %zmm25 {%k2}
+	vmovupd 192+256-64(%rbx, %r14), %zmm25 {%k3}
+	vfmadd231pd	%zmm24, %zmm25, %zmm7
+//1:
+
+8:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_ab_8x8_gen_lib8)
 #endif
 
 
@@ -905,122 +1252,8 @@ NAME:
 #endif
 
 
-	// shift D and sol for cols
-	cmpl	$ 0, %r15d
-	jle		0f
-
-	cmpl	$ 3, %r15d
-	jg		14f
-
-	cmpl	$ 1, %r15d
-	jg		11f
-
-	jmp		1f
-
-11: // 2 3
-
-	cmpl	$ 2, %r15d
-	jg		3f
-
-	jmp		2f
-
-14: // 4 5 6 7
-
-	cmpl	$ 5, %r15d
-	jg		16f
-
-	cmpl	$ 4, %r15d
-	jg		5f
-
-	jmp		4f
-
-16: // 6 7
-
-	cmpl	$ 6, %r15d
-	jg		7f
-
-	jmp		6f
-
-1:
-
-	vmovapd		%zmm1, %zmm0
-	vmovapd		%zmm2, %zmm1
-	vmovapd		%zmm3, %zmm2
-	vmovapd		%zmm4, %zmm3
-	vmovapd		%zmm5, %zmm4
-	vmovapd		%zmm6, %zmm5
-	vmovapd		%zmm7, %zmm6
-	addq		$ 64, %r11
-
-	jmp		0f
-
-2:
-
-	vmovapd		%zmm2, %zmm0
-	vmovapd		%zmm3, %zmm1
-	vmovapd		%zmm4, %zmm2
-	vmovapd		%zmm5, %zmm3
-	vmovapd		%zmm6, %zmm4
-	vmovapd		%zmm7, %zmm5
-	addq		$ 2*64, %r11
-
-	jmp		0f
-
-3:
-
-	vmovapd		%zmm3, %zmm0
-	vmovapd		%zmm4, %zmm1
-	vmovapd		%zmm5, %zmm2
-	vmovapd		%zmm6, %zmm3
-	vmovapd		%zmm7, %zmm4
-	addq		$ 3*64, %r11
-
-	jmp		0f
-
-4:
-
-	vmovapd		%zmm4, %zmm0
-	vmovapd		%zmm5, %zmm1
-	vmovapd		%zmm6, %zmm2
-	vmovapd		%zmm7, %zmm3
-	addq		$ 4*64, %r11
-
-	jmp		0f
-
-5:
-
-	vmovapd		%zmm5, %zmm0
-	vmovapd		%zmm6, %zmm1
-	vmovapd		%zmm7, %zmm2
-	addq		$ 5*64, %r11
-
-	jmp		0f
-
-6:
-
-	vmovapd		%zmm6, %zmm0
-	vmovapd		%zmm7, %zmm1
-	addq		$ 6*64, %r11
-
-	jmp		0f
-
-7:
-
-	vmovapd		%zmm7, %zmm0
-	addq		$ 7*64, %r11
-
-0:
-
-	// compute number of cols
-	cmpl	$ 8, %eax
-	jle		0f
-	movl	$ 8, %eax
-0:
-	subl	%r15d, %eax
-	movl	%eax, %r15d
-
 	// return if no cols
-	cmpl	$ 0, %r15d
+	cmpl	$ 0, %eax
 	jle		8f
 
 	cmpl	$ 0, %r10d
@@ -1028,27 +1261,66 @@ NAME:
 
 	// offset==0
 
+	cmpl	$ 0, %r15d
+	jg		1f // next
 	vmovapd %zmm0,   0(%r11) {%k1}
-	cmpl	$ 2, %r15d
+	jmp		2f
+1:
+	cmpl	$ 1, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 2, %eax
 	jl		8f // end
 	vmovapd %zmm1,  64(%r11) {%k1}
-	cmpl	$ 3, %r15d
+	jmp		2f
+1:
+	cmpl	$ 2, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 3, %eax
 	jl		8f // end
 	vmovapd %zmm2, 128(%r11) {%k1}
-	cmpl	$ 4, %r15d
+	jmp		2f
+1:
+	cmpl	$ 3, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 4, %eax
 	jl		8f // end
 	vmovapd %zmm3, 192(%r11) {%k1}
-	cmpl	$ 5, %r15d
+	jmp		2f
+1:
+	cmpl	$ 4, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 5, %eax
 	jl		8f // end
 	vmovapd %zmm4,   0+256(%r11) {%k1}
-	cmpl	$ 6, %r15d
+	jmp		2f
+1:
+	cmpl	$ 5, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 6, %eax
 	jl		8f // end
 	vmovapd %zmm5,  64+256(%r11) {%k1}
-	cmpl	$ 7, %r15d
+	jmp		2f
+1:
+	cmpl	$ 6, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 7, %eax
 	jl		8f // end
 	vmovapd %zmm6, 128+256(%r11) {%k1}
+	jmp		2f
+1:
+	cmpl	$ 7, %r15d
+	jg		8f // end 1f // next
+2:
+	cmpl	$ 7, %eax
 	je		8f // end
 	vmovapd %zmm7, 192+256(%r11) {%k1}
+//1:
 
 	jmp		8f
 
@@ -1179,35 +1451,74 @@ NAME:
 
 7:
 
+	cmpl	$ 0, %r15d
+	jg		1f // next
 	vmovupd %zmm0,   0(%rbx) {%k2}
 	vmovupd %zmm0,   0-64(%rbx, %r12) {%k3}
-	cmpl	$ 2, %r15d
+	jmp		2f
+1:
+	cmpl	$ 1, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 2, %eax
 	jl		8f // end
 	vmovupd %zmm1,  64(%rbx) {%k2}
 	vmovupd %zmm1,  64-64(%rbx, %r12) {%k3}
-	cmpl	$ 3, %r15d
+	jmp		2f
+1:
+	cmpl	$ 2, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 3, %eax
 	jl		8f // end
 	vmovupd %zmm2, 128(%rbx) {%k2}
 	vmovupd %zmm2, 128-64(%rbx, %r12) {%k3}
-	cmpl	$ 4, %r15d
+	jmp		2f
+1:
+	cmpl	$ 3, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 4, %eax
 	jl		8f // end
 	vmovupd %zmm3, 192(%rbx) {%k2}
 	vmovupd %zmm3, 192-64(%rbx, %r12) {%k3}
-	cmpl	$ 5, %r15d
+	jmp		2f
+1:
+	cmpl	$ 4, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 5, %eax
 	jl		8f // end
 	vmovupd %zmm4,   0+256(%rbx) {%k2}
 	vmovupd %zmm4,   0+256-64(%rbx, %r12) {%k3}
-	cmpl	$ 6, %r15d
+	jmp		2f
+1:
+	cmpl	$ 5, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 6, %eax
 	jl		8f // end
 	vmovupd %zmm5,  64+256(%rbx) {%k2}
 	vmovupd %zmm5,  64+256-64(%rbx, %r12) {%k3}
-	cmpl	$ 7, %r15d
+	jmp		2f
+1:
+	cmpl	$ 6, %r15d
+	jg		1f // next
+2:
+	cmpl	$ 7, %eax
 	jl		8f // end
 	vmovupd %zmm6, 128+256(%rbx) {%k2}
 	vmovupd %zmm6, 128+256-64(%rbx, %r12) {%k3}
+	jmp		2f
+1:
+	cmpl	$ 7, %r15d
+	jg		8f // end 1f // next
+2:
+	cmpl	$ 7, %eax
 	je		8f // end
 	vmovupd %zmm7, 192+256(%rbx) {%k2}
 	vmovupd %zmm7, 192+256-64(%rbx, %r12) {%k3}
+//1:
 
 8:
 
@@ -1314,8 +1625,7 @@ NAME:
 	movq	ARG2, %r10 // alpha
 	movq	ARG5, %r11 // beta
 	movq	ARG6, %r12   // C
-	movq	ARG8, %r13 // km 
-	movq	ARG9, %r14 // kn 
+	movq	ARG9, %r13 // kn 
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X8_VS_LIB8
@@ -1381,13 +1691,13 @@ NAME:
 	movq	ARG7, %r13 // C
 	movq	ARG8, %r14 // sdc
 	sall	$ 6, %r14d // 4*sdc*sizeof(double)
+	movq	ARG14, %r15 // n0
+	movq	ARG15, %rax // n1
 
 #if MACRO_LEVEL>=1
-//	INNER_SCALE_AB_8X8_GEN_LIB8
-	INNER_SCALE_AB_8X8_LIB8
+	INNER_SCALE_AB_8X8_GEN_LIB8
 #else
-//	CALL(inner_scale_ab_8x8_gen_lib8)
-	CALL(inner_scale_ab_8x8_lib8)
+	CALL(inner_scale_ab_8x8_gen_lib8)
 #endif
 
 

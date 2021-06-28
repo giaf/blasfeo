@@ -235,8 +235,8 @@ int main()
 
 #if 1
 	// gemm_nt
-	alpha = 1.0;
-	beta = 0.0;
+	alpha = 0.0;
+	beta = 1.0;
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 //	d_print_mat(n, n, D, n);
