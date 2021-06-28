@@ -2309,6 +2309,159 @@ NAME:
 
 
 
+//                                  1      2              3          4            5          6        7             8          9          10      11
+// void kernel_dgemm_nn_8x8_vs_lib8(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_nn_8x8_vs_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG5, %r12  // B
+	movq	ARG6, %r13 // sdb
+	sall	$ 6, %r13d // 4*sdb*sizeof(double)
+	movq	ARG4, %r14 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_8X8_LIB8
+#else
+	CALL(inner_edge_dgemm_nn_8x8_lib8)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nn_8x8_lib8)
+#endif
+
+
+	// call inner blend 
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG11, %r13 // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X8_VS_LIB8
+#else
+	CALL(inner_scale_ab_8x8_vs_lib8)
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // km 
+	movq	ARG11, %r12 // kn 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X8_VS_LIB8
+#else
+	CALL(inner_store_8x8_vs_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemm_nn_8x8_vs_lib8)
+
+
+
+
+
+//                                   1      2              3          4            5          6        7             8         9          10       11        12         13       14      15      16      17
+// void kernel_dgemm_nn_8x8_gen_lib8(int k, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, int offC, double *C, int sdc, int offD, double *D, int sdd, int m0, int m1, int n0, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_nn_8x8_gen_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG5, %r12  // B
+	movq	ARG6, %r13 // sdb
+	sall	$ 6, %r13d // 4*sdb*sizeof(double)
+	movq	ARG4, %r14 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_8X8_LIB8
+#else
+	CALL(inner_edge_dgemm_nn_8x8_lib8)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nn_8x8_lib8)
+#endif
+
+
+	// call inner blend 
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12 // offsetC
+	movq	ARG9, %r13 // C
+	movq	ARG10, %r14 // sdc
+	sall	$ 6, %r14d // 4*sdc*sizeof(double)
+	movq	ARG16, %r15 // n0
+	movq	ARG17, %rax // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X8_GEN_LIB8
+#else
+	CALL(inner_scale_ab_8x8_gen_lib8)
+#endif
+
+
+	// store n
+
+	movq	ARG11, %r10 // offsetD
+	movq	ARG12, %r11 // D
+	movq	ARG13, %r12 // sdd
+	sall	$ 6, %r12d // 4*sdb*sizeof(double)
+	movq	ARG14, %r13 // m0
+	movq	ARG15, %r14 // m1
+	movq	ARG16, %r15 // n0
+	movq	ARG17, %rax // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X8_GEN_LIB8
+#else
+	CALL(inner_store_8x8_gen_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemm_nn_8x8_gen_lib8)
+
+
+
+
+
 //#if defined(BLAS_API)
 #if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 

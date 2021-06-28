@@ -755,7 +755,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		}
 	else
 		{
-		pC += -4*sdc;
+		pC += -ps*sdc;
 		offsetC = ps+ci0;
 		}
 	if(di0>=0)
@@ -765,7 +765,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		}
 	else
 		{
-		pD += -4*sdd;
+		pD += -ps*sdd;
 		offsetD = ps+di0;
 		}
 
