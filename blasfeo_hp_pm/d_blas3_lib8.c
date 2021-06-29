@@ -374,12 +374,175 @@ loop_CD:
 // dgemm_tn
 void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dgemm_tn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
-#else
-	printf("\nblasfeo_dgemm_tn: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 || n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 8;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+	int cir = ci & (ps-1);
+	int dir = di & (ps-1);
+
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+	double *pC = sC->pA + cj*ps + (ci-cir)*sdc;
+	double *pD = sD->pA + dj*ps + (di-dir)*sdd;
+
+	int offsetA = air;
+	int offsetB = bir;
+	int offsetC = cir;
+	int offsetD = dir;
+
+	ALIGNED( double pU0[1*8*K_MAX_STACK], 64 );
+	int sdu0 = (k+3)/4*4;
+//	int sdu0 = (k+7)/8*8;
+	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
+
+	struct blasfeo_dmat sAt;
+	int sAt_size;
+	void *mem;
+	char *mem_align;
+
+	double *pU;
+	int sdu;
+
+	int ii, jj;
+
+	if(k>K_MAX_STACK)
+		{
+		sAt_size = blasfeo_memsize_dmat(8, k);
+		mem = malloc(sAt_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		blasfeo_create_dmat(8, k, &sAt, (void *) mem_align);
+		pU = sAt.pA;
+		sdu = sAt.cn;
+		}
+	else
+		{
+		pU = pU0;
+		sdu = sdu0;
+		}
+
+
+	// algorithm scheme
+	if(offsetC==0 & offsetD==0)
+		{
+		if(m<=n)
+			{
+			goto loop_00_m0; // transpose A
+			}
+		else
+			{
+			goto loop_00_n0; // transpose B
+			}
+		}
+	else
+		{
+		goto loop_CD_m0;
+		}
+	// should never get here
+	return;
+
+
+
+loop_00_m0:
+	ii = 0;
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dpacp_tn_8_lib8(k, offsetA, pA+ii*ps, sda, pU);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dgemm_nn_8x8_lib8(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nn_8x8_vs_lib8(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto left_8_m0;
+		}
+	goto tn_return;
+
+
+
+	// non-malloc algorith, C, D not aligned
+loop_CD_m0:
+	ii = 0;
+	// clean up loops definitions
+	for(; ii<m; ii+=8)
+		{
+		kernel_dpacp_tn_8_lib8(k, offsetA, pA+ii*ps, sda, pU);
+		for(jj=0; jj<n; jj+=4)
+			{
+			kernel_dgemm_nn_8x8_gen_lib8(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, 0, n-jj);
+			}
+		}
+	// common return if i==m
+	goto tn_return;
+
+
+
+loop_00_n0:
+	jj = 0;
+	for(; jj<n-7; jj+=8)
+		{
+		kernel_dpacp_tn_8_lib8(k, offsetB, pB+jj*ps, sdb, pU);
+		for(ii=0; ii<m-3; ii+=4)
+			{
+			kernel_dgemm_tt_8x8_lib8(k, &alpha, offsetA, pA+ii*ps, sda, pU, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps);
+			}
+		if(ii<m)
+			{
+			kernel_dgemm_tt_8x8_vs_lib8(k, &alpha, offsetA, pA+ii*ps, sda, pU, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+			}
+		}
+	if(jj<n)
+		{
+		goto left_8_n0;
+		}
+	// common return if n==n
+	goto tn_return;
+
+
+
+left_8_m0:
+	kernel_dpacp_tn_8_lib8(k, offsetA, pA+ii*ps, sda, pU);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nn_8x8_vs_lib8(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+		}
+	goto tn_return;
+
+
+
+left_8_n0:
+	kernel_dpacp_tn_8_lib8(k, offsetB, pB+jj*ps, sdb, pU);
+	for(ii=0; ii<m; ii+=4)
+		{
+		kernel_dgemm_tt_8x8_vs_lib8(k, &alpha, offsetA, pA+ii*ps, sda, pU, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+		}
+	goto tn_return;
+
+
+
+tn_return:
+	if(k>K_MAX_STACK)
+		{
+		free(mem);
+		}
+	return;
+
 	}
 
 

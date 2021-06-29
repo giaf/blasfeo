@@ -264,10 +264,11 @@ int main()
 //	kernel_dgemm_tt_8x8_vs_lib8(8, &alpha, 0, sA.pA, sA.cn, sB.pA, &beta, sA.pA, sD.pA, 8, 8);
 //	kernel_dgemm_tt_8x8_gen_lib8(8, &alpha, 0, sA.pA, sA.cn, sB.pA, &beta, 0, sA.pA, sA.cn, 1, sD.pA, sD.cn, 0, 8, 0, 8);
 	
-	kernel_dpacp_tn_8_lib8(n, 0, sA.pA, sA.cn, sD.pA);
+//	kernel_dpacp_tn_8_lib8(n, 0, sA.pA, sA.cn, sD.pA);
 
 //	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_tn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
