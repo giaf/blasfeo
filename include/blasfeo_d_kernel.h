@@ -62,6 +62,7 @@ void blasfeo_align_64_byte(void *ptr, void **ptr_align);
 void kernel_dgemm_nt_16x8_lib8(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd); //
 void kernel_dgemm_nt_16x8_vs_lib8(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1); //
 void kernel_dgemm_nn_16x8_lib8(int k, double *alpha, double *A, int sda, int offB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd); //
+void kernel_dgemm_nn_16x8_vs_lib8(int k, double *alpha, double *A, int sda, int offB, double *B, int sdb, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1); //
 // 8x8
 void kernel_dgemm_nt_8x8_lib8(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D); //
 void kernel_dgemm_nt_8x8_vs_lib8(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int m1, int n1); //
