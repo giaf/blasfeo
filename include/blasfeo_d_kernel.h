@@ -65,6 +65,9 @@ void kernel_dgemm_nt_8x8_gen_lib8(int k, double *alpha, double *A, double *B, do
 void kernel_dgemm_nn_8x8_lib8(int k, double *alpha, double *A, int offB, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_nn_8x8_vs_lib8(int k, double *alpha, double *A, int offB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
 void kernel_dgemm_nn_8x8_gen_lib8(int k, double *alpha, double *A, int offB, double *B, int sdb, double *beta, int offC, double *C, int sdc, int offD, double *D, int sdd, int m0, int m1, int n0, int n1); //
+void kernel_dgemm_tt_8x8_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, double *beta, double *C, double *D); //
+void kernel_dgemm_tt_8x8_vs_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, double *beta, double *C, double *D, int m1, int n1); //
+void kernel_dgemm_tt_8x8_gen_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, double *beta, int offc, double *C, int sdc, int offD, double *D, int sdd, int m0, int m1, int n0, int n1); //
 
 
 

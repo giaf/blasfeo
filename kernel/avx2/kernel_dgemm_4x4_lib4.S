@@ -6650,8 +6650,6 @@ NAME:
 // transpose
 //
 // input arguments:
-// r10  <- D
-// r11  <- ldd
 // ymm0 <- [d00 d11 d22 d33]
 // ymm1 <- [d01 d10 d23 d32]
 // ymm2 <- [d03 d12 d21 d30]
