@@ -3,7 +3,7 @@
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
 * BLASFEO -- BLAS For Embedded Optimization.                                                      *
-* Copyright (C) 2019 by Gianluca Frison.                                                          *
+* Copyright (C) 2021 by Gianluca Frison.                                                          *
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
 *                                                                                                 *
@@ -2788,10 +2788,10 @@ NAME:
 #endif
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	.align 32
+	.align 64
 .LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
 #elif defined(OS_MAC)
-	.align 5
+	.align 6
 LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
 #endif
 	.double 0.5

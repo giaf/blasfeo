@@ -69,6 +69,10 @@ void kernel_dgemm_tt_8x8_lib8(int k, double *alpha, int offA, double *A, int sda
 void kernel_dgemm_tt_8x8_vs_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, double *beta, double *C, double *D, int m1, int n1); //
 void kernel_dgemm_tt_8x8_gen_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, double *beta, int offc, double *C, int sdc, int offD, double *D, int sdd, int m0, int m1, int n0, int n1); //
 
+// panel copy
+// 8
+void kernel_dpacp_tn_8_lib8(int kmax, int offsetA, double *A, int sda, double *B);
+
 
 
 //
