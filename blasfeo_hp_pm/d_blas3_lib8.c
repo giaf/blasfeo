@@ -387,12 +387,146 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 // dgemm_tt
 void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dgemm_tt(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
-#else
-	printf("\nblasfeo_dgemm_tt: feature not implemented yet\n");
-	exit(1);
-#endif
+	if(m<=0 || n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 8;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+
+	// pA, pB point to panels edges
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+	double *pC = sC->pA + (cj-bir)*ps;
+	double *pD = sD->pA + (dj-bir)*ps;
+
+	int offsetA = air;
+
+	int ci0 = ci; //-bir;
+	int di0 = di; //-bir;
+	int offsetC;
+	int offsetD;
+	if(ci0>=0)
+		{
+		pC += ci0/ps*ps*sdd;
+		offsetC = ci0%ps;
+		}
+	else
+		{
+		pC += -ps*sdc;
+		offsetC = ps+ci0;
+		}
+
+	if(di0>=0)
+		{
+		pD += di0/ps*ps*sdd;
+		offsetD = di0%ps;
+		}
+	else
+		{
+		pD += -ps*sdd;
+		offsetD = ps+di0;
+		}
+
+	int i, j, l;
+
+
+
+	// algorithm scheme
+	if(bir!=0)
+		{
+		goto clear_bir;
+		}
+select_loop:
+	if(offsetC==0 & offsetD==0)
+		{
+		goto loop_00;
+		}
+	else
+		{
+		goto loop_CD;
+		}
+	// should never get here
+	return;
+
+
+
+	// clean up at the beginning
+clear_bir:
+	i = 0;
+	for(; i<m; i+=8)
+		{
+		kernel_dgemm_tt_8x8_gen_lib8(k, &alpha, offsetA, &pA[i*ps], sda, &pB[0], &beta, offsetC, &pC[i*sdc], sdc, offsetD, &pD[i*sdd], sdd, 0, m-i, bir, bir+n);
+		}
+	n -= 1*ps-bir;
+	pB += 1*ps*sdb;
+	pC += 1*8*ps;
+	pD += 1*8*ps;
+	goto select_loop;
+
+
+
+	// main loop aligned
+loop_00:
+	j = 0;
+	for(; j<n-7; j+=8)
+		{
+		i = 0;
+		for(; i<m-7; i+=8)
+			{
+			kernel_dgemm_tt_8x8_lib8(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd]);
+			}
+		if(i<m)
+			{
+			kernel_dgemm_tt_8x8_vs_lib8(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+			}
+		}
+	if(n>j)
+		{
+		goto left_8;
+		}
+	// common return if i==m
+	return;
+
+
+
+	// main loop C, D not aligned
+loop_CD:
+	j = 0;
+	for(; j<n; j+=8)
+		{
+		i = 0;
+		for(; i<m; i+=8)
+			{
+			kernel_dgemm_tt_8x8_gen_lib8(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			}
+		}
+	// common return if i==m
+	return;
+
+
+
+	// clean up loops definitions
+
+	left_8:
+	i = 0;
+	for(; i<m; i+=8)
+		{
+		kernel_dgemm_tt_8x8_vs_lib8(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	return;
+
+	return;
+
 	}
 
 
