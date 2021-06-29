@@ -1631,6 +1631,22 @@ NAME:
 	FUN_START(inner_store_8x8_vs_lib8)
 #endif
 	
+#if 1
+
+	// compute mask for rows
+	vcvtsi2sd	%r11d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+
+	vpmovq2m	%zmm25, %k1
+
+#else
+
 	movq	%rcx, %r14 // backup
 	movl	$ 8, %ecx // saturate to ps=8
 	cmpl	%r11d, %ecx
@@ -1640,6 +1656,8 @@ NAME:
 	subl	$ 1, %r13d
 	kmovd	%r13d, %k1
 	movq	%r14, %rcx // restore
+
+#endif
 
 	vmovapd %zmm0,   0(%r10) {%k1}
 	cmpl	$ 2, %r12d
@@ -2202,7 +2220,7 @@ NAME:
 	movq	ARG2, %r10 // alpha
 	movq	ARG5, %r11 // beta
 	movq	ARG6, %r12   // C
-	movq	ARG9, %r13 // kn 
+	movq	ARG9, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X8_VS_LIB8
@@ -2214,8 +2232,8 @@ NAME:
 	// store n
 
 	movq	ARG7, %r10 // D
-	movq	ARG8, %r11 // km 
-	movq	ARG9, %r12 // kn 
+	movq	ARG8, %r11 // m1 
+	movq	ARG9, %r12 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8X8_VS_LIB8
@@ -2789,10 +2807,10 @@ NAME:
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 64
-.LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
+.LC00:
 #elif defined(OS_MAC)
 	.align 6
-LC00: // { 7.5 6.5 5.5 4.5 3.5 2.5 1.5 0.5 }
+LC00:
 #endif
 	.double 0.5
 	.double 1.5

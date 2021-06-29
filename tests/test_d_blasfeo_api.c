@@ -264,7 +264,8 @@ int main()
 //	kernel_dgemm_tt_8x8_vs_lib8(8, &alpha, 0, sA.pA, sA.cn, sB.pA, &beta, sA.pA, sD.pA, 8, 8);
 //	kernel_dgemm_tt_8x8_gen_lib8(8, &alpha, 0, sA.pA, sA.cn, sB.pA, &beta, 0, sA.pA, sA.cn, 1, sD.pA, sD.cn, 0, 8, 0, 8);
 	
-	kernel_dgemm_nt_16x8_lib8(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
+//	kernel_dgemm_nt_16x8_lib8(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
+	kernel_dgemm_nt_16x8_vs_lib8(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 16, 8);
 
 //	kernel_dpacp_tn_8_lib8(n, 0, sA.pA, sA.cn, sD.pA);
 
