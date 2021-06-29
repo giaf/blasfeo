@@ -706,7 +706,7 @@ NAME:
 	vfmadd231pd		%zmm25, %zmm24, %zmm7
 	addq	$ 512, %r11
 
-	// unroll 6
+	// unroll 7
 	vbroadcastsd	56+0*64(%r12), %zmm24 // B
 	vfmadd231pd		%zmm26, %zmm24, %zmm0
 	vmovapd			0*64(%r11), %zmm25 // A
@@ -870,7 +870,7 @@ NAME:
 	vfmadd231pd		%zmm25, %zmm24, %zmm7
 	addq	$ 512, %r11
 
-	// unroll 6
+	// unroll 7
 	vbroadcastsd	56+0*64(%r12), %zmm24 // B
 	vfmadd231pd		%zmm26, %zmm24, %zmm0
 //	vmovapd			0*64(%r11), %zmm25 // A
