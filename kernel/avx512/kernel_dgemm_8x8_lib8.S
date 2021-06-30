@@ -1048,17 +1048,17 @@ NAME:
 // r10   <- alpha
 // r11   <- beta
 // r12   <- C
-// zmm0 <- [d00 d11 d22 d33]
+// zmm0 <- []
 // ...
-// ymm7 <- [d02 d13 d20 d31]
+// zmm7 <- []
 //
 // output arguments:
 // r10   <- alpha
 // r11   <- beta
 // r10   <- C
-// zmm0 <- [d00 d11 d22 d33]
+// zmm0 <- []
 // ...
-// ymm7 <- [d02 d13 d20 d31]
+// zmm7 <- []
 
 #if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_8X8_LIB8
@@ -1127,18 +1127,18 @@ NAME:
 // r11   <- beta
 // r12   <- C
 // r13d  <- n1
-// zmm0 <- [d00 d11 d22 d33]
+// zmm0 <- []
 // ...
-// ymm7 <- [d02 d13 d20 d31]
+// zmm7 <- []
 //
 // output arguments:
 // r10   <- alpha
 // r11   <- beta
 // r12   <- C
 // r13d  <- n1
-// zmm0 <- [d00 d11 d22 d33]
+// zmm0 <- []
 // ...
-// ymm7 <- [d02 d13 d20 d31]
+// zmm7 <- []
 
 #if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_8X8_VS_LIB8
