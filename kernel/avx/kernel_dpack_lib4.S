@@ -3520,6 +3520,12 @@ NAME:
 
 
 
+// input arguments:
+// r10  <- kmax
+// r11  <- A
+// r12  <- ...*sda
+// r13  <- C
+
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_4_0_LIB4
 #else
@@ -3587,6 +3593,12 @@ NAME:
 
 
 
+
+// input arguments:
+// r10  <- kmax
+// r11  <- A
+// r12  <- ...*sda
+// r13  <- C
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_4_1_LIB4
@@ -3671,6 +3683,12 @@ NAME:
 
 
 
+// input arguments:
+// r10  <- kmax
+// r11  <- A
+// r12  <- ...*sda
+// r13  <- C
+
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_4_2_LIB4
 #else
@@ -3748,6 +3766,12 @@ NAME:
 
 
 
+
+// input arguments:
+// r10  <- kmax
+// r11  <- A
+// r12  <- ...*sda
+// r13  <- C
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_4_3_LIB4
@@ -3832,6 +3856,12 @@ NAME:
 
 
 
+// input arguments:
+// r10  <- kmax
+// r11  <- A
+// r12  <- ...*sda
+// r13  <- C
+
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_3_0_LIB4
 #else
@@ -3909,6 +3939,12 @@ NAME:
 
 
 
+
+// input arguments:
+// r10  <- kmax
+// r11  <- A
+// r12  <- ...*sda
+// r13  <- C
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_3_2_LIB4
@@ -3988,6 +4024,12 @@ NAME:
 
 
 
+// input arguments:
+// r10  <- kmax
+// r11  <- A
+// r12  <- ...*sda
+// r13  <- C
+
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_3_3_LIB4
 #else
@@ -4066,6 +4108,12 @@ NAME:
 
 
 
+// input arguments:
+// r10  <- kmax
+// r11  <- A
+// r12  <- ...*sda
+// r13  <- C
+
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_2_0_LIB4
 #else
@@ -4133,6 +4181,12 @@ NAME:
 
 
 
+
+// input arguments:
+// r10  <- kmax
+// r11  <- A
+// r12  <- ...*sda
+// r13  <- C
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_2_1_LIB4
@@ -4206,6 +4260,12 @@ NAME:
 
 
 
+
+// input arguments:
+// r10  <- kmax
+// r11  <- A
+// r12  <- ...*sda
+// r13  <- C
 
 #if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DPACP_NN_1_0_LIB4

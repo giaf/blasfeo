@@ -382,6 +382,258 @@ NAME:
 
 
 //                             1         2            3          4        5
+// void kernel_dpacp_nn_8_lib8(int kmax, int offsetA, double *A, int sda, double *C)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpacp_nn_8_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // offA
+	movq	ARG3, %r12 // A
+	movq	ARG4, %r13 // sda
+	sall	$ 6, %r13d
+	movq	ARG5, %r14 // C
+
+
+	cmpl	$ 0, %r10d
+	jle		8f // return
+
+
+	cmpl	$ 0, %r11d
+	jg		0f
+
+	// offset==0
+
+	cmpl	$ 3, %r10d
+	jle		12f // clean-up loop
+
+	// main loop
+	.p2align 3
+11:
+	//
+	vmovapd		0(%r12), %zmm0
+	vmovapd		%zmm0, 0(%r14)
+	//
+	vmovapd		64(%r12), %zmm0
+	vmovapd		%zmm0, 64(%r14)
+	//
+	vmovapd		128(%r12), %zmm0
+	vmovapd		%zmm0, 128(%r14)
+	//
+	vmovapd		192(%r12), %zmm0
+	vmovapd		%zmm0, 192(%r14)
+
+	subl	$ 4, %r10d
+	addq	$ 256, %r12
+	addq	$ 256, %r14
+
+	cmpl	$ 3, %r10d
+	jg		11b
+
+
+	cmpl	$ 0, %r10d
+	jle		8f // return
+
+
+12: // clean-up loop
+	
+	vmovapd		0(%r12), %zmm0
+	vmovapd		%zmm0, 0(%r14)
+
+	subl	$ 1, %r10d
+	addq	$ 64, %r12
+	addq	$ 64, %r14
+
+	cmpl	$ 0, %r10d
+	jg		12b
+
+	jmp		8f // return
+
+	// end of offset 0
+
+0:
+
+	cmpl	$ 3, %r11d
+	jg		14f
+
+	cmpl	$ 1, %r11d
+	jg		11f
+
+	jmp		0f
+
+11: // 2 3
+
+	cmpl	$ 2, %r11d
+	jg		2f
+
+	jmp		1f
+
+14: // 4 5 6 7
+
+	cmpl	$ 5, %r11d
+	jg		16f
+
+	cmpl	$ 4, %r11d
+	jg		4f
+
+	jmp		3f
+
+16: // 6 7
+
+	cmpl	$ 6, %r11d
+	jg		6f
+
+	jmp		5f
+
+0: 	// offset==1
+
+	movl	$ 0x7f, %r15d
+	kmovd	%r15d, %k2
+	movl	$ 0x80, %r15d
+	kmovd	%r15d, %k3
+
+	leaq	8(%r12), %r15
+
+	jmp		7f
+
+1:  // offset==2
+
+	movl	$ 0x3f, %r15d
+	kmovd	%r15d, %k2
+	movl	$ 0xc0, %r15d
+	kmovd	%r15d, %k3
+
+	leaq	16(%r12), %r15
+
+	jmp		7f
+
+2:  // offset==3
+
+	movl	$ 0x1f, %r15d
+	kmovd	%r15d, %k2
+	movl	$ 0xe0, %r15d
+	kmovd	%r15d, %k3
+
+	leaq	24(%r12), %r15
+
+	jmp		7f
+
+3:  // offset==4
+
+	movl	$ 0x0f, %r15d
+	kmovd	%r15d, %k2
+	movl	$ 0xf0, %r15d
+	kmovd	%r15d, %k3
+
+	leaq	32(%r12), %r15
+
+	jmp		7f
+
+4:  // offset==5
+
+	movl	$ 0x07, %r15d
+	kmovd	%r15d, %k2
+	movl	$ 0xf8, %r15d
+	kmovd	%r15d, %k3
+
+	leaq	40(%r12), %r15
+
+	jmp		7f
+
+5:  // offset==6
+
+	movl	$ 0x03, %r15d
+	kmovd	%r15d, %k2
+	movl	$ 0xfc, %r15d
+	kmovd	%r15d, %k3
+
+	leaq	48(%r12), %r15
+
+	jmp		7f
+
+6:  // offset==7
+
+	movl	$ 0x01, %r15d
+	kmovd	%r15d, %k2
+	movl	$ 0xfe, %r15d
+	kmovd	%r15d, %k3
+
+	leaq	56(%r12), %r15
+
+//	jmp		7f
+
+7:
+
+	// offset==x
+
+	cmpl	$ 3, %r10d
+	jle		12f // clean-up loop
+
+	// main loop
+	.p2align 3
+11:
+	//
+	vmovupd		0(%r15), %zmm0 {%k2}
+	vmovupd		0-64(%r15, %r13), %zmm0 {%k3}
+	vmovapd		%zmm0, 0(%r14)
+	//
+	vmovupd		64(%r15), %zmm0 {%k2}
+	vmovupd		64-64(%r15, %r13), %zmm0 {%k3}
+	vmovapd		%zmm0, 64(%r14)
+	//
+	vmovupd		128(%r15), %zmm0 {%k2}
+	vmovupd		128-64(%r15, %r13), %zmm0 {%k3}
+	vmovapd		%zmm0, 128(%r14)
+	//
+	vmovupd		192(%r15), %zmm0 {%k2}
+	vmovupd		192-64(%r15, %r13), %zmm0 {%k3}
+	vmovapd		%zmm0, 192(%r14)
+
+	subl	$ 4, %r10d
+	addq	$ 256, %r15
+	addq	$ 256, %r14
+
+	cmpl	$ 3, %r10d
+	jg		11b
+
+
+	cmpl	$ 0, %r10d
+	jle		8f // return
+
+
+12: // clean-up loop
+	
+	vmovupd		0(%r15), %zmm0 {%k2}
+	vmovupd		0-64(%r15, %r13), %zmm0 {%k3}
+	vmovapd		%zmm0, 0(%r14)
+
+	subl	$ 1, %r10d
+	addq	$ 64, %r15
+	addq	$ 64, %r14
+
+	cmpl	$ 0, %r10d
+	jg		12b
+
+//	jmp		8f
+
+	// end of offset x
+
+8:
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpacp_nn_8_lib8)
+
+
+
+
+
+//                             1         2            3          4        5
 // void kernel_dpacp_tn_8_lib8(int kmax, int offsetA, double *A, int sda, double *C)
 
 	.p2align 4,,15
