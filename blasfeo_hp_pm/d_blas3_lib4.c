@@ -5072,7 +5072,7 @@ void blasfeo_hp_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 		}
 	else
 		{
-		pC += -4*sdc;
+		pC += -ps*sdc;
 		offsetC = ps+ci0;
 		}
 	if(di0>=0)
@@ -5082,15 +5082,18 @@ void blasfeo_hp_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 		}
 	else
 		{
-		pD += -4*sdd;
+		pD += -ps*sdd;
 		offsetD = ps+di0;
 		}
 
+	struct blasfeo_dmat sAt;
+	int sAt_size;
 	void *mem;
+	char *mem_align;
+
 	double *pU, *pA2;
 	int sdu, sda2;
 
-// TODO visual studio alignment
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
@@ -5106,9 +5109,12 @@ void blasfeo_hp_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 	// allocate memory
 	if(k>K_MAX_STACK)
 		{
-		sdu = (k+ps-1)/ps*ps;
-		mem = malloc(12*sdu*sizeof(double)+63);
-		blasfeo_align_64_byte(mem, (void **) &pU);
+		sAt_size = blasfeo_memsize_dmat(12, k);
+		mem = malloc(sAt_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		blasfeo_create_dmat(12, k, &sAt, (void *) mem_align);
+		pU = sAt.pA;
+		sdu = sAt.cn;
 		}
 	else
 		{
@@ -5128,12 +5134,10 @@ void blasfeo_hp_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 		{
 		if(bir==0)
 			{
-//	printf("\n000\n");
 			goto loop_000;
 			}
 		else
 			{
-//	printf("\nB00\n");
 			goto loop_B00;
 			}
 		}
@@ -5141,12 +5145,10 @@ void blasfeo_hp_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 		{
 		if(bir==0)
 			{
-//	printf("\n0CD\n");
 			goto loop_0CD;
 			}
 		else
 			{
-//	printf("\nBCD\n");
 			goto loop_BCD;
 			}
 		}
@@ -5355,6 +5357,7 @@ loop_B00:
 			j += bir;
 			}
 		kernel_dsyrk_nt_l_4x4_gen_lib4(k, &alpha, pA2, &pB[j*sdb], &beta, 0, &pC[j*ps+i*sdc]-bir*ps, sdc, 0, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, 4);
+		return;
 		kernel_dsyrk_nt_l_4x4_gen_lib4(k, &alpha, pA2, &pB[(j+4)*sdb], &beta, 0, &pC[j*ps+i*sdc]+(ps-bir)*ps, sdc, 0, &pD[j*ps+i*sdd]+(ps-bir)*ps, sdd, ps-bir, m-i, 0, 4);
 		}
 	if(m>i)

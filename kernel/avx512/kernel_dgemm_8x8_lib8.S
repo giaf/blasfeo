@@ -2269,6 +2269,8 @@ NAME:
 	FUN_START(inner_store_l_8x8_gen_lib8)
 #endif
 
+	// XXX this kernel uses a more "natural" definition of gen for lower triangular matrices, and not compatible with the one implemented in lib4 routines
+
 	// compute mask for rows
 	vcvtsi2sd	%r13d, %xmm25, %xmm25
 	vcvtsi2sd	%r14d, %xmm26, %xmm26
