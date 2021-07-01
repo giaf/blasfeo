@@ -633,6 +633,272 @@ NAME:
 
 
 
+//                                1         2            3          4        5          6
+// void kernel_dpacp_nn_8_vs_lib8(int kmax, int offsetA, double *A, int sda, double *C, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpacp_nn_8_vs_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // offA
+	movq	ARG3, %r12 // A
+	movq	ARG4, %r13 // sda
+	sall	$ 6, %r13d
+	movq	ARG5, %r14 // C
+	movq	ARG6, %r15 // m1
+
+
+	cmpl	$ 0, %r10d
+	jle		8f // return
+
+
+	// compute mask for rows
+	vcvtsi2sd	%r15d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+
+	vpmovq2m	%zmm25, %k1
+
+
+	cmpl	$ 0, %r11d
+	jg		0f
+
+	// offset==0
+
+	cmpl	$ 3, %r10d
+	jle		12f // clean-up loop
+
+	// main loop
+	.p2align 3
+11:
+	//
+	vmovupd		0(%r12), %zmm0
+	vmovupd		%zmm0, 0(%r14) {%k1}
+	//
+	vmovupd		64(%r12), %zmm0
+	vmovupd		%zmm0, 64(%r14) {%k1}
+	//
+	vmovupd		128(%r12), %zmm0
+	vmovupd		%zmm0, 128(%r14) {%k1}
+	//
+	vmovupd		192(%r12), %zmm0
+	vmovupd		%zmm0, 192(%r14) {%k1}
+
+	subl	$ 4, %r10d
+	addq	$ 256, %r12
+	addq	$ 256, %r14
+
+	cmpl	$ 3, %r10d
+	jg		11b
+
+
+	cmpl	$ 0, %r10d
+	jle		8f // return
+
+
+12: // clean-up loop
+	
+	vmovupd		0(%r12), %zmm0
+	vmovupd		%zmm0, 0(%r14) {%k1}
+
+	subl	$ 1, %r10d
+	addq	$ 64, %r12
+	addq	$ 64, %r14
+
+	cmpl	$ 0, %r10d
+	jg		12b
+
+	jmp		8f // return
+
+	// end of offset 0
+
+0:
+
+	cmpl	$ 3, %r11d
+	jg		14f
+
+	cmpl	$ 1, %r11d
+	jg		11f
+
+	jmp		0f
+
+11: // 2 3
+
+	cmpl	$ 2, %r11d
+	jg		2f
+
+	jmp		1f
+
+14: // 4 5 6 7
+
+	cmpl	$ 5, %r11d
+	jg		16f
+
+	cmpl	$ 4, %r11d
+	jg		4f
+
+	jmp		3f
+
+16: // 6 7
+
+	cmpl	$ 6, %r11d
+	jg		6f
+
+	jmp		5f
+
+0: 	// offset==1
+
+	movl	$ 0x7f, %eax
+	kmovd	%eax, %k2
+	movl	$ 0x80, %eax
+	kmovd	%eax, %k3
+
+	leaq	8(%r12), %rax
+
+	jmp		7f
+
+1:  // offset==2
+
+	movl	$ 0x3f, %eax
+	kmovd	%eax, %k2
+	movl	$ 0xc0, %eax
+	kmovd	%eax, %k3
+
+	leaq	16(%r12), %rax
+
+	jmp		7f
+
+2:  // offset==3
+
+	movl	$ 0x1f, %eax
+	kmovd	%eax, %k2
+	movl	$ 0xe0, %eax
+	kmovd	%eax, %k3
+
+	leaq	24(%r12), %rax
+
+	jmp		7f
+
+3:  // offset==4
+
+	movl	$ 0x0f, %eax
+	kmovd	%eax, %k2
+	movl	$ 0xf0, %eax
+	kmovd	%eax, %k3
+
+	leaq	32(%r12), %rax
+
+	jmp		7f
+
+4:  // offset==5
+
+	movl	$ 0x07, %eax
+	kmovd	%eax, %k2
+	movl	$ 0xf8, %eax
+	kmovd	%eax, %k3
+
+	leaq	40(%r12), %rax
+
+	jmp		7f
+
+5:  // offset==6
+
+	movl	$ 0x03, %eax
+	kmovd	%eax, %k2
+	movl	$ 0xfc, %eax
+	kmovd	%eax, %k3
+
+	leaq	48(%r12), %rax
+
+	jmp		7f
+
+6:  // offset==7
+
+	movl	$ 0x01, %eax
+	kmovd	%eax, %k2
+	movl	$ 0xfe, %eax
+	kmovd	%eax, %k3
+
+	leaq	56(%r12), %rax
+
+//	jmp		7f
+
+7:
+
+	// offset==x
+
+	cmpl	$ 3, %r10d
+	jle		12f // clean-up loop
+
+	// main loop
+	.p2align 3
+11:
+	//
+	vmovupd		0(%rax), %zmm0 {%k2}
+	vmovupd		0-64(%rax, %r13), %zmm0 {%k3}
+	vmovupd		%zmm0, 0(%r14) {%k1}
+	//
+	vmovupd		64(%rax), %zmm0 {%k2}
+	vmovupd		64-64(%rax, %r13), %zmm0 {%k3}
+	vmovupd		%zmm0, 64(%r14) {%k1}
+	//
+	vmovupd		128(%rax), %zmm0 {%k2}
+	vmovupd		128-64(%rax, %r13), %zmm0 {%k3}
+	vmovupd		%zmm0, 128(%r14) {%k1}
+	//
+	vmovupd		192(%rax), %zmm0 {%k2}
+	vmovupd		192-64(%rax, %r13), %zmm0 {%k3}
+	vmovupd		%zmm0, 192(%r14) {%k1}
+
+	subl	$ 4, %r10d
+	addq	$ 256, %rax
+	addq	$ 256, %r14
+
+	cmpl	$ 3, %r10d
+	jg		11b
+
+
+	cmpl	$ 0, %r10d
+	jle		8f // return
+
+
+12: // clean-up loop
+	
+	vmovupd		0(%rax), %zmm0 {%k2}
+	vmovupd		0-64(%rax, %r13), %zmm0 {%k3}
+	vmovupd		%zmm0, 0(%r14) {%k1}
+
+	subl	$ 1, %r10d
+	addq	$ 64, %rax
+	addq	$ 64, %r14
+
+	cmpl	$ 0, %r10d
+	jg		12b
+
+//	jmp		8f
+
+	// end of offset x
+
+8:
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpacp_nn_8_vs_lib8)
+
+
+
+
+
 //                             1         2            3          4        5
 // void kernel_dpacp_tn_8_lib8(int kmax, int offsetA, double *A, int sda, double *C)
 
@@ -677,16 +943,20 @@ NAME:
 
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-//	.align 32
-//.LC00:
+	.align 64
+.LC00:
 #elif defined(OS_MAC)
-//	.align 5
-//LC00:
+	.align 6
+LC00:
 #endif
-//	.double 0.5
-//	.double 1.5
-//	.double 2.5
-//	.double 3.5
+	.double 0.5
+	.double 1.5
+	.double 2.5
+	.double 3.5
+	.double 4.5
+	.double 5.5
+	.double 6.5
+	.double 7.5
 
 
 #if defined(OS_LINUX)
