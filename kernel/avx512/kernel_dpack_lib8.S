@@ -835,6 +835,10 @@ NAME:
 
 	// offset==x
 
+	// not necessary but it may avoid some load
+	kandd	%k1, %k2, %k2
+	kandd	%k1, %k3, %k3
+
 	cmpl	$ 3, %r10d
 	jle		12f // clean-up loop
 
