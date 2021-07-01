@@ -1522,12 +1522,243 @@ end:
 
 void blasfeo_hp_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
+	if(m<=0 | n<=0)
+		return;
+
+	if(ai!=0 | bi!=0)
+		{
 #if defined(BLASFEO_REF_API)
-	blasfeo_ref_dsyrk_ln_mn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+		blasfeo_ref_dsyrk_ln_mn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+		return;
 #else
-	printf("\nblasfeo_dsyrk_ln_mn: feature not implemented yet\n");
-	exit(1);
+		printf("\nblasfeo_dsyrk_ln_mn: feature not implemented yet: ai=%d, bi=%d\n", ai, bi);
+		exit(1);
 #endif
+		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 8;
+
+	int i, j;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *pA = sA->pA + aj*ps;
+	double *pB = sB->pA + bj*ps;
+	double *pC = sC->pA + cj*ps + (ci-(ci&(ps-1)))*sdc;
+	double *pD = sD->pA + dj*ps + (di-(di&(ps-1)))*sdd;
+
+	// TODO ai and bi
+	int offsetC;
+	int offsetD;
+	offsetC = ci&(ps-1);
+	offsetD = di&(ps-1);
+
+
+
+	// algorithm scheme
+	if(offsetC==0 & offsetD==0)
+		{
+		goto loop_000;
+		}
+	else
+		{
+		goto loop_0CD;
+		}
+	// should never get here
+	goto end;
+
+
+
+	// main loop aligned
+loop_000:
+	i = 0;
+#if 0
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<i & j<n-3; j+=4)
+			{
+			kernel_dgemm_nt_8x4_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
+			}
+		if(j<n)
+			{
+			if(j<i) // dgemm
+				{
+				kernel_dgemm_nt_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+				}
+			else // dsyrk
+				{
+				if(j<n-7)
+					{
+					kernel_dsyrk_nt_l_8x4_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
+					kernel_dsyrk_nt_l_4x4_lib4(k, &alpha, &pA[(i+4)*sda], &pB[(j+4)*sdb], &beta, &pC[(j+4)*ps+(i+4)*sdc], &pD[(j+4)*ps+(i+4)*sdd]);
+					}
+				else
+					{
+					kernel_dsyrk_nt_l_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+					if(j<n-4)
+						{
+						kernel_dsyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[(i+4)*sda], &pB[(j+4)*sdb], &beta, &pC[(j+4)*ps+(i+4)*sdc], &pD[(j+4)*ps+(i+4)*sdd], m-i-4, n-j-4);
+						}
+					}
+				}
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else
+			{
+			goto left_8;
+			}
+		}
+#else
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<i & j<n-7; j+=8)
+			{
+			kernel_dgemm_nt_8x8_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd]);
+			}
+		if(j<n)
+			{
+			if(j<i) // dgemm
+				{
+				kernel_dgemm_nt_8x8_vs_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+				}
+			else // dsyrk
+				{
+				if(j<n-7)
+					{
+					kernel_dsyrk_nt_l_8x8_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd]);
+					}
+				else
+					{
+					kernel_dsyrk_nt_l_8x8_vs_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+					}
+				}
+			}
+		}
+	if(m>i)
+		{
+		goto left_8;
+		}
+#endif
+	// common return if i==m
+	goto end;
+
+
+
+	// main loop C, D not aligned
+loop_0CD:
+	i = 0;
+#if 0
+	for(; i<m-4; i+=8)
+		{
+		j = 0;
+		for(; j<i & j<n; j+=4)
+			{
+			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			}
+		if(j<n)
+			{
+			kernel_dsyrk_nt_l_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			if(j<n-4)
+				{
+				kernel_dsyrk_nt_l_4x4_gen_lib4(k, &alpha, &pA[(i+4)*sda], &pB[(j+4)*sdb], &beta, offsetC, &pC[(j+4)*ps+(i+4)*sdc], sdc, offsetD, &pD[(j+4)*ps+(i+4)*sdd], sdd, 0, m-i-4, 0, n-j-4);
+				}
+			}
+		}
+	if(m>i)
+		{
+		goto left_4_gen;
+		}
+#else
+	for(; i<m; i+=8)
+		{
+		j = 0;
+		for(; j<i & j<n; j+=8)
+			{
+			kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			}
+		if(j<n)
+			{
+			kernel_dsyrk_nt_l_8x8_gen_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			}
+		}
+#endif
+	// common return if i==m
+	goto end;
+
+
+
+	// clean up loops definitions
+
+#if 0
+	left_8:
+	j = 0;
+	for(; j<i & j<n; j+=4)
+		{
+		kernel_dgemm_nt_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+		}
+	if(j<n)
+		{
+		kernel_dsyrk_nt_l_8x4_vs_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+		if(j<n-4)
+			{
+			kernel_dsyrk_nt_l_4x4_vs_lib4(k, &alpha, &pA[(i+4)*sda], &pB[(j+4)*sdb], &beta, &pC[(j+4)*ps+(i+4)*sdc], &pD[(j+4)*ps+(i+4)*sdd], m-i-4, n-j-4);
+			}
+		}
+	goto end;
+#endif
+
+	left_8:
+	j = 0;
+#if 0
+	for(; j<i-8 & j<n-8; j+=16)
+		{
+		kernel_dgemm_nt_8x16_vs_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], sdb, &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	if(j<i & j<n)
+		{
+		kernel_dgemm_nt_8x8_vs_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		j += 4;
+		}
+#else
+	for(; j<i & j<n; j+=8)
+		{
+		kernel_dgemm_nt_8x8_vs_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+#endif
+	if(j<n)
+		{
+		kernel_dsyrk_nt_l_8x8_vs_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	goto end;
+
+	left_8_gen:
+	j = 0;
+	for(; j<i & j<n; j+=8)
+		{
+		kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+		}
+	if(j<n)
+		{
+		kernel_dsyrk_nt_l_8x8_gen_lib8(k, &alpha, &pA[i*sda], &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+		}
+	goto end;
+
+end:
+	return;
+
 	}
 
 
