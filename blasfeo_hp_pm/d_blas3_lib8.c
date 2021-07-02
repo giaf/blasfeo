@@ -1356,7 +1356,7 @@ loop_0CD:
 			}
 		else
 			{
-			kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu);
+			kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu); // vs ???
 			pA2 = pU;
 			sda2 = sdu;
 			}
@@ -1412,7 +1412,7 @@ loop_0CD:
 		}
 	else
 		{
-		kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu);
+		kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu); // vs ???
 		pA2 = pU;
 		sda2 = sdu;
 		}
