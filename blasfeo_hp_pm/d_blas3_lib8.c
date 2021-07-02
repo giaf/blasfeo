@@ -1114,28 +1114,28 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 		}
 
 	i = 0;
-#if 0
-	for(; i<m-7; i+=8)
+#if 1
+	for(; i<m-15; i+=16)
 		{
 		j = 0;
-		for(; j<n-3; j+=4)
+		for(; j<n-7; j+=8)
 			{
-			kernel_dtrsm_nt_rl_inv_8x4_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j]);
+			kernel_dtrsm_nt_rl_inv_16x8_lib8(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j]);
 			}
 		if(j<n)
 			{
-			kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+			kernel_dtrsm_nt_rl_inv_16x8_vs_lib8(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
 			}
 		}
 	if(m>i)
 		{
-		if(m-i<=4)
+		if(m-i<=8)
 			{
-			goto left_4;
+			goto left_8;
 			}
 		else
 			{
-			goto left_8;
+			goto left_16;
 			}
 		}
 #else
@@ -1160,12 +1160,12 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	// common return if i==m
 	return;
 
-#if 0
-	left_8:
+#if 1
+	left_16:
 	j = 0;
-	for(; j<n; j+=4)
+	for(; j<n; j+=8)
 		{
-		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		kernel_dtrsm_nt_rl_inv_16x8_vs_lib8(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
 		}
 	return;
 #endif
