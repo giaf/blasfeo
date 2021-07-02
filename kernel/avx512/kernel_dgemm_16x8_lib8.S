@@ -2039,6 +2039,183 @@ NAME:
 
 // common inner routine with file scope
 //
+// store n
+//
+// input arguments:
+// r10  <- D
+// r11  <- 8*sdd*sizeof(double)
+// zmm0 <- []
+// ...
+// zmm15 <- []
+//
+// output arguments:
+// r10  <- D
+// r11  <- 8*sdd*sizeof(double)
+// zmm0 <- []
+// ...
+// zmm15 <- []
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_16X8_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_store_l_16x8_lib8)
+#endif
+	
+	//
+	vmovapd %zmm0,   0(%r10)
+	//
+	movl	$ 0xfe, %r12d
+	kmovd	%r12d, %k1
+	vmovapd %zmm1,  64(%r10) {%k1}
+	//
+	movl	$ 0xfc, %r12d
+	kmovd	%r12d, %k1
+	vmovapd %zmm2, 128(%r10) {%k1}
+	//
+	movl	$ 0xf8, %r12d
+	kmovd	%r12d, %k1
+	vmovapd %zmm3, 192(%r10) {%k1}
+	//
+	movl	$ 0xf0, %r12d
+	kmovd	%r12d, %k1
+	vmovapd %zmm4,   0+256(%r10) {%k1}
+	//
+	movl	$ 0xe0, %r12d
+	kmovd	%r12d, %k1
+	vmovapd %zmm5,  64+256(%r10) {%k1}
+	//
+	movl	$ 0xc0, %r12d
+	kmovd	%r12d, %k1
+	vmovapd %zmm6, 128+256(%r10) {%k1}
+	//
+	movl	$ 0x80, %r12d
+	kmovd	%r12d, %k1
+	vmovapd %zmm7, 192+256(%r10) {%k1}
+
+	vmovapd %zmm8,   0(%r10, %r11)
+	vmovapd %zmm9,  64(%r10, %r11)
+	vmovapd %zmm10, 128(%r10, %r11)
+	vmovapd %zmm11, 192(%r10, %r11)
+	vmovapd %zmm12,   0+256(%r10, %r11)
+	vmovapd %zmm13,  64+256(%r10, %r11)
+	vmovapd %zmm14, 128+256(%r10, %r11)
+	vmovapd %zmm15, 192+256(%r10, %r11)
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_l_16x8_lib8)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n
+//
+// input arguments:
+// r10  <- D
+// r11  <- 8*sdd*sizeof(double)
+// r12  <- m1
+// r13  <- n1
+// zmm0 <- []
+// ...
+// zmm15 <- []
+//
+// output arguments:
+// r10  <- D
+// r11  <- 8*sdd*sizeof(double)
+// r12  <- m1
+// r13  <- n1
+// zmm0 <- []
+// ...
+// zmm15 <- []
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_L_16X8_VS_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_store_l_16x8_vs_lib8)
+#endif
+	
+	// compute mask for rows
+	vcvtsi2sd	%r12d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+
+	vpmovq2m	%zmm25, %k1
+
+	vmovapd %zmm0,   0(%r10)
+	vmovapd %zmm8,   0(%r10, %r11) {%k1}
+	cmpl	$ 2, %r13d
+	jl		0f // end
+	movl	$ 0xfe, %r14d
+	kmovd	%r14d, %k2
+	vmovapd %zmm1,  64(%r10) {%k2}
+	vmovapd %zmm9,  64(%r10, %r11) {%k1}
+	cmpl	$ 3, %r13d
+	jl		0f // end
+	movl	$ 0xfc, %r14d
+	kmovd	%r14d, %k2
+	vmovapd %zmm2, 128(%r10) {%k2}
+	vmovapd %zmm10, 128(%r10, %r11) {%k1}
+	cmpl	$ 4, %r13d
+	jl		0f // end
+	movl	$ 0xf8, %r14d
+	kmovd	%r14d, %k2
+	vmovapd %zmm3, 192(%r10) {%k2}
+	vmovapd %zmm11, 192(%r10, %r11) {%k1}
+	cmpl	$ 5, %r13d
+	jl		0f // end
+	movl	$ 0xf0, %r14d
+	kmovd	%r14d, %k2
+	vmovapd %zmm4,   0+256(%r10) {%k2}
+	vmovapd %zmm12,   0+256(%r10, %r11) {%k1}
+	cmpl	$ 6, %r13d
+	jl		0f // end
+	movl	$ 0xe0, %r14d
+	kmovd	%r14d, %k2
+	vmovapd %zmm5,  64+256(%r10) {%k2}
+	vmovapd %zmm13,  64+256(%r10, %r11) {%k1}
+	cmpl	$ 7, %r13d
+	jl		0f // end
+	movl	$ 0xc0, %r14d
+	kmovd	%r14d, %k2
+	vmovapd %zmm6, 128+256(%r10) {%k2}
+	vmovapd %zmm14, 128+256(%r10, %r11) {%k1}
+	cmpl	$ 7, %r13d
+	je		0f // end
+	movl	$ 0x80, %r14d
+	kmovd	%r14d, %k2
+	vmovapd %zmm7, 192+256(%r10) {%k2}
+	vmovapd %zmm15, 192+256(%r10, %r11) {%k1}
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_l_16x8_vs_lib8)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // transpose
 //
 // input arguments:
@@ -2717,6 +2894,143 @@ NAME:
 	ret
 
 	FUN_END(kernel_dgemm_tt_8x16_vs_lib8)
+
+
+
+
+
+//                                  1      2              3          4        5          6             7          8        9          10
+// void kernel_dsyrk_nt_l_16x8_lib8(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsyrk_nt_l_16x8_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$ 6, %r12d // 8*sda*sizeof(double)
+	movq	ARG5, %r13 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_16X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_16x8_lib8)
+#endif
+
+
+	// call inner blend scale
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12 // C
+	movq	ARG8, %r13 // sdc
+	sall	$ 6, %r13d // 8*sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_16X8_LIB8
+#else
+	CALL(inner_scale_ab_16x8_lib8)
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // sdd
+	sall	$ 6, %r11d // 8*sdd*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_16X8_LIB8
+#else
+	CALL(inner_store_l_16x8_lib8)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dsyrk_nt_l_16x8_lib8)
+
+
+
+
+
+
+//                                     1      2              3          4        5          6             7          8        9          10       11      12
+// void kernel_dsyrk_nt_l_16x8_vs_lib8(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsyrk_nt_l_16x8_vs_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$ 6, %r12d // 8*sda*sizeof(double)
+	movq	ARG5, %r13 // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_16X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_16x8_lib8)
+#endif
+
+
+	// call inner blend scale
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12 // C
+	movq	ARG8, %r13 // sdc
+	sall	$ 6, %r13d // 8*sdc*sizeof(double)
+	movq	ARG12, %r14 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_16X8_VS_LIB8
+#else
+	CALL(inner_scale_ab_16x8_vs_lib8)
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // sdd
+	sall	$ 6, %r11d // 8*sdd*sizeof(double)
+	movq	ARG11, %r12 // m1
+	movq	ARG12, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_16X8_VS_LIB8
+#else
+	CALL(inner_store_l_16x8_vs_lib8)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dsyrk_nt_l_16x8_vs_lib8)
+
 
 
 
