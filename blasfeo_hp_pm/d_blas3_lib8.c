@@ -1056,11 +1056,146 @@ void blasfeo_hp_dtrsm_rlnu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 // dtrsm_right_lower_transposed_notunit
 void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
+
+	if(m<=0 || n<=0)
+		return;
+
+	const int ps = 8;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	// TODO alpha !!!!!
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdd = sD->cn;
+	int bir = bi & (ps-1);
+	int dir = di & (ps-1);
+	double *pA = sA->pA + aj*ps;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+	double *pD = sD->pA + dj*ps + (di-dir)*sdd;
+	double *dA = sA->dA;
+
+	if(ai!=0 | bir!=0 | dir!=0 | alpha!=1.0)
+		{
 #if defined(BLASFEO_REF_API)
-	blasfeo_ref_dtrsm_rltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+		blasfeo_ref_dtrsm_rltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+		return;
 #else
-	printf("\nblasfeo_dtrsm_rltn: feature not implemented yet\n");
-	exit(1);
+		printf("\nblasfeo_dtrsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		exit(1);
+#endif
+		}
+
+	int i, j;
+
+	// TODO to avoid touching A, better temporarely use sD.dA ?????
+	struct blasfeo_dvec td;
+	td.pa = dA;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA<n)
+			{
+//			ddiaex_lib(n, 1.0, ai, pA, sda, dA);
+			blasfeo_ddiaex(n, 1.0, sA, ai, aj, &td, 0);
+			for(i=0; i<n; i++)
+				dA[i] = 1.0 / dA[i];
+			sA->use_dA = n;
+			}
+		}
+	else
+		{
+//		ddiaex_lib(n, 1.0, ai, pA, sda, dA);
+		blasfeo_ddiaex(n, 1.0, sA, ai, aj, &td, 0);
+		for(i=0; i<n; i++)
+			dA[i] = 1.0 / dA[i];
+		sA->use_dA = 0;
+		}
+
+	i = 0;
+#if 0
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<n-3; j+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_8x4_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j]);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=4)
+			{
+			goto left_4;
+			}
+		else
+			{
+			goto left_8;
+			}
+		}
+#else
+	for(; i<m-7; i+=8)
+		{
+		j = 0;
+		for(; j<n-7; j+=8)
+			{
+			kernel_dtrsm_nt_rl_inv_8x8_lib8(j, &pD[i*sdd], &pA[j*sda], &alpha, &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j]);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nt_rl_inv_8x8_vs_lib8(j, &pD[i*sdd], &pA[j*sda], &alpha, &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		goto left_8;
+		}
+#endif
+
+	// common return if i==m
+	return;
+
+#if 0
+	left_8:
+	j = 0;
+	for(; j<n; j+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		}
+	return;
+#endif
+
+#if 0
+	left_4:
+	j = 0;
+	for(; j<n-8; j+=12)
+		{
+		kernel_dtrsm_nt_rl_inv_4x12_vs_lib4(j, &pD[i*sdd], &pA[j*sda], sda, &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], sda, &dA[j], m-i, n-j);
+		}
+	if(j<n-4)
+		{
+		kernel_dtrsm_nt_rl_inv_4x8_vs_lib4(j, &pD[i*sdd], &pA[j*sda], sda, &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], sda, &dA[j], m-i, n-j);
+		j += 8;
+		}
+	else if(j<n)
+		{
+		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(j, &pD[i*sdd], &pA[j*sda], &alpha, &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		j += 4;
+		}
+	return;
+#else
+	left_8:
+	j = 0;
+	for(; j<n; j+=8)
+		{
+		kernel_dtrsm_nt_rl_inv_8x8_vs_lib8(j, &pD[i*sdd], &pA[j*sda], &alpha, &pB[j*ps+i*sdb], &pD[j*ps+i*sdd], &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		}
+	return;
 #endif
 	}
 
