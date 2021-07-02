@@ -87,9 +87,10 @@ void kernel_dsyrk_nt_l_8x8_gen_lib8(int k, double *alpha, double *A, double *B, 
 // panel copy
 // 16
 void kernel_dpacp_nn_16_lib8(int kmax, int offsetA, double *A, int sda, double *B, int sdb);
+void kernel_dpacp_nn_16_vs_lib8(int kmax, int offsetA, double *A, int sda, double *B, int sdb, int m1);
 // 8
 void kernel_dpacp_nn_8_lib8(int kmax, int offsetA, double *A, int sda, double *B);
-void kernel_dpacp_nn_8_vs_lib8(int kmax, int offsetA, double *A, int sda, double *B, int n1);
+void kernel_dpacp_nn_8_vs_lib8(int kmax, int offsetA, double *A, int sda, double *B, int m1);
 void kernel_dpacp_tn_8_lib8(int kmax, int offsetA, double *A, int sda, double *B);
 
 

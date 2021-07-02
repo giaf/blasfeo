@@ -278,7 +278,8 @@ int main()
 //	kernel_dsyrk_nt_l_16x8_lib8(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
 //	kernel_dsyrk_nt_l_16x8_vs_lib8(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 16, 8);
 
-	kernel_dpacp_nn_16_lib8(n, 1, sA.pA, sA.cn, sD.pA, sD.cn);
+//	kernel_dpacp_nn_16_lib8(n, 0, sA.pA, sA.cn, sD.pA, sD.cn);
+	kernel_dpacp_nn_16_vs_lib8(n, 0, sA.pA, sA.cn, sD.pA, sD.cn, 16);
 //	kernel_dpacp_nn_8_lib8(n, 0, sA.pA, sA.cn, sD.pA);
 //	kernel_dpacp_nn_8_vs_lib8(n, 0, sA.pA, sA.cn, sD.pA, 8);
 //	kernel_dpacp_tn_8_lib8(n, 0, sA.pA, sA.cn, sD.pA);
