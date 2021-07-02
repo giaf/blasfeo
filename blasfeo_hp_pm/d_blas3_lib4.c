@@ -5382,7 +5382,7 @@ loop_0CD:
 			}
 		else
 			{
-			kernel_dpacp_nn_12_lib4(k, air, pA+i*sda, sda, pU, sdu);
+			kernel_dpacp_nn_12_lib4(k, air, pA+i*sda, sda, pU, sdu); // vs ???
 			pA2 = pU;
 			sda2 = sdu;
 			}
@@ -5416,7 +5416,7 @@ loop_0CD:
 			}
 		else
 			{
-			kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu);
+			kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu); // vs ???
 			pA2 = pU;
 			sda2 = sdu;
 			}
@@ -5587,7 +5587,7 @@ loop_BCD:
 		}
 	else
 		{
-		kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu);
+		kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu); // vs ???
 		pA2 = pU;
 		sda2 = sdu;
 		}
@@ -5620,7 +5620,7 @@ loop_BCD:
 		}
 	else
 		{
-		kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu);
+		kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu); // vs ???
 		pA2 = pU;
 		sda2 = sdu;
 		}
@@ -5642,8 +5642,8 @@ loop_BCD:
 		}
 	else
 		{
-		kernel_dpacp_nn_4_lib4(k, air, pA+(i+0)*sda, sda, pU+0*sdu);
-		kernel_dpacp_nn_4_lib4(k, air, pA+(i+4)*sda, sda, pU+4*sdu);
+		kernel_dpacp_nn_4_lib4(k, air, pA+(i+0)*sda, sda, pU+0*sdu); // vs ???
+		kernel_dpacp_nn_4_lib4(k, air, pA+(i+4)*sda, sda, pU+4*sdu); // vs ???
 		pA2 = pU;
 		sda2 = sdu;
 		}
