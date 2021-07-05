@@ -682,6 +682,7 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	else
 		{
 		goto loop_CD_m0;
+		// TODO loop_CD_n0
 		}
 	// should never get here
 	return;
