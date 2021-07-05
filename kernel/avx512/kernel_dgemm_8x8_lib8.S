@@ -1492,7 +1492,7 @@ NAME:
 // rax   <- n1
 // zmm0 <- []
 // ...
-// ymm7 <- []
+// zmm7 <- []
 //
 // output arguments:
 // r10   <- alpha
@@ -1502,9 +1502,9 @@ NAME:
 // r14  <- 8*sdc*sizeof(double)
 // r15   <- n0
 // rax   <- n1
-// zmm0 <- [d00 d11 d22 d33]
+// zmm0 <- []
 // ...
-// ymm7 <- [d02 d13 d20 d31]
+// zmm7 <- []
 
 #if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_8X8_GEN_LIB8

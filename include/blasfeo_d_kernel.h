@@ -72,6 +72,7 @@ void kernel_dtrsm_nt_rl_inv_16x8_vs_lib8(int k, double *A, int sda, double *B, d
 // 8x16
 void kernel_dgemm_tt_8x16_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_tt_8x16_vs_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
+void kernel_dgemm_tt_8x16_gen_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, int sdb, double *beta, int offC, double *C, int sdc, int offD, double *D, int sdd, int m0, int m1, int n0, int n1); //
 void kernel_dgemm_nt_8x16_lib8(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_nt_8x16_vs_lib8(int k, double *alpha, double *A, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
 // 8x8
