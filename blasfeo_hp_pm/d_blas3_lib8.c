@@ -1665,8 +1665,8 @@ loop_000:
 	// main loop C, D not aligned
 loop_0CD:
 	i = 0;
-#if 0
-	for(; i<m-4; i+=8)
+#if 1
+	for(; i<m-8; i+=16)
 		{
 		if(air==0)
 			{
@@ -1675,22 +1675,22 @@ loop_0CD:
 			}
 		else
 			{
-			kernel_dpacp_nn_8_lib4(k, air, pA+i*sda, sda, pU, sdu); // vs ???
+			kernel_dpacp_nn_16_vs_lib8(k, air, pA+i*sda, sda, pU, sdu, m-i);
 			pA2 = pU;
 			sda2 = sdu;
 			}
 		j = 0;
 		// main loop
-		for(; j<i; j+=4)
+		for(; j<i; j+=8)
 			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, pA2, sda2, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, m-j);
+			kernel_dgemm_nt_16x8_gen_lib8(k, &alpha, pA2, sda2, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, m-j);
 			}
-		kernel_dsyrk_nt_l_8x4_gen_lib4(k, &alpha, pA2, sda2, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, m-j);
-		kernel_dsyrk_nt_l_4x4_gen_lib4(k, &alpha, pA2+4*sda2, &pB[(j+4)*sdb], &beta, offsetC, &pC[(j+4)*ps+(i+4)*sdc], sdc, offsetD, &pD[(j+4)*ps+(i+4)*sdd], sdd, 0, m-i-4, 0, m-j-4);
+		kernel_dsyrk_nt_l_16x8_gen_lib8(k, &alpha, pA2, sda2, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, m-j);
+		kernel_dsyrk_nt_l_8x8_gen_lib8(k, &alpha, pA2+8*sda2, &pB[(j+8)*sdb], &beta, offsetC, &pC[(j+8)*ps+(i+8)*sdc], sdc, offsetD, &pD[(j+8)*ps+(i+8)*sdd], sdd, 0, m-i-8, 0, m-j-8);
 		}
 	if(m>i)
 		{
-		goto left_4_g;
+		goto left_8_g;
 		}
 #else
 	for(; i<m; i+=8)
@@ -1730,7 +1730,7 @@ loop_0CD:
 		}
 	else
 		{
-		kernel_dpacp_nn_16_vs_lib8(k, air, pA+i*sda, sda, pU, sdu, m-i); // vs ???
+		kernel_dpacp_nn_16_vs_lib8(k, air, pA+i*sda, sda, pU, sdu, m-i);
 		pA2 = pU;
 		sda2 = sdu;
 		}
@@ -1977,26 +1977,26 @@ loop_000:
 	// main loop C, D not aligned
 loop_0CD:
 	i = 0;
-#if 0
-	for(; i<m-4; i+=8)
+#if 1
+	for(; i<m-8; i+=16)
 		{
 		j = 0;
-		for(; j<i & j<n; j+=4)
+		for(; j<i & j<n; j+=8)
 			{
-			kernel_dgemm_nt_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			kernel_dgemm_nt_16x8_gen_lib8(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 			}
 		if(j<n)
 			{
-			kernel_dsyrk_nt_l_8x4_gen_lib4(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
-			if(j<n-4)
+			kernel_dsyrk_nt_l_16x8_gen_lib8(k, &alpha, &pA[i*sda], sda, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			if(j<n-8)
 				{
-				kernel_dsyrk_nt_l_4x4_gen_lib4(k, &alpha, &pA[(i+4)*sda], &pB[(j+4)*sdb], &beta, offsetC, &pC[(j+4)*ps+(i+4)*sdc], sdc, offsetD, &pD[(j+4)*ps+(i+4)*sdd], sdd, 0, m-i-4, 0, n-j-4);
+				kernel_dsyrk_nt_l_8x8_gen_lib8(k, &alpha, &pA[(i+8)*sda], &pB[(j+8)*sdb], &beta, offsetC, &pC[(j+8)*ps+(i+8)*sdc], sdc, offsetD, &pD[(j+8)*ps+(i+8)*sdd], sdd, 0, m-i-8, 0, n-j-8);
 				}
 			}
 		}
 	if(m>i)
 		{
-		goto left_4_gen;
+		goto left_8_gen;
 		}
 #else
 	for(; i<m; i+=8)
