@@ -1490,9 +1490,9 @@ NAME:
 // r14  <- 8*sdc*sizeof(double)
 // r15   <- n0
 // rax   <- n1
-// zmm0 <- [d00 d11 d22 d33]
+// zmm0 <- []
 // ...
-// ymm7 <- [d02 d13 d20 d31]
+// ymm7 <- []
 //
 // output arguments:
 // r10   <- alpha
