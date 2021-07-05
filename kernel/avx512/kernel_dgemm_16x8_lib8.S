@@ -4111,6 +4111,87 @@ NAME:
 
 
 
+//                                    1      2              3          4        5         6          7        8             9         10         11       12        13         14       15      16      17      18
+// void kernel_dgemm_nn_16x8_gen_lib8(int k, double *alpha, double *A, int sda, int offB, double *B, int sdb, double *beta, int offC, double *C, int sdc, int offD, double *D, int sdd, int m0, int m1, int n0, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_nn_16x8_gen_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$ 6, %r12d // 4*sda*sizeof(double)
+	movq	ARG6, %r13  // B
+	movq	ARG7, %r14 // sdb
+	sall	$ 6, %r14d // 4*sdb*sizeof(double)
+	movq	ARG5, %r15 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_16X8_LIB8
+#else
+	CALL(inner_edge_dgemm_nn_16x8_lib8)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_16X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nn_16x8_lib8)
+#endif
+
+
+	// call inner blend scale
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG8, %r11 // beta
+	movq	ARG9, %r12 // offsetC
+	movq	ARG10, %r13 // C
+	movq	ARG11, %r14 // sdc
+	sall	$ 6, %r14d // 4*sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_16X8_GEN_LIB8
+#else
+	CALL(inner_scale_ab_16x8_gen_lib8)
+#endif
+
+
+	// store n gen
+
+	movq	ARG12, %r10 // offsetD
+	movq	ARG13, %r11 // D
+	movq	ARG14, %r12 // sdd
+	sall	$ 6, %r12d // 4*sdb*sizeof(double)
+	movq	ARG15, %r13 // m0
+	movq	ARG16, %r14 // m1
+	movq	ARG17, %r15 // n0
+	movq	ARG18, %rax // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_16X8_GEN_LIB8
+#else
+	CALL(inner_store_16x8_gen_lib8)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dgemm_nn_16x8_gen_lib8)
+
+
+
+
+
 //                               1      2              3          4        5            6          7        8             9          10
 // void kernel_dgemm_tt_8x16_lib8(int k, double *alpha, int offsetA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D);
 
