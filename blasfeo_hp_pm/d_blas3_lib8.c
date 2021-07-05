@@ -304,24 +304,53 @@ select_loop:
 
 	// clean up at the beginning
 clear_air:
-	j = 0;
-	idxB = 0;
-	// clean up at the beginning
-	if(bir!=0)
+#if 1
+	if(air+m>8) // (m>9)
 		{
-		kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
-		j += ps-bir;
-		idxB += 8;
+		j = 0;
+		idxB = 0;
+		// clean up at the beginning
+		if(bir!=0)
+			{
+			kernel_dgemm_nt_16x8_gen_lib8(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
+			j += ps-bir;
+			idxB += 8;
+			}
+		// main loop
+		for(; j<n; j+=8, idxB+=8)
+			{
+			kernel_dgemm_nt_16x8_gen_lib8(k, &alpha, &pA[0], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+			}
+		m -= 2*ps-air;
+		pA += 2*ps*sda;
+		pC += 2*ps*sdc;
+		pD += 2*ps*sdd;
 		}
-	// main loop
-	for(; j<n; j+=8, idxB+=8)
+	else // m<=4
 		{
-		kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+#endif
+		j = 0;
+		idxB = 0;
+		// clean up at the beginning
+		if(bir!=0)
+			{
+			kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps]-bir*ps, sdc, offsetD, &pD[j*ps]-bir*ps, sdd, air, air+m, bir, bir+n-j);
+			j += ps-bir;
+			idxB += 8;
+			}
+		// main loop
+		for(; j<n; j+=8, idxB+=8)
+			{
+			kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[0], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps], sdc, offsetD, &pD[j*ps], sdd, air, air+m, 0, n-j);
+			}
+		m -= ps-air;
+		pA += ps*sda;
+		pC += ps*sdc;
+		pD += ps*sdd;
+#if 1
+		// nothing more to do
 		}
-	m -= ps-air;
-	pA += ps*sda;
-	pC += ps*sdc;
-	pD += ps*sdd;
+#endif
 	goto select_loop;
 
 
@@ -337,7 +366,7 @@ loop_00:
 		// clean up at the beginning
 		if(bir!=0)
 			{
-#if 0
+#if 1
 			kernel_dgemm_nt_16x8_gen_lib8(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
 #else
 			kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[(i+0)*sda], &pB[idxB*sdb], &beta, 0, &pC[j*ps+(i+0)*sdc]-bir*ps, sdc, 0, &pD[j*ps+(i+0)*sdd]-bir*ps, sdd, 0, m-(i+0), bir, bir+n-j);
@@ -402,6 +431,29 @@ loop_00:
 	// main loop C, D not aligned
 loop_CD:
 	i = 0;
+#if 1
+	for(; i<m-8; i+=16)
+		{
+		j = 0;
+		idxB = 0;
+		// clean up at the beginning
+		if(bir!=0)
+			{
+			kernel_dgemm_nt_16x8_gen_lib8(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
+			j += ps-bir;
+			idxB += 8;
+			}
+		// main loop
+		for(; j<n; j+=8, idxB+=8)
+			{
+			kernel_dgemm_nt_16x8_gen_lib8(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			}
+		}
+	if(m>i)
+		{
+		goto left_8_g;
+		}
+#else
 	for(; i<m; i+=8)
 		{
 		j = 0;
@@ -419,6 +471,7 @@ loop_CD:
 			kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 			}
 		}
+#endif
 	// common return if i==m
 	return;
 
@@ -432,7 +485,7 @@ loop_CD:
 	// clean up at the beginning
 	if(bir!=0)
 		{
-#if 0
+#if 1
 		kernel_dgemm_nt_16x8_gen_lib8(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
 #else
 		kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[(i+0)*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+(i+0)*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+(i+0)*sdd]-bir*ps, sdd, 0, m-(i+0), bir, bir+n-j);
@@ -476,6 +529,25 @@ loop_CD:
 		kernel_dgemm_nt_8x8_vs_lib8(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
 		}
 #endif
+	return;
+
+
+
+	left_8_g:
+	j = 0;
+	idxB = 0;
+	// clean up at the beginning
+	if(bir!=0)
+		{
+		kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
+		j += ps-bir;
+		idxB += 8;
+		}
+	// main loop
+	for(; j<n; j+=8, idxB+=8)
+		{
+		kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[i*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+		}
 	return;
 
 	}
