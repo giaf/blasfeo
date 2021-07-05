@@ -961,6 +961,22 @@ select_loop:
 
 	// clean up at the beginning
 clear_bir:
+#if 1
+	if(bir+n>8) // (m>9)
+		{
+		i = 0;
+		for(; i<m; i+=8)
+			{
+			kernel_dgemm_tt_8x16_gen_lib8(k, &alpha, offsetA, &pA[i*ps], sda, &pB[0], sdb, &beta, offsetC, &pC[i*sdc], sdc, offsetD, &pD[i*sdd], sdd, 0, m-i, bir, bir+n);
+			}
+		n -= 2*ps-bir;
+		pB += 2*ps*sdb;
+		pC += 2*ps*ps;
+		pD += 2*ps*ps;
+		}
+	else // air+m<=8 // m-i<=8
+		{
+#endif
 	i = 0;
 	for(; i<m; i+=8)
 		{
@@ -968,8 +984,12 @@ clear_bir:
 		}
 	n -= 1*ps-bir;
 	pB += 1*ps*sdb;
-	pC += 1*8*ps;
-	pD += 1*8*ps;
+	pC += 1*ps*ps;
+	pD += 1*ps*ps;
+#if 1
+		// nothing more to do
+		}
+#endif
 	goto select_loop;
 
 
@@ -1027,6 +1047,20 @@ loop_00:
 	// main loop C, D not aligned
 loop_CD:
 	j = 0;
+#if 1
+	for(; j<n-8; j+=16)
+		{
+		i = 0;
+		for(; i<m; i+=8)
+			{
+			kernel_dgemm_tt_8x16_gen_lib8(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], sdb, &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
+			}
+		}
+	if(n>j)
+		{
+		goto left_8_g;
+		}
+#else
 	for(; j<n; j+=8)
 		{
 		i = 0;
@@ -1035,6 +1069,7 @@ loop_CD:
 			kernel_dgemm_tt_8x8_gen_lib8(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 			}
 		}
+#endif
 	// common return if i==m
 	return;
 
@@ -1057,6 +1092,16 @@ loop_CD:
 	for(; i<m; i+=8)
 		{
 		kernel_dgemm_tt_8x8_vs_lib8(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], &beta, &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], m-i, n-j);
+		}
+	return;
+
+
+
+	left_8_g:
+	i = 0;
+	for(; i<m; i+=8)
+		{
+		kernel_dgemm_tt_8x8_gen_lib8(k, &alpha, offsetA, &pA[i*ps], sda, &pB[j*sdb], &beta, offsetC, &pC[j*ps+i*sdc], sdc, offsetD, &pD[j*ps+i*sdd], sdd, 0, m-i, 0, n-j);
 		}
 	return;
 
