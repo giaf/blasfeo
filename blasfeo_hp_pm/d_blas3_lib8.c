@@ -741,6 +741,21 @@ loop_00_m0:
 loop_CD_m0:
 	ii = 0;
 	// clean up loops definitions
+#if 1
+	for(; ii<m-8; ii+=16)
+		{
+		kernel_dpacp_tn_8_lib8(k, offsetA, pA+(ii+0)*ps, sda, pU+0*sdu);
+		kernel_dpacp_tn_8_lib8(k, offsetA, pA+(ii+8)*ps, sda, pU+8*sdu);
+		for(jj=0; jj<n; jj+=8)
+			{
+			kernel_dgemm_nn_16x8_gen_lib8(k, &alpha, pU, sdu, offsetB, pB+jj*ps, sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, 0, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto left_8_m0_g;
+		}
+#else
 	for(; ii<m; ii+=8)
 		{
 		kernel_dpacp_tn_8_lib8(k, offsetA, pA+ii*ps, sda, pU);
@@ -749,6 +764,7 @@ loop_CD_m0:
 			kernel_dgemm_nn_8x8_gen_lib8(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, 0, n-jj);
 			}
 		}
+#endif
 	// common return if i==m
 	goto tn_return;
 
@@ -820,6 +836,16 @@ left_8_m0:
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nn_8x8_vs_lib8(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
+		}
+	goto tn_return;
+
+
+
+left_8_m0_g:
+	kernel_dpacp_tn_8_lib8(k, offsetA, pA+ii*ps, sda, pU);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dgemm_nn_8x8_gen_lib8(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, 0, n-jj);
 		}
 	goto tn_return;
 
