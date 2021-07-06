@@ -73,7 +73,9 @@ void kernel_dtrsm_nt_rl_inv_16x8_vs_lib8(int k, double *A, int sda, double *B, d
 void kernel_dpotrf_nt_l_16x8_lib8(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
 void kernel_dpotrf_nt_l_16x8_vs_lib8(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int m1, int n1);
 void kernel_dgemm_dtrsm_nt_rl_inv_16x8_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
+void kernel_dgemm_dtrsm_nt_rl_inv_16x8_vs_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int m1, int n1);
 void kernel_dsyrk_dpotrf_nt_l_16x8_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
+void kernel_dsyrk_dpotrf_nt_l_16x8_vs_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int m1, int n1);
 // 8x16
 void kernel_dgemm_tt_8x16_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_tt_8x16_vs_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
