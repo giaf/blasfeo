@@ -11596,7 +11596,7 @@ NAME:
 
 
 
-//                                  rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24
+//                                  1      2          3        4          5          6        7          8        9
 // void kernel_dpotrf_nt_l_8x4_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
 
 	.p2align 4,,15
@@ -11672,7 +11672,7 @@ NAME:
 
 
 
-//                                     rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24              rsp+32  rsp+40 
+//                                     1      2          3        4          5          6        7          8        9                   10      11
 // void kernel_dpotrf_nt_l_8x4_vs_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int km, int kn);
 
 	.p2align 4,,15

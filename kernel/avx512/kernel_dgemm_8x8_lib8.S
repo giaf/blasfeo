@@ -1672,48 +1672,39 @@ NAME:
 	vmovsd			%xmm26, 56(%r10)
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm7, %zmm26, %zmm7
-//	cmpl			$ 9, %r11d
-//	jl				0f // ret
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-//	vmovapd		.LC12(%rip), %zmm27
-#elif defined(OS_MAC)
-//	vmovapd		LC12(%rip), %zmm27
-#endif
-//	vpermpd			%zmm7, %zmm27, %zmm26
-//	vfnmadd231pd	%zmm7, %zmm26, %zmm7
 
 	jmp				0f
 
 1:
-	vxorpd			%zmm13, %zmm13, %zmm13
+	vxorpd			%zmm26, %zmm26, %zmm26
 	jmp				2b
 
 3:
-	vxorpd			%zmm13, %zmm13, %zmm13
+	vxorpd			%zmm26, %zmm26, %zmm26
 	jmp				4b
 
 5:
-	vxorpd			%zmm13, %zmm13, %zmm13
+	vxorpd			%zmm26, %zmm26, %zmm26
 	jmp				6b
 
 7:
-	vxorpd			%zmm13, %zmm13, %zmm13
+	vxorpd			%zmm26, %zmm26, %zmm26
 	jmp				8b
 
 9:
-	vxorpd			%zmm13, %zmm13, %zmm13
+	vxorpd			%zmm26, %zmm26, %zmm26
 	jmp				10b
 
 11:
-	vxorpd			%zmm13, %zmm13, %zmm13
+	vxorpd			%zmm26, %zmm26, %zmm26
 	jmp				12b
 
 13:
-	vxorpd			%zmm13, %zmm13, %zmm13
+	vxorpd			%zmm26, %zmm26, %zmm26
 	jmp				14b
 
 15:
-	vxorpd			%zmm13, %zmm13, %zmm13
+	vxorpd			%zmm26, %zmm26, %zmm26
 	jmp				16b
 
 0:
@@ -4799,6 +4790,7 @@ NAME:
 #elif defined(OS_WINDOWS)
 	.section .rdata,"dr"
 #endif
+
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 64
