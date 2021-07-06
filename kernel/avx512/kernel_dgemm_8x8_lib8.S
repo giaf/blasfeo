@@ -97,16 +97,16 @@ NAME:
 	vmovapd	%zmm0, %zmm5; \
 	vmovapd	%zmm0, %zmm6; \
 	vmovapd	%zmm0, %zmm7;
-//#define NEG_ACC \
-//	vmovapd		.LC11(%rip), %ymm15; \
-//	vxorpd		%ymm15, %ymm0, %ymm0; \
-//	vxorpd		%ymm15, %ymm1, %ymm1; \
-//	vxorpd		%ymm15, %ymm2, %ymm2; \
-//	vxorpd		%ymm15, %ymm3, %ymm3; \
-//	vxorpd		%ymm15, %ymm4, %ymm4; \
-//	vxorpd		%ymm15, %ymm5, %ymm5; \
-//	vxorpd		%ymm15, %ymm6, %ymm6; \
-//	vxorpd		%ymm15, %ymm7, %ymm7;
+#define NEG_ACC \
+	vmovapd		.LC03(%rip), %zmm24; \
+	vxorpd		%zmm24, %zmm0, %zmm0; \
+	vxorpd		%zmm24, %zmm1, %zmm1; \
+	vxorpd		%zmm24, %zmm2, %zmm2; \
+	vxorpd		%zmm24, %zmm3, %zmm3; \
+	vxorpd		%zmm24, %zmm4, %zmm4; \
+	vxorpd		%zmm24, %zmm5, %zmm5; \
+	vxorpd		%zmm24, %zmm6, %zmm6; \
+	vxorpd		%zmm24, %zmm7, %zmm7;
 
 #else // defined(OS_MAC)
 
@@ -127,16 +127,16 @@ _ ## NAME:
 	vmovapd	%zmm0, %zmm5; \
 	vmovapd	%zmm0, %zmm6; \
 	vmovapd	%zmm0, %zmm7;
-//#define NEG_ACC \
-//	vmovapd		LC11(%rip), %ymm15; \
-//	vxorpd		%ymm15, %ymm0, %ymm0; \
-//	vxorpd		%ymm15, %ymm1, %ymm1; \
-//	vxorpd		%ymm15, %ymm2, %ymm2; \
-//	vxorpd		%ymm15, %ymm3, %ymm3; \
-//	vxorpd		%ymm15, %ymm4, %ymm4; \
-//	vxorpd		%ymm15, %ymm5, %ymm5; \
-//	vxorpd		%ymm15, %ymm6, %ymm6; \
-//	vxorpd		%ymm15, %ymm7, %ymm7;
+#define NEG_ACC \
+	vmovapd		LC03(%rip), %zmm24; \
+	vxorpd		%zmm24, %zmm0, %zmm0; \
+	vxorpd		%zmm24, %zmm1, %zmm1; \
+	vxorpd		%zmm24, %zmm2, %zmm2; \
+	vxorpd		%zmm24, %zmm3, %zmm3; \
+	vxorpd		%zmm24, %zmm4, %zmm4; \
+	vxorpd		%zmm24, %zmm5, %zmm5; \
+	vxorpd		%zmm24, %zmm6, %zmm6; \
+	vxorpd		%zmm24, %zmm7, %zmm7;
 
 #endif
 
@@ -224,16 +224,16 @@ NAME:
 	vmovapd	%zmm0, %zmm5; \
 	vmovapd	%zmm0, %zmm6; \
 	vmovapd	%zmm0, %zmm7;
-//#define NEG_ACC \
-//	vmovapd		.LC11(%rip), %ymm15; \
-//	vxorpd		%ymm15, %ymm0, %ymm0; \
-//	vxorpd		%ymm15, %ymm1, %ymm1; \
-//	vxorpd		%ymm15, %ymm2, %ymm2; \
-//	vxorpd		%ymm15, %ymm3, %ymm3; \
-//	vxorpd		%ymm15, %ymm4, %ymm4; \
-//	vxorpd		%ymm15, %ymm5, %ymm5; \
-//	vxorpd		%ymm15, %ymm6, %ymm6; \
-//	vxorpd		%ymm15, %ymm7, %ymm7;
+#define NEG_ACC \
+	vmovapd		.LC03(%rip), %zmm24; \
+	vxorpd		%zmm24, %zmm0, %zmm0; \
+	vxorpd		%zmm24, %zmm1, %zmm1; \
+	vxorpd		%zmm24, %zmm2, %zmm2; \
+	vxorpd		%zmm24, %zmm3, %zmm3; \
+	vxorpd		%zmm24, %zmm4, %zmm4; \
+	vxorpd		%zmm24, %zmm5, %zmm5; \
+	vxorpd		%zmm24, %zmm6, %zmm6; \
+	vxorpd		%zmm24, %zmm7, %zmm7;
 
 #else
 
@@ -4751,8 +4751,8 @@ NAME:
 	// store
 
 	movq	ARG5, %r10 // D
-	movq	ARG7, %r11 // km 
-	movq	ARG8, %r12 // kn 
+	movq	ARG7, %r11 // m1
+	movq	ARG8, %r12 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_8X8_VS_LIB8
@@ -4766,6 +4766,183 @@ NAME:
 	ret
 
 	FUN_END(kernel_dpotrf_nt_l_8x8_vs_lib8)
+
+
+
+
+
+//                                        1       2           3           4       5           6           7          8          9
+// void kernel_dsyrk_dpotrf_nt_l_8x8_lib8(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsyrk_dpotrf_nt_l_8x8_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt add
+
+	movq	ARG1, %r10 // kp
+	movq	ARG2, %r11  // Ap
+	movq	ARG3, %r12  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_8x8_lib8)
+#endif
+
+
+	// change sing
+	NEG_ACC
+
+
+	// call inner dgemm kernel nt sub
+
+	movq	ARG4, %r10 // km
+	movq	ARG5, %r11   // Am
+	movq	ARG6, %r12   // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_8x8_lib8)
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG7, %r10   // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M11_8X8_LIB8
+#else
+	CALL(inner_scale_m11_8x8_lib8)
+#endif
+
+
+	// factorization
+
+	movq	ARG9, %r10  // inv_diag_D 
+	movl	$ 8, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DPOTRF_8X8_VS_LIB8
+#else
+	CALL(inner_edge_dpotrf_8x8_vs_lib8)
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10  // D 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X8_LIB8
+#else
+	CALL(inner_store_l_8x8_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dsyrk_dpotrf_nt_l_8x8_lib8)
+
+
+
+
+
+//                                           1       2           3           4       5           6           7          8          9                   10      11
+// void kernel_dsyrk_dpotrf_nt_l_8x8_vs_lib8(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsyrk_dpotrf_nt_l_8x8_vs_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt add
+
+	movq	ARG1, %r10 // kp
+	movq	ARG2, %r11  // Ap
+	movq	ARG3, %r12  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_8x8_lib8)
+#endif
+
+
+	// change sing
+	NEG_ACC
+
+
+	// call inner dgemm kernel nt sub
+
+	movq	ARG4, %r10 // km
+	movq	ARG5, %r11   // Am
+	movq	ARG6, %r12   // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_8x8_lib8)
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG7, %r10   // C
+	movq	ARG11, %r11  // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M11_8X8_VS_LIB8
+#else
+	CALL(inner_scale_m11_8x8_vs_lib8)
+#endif
+
+
+	// factorization
+
+	movq	ARG9, %r10  // inv_diag_D 
+	movq	ARG11, %r11  // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DPOTRF_8X8_VS_LIB8
+#else
+	CALL(inner_edge_dpotrf_8x8_vs_lib8)
+#endif
+
+
+	// store
+
+	movq	ARG8, %r10  // D
+	movq	ARG10, %r11  // m1
+	movq	ARG11, %r12  // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X8_VS_LIB8
+#else
+	CALL(inner_store_l_8x8_vs_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dsyrk_dpotrf_nt_l_8x8_vs_lib8)
 
 
 
@@ -4807,6 +4984,35 @@ LC00:
 	.double 5.5
 	.double 6.5
 	.double 7.5
+
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	.align 64
+.LC03:
+#elif defined(OS_MAC)
+	.align 6
+LC03:
+#endif
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
 
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)

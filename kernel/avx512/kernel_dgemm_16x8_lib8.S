@@ -105,16 +105,24 @@ NAME:
 	vmovapd	%zmm0, %zmm13; \
 	vmovapd	%zmm0, %zmm14; \
 	vmovapd	%zmm0, %zmm15;
-//#define NEG_ACC \
-//	vmovapd		.LC11(%rip), %ymm15; \
-//	vxorpd		%ymm15, %ymm0, %ymm0; \
-//	vxorpd		%ymm15, %ymm1, %ymm1; \
-//	vxorpd		%ymm15, %ymm2, %ymm2; \
-//	vxorpd		%ymm15, %ymm3, %ymm3; \
-//	vxorpd		%ymm15, %ymm4, %ymm4; \
-//	vxorpd		%ymm15, %ymm5, %ymm5; \
-//	vxorpd		%ymm15, %ymm6, %ymm6; \
-//	vxorpd		%ymm15, %ymm7, %ymm7;
+#define NEG_ACC \
+	vmovapd		.LC03(%rip), %zmm24; \
+	vxorpd		%zmm24, %zmm0, %zmm0; \
+	vxorpd		%zmm24, %zmm1, %zmm1; \
+	vxorpd		%zmm24, %zmm2, %zmm2; \
+	vxorpd		%zmm24, %zmm3, %zmm3; \
+	vxorpd		%zmm24, %zmm4, %zmm4; \
+	vxorpd		%zmm24, %zmm5, %zmm5; \
+	vxorpd		%zmm24, %zmm6, %zmm6; \
+	vxorpd		%zmm24, %zmm7, %zmm7; \
+	vxorpd		%zmm24, %zmm8, %zmm8; \
+	vxorpd		%zmm24, %zmm9, %zmm9; \
+	vxorpd		%zmm24, %zmm10, %zmm10; \
+	vxorpd		%zmm24, %zmm11, %zmm11; \
+	vxorpd		%zmm24, %zmm12, %zmm12; \
+	vxorpd		%zmm24, %zmm13, %zmm13; \
+	vxorpd		%zmm24, %zmm14, %zmm14; \
+	vxorpd		%zmm24, %zmm15, %zmm15;
 
 #else // defined(OS_MAC)
 
@@ -143,16 +151,24 @@ _ ## NAME:
 	vmovapd	%zmm0, %zmm13; \
 	vmovapd	%zmm0, %zmm14; \
 	vmovapd	%zmm0, %zmm15;
-//#define NEG_ACC \
-//	vmovapd		LC11(%rip), %ymm15; \
-//	vxorpd		%ymm15, %ymm0, %ymm0; \
-//	vxorpd		%ymm15, %ymm1, %ymm1; \
-//	vxorpd		%ymm15, %ymm2, %ymm2; \
-//	vxorpd		%ymm15, %ymm3, %ymm3; \
-//	vxorpd		%ymm15, %ymm4, %ymm4; \
-//	vxorpd		%ymm15, %ymm5, %ymm5; \
-//	vxorpd		%ymm15, %ymm6, %ymm6; \
-//	vxorpd		%ymm15, %ymm7, %ymm7;
+#define NEG_ACC \
+	vmovapd		LC03(%rip), %zmm24; \
+	vxorpd		%zmm24, %zmm0, %zmm0; \
+	vxorpd		%zmm24, %zmm1, %zmm1; \
+	vxorpd		%zmm24, %zmm2, %zmm2; \
+	vxorpd		%zmm24, %zmm3, %zmm3; \
+	vxorpd		%zmm24, %zmm4, %zmm4; \
+	vxorpd		%zmm24, %zmm5, %zmm5; \
+	vxorpd		%zmm24, %zmm6, %zmm6; \
+	vxorpd		%zmm24, %zmm7, %zmm7; \
+	vxorpd		%zmm24, %zmm8, %zmm8; \
+	vxorpd		%zmm24, %zmm9, %zmm9; \
+	vxorpd		%zmm24, %zmm10, %zmm10; \
+	vxorpd		%zmm24, %zmm11, %zmm11; \
+	vxorpd		%zmm24, %zmm12, %zmm12; \
+	vxorpd		%zmm24, %zmm13, %zmm13; \
+	vxorpd		%zmm24, %zmm14, %zmm14; \
+	vxorpd		%zmm24, %zmm15, %zmm15;
 
 #endif
 
@@ -248,16 +264,24 @@ NAME:
 	vmovapd	%zmm0, %zmm13; \
 	vmovapd	%zmm0, %zmm14; \
 	vmovapd	%zmm0, %zmm15;
-//#define NEG_ACC \
-//	vmovapd		.LC11(%rip), %ymm15; \
-//	vxorpd		%ymm15, %ymm0, %ymm0; \
-//	vxorpd		%ymm15, %ymm1, %ymm1; \
-//	vxorpd		%ymm15, %ymm2, %ymm2; \
-//	vxorpd		%ymm15, %ymm3, %ymm3; \
-//	vxorpd		%ymm15, %ymm4, %ymm4; \
-//	vxorpd		%ymm15, %ymm5, %ymm5; \
-//	vxorpd		%ymm15, %ymm6, %ymm6; \
-//	vxorpd		%ymm15, %ymm7, %ymm7;
+#define NEG_ACC \
+	vmovapd		.LC03(%rip), %zmm24; \
+	vxorpd		%zmm24, %zmm0, %zmm0; \
+	vxorpd		%zmm24, %zmm1, %zmm1; \
+	vxorpd		%zmm24, %zmm2, %zmm2; \
+	vxorpd		%zmm24, %zmm3, %zmm3; \
+	vxorpd		%zmm24, %zmm4, %zmm4; \
+	vxorpd		%zmm24, %zmm5, %zmm5; \
+	vxorpd		%zmm24, %zmm6, %zmm6; \
+	vxorpd		%zmm24, %zmm7, %zmm7; \
+	vxorpd		%zmm24, %zmm8, %zmm8; \
+	vxorpd		%zmm24, %zmm9, %zmm9; \
+	vxorpd		%zmm24, %zmm10, %zmm10; \
+	vxorpd		%zmm24, %zmm11, %zmm11; \
+	vxorpd		%zmm24, %zmm12, %zmm12; \
+	vxorpd		%zmm24, %zmm13, %zmm13; \
+	vxorpd		%zmm24, %zmm14, %zmm14; \
+	vxorpd		%zmm24, %zmm15, %zmm15;
 
 #else
 
@@ -6817,6 +6841,35 @@ LC01:
 	.double 13.5
 	.double 14.5
 	.double 15.5
+
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	.align 64
+.LC03:
+#elif defined(OS_MAC)
+	.align 6
+LC03:
+#endif
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
+	.long	0x0
+	.long	0x80000000
 
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
