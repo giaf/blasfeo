@@ -54,7 +54,7 @@ int main()
 
 	int ii;
 
-	int n = 8;
+	int n = 24;
 
 	//
 	// matrices in column-major format
@@ -294,6 +294,7 @@ int main()
 	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dsyrk_ln_mn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l_mn(n, n, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dtrsm_rltn(n, n, alpha, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
 	
 //	kernel_dpotrf_nt_l_8x8_lib8(0, sA.pA, sA.pA, sD.pA, sD.pA, sD.dA);
