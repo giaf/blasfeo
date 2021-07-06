@@ -6633,6 +6633,200 @@ NAME:
 
 
 
+//                                             1       2           3         4           5       6           7         8           9          10       11         12       13         14
+// void kernel_dgemm_dtrsm_nt_rl_inv_16x8_lib8(int kp, double *Ap, int sdap, double *Bp, int km, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_dtrsm_nt_rl_inv_16x8_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt add
+
+	movq	ARG1, %r10 // kp
+	movq	ARG2, %r11  // Ap
+	movq	ARG3, %r12 // sdap
+	sall	$ 6, %r12d   // 4*sdap*sizeof(double)
+	movq	ARG4, %r13  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_16X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_16x8_lib8)
+#endif
+
+
+	// change sign
+	NEG_ACC
+
+
+	// call inner dgemm kernel nt sub
+
+	movq	ARG5, %r10 // km
+	movq	ARG6, %r11 // Am
+	movq	ARG7, %r12 // sdam
+	sall	$ 6, %r12d // 4*sda*sizeof(double)
+	movq	ARG8, %r13  // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_16X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_16x8_lib8)
+#endif
+
+
+	// call inner blender nn
+
+	movq	ARG9, %r10  // C
+	movq	ARG10, %r11 // sdc
+	sall	$ 6, %r11d // 4*sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M11_16X8_LIB8
+#else
+	CALL(inner_scale_m11_16x8_lib8)
+#endif
+
+
+	// solve
+
+	movq	ARG13, %r10  // E 
+	movq	ARG14, %r11  // inv_diag_E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_INV_16X8_LIB8
+#else
+	CALL(inner_edge_dtrsm_rlt_inv_16x8_lib8)
+#endif
+
+
+	// store n
+
+	movq	ARG11, %r10 // store address D
+	movq	ARG12, %r11 // sdd
+	sall	$ 6, %r11d // 4*sdd*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_16X8_LIB8
+#else
+	CALL(inner_store_16x8_lib8)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dgemm_dtrsm_nt_rl_inv_16x8_lib8)
+
+
+
+
+
+//                                                1       2           3         4           5       6           7         8           9          10       11         12       13         14                  15      16
+// void kernel_dgemm_dtrsm_nt_rl_inv_16x8_vs_lib8(int kp, double *Ap, int sdap, double *Bp, int km, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_dtrsm_nt_rl_inv_16x8_vs_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt add
+
+	movq	ARG1, %r10 // kp
+	movq	ARG2, %r11  // Ap
+	movq	ARG3, %r12 // sdap
+	sall	$ 6, %r12d   // 4*sdap*sizeof(double)
+	movq	ARG4, %r13  // Bp
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_16X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_16x8_lib8)
+#endif
+
+
+	// change sign
+	NEG_ACC
+
+
+	// call inner dgemm kernel nt sub
+
+	movq	ARG5, %r10 // km
+	movq	ARG6, %r11 // Am
+	movq	ARG7, %r12 // sdam
+	sall	$ 6, %r12d // 4*sda*sizeof(double)
+	movq	ARG8, %r13  // Bm
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_16X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_16x8_lib8)
+#endif
+
+
+	// call inner blender nn
+
+	movq	ARG9, %r10  // C
+	movq	ARG10, %r11 // sdc
+	sall	$ 6, %r11d // 4*sdc*sizeof(double)
+	movq	ARG16, %r12 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M11_16X8_VS_LIB8
+#else
+	CALL(inner_scale_m11_16x8_vs_lib8)
+#endif
+
+
+	// solve
+
+	movq	ARG13, %r10  // E 
+	movq	ARG14, %r11  // inv_diag_E 
+	movq	ARG16, %r12 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_RLT_INV_16X8_VS_LIB8
+#else
+	CALL(inner_edge_dtrsm_rlt_inv_16x8_vs_lib8)
+#endif
+
+
+	// store n
+
+	movq	ARG11, %r10 // store address D
+	movq	ARG12, %r11 // sdd
+	sall	$ 6, %r11d // 4*sdd*sizeof(double)
+	movq	ARG15, %r12 // m1
+	movq	ARG16, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_16X8_VS_LIB8
+#else
+	CALL(inner_store_16x8_vs_lib8)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dgemm_dtrsm_nt_rl_inv_16x8_vs_lib8)
+
+
+
+
+
 //                                   1      2          3        4          5          6        7          8        9
 // void kernel_dpotrf_nt_l_16x8_lib8(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
 

@@ -12495,7 +12495,7 @@ NAME:
 
 
 
-//                                            rdi     rsi         rdx       rcx         r8      r9          rsp+8     rsp+16      rsp+24     rsp+32   rsp+40     rsp+48   rsp+56     rsp+64
+//                                            1       2           3         4           5       6           7         8           9          10       11         12       13         14
 // void kernel_dgemm_dtrsm_nt_rl_inv_8x4_lib4(int kp, double *Ap, int sdap, double *Bp, int km, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 	.p2align 4,,15
