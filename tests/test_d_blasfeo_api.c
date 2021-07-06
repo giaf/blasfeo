@@ -54,7 +54,7 @@ int main()
 
 	int ii;
 
-	int n = 24;
+	int n = 8;
 
 	//
 	// matrices in column-major format
@@ -236,7 +236,7 @@ int main()
 #if 1
 	// gemm_nt
 	alpha = 1.0;
-	beta = 0.0;
+	beta = 1.0;
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 //	d_print_mat(n, n, D, n);
@@ -291,10 +291,13 @@ int main()
 //	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
-//	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
-	blasfeo_dsyrk_ln_mn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dsyrk_ln_mn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dtrsm_rltn(n, n, alpha, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+	
+//	kernel_dpotrf_nt_l_8x8_lib8(0, sA.pA, sA.pA, sD.pA, sD.pA, sD.dA);
+//	kernel_dpotrf_nt_l_8x8_vs_lib8(0, sA.pA, sA.pA, sD.pA, sD.pA, sD.dA, 8, 8);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 //	blasfeo_print_dmat(n, n, &sE, 0, 0);

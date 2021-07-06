@@ -91,6 +91,8 @@ void kernel_dsyrk_nt_l_8x8_vs_lib8(int k, double *alpha, double *A, double *B, d
 void kernel_dsyrk_nt_l_8x8_gen_lib8(int k, double *alpha, double *A, double *B, double *beta, int offC, double *C, int sdc, int offD, double *D, int sdd, int m0, int m1, int n0, int n1); //
 void kernel_dtrsm_nt_rl_inv_8x8_lib8(int k, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E);
 void kernel_dtrsm_nt_rl_inv_8x8_vs_lib8(int k, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E, int m1, int n1);
+void kernel_dpotrf_nt_l_8x8_lib8(int k, double *A, double *B, double *C, double *D, double *inv_diag_D);
+void kernel_dpotrf_nt_l_8x8_vs_lib8(int k, double *A, double *B, double *C, double *D, double *inv_diag_D, int m1, int n1);
 
 // panel copy
 // 16

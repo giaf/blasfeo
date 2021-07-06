@@ -3552,7 +3552,7 @@ NAME:
 	.p2align 4,,15
 	FUN_START(inner_edge_dpotrf_4x4_vs_lib4)
 #endif
-	
+
 	vxorpd	%ymm15, %ymm15, %ymm15 // 0.0
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd	.LC04(%rip), %xmm14 // 1.0
@@ -8335,7 +8335,7 @@ NAME:
 
 
 
-//                                     edi    rsi        rdx        rcx        r8         r9                  rsp+8   rsp+16
+//                                     1      2          3          4          5          6                   7       8
 // void kernel_dpotrf_nt_l_4x4_vs_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D, int km, int kn);
 
 	.p2align 4,,15
