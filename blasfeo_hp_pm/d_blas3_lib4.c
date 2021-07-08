@@ -4966,6 +4966,7 @@ loop_0:
 
 	// main loop C, D not aligned
 loop_D:
+	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<m-4; ii+=8)
 		{
