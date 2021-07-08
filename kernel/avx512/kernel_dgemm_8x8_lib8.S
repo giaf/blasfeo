@@ -1040,6 +1040,7 @@ NAME:
 
 
 
+#if 0 // TODO keep as reference !!!!!!!!!!!!!!!!!!!!!!
 // common inner routine with file scope
 //
 // edge for B lower triangular
@@ -2360,6 +2361,7 @@ NAME:
 
 	FUN_END(inner_edge_dtrmm_nn_rl_8x8_lib8)
 #endif
+#endif // TODO keep as reference !!!!!!!!!!!!!!
 
 
 
@@ -2392,10 +2394,10 @@ NAME:
 
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRMM_NN_RL_8X8_VS_LIB8
+	.macro INNER_EDGE_DTRMM_NN_RL_8X8_LIB8
 #else
 	.p2align 4,,15
-	FUN_START(inner_edge_dtrmm_nn_rl_8x8_vs_lib8)
+	FUN_START(inner_edge_dtrmm_nn_rl_8x8_lib8)
 #endif
 	
 	cmpl	$ 0, %r10d
@@ -2564,7 +2566,7 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_edge_dtrmm_nn_rl_8x8_vs_lib8)
+	FUN_END(inner_edge_dtrmm_nn_rl_8x8_lib8)
 #endif
 
 
@@ -6088,6 +6090,12 @@ NAME:
 	CALL(inner_edge_dtrmm_nn_rl_8x8_lib8)
 #endif
 
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_8X8_LIB8
+#else
+	CALL(inner_edge_dgemm_nn_8x8_lib8)
+#endif
+
 	// call inner dgemm kernel nt after initial triangle
 
 #if MACRO_LEVEL>=2
@@ -6152,9 +6160,9 @@ NAME:
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_NN_RL_8X8_VS_LIB8
+	INNER_EDGE_DTRMM_NN_RL_8X8_LIB8
 #else
-	CALL(inner_edge_dtrmm_nn_rl_8x8_vs_lib8)
+	CALL(inner_edge_dtrmm_nn_rl_8x8_lib8)
 #endif
 
 #if MACRO_LEVEL>=1
