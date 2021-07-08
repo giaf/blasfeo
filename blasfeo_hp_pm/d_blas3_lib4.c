@@ -4837,138 +4837,162 @@ void blasfeo_hp_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, 
 
 	int ii, jj;
 
+	// algorithm scheme
 	if(air!=0)
+		{
+		goto clear_air;
+		}
+select_loop:
+	if(offsetD==0)
+		{
+		goto loop_0;
+		}
+	else
+		{
+		goto loop_D;
+		}
+	// should never get here
+	return;
+
+
+
+clear_air:
+	jj = 0;
+	for(; jj<n; jj+=4)
+		{
+		kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[jj*ps], sdd, air, air+m, 0, n-jj);
+		}
+	m -= ps-air;
+	pA += ps*sda;
+	pD += ps*sdd;
+	goto select_loop;
+
+
+
+loop_0:
+	ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-11; ii+=12)
+		{
+		jj = 0;
+		for(; jj<n-5; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_12x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd); // n-j>=6 !!!!!
+			}
+		for(; jj<n; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_12x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, 12, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(ii<m-8)
+			goto left_12;
+		else if(ii<m-4)
+			goto left_8;
+		else
+			goto left_4;
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-7; ii+=8)
+		{
+		jj = 0;
+		for(; jj<n-5; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_8x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd);
+			}
+		for(; jj<n; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_8x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, 8, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(ii<m-4)
+			goto left_8;
+		else
+			goto left_4;
+		}
+#elif defined(TARGET_X86_AMD_BARCELONA)
+	for(; ii<m-3; ii+=4)
+		{
+		jj = 0;
+		for(; jj<n-3; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_4x2_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps]);
+			if(offsetB+2<4)
+				kernel_dtrmm_nn_rl_4x2_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2, &pB[jj*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps]);
+			else
+				kernel_dtrmm_nn_rl_4x2_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2-ps, &pB[(jj+ps)*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps]);
+			}
+		for(; jj<n; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_4x2_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], 4, n-jj);
+			if(jj<n-2)
+				{
+				if(offsetB+2<4)
+					kernel_dtrmm_nn_rl_4x2_vs_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2, &pB[jj*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps], 4, n-(jj+2));
+				else
+					kernel_dtrmm_nn_rl_4x2_vs_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2-ps, &pB[(jj+ps)*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps], 4, n-(jj+2));
+				}
+			}
+		}
+	if(ii<m)
+		{
+		goto left_4;
+		}
+#else
+	for(; ii<m-3; ii+=4)
+		{
+		jj = 0;
+		for(; jj<n-5; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_4x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps]);
+			}
+		for(; jj<n; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_4x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], 4, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto left_4;
+		}
+#endif
+	// common return if i==m
+	return;
+
+
+
+	// main loop C, D not aligned
+loop_D:
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-4; ii+=8)
 		{
 		jj = 0;
 		for(; jj<n; jj+=4)
 			{
-			kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[jj*ps], sdd, air, air+m, 0, n-jj);
+			kernel_dtrmm_nn_rl_8x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[ii*sdd+jj*ps], sdd, 0, m-ii, 0, n-jj);
 			}
-		m -= ps-air;
-		pA += ps*sda;
-		pD += ps*sdd;
 		}
-	ii = 0;
-	if(offsetD==0)
+	if(ii<m)
 		{
-#if defined(TARGET_X64_INTEL_HASWELL)
-		for(; ii<m-11; ii+=12)
-			{
-			jj = 0;
-			for(; jj<n-5; jj+=4)
-				{
-				kernel_dtrmm_nn_rl_12x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd); // n-j>=6 !!!!!
-				}
-			for(; jj<n; jj+=4)
-				{
-				kernel_dtrmm_nn_rl_12x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, 12, n-jj);
-				}
-			}
-		if(ii<m)
-			{
-			if(ii<m-8)
-				goto left_12;
-			else if(ii<m-4)
-				goto left_8;
-			else
-				goto left_4;
-			}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		for(; ii<m-7; ii+=8)
-			{
-			jj = 0;
-			for(; jj<n-5; jj+=4)
-				{
-				kernel_dtrmm_nn_rl_8x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd);
-				}
-			for(; jj<n; jj+=4)
-				{
-				kernel_dtrmm_nn_rl_8x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, 8, n-jj);
-				}
-			}
-		if(ii<m)
-			{
-			if(ii<m-4)
-				goto left_8;
-			else
-				goto left_4;
-			}
-#elif defined(TARGET_X86_AMD_BARCELONA)
-		for(; ii<m-3; ii+=4)
-			{
-			jj = 0;
-			for(; jj<n-3; jj+=4)
-				{
-				kernel_dtrmm_nn_rl_4x2_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps]);
-				if(offsetB+2<4)
-					kernel_dtrmm_nn_rl_4x2_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2, &pB[jj*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps]);
-				else
-					kernel_dtrmm_nn_rl_4x2_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2-ps, &pB[(jj+ps)*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps]);
-				}
-			for(; jj<n; jj+=4)
-				{
-				kernel_dtrmm_nn_rl_4x2_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], 4, n-jj);
-				if(jj<n-2)
-					{
-					if(offsetB+2<4)
-						kernel_dtrmm_nn_rl_4x2_vs_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2, &pB[jj*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps], 4, n-(jj+2));
-					else
-						kernel_dtrmm_nn_rl_4x2_vs_lib4(n-(jj+2), &alpha, &pA[ii*sda+(jj+2)*ps], offsetB+2-ps, &pB[(jj+ps)*sdb+(jj+2)*ps], sdb, &pD[ii*sdd+(jj+2)*ps], 4, n-(jj+2));
-					}
-				}
-			}
-		if(ii<m)
-			{
-			goto left_4;
-			}
-#else
-		for(; ii<m-3; ii+=4)
-			{
-			jj = 0;
-			for(; jj<n-5; jj+=4)
-				{
-				kernel_dtrmm_nn_rl_4x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps]);
-				}
-			for(; jj<n; jj+=4)
-				{
-				kernel_dtrmm_nn_rl_4x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], 4, n-jj);
-				}
-			}
-		if(ii<m)
-			{
-			goto left_4;
-			}
-#endif
+		goto left_4_gen;
 		}
-	else
+#else
+	for(; ii<m; ii+=4)
 		{
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-		for(; ii<m-4; ii+=8)
+		jj = 0;
+		for(; jj<n; jj+=4)
 			{
-			jj = 0;
-			for(; jj<n; jj+=4)
-				{
-				kernel_dtrmm_nn_rl_8x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[ii*sdd+jj*ps], sdd, 0, m-ii, 0, n-jj);
-				}
+			kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[ii*sdd+jj*ps], sdd, 0, m-ii, 0, n-jj);
 			}
-		if(ii<m)
-			{
-			goto left_4_gen;
-			}
-#else
-		for(; ii<m; ii+=4)
-			{
-			jj = 0;
-			for(; jj<n; jj+=4)
-				{
-				kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[ii*sdd+jj*ps], sdd, 0, m-ii, 0, n-jj);
-				}
-			}
-#endif
 		}
-
+#endif
 	// common return if i==m
 	return;
+
+
 
 	// clean up loops definitions
 
