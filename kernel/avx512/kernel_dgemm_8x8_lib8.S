@@ -2405,6 +2405,8 @@ NAME:
 
 	// offB==xxx
 
+	// TODO saturate offB to 8 ???
+
 	// unroll 0
 	vmovapd			0*64(%r11), %zmm25 // A
 	vbroadcastsd	0*64(%r12, %r14, 8), %zmm24 // B

@@ -4831,7 +4831,7 @@ void blasfeo_hp_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, 
 		}
 	else
 		{
-		pD += -4*sdd;
+		pD += -ps*sdd;
 		offsetD = ps+di0;
 		}
 

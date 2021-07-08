@@ -1471,12 +1471,190 @@ void blasfeo_hp_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sB, 
 // dtrmm_right_lower_nottransposed_notunit (B, i.e. the first matrix, is triangular !!!)
 void blasfeo_hp_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sD, int di, int dj)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dtrmm_rlnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+
+	const int ps = 8;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdd = sD->cn;
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+	double *pD = sD->pA + dj*ps;
+
+	int offsetB = bir;
+
+	int di0 = di-air;
+	int offsetD;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	if(di0>=0)
+		{
+		pD += di0/ps*ps*sdd;
+		offsetD = di0%ps;
+		}
+	else
+		{
+		pD += -ps*sdd;
+		offsetD = ps+di0;
+		}
+
+	int ii, jj;
+
+
+	// algorithm scheme
+	if(air!=0)
+		{
+		goto clear_air;
+		}
+select_loop:
+	if(offsetD==0)
+		{
+		goto loop_0;
+		}
+	else
+		{
+		goto loop_D;
+		}
+	// should never get here
+	return;
+
+
+
+clear_air:
+	jj = 0;
+	for(; jj<n; jj+=8)
+		{
+		kernel_dtrmm_nn_rl_8x8_gen_lib8(n-jj, &alpha, &pA[jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[jj*ps], sdd, air, air+m, 0, n-jj);
+		}
+	m -= ps-air;
+	pA += ps*sda;
+	pD += ps*sdd;
+	goto select_loop;
+
+
+
+loop_0:
+	ii = 0;
+#if 0
+	for(; ii<m-7; ii+=8)
+		{
+		jj = 0;
+		for(; jj<n-5; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_8x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd);
+			}
+		for(; jj<n; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_8x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, 8, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(ii<m-4)
+			goto left_8;
+		else
+			goto left_4;
+		}
 #else
-	printf("\nblasfeo_dtrmm_rlnn: feature not implemented yet\n");
-	exit(1);
+	for(; ii<m-7; ii+=8)
+		{
+		jj = 0;
+#if 1
+		for(; jj<n-7; jj+=8)
+			{
+			kernel_dtrmm_nn_rl_8x8_lib8(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps]);
+			}
+		if(jj<n)
+			{
+			kernel_dtrmm_nn_rl_8x8_vs_lib8(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], 8, n-jj);
+			}
+#else
+		for(; jj<n-5; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_4x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps]);
+			}
+		for(; jj<n; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_4x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], 4, n-jj);
+			}
 #endif
+		}
+	if(ii<m)
+		{
+		goto left_8;
+		}
+#endif
+	// common return if i==m
+	return;
+
+
+
+	// main loop C, D not aligned
+loop_D:
+#if 0
+	for(; ii<m-4; ii+=8)
+		{
+		jj = 0;
+		for(; jj<n; jj+=4)
+			{
+			kernel_dtrmm_nn_rl_8x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[ii*sdd+jj*ps], sdd, 0, m-ii, 0, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto left_4_gen;
+		}
+#else
+	for(; ii<m; ii+=8)
+		{
+		jj = 0;
+		for(; jj<n; jj+=8)
+			{
+			kernel_dtrmm_nn_rl_8x8_gen_lib8(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[ii*sdd+jj*ps], sdd, 0, m-ii, 0, n-jj);
+			}
+		}
+#endif
+	// common return if i==m
+	return;
+
+
+
+	// clean up loops definitions
+
+#if 0
+	left_8:
+	jj = 0;
+	for(; jj<n; jj+=4)
+		{
+		kernel_dtrmm_nn_rl_8x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, m-ii, n-jj);
+		}
+	return;
+#endif
+
+	left_8:
+	jj = 0;
+	for(; jj<n; jj+=8)
+		{
+		kernel_dtrmm_nn_rl_8x8_vs_lib8(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], m-ii, n-jj);
+		}
+	return;
+
+#if 0
+	left_4_gen:
+	jj = 0;
+	for(; jj<n; jj+=4)
+		{
+		kernel_dtrmm_nn_rl_4x4_gen_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, offsetD, &pD[ii*sdd+jj*ps], sdd, 0, m-ii, 0, n-jj);
+		}
+	return;
+#endif
+
+	return;
+
 	}
 
 
