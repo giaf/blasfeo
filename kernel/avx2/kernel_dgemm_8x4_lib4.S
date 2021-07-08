@@ -11178,7 +11178,7 @@ NAME:
 
 
 
-//                                  rdi    rsi            rdx        rcx      r8           r9         rsp+8    rsp+16     rsp+24
+//                                  1      2              3          4        5            6          7        8          9
 // void kernel_dtrmm_nn_rl_8x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *D, int sdd);
 
 	.p2align 4,,15
