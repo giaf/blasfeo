@@ -304,7 +304,9 @@ int main()
 //	blasfeo_dtrsm_rltn(n, n, alpha, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
 //	blasfeo_dsyrk_dpotrf_ln(n, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dsyrk_dpotrf_ln_mn(n, n, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
-	blasfeo_dtrmm_rlnn(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dtrmm_rlnn(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+
+	blasfeo_dgecp(n, n, &sA, 0, 0, &sD, 0, 0);
 	
 //	kernel_dpotrf_nt_l_8x8_lib8(0, sA.pA, sA.pA, sD.pA, sD.pA, sD.dA);
 //	kernel_dpotrf_nt_l_8x8_vs_lib8(0, sA.pA, sA.pA, sD.pA, sD.pA, sD.dA, 8, 8);

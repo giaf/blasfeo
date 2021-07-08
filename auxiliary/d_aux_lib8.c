@@ -40,7 +40,7 @@
 #include <blasfeo_common.h>
 #include <blasfeo_block_size.h>
 #include <blasfeo_d_aux.h>
-//#include <blasfeo_d_kernel.h>
+#include <blasfeo_d_kernel.h>
 #if defined(BLASFEO_REF_API)
 #include <blasfeo_d_aux_ref.h>
 #endif
@@ -655,12 +655,54 @@ void blasfeo_dcolpei(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 // copy a generic strmat into a generic strmat
 void blasfeo_dgecp(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dgecp(m, n, sA, ai, aj, sB, bi, bj);
-#else
-	printf("\nblasfeo_dgecp: feature not implemented yet\n");
-	exit(1);
-#endif
+
+	// invalidate stored inverse diagonal
+	sB->use_dA = 0;
+
+	const int ps = 8;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+
+	// pA, pB point to panels edges
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+
+	int ii, mmax;
+
+	int offsetB = bir;
+	int offsetA = (air+ps-bir) & (ps-1);
+
+	// clean bir
+	if(bir!=0)
+		{
+		mmax = m<ps-bir ? m : ps-bir;
+		kernel_dpacp_nn_8_vs_lib8(n, air, pA, sda, pB+bir, mmax);
+		if(air>=bir)
+			pA += ps*sda;
+		pB += ps*sdb;
+		m -= mmax;
+		}
+	ii = 0;	
+	// main loop
+	for(; ii<m-15; ii+=16)
+		{
+		kernel_dpacp_nn_16_lib8(n, offsetA, pA+ii*sda, sda, pB+ii*sdb, sdb);
+		}
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dpacp_nn_8_lib8(n, offsetA, pA+ii*sda, sda, pB+ii*sdb);
+		}
+	if(ii<m)
+		{
+		kernel_dpacp_nn_8_vs_lib8(n, offsetA, pA+ii*sda, sda, pB+ii*sdb, m-ii);
+		}
+
+	return;
+
 	}
 
 
