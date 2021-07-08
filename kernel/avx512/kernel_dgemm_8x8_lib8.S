@@ -6214,6 +6214,88 @@ NAME:
 
 
 
+//                                      1      2              3          4            5          6        7            8          9       10       11      12      13
+// void kernel_dtrmm_nn_rl_8x8_gen_lib8(int k, double *alpha, double *A, int offsetB, double *B, int sdb, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrmm_nn_rl_8x8_gen_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// initial triangle
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A
+	movq	ARG5, %r12 // B
+	movq	ARG6, %r13 // sdb
+	sall	$ 6, %r13d // 4*sdb*sizeof(double)
+	movq	ARG4, %r14 // offsetB
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_NN_RL_8X8_LIB8
+#else
+	CALL(inner_edge_dtrmm_nn_rl_8x8_lib8)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGEMM_NN_8X8_LIB8
+#else
+	CALL(inner_edge_dgemm_nn_8x8_lib8)
+#endif
+
+	// call inner dgemm kernel nn after initial triangle
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nn_8x8_lib8)
+#endif
+
+
+	// call inner scale
+
+	movq	ARG2, %r10 // alpha
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_A0_8X8_LIB8
+#else
+	CALL(inner_scale_a0_8x8_lib8)
+#endif
+
+
+	// store n
+
+	movq	ARG7, %r10 // offsetD
+	movq	ARG8, %r11 // D
+	movq	ARG9, %r12 // sdd
+	sall	$ 6, %r12d // 4*sdb*sizeof(double)
+	movq	ARG10, %r13 // m0
+	movq	ARG11, %r14 // m1
+	movq	ARG12, %r15 // n0
+	movq	ARG13, %rax // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X8_GEN_LIB8
+#else
+	CALL(inner_store_8x8_gen_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrmm_nn_rl_8x8_gen_lib8)
+
+
+
+
+
 //                                      1      2          3          4             5          6          7          8
 // void kernel_dtrsm_nt_rl_inv_8x8_lib8(int k, double *A, double *B, double *beta, double *C, double *D, double *E, double *inv_diag_E);
 
