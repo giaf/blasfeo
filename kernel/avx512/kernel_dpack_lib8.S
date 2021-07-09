@@ -1514,6 +1514,7 @@ NAME:
 	movq	ARG5, %r14 // C
 
 
+
 	// no quick return
 //	cmpl	$ 0, %r10d
 //	jle		8f // return
@@ -1523,6 +1524,9 @@ NAME:
 	jg		0f
 
 	// offset==0
+
+	cmpl	$ 0, %r10d
+	jle		13f // final triangle
 
 	cmpl	$ 3, %r10d
 	jle		12f // clean-up loop
@@ -1724,6 +1728,9 @@ NAME:
 
 	// offset==x
 
+	cmpl	$ 0, %r10d
+	jle		13f // final triangle
+
 	cmpl	$ 3, %r10d
 	jle		12f // clean-up loop
 
@@ -1876,6 +1883,9 @@ NAME:
 	jg		0f
 
 	// offset==0
+
+	cmpl	$ 0, %r10d
+	jle		13f // final triangle
 
 	cmpl	$ 3, %r10d
 	jle		12f // clean-up loop
@@ -2088,6 +2098,9 @@ NAME:
 	// not necessary but it may avoid some load
 	kandd	%k1, %k2, %k2
 	kandd	%k1, %k3, %k3
+
+	cmpl	$ 0, %r10d
+	jle		13f // final triangle
 
 	cmpl	$ 3, %r10d
 	jle		12f // clean-up loop
