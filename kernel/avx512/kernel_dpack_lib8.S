@@ -211,14 +211,12 @@ NAME:
 	cmpl	$ 0, %r11d
 	jle		3f // offset==0
 
-	movl			$ 8, %r15d				// load 8
-	subl			%r11d, %r15d			// 8-offsetA
-	cmpl			%r10d, %r15d			// k > 8-offsetA
-	cmovgl			%r10d, %r15d			// kend=min(k,8-offsetA)
+	movl	$ 8, %r15d				// load 8
+	subl	%r11d, %r15d			// 8-offsetA
+	cmpl	%r10d, %r15d			// k > 8-offsetA
+	cmovgl	%r10d, %r15d			// kend=min(k,8-offsetA)
 
-	movl			%r11d, %eax				// load offsetA
-	sall			$ 3, %eax				// offsetA*sizeof(double)
-	addq			%rax, %r12				// B+offsetB*sizeof(double)
+	leaq	0(%r12, %r11, 8), %r12
 
 // TODO vector and mask instead ?
 
@@ -240,19 +238,19 @@ NAME:
 	vmovsd		7*64(%r12), %xmm0
 	vmovsd		%xmm0, 56(%r14)
 
-	subl			$ 1, %r10d				// k=-1
-	subl			$ 1, %r15d				// k_panel=-1
-	addq			$ 8, %r12				// A=+1
-	addq			$ 64, %r14				// C=+bs
+	subl	$ 1, %r10d				// k=-1
+	subl	$ 1, %r15d				// k_panel=-1
+	addq	$ 8, %r12				// A=+1
+	addq	$ 64, %r14				// C=+bs
 
-	cmpl			$ 0, %r15d				// if k_panel=0
-	jg				4b						// loop 1
+	cmpl	$ 0, %r15d				// if k_panel=0
+	jg		4b						// loop 1
 
-	cmpl			$ 0, %r10d				// if k=0
-	jle				0f						// end
+	cmpl	$ 0, %r10d				// if k=0
+	jle		0f						// end
 
-	addq			%r13, %r12				// A=Boff+sdb*bs
-	subq			$ 64, %r12				// A-=4*sizeof(double) (loop+offsetA)
+	addq	%r13, %r12				// A=Boff+sdb*bs
+	subq	$ 64, %r12				// A-=4*sizeof(double) (loop+offsetA)
 
 
 3:
@@ -375,6 +373,246 @@ NAME:
 	ret
 
 	FUN_END(inner_kernel_dpacp_tn_8_lib8)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_DPACP_TN_8_VS_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dpacp_tn_8_vs_lib8)
+#endif
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+	// compute mask for rows
+	vcvtsi2sd	%r15d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+
+	vpmovq2m	%zmm25, %k3
+
+
+	cmpl	$ 0, %r11d
+	jle		3f // offset==0
+
+	movl	$ 8, %eax				// load 8
+	subl	%r11d, %eax			// 8-offsetA
+	cmpl	%r10d, %eax			// k > 8-offsetA
+	cmovgl	%r10d, %eax			// kend=min(k,8-offsetA)
+
+	leaq	0(%r12, %r11, 8), %r12
+
+// TODO vector and mask instead ?
+
+4:
+	vmovsd		0*64(%r12), %xmm0
+	vmovsd		%xmm0, 0(%r14)
+	cmpl	$ 1, %r15d
+	jle		10f
+	vmovsd		1*64(%r12), %xmm0
+	vmovsd		%xmm0, 8(%r14)
+	cmpl	$ 2, %r15d
+	jle		10f
+	vmovsd		2*64(%r12), %xmm0
+	vmovsd		%xmm0, 16(%r14)
+	cmpl	$ 3, %r15d
+	jle		10f
+	vmovsd		3*64(%r12), %xmm0
+	vmovsd		%xmm0, 24(%r14)
+	cmpl	$ 4, %r15d
+	jle		10f
+	vmovsd		4*64(%r12), %xmm0
+	vmovsd		%xmm0, 32(%r14)
+	cmpl	$ 5, %r15d
+	jle		10f
+	vmovsd		5*64(%r12), %xmm0
+	vmovsd		%xmm0, 40(%r14)
+	cmpl	$ 6, %r15d
+	jle		10f
+	vmovsd		6*64(%r12), %xmm0
+	vmovsd		%xmm0, 48(%r14)
+	cmpl	$ 7, %r15d
+	jle		10f
+	vmovsd		7*64(%r12), %xmm0
+	vmovsd		%xmm0, 56(%r14)
+10:
+
+	subl	$ 1, %r10d				// k=-1
+	subl	$ 1, %eax				// k_panel=-1
+	addq	$ 8, %r12				// A=+1
+	addq	$ 64, %r14				// C=+bs
+
+	cmpl	$ 0, %eax				// if k_panel=0
+	jg		4b						// loop 1
+
+	cmpl	$ 0, %r10d				// if k=0
+	jle		0f						// end
+
+	addq	%r13, %r12				// A=Boff+sdb*bs
+	subq	$ 64, %r12				// A-=4*sizeof(double) (loop+offsetA)
+
+
+3:
+	cmpl	$ 7, %r10d
+	jle		2f // clean-up loop
+
+	movl	$ 0xcc, %eax
+	kmovd	%eax, %k1
+	movl	$ 0x33, %eax
+	kmovd	%eax, %k2
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+//	prefetcht0	0(%r12, %r13, 1) // software prefetch
+//	prefetcht0	64(%r12, %r13, 1) // software prefetch
+
+	vmovapd			0+0*64(%r12), %ymm0
+	vmovapd			32+0*64(%r12), %ymm4
+	cmpl	$ 1, %r15d
+	jle		10f
+	vmovapd			0+1*64(%r12), %ymm1
+	vmovapd			32+1*64(%r12), %ymm5
+	cmpl	$ 2, %r15d
+	jle		10f
+	vmovapd			0+2*64(%r12), %ymm2
+	vmovapd			32+2*64(%r12), %ymm6
+	cmpl	$ 3, %r15d
+	jle		10f
+	vmovapd			0+3*64(%r12), %ymm3
+	vmovapd			32+3*64(%r12), %ymm7
+	cmpl	$ 4, %r15d
+	jle		10f
+	vmovapd			0+4*64(%r12), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm0, %zmm0
+	vmovapd			32+4*64(%r12), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm4, %zmm4
+	cmpl	$ 5, %r15d
+	jle		10f
+	vmovapd			0+5*64(%r12), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm1, %zmm1
+	vmovapd			32+5*64(%r12), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm5, %zmm5
+	cmpl	$ 6, %r15d
+	jle		10f
+	vmovapd			0+6*64(%r12), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm2, %zmm2
+	vmovapd			32+6*64(%r12), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm6, %zmm6
+	cmpl	$ 7, %r15d
+	jle		10f
+	vmovapd			0+7*64(%r12), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm3, %zmm3
+	vmovapd			32+7*64(%r12), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm7, %zmm7
+10:
+
+	vmovapd		%zmm0, %zmm24
+	vpermq		$ 0x40, %zmm2, %zmm0 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm2 {%k2}
+	vmovapd		%zmm1, %zmm24
+	vpermq		$ 0x40, %zmm3, %zmm1 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm3 {%k2}
+	vmovapd		%zmm4, %zmm24
+	vpermq		$ 0x40, %zmm6, %zmm4 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm6 {%k2}
+	vmovapd		%zmm5, %zmm24
+	vpermq		$ 0x40, %zmm7, %zmm5 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm7 {%k2}
+
+	vunpcklpd	%zmm1, %zmm0, %zmm24
+	vmovapd		%zmm24, 0*64(%r14) {%k3}
+	vunpckhpd	%zmm1, %zmm0, %zmm24
+	vmovapd		%zmm24, 1*64(%r14) {%k3}
+	vunpcklpd	%zmm3, %zmm2, %zmm24
+	vmovapd		%zmm24, 2*64(%r14) {%k3}
+	vunpckhpd	%zmm3, %zmm2, %zmm24
+	vmovapd		%zmm24, 3*64(%r14) {%k3}
+	vunpcklpd	%zmm5, %zmm4, %zmm24
+	vmovapd		%zmm24, 4*64(%r14) {%k3}
+	vunpckhpd	%zmm5, %zmm4, %zmm24
+	vmovapd		%zmm24, 5*64(%r14) {%k3}
+	vunpcklpd	%zmm7, %zmm6, %zmm24
+	vmovapd		%zmm24, 6*64(%r14) {%k3}
+	vunpckhpd	%zmm7, %zmm6, %zmm24
+	vmovapd		%zmm24, 7*64(%r14) {%k3}
+
+	subl	$ 8, %r10d
+	addq	%r13, %r12
+	addq	$ 512, %r14
+
+	cmpl	$ 7, %r10d
+	jg		1b
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+// TODO vector and mask instead ?
+
+2: // clean-up loop
+	
+	vmovsd		0*64(%r12), %xmm0
+	vmovsd		%xmm0, 0(%r14)
+	cmpl	$ 1, %r15d
+	jle		10f
+	vmovsd		1*64(%r12), %xmm0
+	vmovsd		%xmm0, 8(%r14)
+	cmpl	$ 2, %r15d
+	jle		10f
+	vmovsd		2*64(%r12), %xmm0
+	vmovsd		%xmm0, 16(%r14)
+	cmpl	$ 3, %r15d
+	jle		10f
+	vmovsd		3*64(%r12), %xmm0
+	vmovsd		%xmm0, 24(%r14)
+	cmpl	$ 4, %r15d
+	jle		10f
+	vmovsd		4*64(%r12), %xmm0
+	vmovsd		%xmm0, 32(%r14)
+	cmpl	$ 5, %r15d
+	jle		10f
+	vmovsd		5*64(%r12), %xmm0
+	vmovsd		%xmm0, 40(%r14)
+	cmpl	$ 6, %r15d
+	jle		10f
+	vmovsd		6*64(%r12), %xmm0
+	vmovsd		%xmm0, 48(%r14)
+	cmpl	$ 7, %r15d
+	jle		10f
+	vmovsd		7*64(%r12), %xmm0
+	vmovsd		%xmm0, 56(%r14)
+10:
+
+	subl	$ 1, %r10d
+	addq	$ 8, %r12
+	addq	$ 64, %r14
+
+	cmpl	$ 0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dpacp_tn_8_vs_lib8)
 #endif
 
 
@@ -2247,6 +2485,40 @@ NAME:
 	ret
 
 	FUN_END(kernel_dpacp_tn_8_lib8)
+
+
+
+
+
+//                                1         2            3          4        5          6
+// void kernel_dpacp_tn_8_vs_lib8(int kmax, int offsetA, double *A, int sda, double *C, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpacp_tn_8_vs_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // offsetA
+	movq	ARG3, %r12 // A
+	movq	ARG4, %r13 // sda
+	sall	$ 6, %r13d
+	movq	ARG5, %r14 // C
+	movq	ARG6, %r15 // m1
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_DPACP_TN_8_VS_LIB8
+#else
+	CALL(inner_kernel_dpacp_tn_8_vs_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpacp_tn_8_vs_lib8)
 
 
 

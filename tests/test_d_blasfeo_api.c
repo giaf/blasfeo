@@ -292,6 +292,7 @@ int main()
 //	kernel_dpacp_nn_8_lib8(n, 0, sA.pA, sA.cn, sD.pA);
 //	kernel_dpacp_nn_8_vs_lib8(n, 0, sA.pA, sA.cn, sD.pA, 8);
 //	kernel_dpacp_tn_8_lib8(n, 0, sA.pA, sA.cn, sD.pA);
+	kernel_dpacp_tn_8_vs_lib8(n, 0, sA.pA, sA.cn, sD.pA, 8);
 //	kernel_dpacp_l_nn_8_lib8(4, 0, sA.pA, sA.cn, sD.pA);
 //	kernel_dpacp_l_nn_8_vs_lib8(4, 0, sA.pA, sA.cn, sD.pA, 8);
 
@@ -309,7 +310,7 @@ int main()
 //	blasfeo_dtrmm_rlnn(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 
 //	blasfeo_dgecp(n, n, &sA, 0, 0, &sD, 0, 0);
-	blasfeo_dtrcp_l(n, &sA, 0, 0, &sD, 0, 0);
+//	blasfeo_dtrcp_l(n, &sA, 0, 0, &sD, 0, 0);
 	
 //	kernel_dpotrf_nt_l_8x8_lib8(0, sA.pA, sA.pA, sD.pA, sD.pA, sD.dA);
 //	kernel_dpotrf_nt_l_8x8_vs_lib8(0, sA.pA, sA.pA, sD.pA, sD.pA, sD.dA, 8, 8);
