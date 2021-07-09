@@ -533,21 +533,21 @@ NAME:
 	vpermq		$ 0x0e, %zmm24, %zmm7 {%k2}
 
 	vunpcklpd	%zmm1, %zmm0, %zmm24
-	vmovapd		%zmm24, 0*64(%r14) {%k3}
+	vmovupd		%zmm24, 0*64(%r14) {%k3}
 	vunpckhpd	%zmm1, %zmm0, %zmm24
-	vmovapd		%zmm24, 1*64(%r14) {%k3}
+	vmovupd		%zmm24, 1*64(%r14) {%k3}
 	vunpcklpd	%zmm3, %zmm2, %zmm24
-	vmovapd		%zmm24, 2*64(%r14) {%k3}
+	vmovupd		%zmm24, 2*64(%r14) {%k3}
 	vunpckhpd	%zmm3, %zmm2, %zmm24
-	vmovapd		%zmm24, 3*64(%r14) {%k3}
+	vmovupd		%zmm24, 3*64(%r14) {%k3}
 	vunpcklpd	%zmm5, %zmm4, %zmm24
-	vmovapd		%zmm24, 4*64(%r14) {%k3}
+	vmovupd		%zmm24, 4*64(%r14) {%k3}
 	vunpckhpd	%zmm5, %zmm4, %zmm24
-	vmovapd		%zmm24, 5*64(%r14) {%k3}
+	vmovupd		%zmm24, 5*64(%r14) {%k3}
 	vunpcklpd	%zmm7, %zmm6, %zmm24
-	vmovapd		%zmm24, 6*64(%r14) {%k3}
+	vmovupd		%zmm24, 6*64(%r14) {%k3}
 	vunpckhpd	%zmm7, %zmm6, %zmm24
-	vmovapd		%zmm24, 7*64(%r14) {%k3}
+	vmovupd		%zmm24, 7*64(%r14) {%k3}
 
 	subl	$ 8, %r10d
 	addq	%r13, %r12
