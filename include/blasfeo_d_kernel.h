@@ -123,6 +123,8 @@ void kernel_dpacp_l_nn_8_lib8(int kmax, int offsetA, double *A, int sda, double 
 void kernel_dpacp_l_nn_8_vs_lib8(int kmax, int offsetA, double *A, int sda, double *B, int m1);
 void kernel_dpacp_l_tn_8_lib8(int kmax, int offsetA, double *A, int sda, double *B);
 void kernel_dpacp_l_tn_8_vs_lib8(int kmax, int offsetA, double *A, int sda, double *B, int m1);
+void kernel_dpaad_nn_8_lib8(int kmax, double *alpha, int offsetA, double *A, int sda, double *B);
+void kernel_dpaad_nn_8_vs_lib8(int kmax, double *alpha, int offsetA, double *A, int sda, double *B, int m1);
 
 
 
