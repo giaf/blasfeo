@@ -891,14 +891,55 @@ void blasfeo_dveccpsc(int m, double alpha, struct blasfeo_dvec *sa, int ai, stru
 
 
 // scale and add a generic strmat into a generic strmat
-void blasfeo_dgead(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
+void blasfeo_dgead(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dgead(m, n, alpha, sA, ai, aj, sC, ci, cj);
-#else
-	printf("\nblasfeo_dgead: feature not implemented yet\n");
-	exit(1);
-#endif
+
+	// invalidate stored inverse diagonal
+	sB->use_dA = 0;
+
+	const int ps = 8;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+
+	// pA, pB point to panels edges
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+
+	int ii, mmax;
+
+	int offsetA = (air+ps-bir) & (ps-1);
+
+	// clean bir
+	if(bir!=0)
+		{
+		mmax = m<ps-bir ? m : ps-bir;
+		kernel_dpaad_nn_8_vs_lib8(n, &alpha, air, pA, sda, pB+bir, mmax);
+		if(air>=bir)
+			pA += ps*sda;
+		pB += ps*sdb;
+		m -= mmax;
+		}
+	ii = 0;	
+	// main loop
+//	for(; ii<m-15; ii+=16)
+//		{
+//		kernel_dpacp_nn_16_lib8(n, &alpha, offsetA, pA+ii*sda, sda, pB+ii*sdb, sdb);
+//		}
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dpaad_nn_8_lib8(n, &alpha, offsetA, pA+ii*sda, sda, pB+ii*sdb);
+		}
+	if(ii<m)
+		{
+		kernel_dpaad_nn_8_vs_lib8(n, &alpha, offsetA, pA+ii*sda, sda, pB+ii*sdb, m-ii);
+		}
+
+	return;
+
 	}
 
 
