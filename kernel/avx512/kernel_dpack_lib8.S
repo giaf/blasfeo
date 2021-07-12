@@ -1204,6 +1204,11 @@ NAME:
 
 11:
 
+	// check for return
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
 	// initial rectangle unaligned
 
 	movl	$ 8, %eax				// load 8
@@ -1263,7 +1268,12 @@ NAME:
 	subq	$ 64, %r12				// A-=4*sizeof(double) (loop+offsetA)
 
 
-5:  // main panel
+	// check for return
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+//5:  // main panel
 	cmpl	$ 7, %r10d
 	jle		2f // clean-up loop
 

@@ -973,14 +973,52 @@ void blasfeo_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct
 
 
 // copy and transpose a lower triangular strmat into an upper triangular strmat
-void blasfeo_dtrtr_l(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj)
+void blasfeo_dtrtr_l(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dtrtr_l(m, sA, ai, aj, sC, ci, cj);
-#else
-	printf("\nblasfeo_dtrtr_l: feature not implemented yet\n");
-	exit(1);
-#endif
+
+	// invalidate stored inverse diagonal
+	sB->use_dA = 0;
+
+	const int ps = 8;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+
+	int air = ai & (ps-1);
+	int bir = bi & (ps-1);
+
+	// pA, pB point to panels edges
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pB = sB->pA + bj*ps + (bi-bir)*sdb;
+
+	int ii, mmax;
+
+	int offsetA = (air+ps-bir) & (ps-1);
+
+	// clean bir
+	if(bir!=0)
+		{
+		mmax = m<ps-bir ? m : ps-bir;
+		kernel_dpacp_l_tn_8_vs_lib8(m-mmax, air, pA, sda, pB+bir, mmax);
+		pA += mmax*ps;
+		if(air>=bir)
+			pA += ps*sda;
+		pB += ps*sdb + mmax*ps;
+		m -= mmax;
+		}
+	ii = 0;	
+	// main loop
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dpacp_l_tn_8_lib8(m-ii-8, offsetA, pA+ii*sda+ii*ps, sda, pB+ii*sdb+ii*ps);
+		}
+	if(ii<m)
+		{
+		kernel_dpacp_l_tn_8_vs_lib8(m-ii-8, offsetA, pA+ii*sda+ii*ps, sda, pB+ii*sdb+ii*ps, m-ii);
+		}
+
+	return;
+
 	}
 
 
