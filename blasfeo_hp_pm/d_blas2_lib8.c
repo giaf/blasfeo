@@ -113,11 +113,12 @@ void blasfeo_hp_dgemv_t(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	int i;
 
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*ps + ai/ps*ps*sda + ai%ps; // TODO remove air from here !!!!!!!!!
-	int offsetA = ai%ps;
+	double *pA = sA->pA + aj*ps + ai/ps*ps*sda; // + ai%ps; // TODO remove air from here !!!!!!!!!
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
+
+	int offsetA = ai%ps;
 
 	i = 0;
 #if 0

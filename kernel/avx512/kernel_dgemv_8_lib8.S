@@ -489,13 +489,12 @@ NAME:
 	movl	%r14d, %r15d
 	sall	$ 3, %r15d // offA*sizeof(double)
 
-	// TODO different def of A with offA !!!!!!!!!
-	subq	%r15, %r11 // A - offA
-	// TODO leaq
+//	subq	%r15, %r11 // A - offA
 	subq	%r15, %r13 // x - offA
 
-	movl	%r10d, %r15d // kmax
-	addl	%r14d, %r15d // kmax + offA
+//	movl	%r10d, %r15d // kmax
+//	addl	%r14d, %r15d // kmax + offA
+	leal	0(%r10d, %r14d), %r15d
 
 	vcvtsi2sd		%r14d, %xmm24, %xmm24 // offA
 	vcvtsi2sd		%r15d, %xmm25, %xmm25 // offA + kmax
