@@ -131,6 +131,8 @@ void kernel_dpaad_nn_8_vs_lib8(int kmax, double *alpha, int offsetA, double *A, 
 void kernel_dgemv_n_8_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
 void kernel_dgemv_n_8_vs_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int m1);
 void kernel_dgemv_n_8_gen_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int m0, int m1);
+void kernel_dgemv_t_8_lib8(int k, double *alpha, int offsetA, double *A, int sda, double *x, double *beta, double *y, double *z);
+void kernel_dgemv_t_8_vs_lib8(int k, double *alpha, int offsetA, double *A, int sda, double *x, double *beta, double *y, double *z, int m1);
 
 
 
