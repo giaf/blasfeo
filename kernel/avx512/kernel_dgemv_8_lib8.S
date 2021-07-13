@@ -500,15 +500,15 @@ NAME:
 	vcvtsi2sd		%r14d, %xmm24, %xmm24 // offA
 	vcvtsi2sd		%r15d, %xmm25, %xmm25 // offA + kmax
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd			.LC00(%rip), %ymm26
+	vmovupd			.LC00(%rip), %zmm26
 #elif defined(OS_MAC)
-	vmovupd			LC00(%rip), %ymm26
+	vmovupd			LC00(%rip), %zmm26
 #endif
 	vbroadcastsd	%xmm24, %zmm24
 	vbroadcastsd	%xmm25, %zmm25
-	vsubpd			%ymm26, %ymm24, %ymm24
-	vsubpd			%ymm25, %ymm26, %ymm25
-	vandpd			%ymm25, %ymm24, %ymm24
+	vsubpd			%zmm26, %zmm24, %zmm24
+	vsubpd			%zmm25, %zmm26, %zmm25
+	vandpd			%zmm25, %zmm24, %zmm24
 
 	vpmovq2m		%zmm25, %k1
 

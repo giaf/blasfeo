@@ -104,12 +104,45 @@ void blasfeo_hp_dgemv_n(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 void blasfeo_hp_dgemv_t(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dgemv_t(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+
+	if(n<=0)
+		return;
+	
+	const int ps = 8;
+
+	int i;
+
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*ps + ai/ps*ps*sda + ai%ps; // TODO remove air from here !!!!!!!!!
+	int offsetA = ai%ps;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+
+	i = 0;
+#if 0
+	for( ; i<n-7; i+=8)
+		{
+		kernel_dgemv_t_8_lib4(m, &alpha, offsetA, &pA[i*ps], sda, x, &beta, &y[i], &z[i]);
+		}
+	if(i<n-3)
+		{
+		kernel_dgemv_t_4_lib4(m, &alpha, offsetA, &pA[i*ps], sda, x, &beta, &y[i], &z[i]);
+		i+=4;
+		}
 #else
-	printf("\nblasfeo_dgemv_t: feature not implemented yet\n");
-	exit(1);
+	for( ; i<n-7; i+=8)
+		{
+		kernel_dgemv_t_8_lib8(m, &alpha, offsetA, &pA[i*ps], sda, x, &beta, &y[i], &z[i]);
+		}
 #endif
+	if(i<n)
+		{
+		kernel_dgemv_t_8_vs_lib8(m, &alpha, offsetA, &pA[i*ps], sda, x, &beta, &y[i], &z[i], n-i);
+		}
+	
+	return;
+
 	}
 
 
