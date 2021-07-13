@@ -120,15 +120,15 @@ void blasfeo_hp_dtrmv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct
 
 
 // m >= n
-void blasfeo_hp_dtrmv_lnu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
-	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dtrmv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
-#else
-	printf("\nblasfeo_dtrmv_lnu: feature not implemented yet\n");
-	exit(1);
-#endif
-	}
+//void blasfeo_hp_dtrmv_lnu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+//	{
+//#if defined(BLASFEO_REF_API)
+//	blasfeo_ref_dtrmv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
+//#else
+//	printf("\nblasfeo_dtrmv_lnu: feature not implemented yet\n");
+//	exit(1);
+//#endif
+//	}
 
 
 
@@ -146,15 +146,15 @@ void blasfeo_hp_dtrmv_ltn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct
 
 
 // m >= n
-void blasfeo_hp_dtrmv_ltu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
-	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dtrmv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
-#else
-	printf("\nblasfeo_dtrmv_ltu: feature not implemented yet\n");
-	exit(1);
-#endif
-	}
+//void blasfeo_hp_dtrmv_ltu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+//	{
+//#if defined(BLASFEO_REF_API)
+//	blasfeo_ref_dtrmv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
+//#else
+//	printf("\nblasfeo_dtrmv_ltu: feature not implemented yet\n");
+//	exit(1);
+//#endif
+//	}
 
 
 
@@ -324,10 +324,10 @@ void blasfeo_dtrmv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 
 
 
-void blasfeo_dtrmv_lnu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
-	{
-	blasfeo_hp_dtrmv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
-	}
+//void blasfeo_dtrmv_lnu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+//	{
+//	blasfeo_hp_dtrmv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
+//	}
 
 
 
@@ -338,10 +338,10 @@ void blasfeo_dtrmv_ltn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 
 
 
-void blasfeo_dtrmv_ltu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
-	{
-	blasfeo_hp_dtrmv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
-	}
+//void blasfeo_dtrmv_ltu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+//	{
+//	blasfeo_hp_dtrmv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
+//	}
 
 
 

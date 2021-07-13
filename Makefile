@@ -237,6 +237,7 @@ ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
 KERNEL_OBJS = \
 		kernel/avx512/kernel_dgemm_16x8_lib8.o \
 		kernel/avx512/kernel_dgemm_8x8_lib8.o \
+		kernel/avx512/kernel_dgemv_8_lib8.o \
 		kernel/avx512/kernel_dpack_lib8.o \
 		\
 		kernel/sse3/kernel_align_x64.o \
