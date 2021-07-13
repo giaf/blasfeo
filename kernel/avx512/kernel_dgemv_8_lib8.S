@@ -233,18 +233,18 @@ NAME:
 // r10d  <- k
 // r11   <- A
 // r12   <- x
-// ymm0  <- []_a
+// zmm0  <- []_a
 // ...
-// ymm3  <- []_d
+// zmm3  <- []_d
 
 //
 // output arguments:
 // r10d  <- 0
 // r11   <- A+4*k*sizeof(double)
 // r12   <- x+k*sizeof(double)
-// ymm0  <- []_a
+// zmm0  <- []_a
 // ...
-// ymm3  <- []_d
+// zmm3  <- []_d
 
 #if MACRO_LEVEL>=2
 	.macro INNER_KERNEL_GEMV_ADD_N_8_LIB8
@@ -293,9 +293,9 @@ NAME:
 
 0: // clean-up
 	
-	vmovapd	0(%r11), %ymm8
-	vbroadcastsd	0(%r12), %ymm12
-	vfmadd231pd		%ymm8, %ymm12, %ymm0
+	vmovapd			0*64(%r11), %zmm24
+	vbroadcastsd	0*8(%r12), %zmm25
+	vfmadd231pd		%zmm24, %zmm25, %zmm0
 	
 	subl	$ 1, %r10d
 	addq	$ 32, %r11
@@ -351,7 +351,7 @@ NAME:
 	// beta
 	vbroadcastsd	0(%r11), %zmm25
 	vmovupd			0(%r12), %zmm24
-	vfmadd231pd		%zmm15, %zmm14, %zmm0
+	vfmadd231pd		%zmm25, %zmm24, %zmm0
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -595,6 +595,7 @@ NAME:
 	movq	ARG5, %r11   // beta
 	movq	ARG6, %r12   // y
 
+	// TODO vs_ ???
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_8_LIB8
 #else
@@ -659,6 +660,7 @@ NAME:
 	movq	ARG5, %r11   // beta
 	movq	ARG6, %r12   // y
 
+	// TODO gen_ ???
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_SCALE_AB_8_LIB8
 #else

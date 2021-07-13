@@ -494,8 +494,8 @@ int main()
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 //	kernel_dgemv_n_8_lib8(n, &alpha, sA.pA, sx_n.pa, &beta, sy_n.pa, sz_n.pa);
 //	kernel_dgemv_n_8_vs_lib8(n, &alpha, sA.pA, sx_n.pa, &beta, sy_n.pa, sz_n.pa, 5);
-	kernel_dgemv_n_8_gen_lib8(n, &alpha, sA.pA, sx_n.pa, &beta, sy_n.pa, sz_n.pa, 3, 5);
-//	blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+//	kernel_dgemv_n_8_gen_lib8(n, &alpha, sA.pA, sx_n.pa, &beta, sy_n.pa, sz_n.pa, 3, 5);
+	blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	return 0;
 #endif
