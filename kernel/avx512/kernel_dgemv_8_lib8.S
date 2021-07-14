@@ -1489,6 +1489,130 @@ NAME:
 
 
 
+//                                1      2                3                4          5        6            7            8               9            10           11           12
+// void kernel_dgemv_nt_8_vs_lib8(int k, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t, int m1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemv_nt_8_vs_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers y_t
+
+	vxorpd	%zmm0, %zmm0, %zmm0
+	vmovapd	%zmm0, %zmm1
+	vmovapd	%zmm0, %zmm2
+	vmovapd	%zmm0, %zmm3
+	vmovapd	%zmm0, %zmm4
+	vmovapd	%zmm0, %zmm5
+	vmovapd	%zmm0, %zmm6
+	vmovapd	%zmm0, %zmm7
+
+	vmovapd	%zmm0, %zmm8
+	vmovapd	%zmm0, %zmm9
+	vmovapd	%zmm0, %zmm10
+	vmovapd	%zmm0, %zmm11
+	vmovapd	%zmm0, %zmm12
+	vmovapd	%zmm0, %zmm13
+	vmovapd	%zmm0, %zmm14
+	vmovapd	%zmm0, %zmm15
+
+	// initialize x_n
+	movq	ARG2, %r10 // alpha_n
+	vbroadcastsd 0(%r10), %zmm24
+
+	movq	ARG6, %r10 // x_n
+	movq	ARG12, %r11 // m1
+
+	vbroadcastsd 0(%r10), %zmm8
+	vmulpd		%zmm24, %zmm8, %zmm8
+	cmpl	$ 2, %r11d
+	jl		0f
+	vbroadcastsd 8(%r10), %zmm9
+	vmulpd		%zmm24, %zmm9, %zmm9
+	cmpl	$ 3, %r11d
+	jl		0f
+	vbroadcastsd 16(%r10), %zmm10
+	vmulpd		%zmm24, %zmm10, %zmm10
+	cmpl	$ 4, %r11d
+	jl		0f
+	vbroadcastsd 24(%r10), %zmm11
+	vmulpd		%zmm24, %zmm11, %zmm11
+	cmpl	$ 5, %r11d
+	jl		0f
+	vbroadcastsd 32(%r10), %zmm11
+	vmulpd		%zmm24, %zmm12, %zmm12
+	cmpl	$ 6, %r11d
+	jl		0f
+	vbroadcastsd 40(%r10), %zmm11
+	vmulpd		%zmm24, %zmm13, %zmm13
+	cmpl	$ 7, %r11d
+	jl		0f
+	vbroadcastsd 48(%r10), %zmm11
+	vmulpd		%zmm24, %zmm14, %zmm14
+	je		0f
+	vbroadcastsd 56(%r10), %zmm11
+	vmulpd		%zmm24, %zmm15, %zmm15
+0:
+
+
+	// inner kernel dgemv nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG4, %r11  // A
+	movq	ARG5, %r12 // sda
+	sall	$ 6, %r12d // 4*sda*sizeof(double)
+	movq	ARG7, %r13  // x_t
+	movq	ARG10, %r14  // z_n
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_ADD_NT_8_LIB8
+#else
+	CALL(inner_kernel_gemv_add_nt_8_lib8)
+#endif
+
+
+	// inner blend n scale ab
+
+	movq	ARG3, %r10 // alpha_t
+	movq	ARG8, %r11   // beta_t
+	movq	ARG9, %r12   // y_t
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_8_LIB8
+#else
+	CALL(inner_blend_t_8_lib8)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8_LIB8
+#else
+	CALL(inner_scale_ab_8_lib8)
+#endif
+
+
+	// store
+
+	movq	ARG11, %r10 // z_t 
+	movq	ARG12, %r11 // m1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8_VS_LIB8
+#else
+	CALL(inner_store_8_vs_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemv_nt_8_vs_lib8)
+
+
+
+
+
 	// read-only data
 #if defined(OS_LINUX)
 	.section	.rodata.cst32,"aM",@progbits,32
