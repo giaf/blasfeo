@@ -486,7 +486,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// gemv_n
 	alpha = 1.0;
 	beta = 0.0;
@@ -529,10 +529,10 @@ int main()
 	return 0;
 #endif
 
-#if 0
+#if 1
 	// gemv_nt
 	blasfeo_print_tran_dvec(n, &sx_n, 0);
-	blasfeo_dgemv_nt(6, 6, 1.0, 1.0, &sA, 1, 0, &sx_n, 0, &sx_t, 0, 0.0, 0.0, &sy_n, 0, &sy_t, 0, &sz_n, 0, &sz_t, 0);
+	blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx_n, 0, &sx_t, 0, 0.0, 0.0, &sy_n, 0, &sy_t, 0, &sz_n, 0, &sz_t, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_t, 0);
 	return 0;

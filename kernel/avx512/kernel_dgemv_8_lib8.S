@@ -564,43 +564,43 @@ NAME:
 
 	vpmovq2m		%zmm25, %k1
 
-	vmovupd		0(%r13), %zmm24 {%k1}
-	vmovupd		0(%r14), %zmm25 {%k1}
+	vmovupd		0(%r13), %zmm24 {%k1}{z}
+	vmovupd		0(%r14), %zmm25 {%k1}{z}
 
-	vmovapd		0*64(%r11), %zmm26 {%k1}
+	vmovapd		0*64(%r11), %zmm26 {%k1}{z}
 	vfmadd231pd	%zmm26, %zmm24, %zmm0
 	vfmadd231pd	%zmm26, %zmm8, %zmm25
 
-	vmovapd		1*64(%r11), %zmm26 {%k1}
+	vmovapd		1*64(%r11), %zmm26 {%k1}{z}
 	vfmadd231pd	%zmm26, %zmm24, %zmm1
 //	vfmadd231pd	%zmm26, %zmm9, %zmm25
 	vmulpd		%zmm26, %zmm9, %zmm27
 
-	vmovapd		2*64(%r11), %zmm26 {%k1}
+	vmovapd		2*64(%r11), %zmm26 {%k1}{z}
 	vfmadd231pd	%zmm26, %zmm24, %zmm2
 //	vfmadd231pd	%zmm26, %zmm10, %zmm25
 	vmulpd		%zmm26, %zmm10, %zmm28
 
-	vmovapd		3*64(%r11), %zmm26 {%k1}
+	vmovapd		3*64(%r11), %zmm26 {%k1}{z}
 	vfmadd231pd	%zmm26, %zmm24, %zmm3
 //	vfmadd231pd	%zmm26, %zmm11, %zmm25
 	vmulpd		%zmm26, %zmm11, %zmm29
 
-	vmovapd		4*64(%r11), %zmm26 {%k1}
+	vmovapd		4*64(%r11), %zmm26 {%k1}{z}
 	vfmadd231pd	%zmm26, %zmm24, %zmm4
 	vfmadd231pd	%zmm26, %zmm12, %zmm25
 
-	vmovapd		5*64(%r11), %zmm26 {%k1}
+	vmovapd		5*64(%r11), %zmm26 {%k1}{z}
 	vfmadd231pd	%zmm26, %zmm24, %zmm5
 //	vfmadd231pd	%zmm26, %zmm13, %zmm25
 	vfmadd231pd	%zmm26, %zmm13, %zmm27
 
-	vmovapd		6*64(%r11), %zmm26 {%k1}
+	vmovapd		6*64(%r11), %zmm26 {%k1}{z}
 	vfmadd231pd	%zmm26, %zmm24, %zmm6
 //	vfmadd231pd	%zmm26, %zmm14, %zmm25
 	vfmadd231pd	%zmm26, %zmm14, %zmm28
 
-	vmovapd		7*64(%r11), %zmm26 {%k1}
+	vmovapd		7*64(%r11), %zmm26 {%k1}{z}
 	vfmadd231pd	%zmm26, %zmm24, %zmm7
 //	vfmadd231pd	%zmm26, %zmm15, %zmm25
 	vfmadd231pd	%zmm26, %zmm15, %zmm29
@@ -1423,13 +1423,13 @@ NAME:
 	vmulpd		%zmm24, %zmm10, %zmm10
 	vbroadcastsd 24(%r10), %zmm11
 	vmulpd		%zmm24, %zmm11, %zmm11
-	vbroadcastsd 32(%r10), %zmm11
+	vbroadcastsd 32(%r10), %zmm12
 	vmulpd		%zmm24, %zmm12, %zmm12
-	vbroadcastsd 40(%r10), %zmm11
+	vbroadcastsd 40(%r10), %zmm13
 	vmulpd		%zmm24, %zmm13, %zmm13
-	vbroadcastsd 48(%r10), %zmm11
+	vbroadcastsd 48(%r10), %zmm14
 	vmulpd		%zmm24, %zmm14, %zmm14
-	vbroadcastsd 56(%r10), %zmm11
+	vbroadcastsd 56(%r10), %zmm15
 	vmulpd		%zmm24, %zmm15, %zmm15
 
 
@@ -1540,18 +1540,18 @@ NAME:
 	vmulpd		%zmm24, %zmm11, %zmm11
 	cmpl	$ 5, %r11d
 	jl		0f
-	vbroadcastsd 32(%r10), %zmm11
+	vbroadcastsd 32(%r10), %zmm12
 	vmulpd		%zmm24, %zmm12, %zmm12
 	cmpl	$ 6, %r11d
 	jl		0f
-	vbroadcastsd 40(%r10), %zmm11
+	vbroadcastsd 40(%r10), %zmm13
 	vmulpd		%zmm24, %zmm13, %zmm13
 	cmpl	$ 7, %r11d
 	jl		0f
-	vbroadcastsd 48(%r10), %zmm11
+	vbroadcastsd 48(%r10), %zmm14
 	vmulpd		%zmm24, %zmm14, %zmm14
 	je		0f
-	vbroadcastsd 56(%r10), %zmm11
+	vbroadcastsd 56(%r10), %zmm15
 	vmulpd		%zmm24, %zmm15, %zmm15
 0:
 
