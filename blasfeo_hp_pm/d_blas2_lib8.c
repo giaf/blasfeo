@@ -75,15 +75,15 @@ void blasfeo_hp_dgemv_n(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 		}
 	// main loop
 	i = 0;
-#if 0
-	for( ; i<m-7; i+=8)
+#if 1
+	for( ; i<m-15; i+=16)
 		{
-		kernel_dgemv_n_8_lib4(n, &alpha, &pA[i*sda], sda, x, &beta, &y[i], &z[i]);
+		kernel_dgemv_n_16_lib8(n, &alpha, &pA[i*sda], sda, x, &beta, &y[i], &z[i]);
 		}
-	if(i<m-3)
+	if(i<m-7)
 		{
-		kernel_dgemv_n_4_lib4(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i]);
-		i+=4;
+		kernel_dgemv_n_8_lib8(n, &alpha, &pA[i*sda], x, &beta, &y[i], &z[i]);
+		i+=8;
 		}
 #else
 	for( ; i<m-7; i+=8)
