@@ -247,10 +247,10 @@ NAME:
 // zmm3  <- []_d
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMV_ADD_N_8_LIB8
+	.macro INNER_KERNEL_GEMV_N_8_LIB8
 #else
 	.p2align 4,,15
-	FUN_START(inner_kernel_gemv_add_n_8_lib8)
+	FUN_START(inner_kernel_gemv_n_8_lib8)
 #endif
 	
 	cmpl	$ 0, %r10d
@@ -313,7 +313,7 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_kernel_gemv_add_n_8_lib8)
+	FUN_END(inner_kernel_gemv_n_8_lib8)
 #endif
 
 
@@ -342,10 +342,10 @@ NAME:
 // ymm7  <- []
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMV_ADD_T_8_LIB8
+	.macro INNER_KERNEL_GEMV_T_8_LIB8
 #else
 	.p2align 4,,15
-	FUN_START(inner_kernel_gemv_add_t_8_lib8)
+	FUN_START(inner_kernel_gemv_t_8_lib8)
 #endif
 
 	cmpl	$ 0, %r10d
@@ -449,7 +449,7 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_kernel_gemv_add_t_8_lib8)
+	FUN_END(inner_kernel_gemv_t_8_lib8)
 #endif
 
 
@@ -474,10 +474,10 @@ NAME:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMV_ADD_NT_8_LIB8
+	.macro INNER_KERNEL_GEMV_NT_8_LIB8
 #else
 	.p2align 4,,15
-	FUN_START(inner_kernel_gemv_add_nt_8_lib8)
+	FUN_START(inner_kernel_gemv_nt_8_lib8)
 #endif
 
 	cmpl	$ 0, %r10d
@@ -625,7 +625,7 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_kernel_gemv_add_nt_8_lib8)
+	FUN_END(inner_kernel_gemv_nt_8_lib8)
 #endif
 
 
@@ -657,10 +657,10 @@ NAME:
 // ymm7  <- []
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_GEMV_ADD_T_8_LIB8
+	.macro INNER_EDGE_GEMV_T_8_LIB8
 #else
 	.p2align 4,,15
-	FUN_START(inner_edge_gemv_add_t_8_lib8)
+	FUN_START(inner_edge_gemv_t_8_lib8)
 #endif
 
 	cmpl	$ 0, %r14d
@@ -730,7 +730,7 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_edge_gemv_add_t_8_lib8)
+	FUN_END(inner_edge_gemv_t_8_lib8)
 #endif
 
 
@@ -1034,9 +1034,9 @@ NAME:
 	movq	ARG4, %r12  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_N_8_LIB8
+	INNER_KERNEL_GEMV_N_8_LIB8
 #else
-	CALL(inner_kernel_gemv_add_n_8_lib8)
+	CALL(inner_kernel_gemv_n_8_lib8)
 #endif
 
 
@@ -1103,9 +1103,9 @@ NAME:
 	movq	ARG4, %r12  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_N_8_LIB8
+	INNER_KERNEL_GEMV_N_8_LIB8
 #else
-	CALL(inner_kernel_gemv_add_n_8_lib8)
+	CALL(inner_kernel_gemv_n_8_lib8)
 #endif
 
 
@@ -1174,9 +1174,9 @@ NAME:
 	movq	ARG4, %r12  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_N_8_LIB8
+	INNER_KERNEL_GEMV_N_8_LIB8
 #else
-	CALL(inner_kernel_gemv_add_n_8_lib8)
+	CALL(inner_kernel_gemv_n_8_lib8)
 #endif
 
 
@@ -1254,15 +1254,15 @@ NAME:
 	movq	ARG3, %r14 // offA
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_GEMV_ADD_T_8_LIB8
+	INNER_EDGE_GEMV_T_8_LIB8
 #else
-	CALL(inner_edge_gemv_add_t_8_lib8)
+	CALL(inner_edge_gemv_t_8_lib8)
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_T_8_LIB8
+	INNER_KERNEL_GEMV_T_8_LIB8
 #else
-	CALL(inner_kernel_gemv_add_t_8_lib8)
+	CALL(inner_kernel_gemv_t_8_lib8)
 #endif
 
 
@@ -1337,15 +1337,15 @@ NAME:
 	movq	ARG3, %r14 // offA
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_GEMV_ADD_T_8_LIB8
+	INNER_EDGE_GEMV_T_8_LIB8
 #else
-	CALL(inner_edge_gemv_add_t_8_lib8)
+	CALL(inner_edge_gemv_t_8_lib8)
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_T_8_LIB8
+	INNER_KERNEL_GEMV_T_8_LIB8
 #else
-	CALL(inner_kernel_gemv_add_t_8_lib8)
+	CALL(inner_kernel_gemv_t_8_lib8)
 #endif
 
 
@@ -1443,9 +1443,9 @@ NAME:
 	movq	ARG10, %r14  // z_n
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_NT_8_LIB8
+	INNER_KERNEL_GEMV_NT_8_LIB8
 #else
-	CALL(inner_kernel_gemv_add_nt_8_lib8)
+	CALL(inner_kernel_gemv_nt_8_lib8)
 #endif
 
 
@@ -1566,9 +1566,9 @@ NAME:
 	movq	ARG10, %r14  // z_n
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_NT_8_LIB8
+	INNER_KERNEL_GEMV_NT_8_LIB8
 #else
-	CALL(inner_kernel_gemv_add_nt_8_lib8)
+	CALL(inner_kernel_gemv_nt_8_lib8)
 #endif
 
 
