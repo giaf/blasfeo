@@ -263,6 +263,8 @@ NAME:
 	.p2align 3
 1: // main loop
 
+	// TODO vbroadcastf64x2 + vshufpd
+
 	vmovapd			0*64(%r11), %zmm24
 	vbroadcastsd	0*8(%r12), %zmm25
 	vfmadd231pd		%zmm24, %zmm25, %zmm0

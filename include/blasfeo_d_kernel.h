@@ -127,6 +127,8 @@ void kernel_dpaad_nn_8_lib8(int kmax, double *alpha, int offsetA, double *A, int
 void kernel_dpaad_nn_8_vs_lib8(int kmax, double *alpha, int offsetA, double *A, int sda, double *B, int m1);
 
 // levle 2 BLAS
+// 16
+void kernel_dgemv_n_16_lib8(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 // 8
 void kernel_dgemv_n_8_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
 void kernel_dgemv_n_8_vs_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int m1);
