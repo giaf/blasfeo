@@ -460,6 +460,184 @@ NAME:
 // input arguments:
 // r10d  <- k
 // r11   <- A
+// r12   <- bs*sda*sizeof(double) = 32*sda
+// r13   <- x_t
+// r14   <- z_n
+// ymm0  <- []
+// ...
+// ymm7  <- []
+// ymm8  <- x_n_0
+// ...
+// ymm15 <- x_n_7
+
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMV_ADD_NT_8_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_gemv_add_nt_8_lib8)
+#endif
+
+	cmpl	$ 0, %r10d
+	jle		2f // return
+
+	cmpl	$ 8, %r10d
+	jl		0f // clean-up loop
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovupd		0(%r13), %zmm24
+	vmovupd		0(%r14), %zmm25
+
+	vmovapd		0*64(%r11), %zmm26
+	vfmadd231pd	%zmm26, %zmm24, %zmm0
+	vfmadd231pd	%zmm26, %zmm8, %zmm25
+
+	vmovapd		1*64(%r11), %zmm26
+	vfmadd231pd	%zmm26, %zmm24, %zmm1
+//	vfmadd231pd	%zmm26, %zmm9, %zmm25
+	vmulpd		%zmm26, %zmm9, %zmm27
+
+	vmovapd		2*64(%r11), %zmm26
+	vfmadd231pd	%zmm26, %zmm24, %zmm2
+//	vfmadd231pd	%zmm26, %zmm10, %zmm25
+	vmulpd		%zmm26, %zmm10, %zmm28
+
+	vmovapd		3*64(%r11), %zmm26
+	vfmadd231pd	%zmm26, %zmm24, %zmm3
+//	vfmadd231pd	%zmm26, %zmm11, %zmm25
+	vmulpd		%zmm26, %zmm11, %zmm29
+
+	vmovapd		4*64(%r11), %zmm26
+	vfmadd231pd	%zmm26, %zmm24, %zmm4
+	vfmadd231pd	%zmm26, %zmm12, %zmm25
+
+	vmovapd		5*64(%r11), %zmm26
+	vfmadd231pd	%zmm26, %zmm24, %zmm5
+//	vfmadd231pd	%zmm26, %zmm13, %zmm25
+	vfmadd231pd	%zmm26, %zmm13, %zmm27
+
+	vmovapd		6*64(%r11), %zmm26
+	vfmadd231pd	%zmm26, %zmm24, %zmm6
+//	vfmadd231pd	%zmm26, %zmm14, %zmm25
+	vfmadd231pd	%zmm26, %zmm14, %zmm28
+
+	vmovapd		7*64(%r11), %zmm26
+	vfmadd231pd	%zmm26, %zmm24, %zmm7
+//	vfmadd231pd	%zmm26, %zmm15, %zmm25
+	vfmadd231pd	%zmm26, %zmm15, %zmm29
+
+	vaddpd		%zmm25, %zmm27, %zmm25
+	vaddpd		%zmm28, %zmm29, %zmm28
+	vaddpd		%zmm25, %zmm28, %zmm25
+
+	vmovupd	%zmm25, 0(%r14) 
+
+	subl	$ 8, %r10d
+	addq	%r12, %r11
+	addq	$ 64, %r13
+	addq	$ 64, %r14
+	
+	cmpl	$ 7, %r10d
+
+	jg		1b // main loop 
+
+
+	// consider clean-up
+	cmpl	$ 0, %r10d
+	jle		2f // return
+
+0: // clean-up
+	
+	vcvtsi2sd		%r10d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd			.LC00(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd			LC00(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd			%zmm25, %zmm24, %zmm25
+
+	vpmovq2m		%zmm25, %k1
+
+	vmovupd		0(%r13), %zmm24 {%k1}
+	vmovupd		0(%r14), %zmm25 {%k1}
+
+	vmovapd		0*64(%r11), %zmm26 {%k1}
+	vfmadd231pd	%zmm26, %zmm24, %zmm0
+	vfmadd231pd	%zmm26, %zmm8, %zmm25
+
+	vmovapd		1*64(%r11), %zmm26 {%k1}
+	vfmadd231pd	%zmm26, %zmm24, %zmm1
+//	vfmadd231pd	%zmm26, %zmm9, %zmm25
+	vmulpd		%zmm26, %zmm9, %zmm27
+
+	vmovapd		2*64(%r11), %zmm26 {%k1}
+	vfmadd231pd	%zmm26, %zmm24, %zmm2
+//	vfmadd231pd	%zmm26, %zmm10, %zmm25
+	vmulpd		%zmm26, %zmm10, %zmm28
+
+	vmovapd		3*64(%r11), %zmm26 {%k1}
+	vfmadd231pd	%zmm26, %zmm24, %zmm3
+//	vfmadd231pd	%zmm26, %zmm11, %zmm25
+	vmulpd		%zmm26, %zmm11, %zmm29
+
+	vmovapd		4*64(%r11), %zmm26 {%k1}
+	vfmadd231pd	%zmm26, %zmm24, %zmm4
+	vfmadd231pd	%zmm26, %zmm12, %zmm25
+
+	vmovapd		5*64(%r11), %zmm26 {%k1}
+	vfmadd231pd	%zmm26, %zmm24, %zmm5
+//	vfmadd231pd	%zmm26, %zmm13, %zmm25
+	vfmadd231pd	%zmm26, %zmm13, %zmm27
+
+	vmovapd		6*64(%r11), %zmm26 {%k1}
+	vfmadd231pd	%zmm26, %zmm24, %zmm6
+//	vfmadd231pd	%zmm26, %zmm14, %zmm25
+	vfmadd231pd	%zmm26, %zmm14, %zmm28
+
+	vmovapd		7*64(%r11), %zmm26 {%k1}
+	vfmadd231pd	%zmm26, %zmm24, %zmm7
+//	vfmadd231pd	%zmm26, %zmm15, %zmm25
+	vfmadd231pd	%zmm26, %zmm15, %zmm29
+
+	vaddpd		%zmm25, %zmm27, %zmm25
+	vaddpd		%zmm28, %zmm29, %zmm28
+	vaddpd		%zmm25, %zmm28, %zmm25
+
+	vmovupd	%zmm25, 0(%r14)  {%k1}
+
+	sall	$ 3, %r10d // *sizeof(double)
+	addq	%r10, %r11
+	addq	%r10, %r13
+	addq	%r10, %r14
+	xorl	%r10d, %r10d
+	
+	
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemv_add_nt_8_lib8)
+#endif
+
+
+
+
+
+
+// common inner routine with file scope
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
 // r12   <- bs*sda*sizeof(double)
 // r13   <- x
 // r14d  <- offA
@@ -669,9 +847,7 @@ NAME:
 // r10  <- alpha
 // r11  <- beta
 // r12  <- y
-// zmm0 <- []_a
-// ...
-// zmm3 <- []_d
+// zmm0 <- []
 //
 // output arguments:
 
@@ -1209,6 +1385,105 @@ NAME:
 	ret
 
 	FUN_END(kernel_dgemv_t_8_vs_lib8)
+
+
+
+
+
+//                             1      2                3                4          5        6            7            8               9            10           11
+// void kernel_dgemv_nt_8_lib8(int k, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemv_nt_8_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers y_t
+
+	vxorpd	%zmm0, %zmm0, %zmm0
+	vmovapd	%zmm0, %zmm1
+	vmovapd	%zmm0, %zmm2
+	vmovapd	%zmm0, %zmm3
+	vmovapd	%zmm0, %zmm4
+	vmovapd	%zmm0, %zmm5
+	vmovapd	%zmm0, %zmm6
+	vmovapd	%zmm0, %zmm7
+
+	// initialize x_n
+	movq	ARG2, %r10 // alpha_n
+	vbroadcastsd 0(%r10), %zmm24
+
+	movq	ARG6, %r10 // x_n
+
+	vbroadcastsd 0(%r10), %zmm8
+	vmulpd		%zmm24, %zmm8, %zmm8
+	vbroadcastsd 8(%r10), %zmm9
+	vmulpd		%zmm24, %zmm9, %zmm9
+	vbroadcastsd 16(%r10), %zmm10
+	vmulpd		%zmm24, %zmm10, %zmm10
+	vbroadcastsd 24(%r10), %zmm11
+	vmulpd		%zmm24, %zmm11, %zmm11
+	vbroadcastsd 32(%r10), %zmm11
+	vmulpd		%zmm24, %zmm12, %zmm12
+	vbroadcastsd 40(%r10), %zmm11
+	vmulpd		%zmm24, %zmm13, %zmm13
+	vbroadcastsd 48(%r10), %zmm11
+	vmulpd		%zmm24, %zmm14, %zmm14
+	vbroadcastsd 56(%r10), %zmm11
+	vmulpd		%zmm24, %zmm15, %zmm15
+
+
+	// inner kernel dgemv nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG4, %r11  // A
+	movq	ARG5, %r12 // sda
+	sall	$ 6, %r12d // 4*sda*sizeof(double)
+	movq	ARG7, %r13  // x_t
+	movq	ARG10, %r14  // z_n
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_ADD_NT_8_LIB8
+#else
+	CALL(inner_kernel_gemv_add_nt_8_lib8)
+#endif
+
+
+	// inner blend n scale ab
+
+	movq	ARG3, %r10 // alpha_t
+	movq	ARG8, %r11   // beta_t
+	movq	ARG9, %r12   // y_t
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_8_LIB8
+#else
+	CALL(inner_blend_t_8_lib8)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8_LIB8
+#else
+	CALL(inner_scale_ab_8_lib8)
+#endif
+
+
+	// store
+
+	movq	ARG11, %r10 // z_t 
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8_LIB8
+#else
+	CALL(inner_store_8_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemv_nt_8_lib8)
 
 
 
