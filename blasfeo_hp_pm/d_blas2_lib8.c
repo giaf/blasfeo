@@ -150,24 +150,19 @@ void blasfeo_hp_dgemv_t(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 void blasfeo_hp_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx_n, int xi_n, struct blasfeo_dvec *sx_t, int xi_t, double beta_n, double beta_t, struct blasfeo_dvec *sy_n, int yi_n, struct blasfeo_dvec *sy_t, int yi_t, struct blasfeo_dvec *sz_n, int zi_n, struct blasfeo_dvec *sz_t, int zi_t)
 	{
-	if(ai!=0)
-		{
-#if defined(BLASFEO_REF_API)
-		blasfeo_ref_dgemv_nt(m, n, alpha_n, alpha_t, sA, ai, aj, sx_n, xi_n, sx_t, xi_t, beta_n, beta_t, sy_n, yi_n, sy_t, yi_t, sz_n, zi_n, sz_t, zi_t);
+
+	if(m<=0 | n<=0)
 		return;
-#else
-		printf("\nblasfeo_dgemv_nt: feature not implemented yet: ai=%d\n", ai);
-		exit(1);
-#endif
-		}
-	const int bs = 8;
+
+	const int ps = 8;
+
 #if 0
 	blasfeo_hp_dgemv_n(m, n, alpha_n, sA, ai, aj, sx_n, xi_n, beta_n, sy_n, yi_n, sz_n, zi_n);
 	blasfeo_hp_dgemv_t(m, n, alpha_t, sA, ai, aj, sx_t, xi_t, beta_t, sy_t, yi_t, sz_t, zi_t);
 	return;
 #endif
 	int sda = sA->cn;
-	double *pA = sA->pA + aj*bs; // TODO ai
+	double *pA = sA->pA + aj*ps + ai/ps*ps*sda;
 	double *x_n = sx_n->pa + xi_n;
 	double *x_t = sx_t->pa + xi_t;
 	double *y_n = sy_n->pa + yi_n;
@@ -175,8 +170,7 @@ void blasfeo_hp_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct bl
 	double *z_n = sz_n->pa + zi_n;
 	double *z_t = sz_t->pa + zi_t;
 
-	if(m<=0 | n<=0)
-		return;
+	int offsetA = ai%ps;
 
 	int ii;
 
@@ -198,16 +192,16 @@ void blasfeo_hp_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct bl
 #if 0
 	for(; ii<n-5; ii+=6)
 		{
-		kernel_dgemv_nt_6_lib4(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii);
+		kernel_dgemv_nt_6_lib4(m, &alpha_n, &alpha_t, pA+ii*ps, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii);
 		}
 #endif
 	for(; ii<n-7; ii+=8)
 		{
-		kernel_dgemv_nt_8_lib8(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii);
+		kernel_dgemv_nt_8_lib8(m, &alpha_n, &alpha_t, offsetA, pA+ii*ps, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii);
 		}
 	if(ii<n)
 		{
-		kernel_dgemv_nt_8_vs_lib8(m, &alpha_n, &alpha_t, pA+ii*bs, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii, n-ii);
+		kernel_dgemv_nt_8_vs_lib8(m, &alpha_n, &alpha_t, offsetA, pA+ii*ps, sda, x_n+ii, x_t, &beta_t, y_t+ii, z_n, z_t+ii, n-ii);
 		}
 	
 	return;
