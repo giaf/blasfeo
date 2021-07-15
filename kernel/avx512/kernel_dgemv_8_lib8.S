@@ -2407,7 +2407,7 @@ NAME:
 	// store
 
 	movq	ARG6, %r10 // z_t 
-	movq	ARG8, %r11  // m1
+	movq	ARG7, %r11  // m1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_VS_LIB8
