@@ -212,12 +212,61 @@ void blasfeo_hp_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct bl
 
 void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dsymv_l(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
-#else
-	printf("\nblasfeo_dsymv_l: feature not implemented yet\n");
-	exit(1);
-#endif
+
+	if(m<=0)
+		return;
+
+	const int ps = 8;
+
+	int ii, m1;
+
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*ps + ai/ps*ps*sda; // + ai%ps; // TODO offsetA !!!!!!!
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+
+	double air = ai%ps;
+
+	// copy and scale y int z
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0];
+		z[ii+1] = beta*y[ii+1];
+		z[ii+2] = beta*y[ii+2];
+		z[ii+3] = beta*y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = beta*y[ii+0];
+		}
+
+	// clean up at the beginning
+	if(air!=0)
+		{
+		m1 = ps-ai%ps;
+		m1 = m<m1 ? m : m1;
+		kernel_dsymv_l_8_gen_lib8(m-m1, &alpha, air, &pA[0], sda, &x[0], &z[0], m1);
+		pA += m1*ps + sda*ps;
+		x += m1;
+		z += m1;
+		m -= m1;
+		}
+
+	// main loop
+	ii = 0;
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dsymv_l_8_lib8(m-ii-8, &alpha, &pA[ii*ps+ii*sda], sda, &x[ii], &z[ii]);
+		}
+	// clean up at the end
+	if(ii<m)
+		{
+		kernel_dsymv_l_8_vs_lib8(0, &alpha, &pA[ii*ps+ii*sda], sda, &x[ii], &z[ii], m-ii);
+		}
+
+	return;
 	}
 
 

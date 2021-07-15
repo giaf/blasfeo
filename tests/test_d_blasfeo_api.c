@@ -521,15 +521,18 @@ int main()
 	return 0;
 #endif
 
-#if 0
+#if 1
 	// symv_l
+	alpha = 1.0;
 	blasfeo_print_tran_dvec(n, &sx_n, 0);
-	blasfeo_dsymv_l(2, 1.0, &sA, 1, 1, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+//	kernel_dsymv_l_8_lib8(3, &alpha, sA.pA, sA.cn, sx_n.pa, sz_n.pa);
+//	kernel_dsymv_l_8_vs_lib8(3, &alpha, sA.pA, sA.cn, sx_n.pa, sz_n.pa, 8);
+	blasfeo_dsymv_l(n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// gemv_nt
 	blasfeo_print_tran_dvec(n, &sx_n, 0);
 	blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx_n, 0, &sx_t, 0, 0.0, 0.0, &sy_n, 0, &sy_t, 0, &sz_n, 0, &sz_t, 0);
