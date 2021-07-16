@@ -362,6 +362,9 @@ void blasfeo_hp_dtrmv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct
 		m1 = ps-air;
 		m1 = m<m1 ? m : m1;
 		// TODO do in assembly ???
+#if 1
+		kernel_dtrmv_n_ln_8_gen_lib8(0, air, pA, x, z, m1);
+#else
 		// 0
 		z[0] = pA[air+0+ps*0]*x[0];
 		if(m1<=1) goto update;
@@ -384,6 +387,7 @@ void blasfeo_hp_dtrmv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct
 		z[6] = pA[air+6+ps*0]*x[0] + pA[air+6+ps*1]*x[1] + pA[air+6+ps*2]*x[2] + pA[air+6+ps*3]*x[3] + pA[air+6+ps*4]*x[4] + pA[air+6+ps*5]*x[5] + pA[air+6+ps*6]*x[6];
 		//
 		update:
+#endif
 		pA += sda*ps;
 		z += m1;
 		m -= m1;
