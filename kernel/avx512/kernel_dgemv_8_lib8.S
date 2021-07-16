@@ -300,7 +300,7 @@ NAME:
 	vfmadd231pd		%zmm24, %zmm25, %zmm0
 	
 	subl	$ 1, %r10d
-	addq	$ 32, %r11
+	addq	$ 64, %r11
 	addq	$ 8, %r12
 	
 	cmpl	$ 0, %r10d
