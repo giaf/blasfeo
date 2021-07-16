@@ -132,7 +132,8 @@ void kernel_dgemv_n_16_lib8(int k, double *alpha, double *A, int sda, double *x,
 // 8
 void kernel_dgemv_n_8_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
 void kernel_dgemv_n_8_vs_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int m1);
-void kernel_dgemv_n_8_gen_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int m0, int m1);
+//void kernel_dgemv_n_8_gen_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int m0, int m1);
+void kernel_dgemv_n_8_gen_lib8(int k, double *alpha, int offsetA, double *A, double *x, double *beta, double *y, double *z, int m1);
 void kernel_dgemv_t_8_lib8(int k, double *alpha, int offsetA, double *A, int sda, double *x, double *beta, double *y, double *z);
 void kernel_dgemv_t_8_vs_lib8(int k, double *alpha, int offsetA, double *A, int sda, double *x, double *beta, double *y, double *z, int n1);
 void kernel_dgemv_nt_8_lib8(int kmax, double *alpha_n, double *alpha_t, int offsetA, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t);
@@ -142,6 +143,7 @@ void kernel_dsymv_l_8_vs_lib8(int kmax, double *alpha, double *A, int sda, doubl
 void kernel_dsymv_l_8_gen_lib8(int kmax, double *alpha, int offsetA, double *A, int sda, double *x, double *z, int n1);
 void kernel_dtrmv_n_ln_8_lib8(int k, double *A, double *x, double *z);
 void kernel_dtrmv_n_ln_8_vs_lib8(int k, double *A, double *x, double *z, int m1);
+void kernel_dtrmv_n_ln_8_gen_lib8(int k, int offsetA, double *A, double *x, double *z, int m1);
 void kernel_dtrmv_t_ln_8_lib8(int k, double *A, int sda, double *x, double *z);
 void kernel_dtrmv_t_ln_8_vs_lib8(int k, double *A, int sda, double *x, double *z, int n1);
 void kernel_dtrmv_t_ln_8_gen_lib8(int k, int offsetA, double *A, int sda, double *x, double *z, int n1);

@@ -486,7 +486,7 @@ int main()
 	return 0;
 #endif
 
-#if 0
+#if 1
 	// gemv_n
 	alpha = 1.0;
 	beta = 0.0;
@@ -501,7 +501,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// gemv_t
 	alpha = 1.0;
 	beta = 0.0;

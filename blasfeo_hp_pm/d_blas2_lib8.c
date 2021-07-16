@@ -54,7 +54,7 @@ void blasfeo_hp_dgemv_n(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 	const int ps = 8;
 
-	int i;
+	int i, m1;
 
 	int sda = sA->cn;
 	double *pA = sA->pA + aj*ps + ai/ps*ps*sda;
@@ -67,11 +67,14 @@ void blasfeo_hp_dgemv_n(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	// clean up at the beginning
 	if(air!=0)
 		{
-		kernel_dgemv_n_8_gen_lib8(n, &alpha, pA, x, &beta, y-air, z-air, air, m+air);
+//		kernel_dgemv_n_8_gen_lib8(n, &alpha, pA, x, &beta, y-air, z-air, air, m+air);
+		m1 = ps-air;
+		m1 = m<m1 ? m : m1;
+		kernel_dgemv_n_8_gen_lib8(n, &alpha, air, pA, x, &beta, y, z, m1);
 		pA += ps*sda;
-		y += ps - air;
-		z += ps - air;
-		m -= ps - air;
+		y += m1;
+		z += m1;
+		m -= m1;
 		}
 	// main loop
 	i = 0;
