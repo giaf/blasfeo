@@ -486,7 +486,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// gemv_n
 	alpha = 1.0;
 	beta = 0.0;
@@ -495,20 +495,21 @@ int main()
 //	kernel_dgemv_n_8_vs_lib8(n, &alpha, sA.pA, sx_n.pa, &beta, sy_n.pa, sz_n.pa, 5);
 //	kernel_dgemv_n_8_gen_lib8(n, &alpha, sA.pA, sx_n.pa, &beta, sy_n.pa, sz_n.pa, 3, 5);
 //	kernel_dgemv_n_16_lib8(n, &alpha, sA.pA, sA.cn, sx_n.pa, &beta, sy_n.pa, sz_n.pa);
-//	blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
-	blasfeo_dtrmv_lnn(n, &sA, 0, 0, &sx_n, 0, &sz_n, 0);
+	blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+//	blasfeo_dtrmv_lnn(n, &sA, 0, 0, &sx_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	return 0;
 #endif
 
-#if 0
+#if 1
 	// gemv_t
 	alpha = 1.0;
 	beta = 0.0;
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 //	kernel_dgemv_t_8_lib8(12, &alpha, 1, sA.pA+1, sA.cn, sx_n.pa+0, &beta, sy_n.pa, sz_n.pa);
 //	kernel_dgemv_t_8_vs_lib8(12, &alpha, 1, sA.pA+1, sA.cn, sx_n.pa+0, &beta, sy_n.pa, sz_n.pa, 3);
-	blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+//	blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx_n, 0, 0.0, &sy_n, 0, &sz_n, 0);
+	blasfeo_dtrmv_ltn(n, &sA, 0, 0, &sx_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	return 0;
 #endif

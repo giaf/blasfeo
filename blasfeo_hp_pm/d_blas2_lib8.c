@@ -247,23 +247,22 @@ void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, in
 		{
 		m1 = ps-air;
 		m1 = m<m1 ? m : m1;
-		kernel_dsymv_l_8_gen_lib8(m-m1, &alpha, air, &pA[0], sda, &x[0], &z[0], m1);
+		kernel_dsymv_l_8_gen_lib8(m-m1, &alpha, air, pA, sda, x, z, m1);
 		pA += m1*ps + sda*ps;
 		x += m1;
 		z += m1;
 		m -= m1;
 		}
-
 	// main loop
 	ii = 0;
 	for(; ii<m-7; ii+=8)
 		{
-		kernel_dsymv_l_8_lib8(m-ii-8, &alpha, &pA[ii*ps+ii*sda], sda, &x[ii], &z[ii]);
+		kernel_dsymv_l_8_lib8(m-ii-8, &alpha, pA+ii*ps+ii*sda, sda, x+ii, z+ii);
 		}
 	// clean up at the end
 	if(ii<m)
 		{
-		kernel_dsymv_l_8_vs_lib8(0, &alpha, &pA[ii*ps+ii*sda], sda, &x[ii], &z[ii], m-ii);
+		kernel_dsymv_l_8_vs_lib8(0, &alpha, pA+ii*ps+ii*sda, sda, x+ii, z+ii, m-ii);
 		}
 
 	return;
@@ -392,6 +391,7 @@ void blasfeo_hp_dtrmv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct
 		{
 		kernel_dtrmv_n_ln_8_lib8(m1+ii, &pA[ii*sda], x, &z[ii]);
 		}
+	// clean up at the end
 	if(ii<m)
 		{
 		kernel_dtrmv_n_ln_8_vs_lib8(m1+ii, &pA[ii*sda], x, &z[ii], m-ii);
@@ -417,12 +417,46 @@ void blasfeo_hp_dtrmv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct
 
 void blasfeo_hp_dtrmv_ltn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dtrmv_ltn(m, sA, ai, aj, sx, xi, sz, zi);
-#else
-	printf("\nblasfeo_dtrmv_ltn: feature not implemented yet\n");
-	exit(1);
-#endif
+
+	if(m<=0)
+		return;
+	
+	const int ps = 8;
+
+	int i, m1;
+
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*ps + ai/ps*ps*sda;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+
+	int air = ai%ps;
+
+	// clean up at the beginning
+	if(air!=0)
+		{
+		m1 = ps-air;
+		m1 = m<m1 ? m : m1;
+		kernel_dtrmv_t_ln_8_gen_lib8(m-m1, air, pA, sda, x, z, m1);
+		pA += m1*ps + sda*ps;
+		x += m1;
+		z += m1;
+		m -= m1;
+		}
+	// main loop
+	i = 0;
+	for( ; i<m-7; i+=8)
+		{
+		kernel_dtrmv_t_ln_8_lib8(m-i-8, pA+i*ps+i*sda, sda, x+i, z+i);
+		}
+	// clean up at the end
+	if(i<m)
+		{
+		kernel_dtrmv_t_ln_8_vs_lib8(0, pA+i*ps+i*sda, sda, x+i, z+i, m-i);
+		}
+	
+	return;
+
 	}
 
 
