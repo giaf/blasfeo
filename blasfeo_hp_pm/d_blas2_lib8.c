@@ -506,24 +506,166 @@ void blasfeo_hp_dtrmv_utn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct
 
 void blasfeo_hp_dtrsv_lnn_mn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
+	if(m==0 | n==0)
+		return;
+	if(ai!=0)
+		{
 #if defined(BLASFEO_REF_API)
-	blasfeo_ref_dtrsv_lnn_mn(m, n, sA, ai, aj, sx, xi, sz, zi);
+		blasfeo_ref_dtrsv_lnn_mn(m, n, sA, ai, aj, sx, xi, sz, zi);
+		return;
 #else
-	printf("\nblasfeo_dtrsv_lnn_mn: feature not implemented yet\n");
-	exit(1);
+		printf("\nblasfeo_dtrsv_lnn_mn: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
 #endif
+		}
+	const int ps = 8;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*ps; // TODO ai
+	double *inv_diag_A = sA->dA;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+
+	struct blasfeo_dvec td;
+	td.pa = inv_diag_A;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+//			ddiaex_lib(n, 1.0, ai, pA, sda, inv_diag_A);
+			blasfeo_ddiaex(n, 1.0, sA, ai, aj, &td, 0);
+			for(ii=0; ii<n; ii++)
+				inv_diag_A[ii] = 1.0 / inv_diag_A[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+//		ddiaex_lib(n, 1.0, ai, pA, sda, inv_diag_A);
+		blasfeo_ddiaex(n, 1.0, sA, ai, aj, &td, 0);
+		for(ii=0; ii<n; ii++)
+			inv_diag_A[ii] = 1.0 / inv_diag_A[ii];
+		sA->use_dA = 0;
+		}
+	// suppose m>=n
+	if(m<n)
+		m = n;
+
+	double alpha = -1.0;
+	double beta = 1.0;
+
+	int i;
+
+	if(x!=z)
+		{
+		for(i=0; i<m; i++)
+			z[i] = x[i];
+		}
+	
+	i = 0;
+	for( ; i<n-7; i+=8)
+		{
+		kernel_dtrsv_n_l_inv_8_lib8(i, &pA[i*sda], &inv_diag_A[i], z, &z[i], &z[i]);
+		}
+	if(i<n)
+		{
+		kernel_dtrsv_n_l_inv_8_vs_lib8(i, &pA[i*sda], &inv_diag_A[i], z, &z[i], &z[i], m-i, n-i);
+		i+=8;
+		}
+#if 1
+	for( ; i<m-15; i+=16)
+		{
+		kernel_dgemv_n_16_lib8(n, &alpha, &pA[i*sda], sda, z, &beta, &z[i], &z[i]);
+		}
+	if(i<m-7)
+		{
+		kernel_dgemv_n_8_lib8(n, &alpha, &pA[i*sda], z, &beta, &z[i], &z[i]);
+		i+=8;
+		}
+#else
+	for( ; i<m-7; i+=8)
+		{
+		kernel_dgemv_n_8_lib8(n, &alpha, &pA[i*sda], z, &beta, &z[i], &z[i]);
+		}
+#endif
+	if(i<m)
+		{
+		kernel_dgemv_n_8_vs_lib8(n, &alpha, &pA[i*sda], z, &beta, &z[i], &z[i], m-i);
+		i+=8;
+		}
+
+	return;
 	}
 
 
 
 void blasfeo_hp_dtrsv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
+	if(m==0)
+		return;
+	if(ai!=0)
+		{
 #if defined(BLASFEO_REF_API)
-	blasfeo_ref_dtrsv_lnn(m, sA, ai, aj, sx, xi, sz, zi);
+		blasfeo_ref_dtrsv_lnn(m, sA, ai, aj, sx, xi, sz, zi);
+		return;
 #else
-	printf("\nblasfeo_dtrsv_lnn: feature not implemented yet\n");
-	exit(1);
+		printf("\nblasfeo_dtrsv_lnn: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
 #endif
+		}
+	const int ps = 8;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*ps; // TODO ai
+	double *inv_diag_A = sA->dA;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+
+	struct blasfeo_dvec td;
+	td.pa = inv_diag_A;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+//			ddiaex_lib(n, 1.0, ai, pA, sda, inv_diag_A);
+			blasfeo_ddiaex(m, 1.0, sA, ai, aj, &td, 0);
+			for(ii=0; ii<m; ii++)
+				inv_diag_A[ii] = 1.0 / inv_diag_A[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+//		ddiaex_lib(n, 1.0, ai, pA, sda, inv_diag_A);
+		blasfeo_ddiaex(m, 1.0, sA, ai, aj, &td, 0);
+		for(ii=0; ii<m; ii++)
+			inv_diag_A[ii] = 1.0 / inv_diag_A[ii];
+		sA->use_dA = 0;
+		}
+
+	double alpha = -1.0;
+	double beta = 1.0;
+
+	int i;
+
+	if(x!=z)
+		{
+		for(i=0; i<m; i++)
+			z[i] = x[i];
+		}
+	
+	i = 0;
+	for( ; i<m-7; i+=8)
+		{
+		kernel_dtrsv_n_l_inv_8_lib8(i, &pA[i*sda], &inv_diag_A[i], z, &z[i], &z[i]);
+		}
+	if(i<m)
+		{
+		kernel_dtrsv_n_l_inv_8_vs_lib8(i, &pA[i*sda], &inv_diag_A[i], z, &z[i], &z[i], m-i, m-i);
+		i+=8;
+		}
+
+	return;
 	}
 
 
