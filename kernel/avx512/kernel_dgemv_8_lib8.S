@@ -2202,6 +2202,169 @@ NAME:
 
 // common inner routine with file scope
 //
+// triangular substitution with vector RHS
+//
+// input arguments:
+// r10  <- E
+// r11  <- inv_diag_E
+// r12  <- n1
+// zmm0 <- []
+//
+// output arguments:
+// r10  <- E
+// r11  <- inv_diag_E
+// r12  <- n1
+// zmm0 <- []
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSV_N_L_INV_8_VS_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dtrsv_n_l_inv_8_vs_lib8)
+#endif
+	
+	vbroadcastsd	0(%r11), %zmm24
+	movl			$ 0x01, %r12d
+	kmovd			%r12d, %k1
+	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
+	vbroadcastsd	%xmm0, %zmm25
+	movl			$ 0xfe, %r12d
+	kmovd			%r12d, %k1
+	vmovapd			0(%r10), %zmm24 {%k1}{z}
+	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
+
+	cmpl			$ 2, %r12d
+	jl				0f // ret
+
+	vbroadcastsd	1*8(%r11), %zmm24
+	movl			$ 0x02, %r12d
+	kmovd			%r12d, %k1
+	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+1*8(%rip), %zmm25
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+1*8(%rip), %zmm25
+#endif
+	vpermpd			%zmm0, %zmm25, %zmm25
+	movl			$ 0xfc, %r12d
+	kmovd			%r12d, %k1
+	vmovapd			1*64(%r10), %zmm24 {%k1}{z}
+	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
+
+	cmpl			$ 3, %r12d
+	jl				0f // ret
+
+	vbroadcastsd	2*8(%r11), %zmm24
+	movl			$ 0x04, %r12d
+	kmovd			%r12d, %k1
+	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+2*8(%rip), %zmm25
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+2*8(%rip), %zmm25
+#endif
+	vpermpd			%zmm0, %zmm25, %zmm25
+	movl			$ 0xf8, %r12d
+	kmovd			%r12d, %k1
+	vmovapd			2*64(%r10), %zmm24 {%k1}{z}
+	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
+
+	cmpl			$ 4, %r12d
+	jl				0f // ret
+
+	vbroadcastsd	3*8(%r11), %zmm24
+	movl			$ 0x08, %r12d
+	kmovd			%r12d, %k1
+	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm25
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm25
+#endif
+	vpermpd			%zmm0, %zmm25, %zmm25
+	movl			$ 0xf0, %r12d
+	kmovd			%r12d, %k1
+	vmovapd			3*64(%r10), %zmm24 {%k1}{z}
+	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
+
+	cmpl			$ 5, %r12d
+	jl				0f // ret
+
+	vbroadcastsd	4*8(%r11), %zmm24
+	movl			$ 0x10, %r12d
+	kmovd			%r12d, %k1
+	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm25
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm25
+#endif
+	vpermpd			%zmm0, %zmm25, %zmm25
+	movl			$ 0xe0, %r12d
+	kmovd			%r12d, %k1
+	vmovapd			4*64(%r10), %zmm24 {%k1}{z}
+	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
+
+	cmpl			$ 6, %r12d
+	jl				0f // ret
+
+	vbroadcastsd	5*8(%r11), %zmm24
+	movl			$ 0x20, %r12d
+	kmovd			%r12d, %k1
+	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm25
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm25
+#endif
+	vpermpd			%zmm0, %zmm25, %zmm25
+	movl			$ 0xc0, %r12d
+	kmovd			%r12d, %k1
+	vmovapd			5*64(%r10), %zmm24 {%k1}{z}
+	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
+
+	cmpl			$ 7, %r12d
+	jl				0f // ret
+
+	vbroadcastsd	6*8(%r11), %zmm24
+	movl			$ 0x40, %r12d
+	kmovd			%r12d, %k1
+	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm25
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm25
+#endif
+	vpermpd			%zmm0, %zmm25, %zmm25
+	movl			$ 0x80, %r12d
+	kmovd			%r12d, %k1
+	vmovapd			6*64(%r10), %zmm24 {%k1}{z}
+	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
+
+	cmpl			$ 8, %r12d
+	jl				0f // ret
+
+	vbroadcastsd	7*8(%r11), %zmm24
+	movl			$ 0x80, %r12d
+	kmovd			%r12d, %k1
+	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dtrsv_n_l_inv_8_vs_lib8)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // blend for ta==n
 //
 // input arguments:
@@ -4018,7 +4181,7 @@ NAME:
 
 
 
-//                                 1      2          3                   4          5          6
+//                                  1      2          3                   4          5          6
 // void kernel_dtrsv_n_l_inv_8_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4,,15
@@ -4046,8 +4209,6 @@ NAME:
 	CALL(inner_kernel_gemv_n_8_lib8)
 #endif
 
-	movq	%r11, %r13 // A+k*sizeof(double)
-
 
 	// call inner blender n
 
@@ -4068,10 +4229,9 @@ NAME:
 
 	// solution
 
-	movq	%r13, %r10 // A+k*ps*sizeof(double)
-//	movl	ARG1, %r10d
-//	sall	$ 6, %r10d
-//	leaq	0(ARG2, %r10), %r10
+	movq	ARG1, %r10
+	sall	$ 6, %r10d
+	leaq	0(ARG2, %r10), %r10
 	movq	ARG3, %r11 // inv_diag_A
 
 #if MACRO_LEVEL>=1
@@ -4097,6 +4257,89 @@ NAME:
 	ret
 
 	FUN_END(kernel_dtrsv_n_l_inv_8_lib8)
+
+
+
+
+
+//                                     1      2          3                   4          5          6          7       8
+// void kernel_dtrsv_n_l_inv_8_vs_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsv_n_l_inv_8_vs_lib8)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	vxorpd	%zmm0, %zmm0, %zmm0
+	vmovapd	%zmm0, %zmm1
+	vmovapd	%zmm0, %zmm2
+	vmovapd	%zmm0, %zmm3
+
+
+	// call inner dgemv kernel n
+
+	movq	ARG1, %r10 // k
+	movq	ARG2, %r11  // A
+	movq	ARG4, %r12  // x
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_N_8_LIB8
+#else
+	CALL(inner_kernel_gemv_n_8_lib8)
+#endif
+
+
+	// call inner blender n
+
+	movq	ARG5, %r10   // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_N_8_LIB8
+#else
+	CALL(inner_blend_n_8_lib8)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M11_8_LIB8
+#else
+	CALL(inner_scale_m11_8_lib8)
+#endif
+
+
+	// solution
+
+	movq	ARG1, %r10
+	sall	$ 6, %r10d
+	leaq	0(ARG2, %r10), %r10
+	movq	ARG3, %r11 // inv_diag_A
+	movq	ARG8, %r12 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSV_N_L_INV_8_VS_LIB8
+#else
+	CALL(inner_edge_dtrsv_n_l_inv_8_vs_lib8)
+#endif
+
+
+	// store
+
+	movq	ARG6, %r10 // z 
+	movq	ARG7, %r11 // m1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8_VS_LIB8
+#else
+	CALL(inner_store_8_vs_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsv_n_l_inv_8_vs_lib8)
 
 
 
