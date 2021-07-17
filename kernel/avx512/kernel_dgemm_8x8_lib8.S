@@ -7043,7 +7043,6 @@ LC05:
 	.quad 0x0
 
 
-
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	.align 64
 .LC06:
