@@ -775,10 +775,13 @@ void REF_TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC 
 			dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 		sA->use_dA = 0;
 		}
+	if(x!=z)
+		for(ii=0; ii<m; ii++)
+			z[ii] = x[ii];
 	if(n%2!=0)
 		{
 		jj = n-1;
-		y_0 = x[jj];
+		y_0 = z[jj];
 		for(ii=jj+1; ii<m; ii++)
 			{
 			y_0 -= XMATEL_A(aai+ii, aaj+jj) * z[ii];
@@ -793,8 +796,8 @@ void REF_TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC 
 		}
 	for(; jj>=0; jj-=2)
 		{
-		y_0 = x[jj+0];
-		y_1 = x[jj+1];
+		y_0 = z[jj+0];
+		y_1 = z[jj+1];
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
