@@ -2590,69 +2590,7 @@ NAME:
 	FUN_START(inner_edge_dtrsv_t_l_inv_8_vs_lib8)
 #endif
 	
-	// triangle transpose
-	movl	$ 0xcc, %r15d
-	kmovd	%r15d, %k1
-	movl	$ 0x33, %r15d
-	kmovd	%r15d, %k2
-
-	// TODO mask already here the (strict) lower triangle ???
-	// TODO only load needed lanes ???
-	vmovapd			0+0*64(%r10), %ymm16
-//	vmovapd			0+4*64(%r10), %ymm24 //
-//	vinsertf64x4	$ 0x1, %ymm24, %zmm16, %zmm16 //
-	vmovapd			0+1*64(%r10), %ymm17
-//	vmovapd			0+5*64(%r10), %ymm24 //
-//	vinsertf64x4	$ 0x1, %ymm24, %zmm17, %zmm17 //
-	vmovapd			0+2*64(%r10), %ymm18
-//	vmovapd			0+6*64(%r10), %ymm24 //
-//	vinsertf64x4	$ 0x1, %ymm24, %zmm18, %zmm18 //
-//	vmovapd			0+3*64(%r10), %ymm19 //
-	vxorpd			%zmm19, %zmm19, %zmm19
-//	vmovapd			0+7*64(%r10), %ymm24 //
-//	vinsertf64x4	$ 0x1, %ymm24, %zmm19, %zmm19 //
-	vmovapd			32+0*64(%r10), %ymm20
-	vmovapd			32+4*64(%r10), %ymm24
-	vinsertf64x4	$ 0x1, %ymm24, %zmm20, %zmm20
-	vmovapd			32+1*64(%r10), %ymm21
-	vmovapd			32+5*64(%r10), %ymm24
-	vinsertf64x4	$ 0x1, %ymm24, %zmm21, %zmm21
-	vmovapd			32+2*64(%r10), %ymm22
-	vmovapd			32+6*64(%r10), %ymm24
-	vinsertf64x4	$ 0x1, %ymm24, %zmm22, %zmm22
-	vmovapd			32+3*64(%r10), %ymm23
-//	vmovapd			32+7*64(%r10), %ymm24 //
-//	vinsertf64x4	$ 0x1, %ymm24, %zmm23, %zmm23 //
-
-	vmovapd		%zmm16, %zmm24
-	vpermq		$ 0x40, %zmm18, %zmm16 {%k1}
-	vpermq		$ 0x0e, %zmm24, %zmm18 {%k2}
-	vmovapd		%zmm17, %zmm24
-	vpermq		$ 0x40, %zmm19, %zmm17 {%k1}
-	vpermq		$ 0x0e, %zmm24, %zmm19 {%k2}
-	vmovapd		%zmm20, %zmm24
-	vpermq		$ 0x40, %zmm22, %zmm20 {%k1}
-	vpermq		$ 0x0e, %zmm24, %zmm22 {%k2}
-	vmovapd		%zmm21, %zmm24
-	vpermq		$ 0x40, %zmm23, %zmm21 {%k1}
-	vpermq		$ 0x0e, %zmm24, %zmm23 {%k2}
-
-//	vunpcklpd	%zmm17, %zmm16, %zmm24 //
-	vunpckhpd	%zmm17, %zmm16, %zmm17
-//	vmovapd		%zmm24, %zmm16 //
-	vunpcklpd	%zmm19, %zmm18, %zmm24
-	vunpckhpd	%zmm19, %zmm18, %zmm19
-	vmovapd		%zmm24, %zmm18
-	vunpcklpd	%zmm21, %zmm20, %zmm24
-	vunpckhpd	%zmm21, %zmm20, %zmm21
-	vmovapd		%zmm24, %zmm20
-	vunpcklpd	%zmm23, %zmm22, %zmm24
-	vunpckhpd	%zmm23, %zmm22, %zmm23
-	vmovapd		%zmm24, %zmm22
-
-
-	// triangle solve
-
+	// compute mask
 	vcvtsi2sd		%r13d, %xmm25, %xmm25
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovupd			.LC00(%rip), %zmm24
@@ -2661,7 +2599,88 @@ NAME:
 #endif
 	vbroadcastsd	%xmm25, %zmm25
 	vsubpd			%zmm25, %zmm24, %zmm25
-	vpmovq2m		%zmm25, %k2
+	vpmovq2m		%zmm25, %k3
+
+	// triangle transpose
+	movl	$ 0xcc, %r15d
+	kmovd	%r15d, %k1
+	movl	$ 0x33, %r15d
+	kmovd	%r15d, %k2
+
+	// TODO mask already here the (strict) lower triangle ???
+	// TODO only load needed lanes ???
+	//
+	vmovapd			0+0*64(%r10), %ymm16
+	vmovapd			32+0*64(%r10), %ymm20
+	//
+	vmovapd			0+1*64(%r10), %ymm17
+	vmovapd			32+1*64(%r10), %ymm21
+	//
+	vmovapd			0+2*64(%r10), %ymm18
+	vmovapd			32+2*64(%r10), %ymm22
+	//
+//	vmovapd			0+3*64(%r10), %ymm19 //
+	vxorpd			%zmm19, %zmm19, %zmm19
+	vmovapd			32+3*64(%r10), %ymm23
+	//
+	cmpl			$ 5, %r13d
+	jl				1f
+//	vmovapd			0+4*64(%r10), %ymm24 //
+//	vinsertf64x4	$ 0x1, %ymm24, %zmm16, %zmm16 //
+	vmovapd			32+4*64(%r10), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm20, %zmm20
+	//
+//	vmovapd			0+5*64(%r10), %ymm24 //
+//	vinsertf64x4	$ 0x1, %ymm24, %zmm17, %zmm17 //
+	vmovapd			32+5*64(%r10), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm21, %zmm21
+	//
+//	vmovapd			0+6*64(%r10), %ymm24 //
+//	vinsertf64x4	$ 0x1, %ymm24, %zmm18, %zmm18 //
+	vmovapd			32+6*64(%r10), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm22, %zmm22
+	//
+//	vmovapd			0+7*64(%r10), %ymm24 //
+//	vinsertf64x4	$ 0x1, %ymm24, %zmm19, %zmm19 //
+//	vmovapd			32+7*64(%r10), %ymm24 //
+//	vinsertf64x4	$ 0x1, %ymm24, %zmm23, %zmm23 //
+1:
+
+	vmovapd		%zmm16, %zmm24
+	vpermq		$ 0x40, %zmm18, %zmm16 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm18 {%k2}
+	vmovapd		%zmm17, %zmm24
+	vpermq		$ 0x40, %zmm19, %zmm17 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm19 {%k2}
+
+//	vunpcklpd	%zmm17, %zmm16, %zmm24 //
+	vunpckhpd	%zmm17, %zmm16, %zmm17
+//	vmovapd		%zmm24, %zmm16 //
+	vunpcklpd	%zmm19, %zmm18, %zmm24
+	vunpckhpd	%zmm19, %zmm18, %zmm19
+	vmovapd		%zmm24, %zmm18
+
+	cmpl		$ 5, %r12d
+//	jl			1f
+	jl			2f
+
+	vmovapd		%zmm20, %zmm24
+	vpermq		$ 0x40, %zmm22, %zmm20 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm22 {%k2}
+	vmovapd		%zmm21, %zmm24
+	vpermq		$ 0x40, %zmm23, %zmm21 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm23 {%k2}
+
+	vunpcklpd	%zmm21, %zmm20, %zmm24
+	vunpckhpd	%zmm21, %zmm20, %zmm21
+	vmovapd		%zmm24, %zmm20
+	vunpcklpd	%zmm23, %zmm22, %zmm24
+	vunpckhpd	%zmm23, %zmm22, %zmm23
+	vmovapd		%zmm24, %zmm22
+1:
+
+
+	// triangle solve
 
 	cmpl			$ 8, %r12d
 	jl				1f
@@ -2669,7 +2688,7 @@ NAME:
 	vbroadcastsd	7*8(%r11), %zmm24
 	movl			$ 0x80, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+7*8(%rip), %zmm25
@@ -2679,7 +2698,7 @@ NAME:
 	vpermpd			%zmm0, %zmm25, %zmm25
 	movl			$ 0x7f, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vfnmadd231pd	%zmm23, %zmm25, %zmm0 {%k1}
 
 1:
@@ -2689,7 +2708,7 @@ NAME:
 	vbroadcastsd	6*8(%r11), %zmm24
 	movl			$ 0x40, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+6*8(%rip), %zmm25
@@ -2699,7 +2718,7 @@ NAME:
 	vpermpd			%zmm0, %zmm25, %zmm25
 	movl			$ 0x3f, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vfnmadd231pd	%zmm22, %zmm25, %zmm0 {%k1}
 
 1:
@@ -2709,7 +2728,7 @@ NAME:
 	vbroadcastsd	5*8(%r11), %zmm24
 	movl			$ 0x20, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+5*8(%rip), %zmm25
@@ -2719,7 +2738,7 @@ NAME:
 	vpermpd			%zmm0, %zmm25, %zmm25
 	movl			$ 0x1f, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vfnmadd231pd	%zmm21, %zmm25, %zmm0 {%k1}
 
 1:
@@ -2729,7 +2748,7 @@ NAME:
 	vbroadcastsd	4*8(%r11), %zmm24
 	movl			$ 0x10, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+4*8(%rip), %zmm25
@@ -2739,17 +2758,18 @@ NAME:
 	vpermpd			%zmm0, %zmm25, %zmm25
 	movl			$ 0x0f, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vfnmadd231pd	%zmm20, %zmm25, %zmm0 {%k1}
 
 1:
+2:
 	cmpl			$ 4, %r12d
 	jl				1f
 
 	vbroadcastsd	3*8(%r11), %zmm24
 	movl			$ 0x08, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+3*8(%rip), %zmm25
@@ -2759,7 +2779,7 @@ NAME:
 	vpermpd			%zmm0, %zmm25, %zmm25
 	movl			$ 0x07, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vfnmadd231pd	%zmm19, %zmm25, %zmm0 {%k1}
 
 1:
@@ -2769,7 +2789,7 @@ NAME:
 	vbroadcastsd	2*8(%r11), %zmm24
 	movl			$ 0x04, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+2*8(%rip), %zmm25
@@ -2779,7 +2799,7 @@ NAME:
 	vpermpd			%zmm0, %zmm25, %zmm25
 	movl			$ 0x03, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vfnmadd231pd	%zmm18, %zmm25, %zmm0 {%k1}
 
 1:
@@ -2789,7 +2809,7 @@ NAME:
 	vbroadcastsd	1*8(%r11), %zmm24
 	movl			$ 0x02, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+1*8(%rip), %zmm25
@@ -2799,7 +2819,7 @@ NAME:
 	vpermpd			%zmm0, %zmm25, %zmm25
 	movl			$ 0x01, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vfnmadd231pd	%zmm17, %zmm25, %zmm0 {%k1}
 
 1:
@@ -2809,7 +2829,7 @@ NAME:
 	vbroadcastsd	0*8(%r11), %zmm24
 	movl			$ 0x01, %r15d
 	kmovd			%r15d, %k1
-	kandd			%k2, %k1, %k1
+	kandd			%k3, %k1, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 //1:
 
