@@ -749,9 +749,8 @@ void blasfeo_hp_dtrsv_ltn_mn(int m, int n, struct blasfeo_dmat *sA, int ai, int 
 	for(; i<n-7; i+=8)
 		{
 		idx = n-i-8;
-		kernel_dtrsv_t_l_inv_8_lib8(m-n+i, &pA[idx*bs*bs*sda+idx*bs], sda, &inv_diag_A[idx], &z[idx], &z[idx]);
+		kernel_dtrsv_t_l_inv_8_lib8(m-n+i, &pA[idx/bs*bs*sda+idx*bs], sda, &inv_diag_A[idx], &z[idx], &z[idx]);
 		}
-
 
 	return;
 	}
@@ -760,12 +759,71 @@ void blasfeo_hp_dtrsv_ltn_mn(int m, int n, struct blasfeo_dmat *sA, int ai, int 
 
 void blasfeo_hp_dtrsv_ltn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
+	if(m==0)
+		return;
+	if(ai!=0)
+		{
 #if defined(BLASFEO_REF_API)
-	blasfeo_ref_dtrsv_ltn(m, sA, ai, aj, sx, xi, sz, zi);
+		blasfeo_ref_dtrsv_ltn(m, sA, ai, aj, sx, xi, sz, zi);
+		return;
 #else
-	printf("\nblasfeo_dtrsv_ltn: feature not implemented yet\n");
-	exit(1);
+		printf("\nblasfeo_dtrsv_ltn: feature not implemented yet: ai=%d\n", ai);
+		exit(1);
 #endif
+		}
+	const int bs = 8;
+	int sda = sA->cn;
+	double *pA = sA->pA + aj*bs; // TODO ai
+	double *inv_diag_A = sA->dA;
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+
+	struct blasfeo_dvec td;
+	td.pa = inv_diag_A;
+	if(ai==0 & aj==0)
+		{
+		if(sA->use_dA!=1)
+			{
+//			ddiaex_lib(m, 1.0, ai, pA, sda, inv_diag_A);
+			blasfeo_ddiaex(m, 1.0, sA, ai, aj, &td, 0);
+			for(ii=0; ii<m; ii++)
+				inv_diag_A[ii] = 1.0 / inv_diag_A[ii];
+			sA->use_dA = 1;
+			}
+		}
+	else
+		{
+//		ddiaex_lib(m, 1.0, ai, pA, sda, inv_diag_A);
+		blasfeo_ddiaex(m, 1.0, sA, ai, aj, &td, 0);
+		for(ii=0; ii<m; ii++)
+			inv_diag_A[ii] = 1.0 / inv_diag_A[ii];
+		sA->use_dA = 0;
+		}
+	if(m<=0)
+		return;
+
+	int i, idx, m1;
+	
+	if(x!=z)
+		for(i=0; i<m; i++)
+			z[i] = x[i];
+			
+	i=0;
+	if(m%8!=0)
+		{
+		m1 = m%8;
+		idx = m-m1;
+		kernel_dtrsv_t_l_inv_8_vs_lib8(0, &pA[idx/bs*bs*sda+idx*bs], sda, &inv_diag_A[idx], &z[idx], &z[idx], m1, m1);
+		i += m1;
+		}
+	for(; i<m-7; i+=8)
+		{
+		idx = m-i-8;
+		kernel_dtrsv_t_l_inv_8_lib8(i, &pA[idx/bs*bs*sda+idx*bs], sda, &inv_diag_A[idx], &z[idx], &z[idx]);
+		}
+
+	return;
 	}
 
 
