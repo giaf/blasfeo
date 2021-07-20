@@ -149,6 +149,7 @@ void kernel_dtrmv_t_ln_8_vs_lib8(int k, double *A, int sda, double *x, double *z
 void kernel_dtrmv_t_ln_8_gen_lib8(int k, int offsetA, double *A, int sda, double *x, double *z, int n1);
 void kernel_dtrsv_n_l_inv_8_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
 void kernel_dtrsv_n_l_inv_8_vs_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int m1, int n1);
+void kernel_dtrsv_t_l_inv_8_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 
 
 
