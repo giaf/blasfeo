@@ -684,15 +684,6 @@ void blasfeo_hp_dtrsv_lnu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct
 
 void blasfeo_hp_dtrsv_ltn_mn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dtrsv_ltn_mn(m, n, sA, ai, aj, sx, xi, sz, zi);
-	return;
-#else
-	printf("\nblasfeo_dtrsv_ltn_mn: feature not implemented yet: ai=%d\n", ai);
-	exit(1);
-#endif
-
-
 	if(m==0)
 		return;
 	if(ai!=0)
@@ -740,31 +731,23 @@ void blasfeo_hp_dtrsv_ltn_mn(int m, int n, struct blasfeo_dmat *sA, int ai, int 
 	if(n>m)
 		n = m;
 	
-	int i, idx;
+	int i, idx, m1, n1;
 	
 	if(x!=z)
 		for(i=0; i<m; i++)
 			z[i] = x[i];
 			
 	i=0;
-//	if(n%4==1)
-//		{
-//		kernel_dtrsv_lt_inv_1_lib4(m-n+i+1, &pA[n/bs*bs*sda+(n-i-1)*bs], sda, &inv_diag_A[n-i-1], &z[n-i-1], &z[n-i-1], &z[n-i-1]);
-//		i++;
-//		}
-//	else if(n%4==2)
-//		{
-//		kernel_dtrsv_lt_inv_2_lib4(m-n+i+2, &pA[n/bs*bs*sda+(n-i-2)*bs], sda, &inv_diag_A[n-i-2], &z[n-i-2], &z[n-i-2], &z[n-i-2]);
-//		i+=2;
-//		}
-//	else if(n%4==3)
-//		{
-//		kernel_dtrsv_lt_inv_3_lib4(m-n+i+3, &pA[n/bs*bs*sda+(n-i-3)*bs], sda, &inv_diag_A[n-i-3], &z[n-i-3], &z[n-i-3], &z[n-i-3]);
-//		i+=3;
-//		}
+	if(n%8!=0)
+		{
+		n1 = n%8;
+		idx = n-n1;
+		m1 = m-idx<8 ? m-idx : 8;
+		kernel_dtrsv_t_l_inv_8_vs_lib8(m-idx-m1, &pA[idx/bs*bs*sda+idx*bs], sda, &inv_diag_A[idx], &z[idx], &z[idx], m-idx, n1);
+		i += n1;
+		}
 	for(; i<n-7; i+=8)
 		{
-//		kernel_dtrsv_t_l_inv_8_lib8(m-n+i+8, &pA[(n-i-8)/bs*bs*sda+(n-i-8)*bs], sda, &inv_diag_A[n-i-8], &z[n-i-8], &z[n-i-8], &z[n-i-8]);
 		idx = n-i-8;
 		kernel_dtrsv_t_l_inv_8_lib8(m-n+i, &pA[idx*bs*bs*sda+idx*bs], sda, &inv_diag_A[idx], &z[idx], &z[idx]);
 		}
