@@ -4383,8 +4383,8 @@ NAME:
 
 
 
-//                                  1      2          3                   4          5          6
-// void kernel_dtrsv_n_l_inv_8_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
+//                                  1      2          3                   4          5
+// void kernel_dtrsv_n_l_inv_8_lib8(int k, double *A, double *inv_diag_A, double *x, double *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dtrsv_n_l_inv_8_lib8)
@@ -4414,7 +4414,7 @@ NAME:
 
 	// call inner blender n
 
-	movq	ARG5, %r10   // y
+	movq	ARG5, %r10   // z
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_8_LIB8
@@ -4445,7 +4445,7 @@ NAME:
 
 	// store
 
-	movq	ARG6, %r10 // z 
+	movq	ARG5, %r10 // z 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB8
@@ -4464,8 +4464,8 @@ NAME:
 
 
 
-//                                     1      2          3                   4          5          6          7       8
-// void kernel_dtrsv_n_l_inv_8_vs_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int m1, int n1);
+//                                     1      2          3                   4          5          6       7
+// void kernel_dtrsv_n_l_inv_8_vs_lib8(int k, double *A, double *inv_diag_A, double *x, double *z, int m1, int n1);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dtrsv_n_l_inv_8_vs_lib8)
@@ -4495,7 +4495,7 @@ NAME:
 
 	// call inner blender n
 
-	movq	ARG5, %r10   // y
+	movq	ARG5, %r10   // z
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_N_8_LIB8
@@ -4516,7 +4516,7 @@ NAME:
 	sall	$ 6, %r10d
 	leaq	0(ARG2, %r10), %r10
 	movq	ARG3, %r11 // inv_diag_A
-	movq	ARG8, %r12 // n1
+	movq	ARG7, %r12 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSV_N_L_INV_8_VS_LIB8
@@ -4527,8 +4527,8 @@ NAME:
 
 	// store
 
-	movq	ARG6, %r10 // z 
-	movq	ARG7, %r11 // m1
+	movq	ARG5, %r10 // z 
+	movq	ARG6, %r11 // m1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_VS_LIB8
@@ -4547,8 +4547,8 @@ NAME:
 
 
 
-//                                  1      2          3        4                   5          6          7
-// void kernel_dtrsv_t_l_inv_8_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
+//                                  1      2          3        4                   5          6
+// void kernel_dtrsv_t_l_inv_8_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dtrsv_t_l_inv_8_lib8)
@@ -4587,7 +4587,7 @@ NAME:
 
 	// call inner blender t
 
-	movq	ARG6, %r10 // y 
+	movq	ARG6, %r10 // z
 
 #if MACRO_LEVEL>=1
 	INNER_BLEND_T_8_LIB8
@@ -4616,7 +4616,7 @@ NAME:
 
 	// store
 
-	movq	ARG7, %r10 // z 
+	movq	ARG6, %r10 // z 
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_8_LIB8

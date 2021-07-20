@@ -74,7 +74,7 @@ int main()
 
 	double *x_n; d_zeros(&x_n, n, 1);
 //	for(ii=0; ii<n; ii++) x_n[ii] = 1.0;
-	x_n[0] = 1.0;
+	x_n[7] = 1000.0;
 //	x_n[1] = 1.0;
 //	x_n[2] = 2.0;
 //	x_n[3] = 3.0;
@@ -514,7 +514,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// trsv_lnn
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	blasfeo_dtrsv_lnn(13, &sA, 0, 1, &sx_n, 0, &sz_n, 0);
@@ -523,10 +523,11 @@ int main()
 	return 0;
 #endif
 
-#if 0
+#if 1
 	// trsv_ltn
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
-	blasfeo_dtrsv_ltn(n, &sA, 0, 1, &sx_n, 0, &sz_n, 0);
+//	blasfeo_dtrsv_ltn(8, &sA, 0, 1, &sx_n, 0, &sz_n, 0);
+	blasfeo_dtrsv_ltn_mn(8, 8, &sA, 0, 1, &sx_n, 0, &sz_n, 0);
 	blasfeo_print_tran_dvec(n, &sz_n, 0);
 	return 0;
 #endif
