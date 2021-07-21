@@ -127,6 +127,7 @@ void kernel_dpaad_nn_8_lib8(int kmax, double *alpha, int offsetA, double *A, int
 void kernel_dpaad_nn_8_vs_lib8(int kmax, double *alpha, int offsetA, double *A, int sda, double *B, int m1);
 // 4
 void kernel_dpack_tt_4_lib8(int kmax, double *A, int lda, double *C, int sdc); // TODO offsetC 
+void kernel_dpack_tt_4_vs_lib8(int kmax, double *A, int lda, double *C, int sdc, int m1); // TODO offsetC 
 
 // levle 2 BLAS
 // 16

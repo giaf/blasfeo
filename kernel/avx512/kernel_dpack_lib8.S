@@ -1438,14 +1438,6 @@ NAME:
 	.p2align 3
 1: // main loop
 	
-//	prefetcht2	0(%r13, %r14, 4) // software prefetch
-//	prefetcht2	64(%r13, %r14, 4) // software prefetch
-
-//	prefetchnta	2*64(%r11)
-//	prefetchnta	2*64(%r11, %r12)
-//	prefetchnta	2*64(%r11, %r12, 2)
-//	prefetchnta	2*64(%r11, %r15)
-
 	vmovupd		0(%r11), %zmm0
 	vmovupd		0(%r11, %r12), %zmm1
 	vmovupd		0(%r11, %r12, 2), %zmm2
@@ -1503,6 +1495,255 @@ NAME:
 	ret
 
 	FUN_END(inner_kernel_dpack_tt_4_lib8)
+#endif
+
+
+
+
+
+// input arguments
+//
+// r10	<- kmax
+// r11	<- A
+// r12	<- lda
+// r13	<- C
+// r14	<- sdc
+//
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_DPACK_TT_3_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dpack_tt_3_lib8)
+#endif
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+	// TODO offsetC
+
+	cmpl	$ 7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %zmm0
+	vmovupd		0(%r11, %r12), %zmm1
+	vmovupd		0(%r11, %r12, 2), %zmm2
+
+	vmovapd		%zmm0, 0*64(%r13)
+	vmovapd		%zmm1, 1*64(%r13)
+	vmovapd		%zmm2, 2*64(%r13)
+
+	subl	$ 8, %r10d
+	addq	$ 64, %r11
+	addq	%r14, %r13
+
+	cmpl	$ 7, %r10d
+	jg		1b
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	// compute mask for rows
+	vcvtsi2sd	%r10d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+	vpmovq2m	%zmm25, %k1
+
+	vmovupd		0(%r11), %zmm0 {%k1}
+	vmovupd		0(%r11, %r12), %zmm1 {%k1}
+	vmovupd		0(%r11, %r12, 2), %zmm2 {%k1}
+
+	vmovapd		%zmm0, 0*64(%r13) {%k1}
+	vmovapd		%zmm1, 1*64(%r13) {%k1}
+	vmovapd		%zmm2, 2*64(%r13) {%k1}
+
+	leaq	0(%r11, %r10, 8), %r11
+	leaq	0(%r13, %r10, 8), %r13
+	movl	$ 0, %r10d
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dpack_tt_3_lib8)
+#endif
+
+
+
+
+
+// input arguments
+//
+// r10	<- kmax
+// r11	<- A
+// r12	<- lda
+// r13	<- C
+// r14	<- sdc
+//
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_DPACK_TT_2_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dpack_tt_2_lib8)
+#endif
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+	// TODO offsetC
+
+	cmpl	$ 7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %zmm0
+	vmovupd		0(%r11, %r12), %zmm1
+
+	vmovapd		%zmm0, 0*64(%r13)
+	vmovapd		%zmm1, 1*64(%r13)
+
+	subl	$ 8, %r10d
+	addq	$ 64, %r11
+	addq	%r14, %r13
+
+	cmpl	$ 7, %r10d
+	jg		1b
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	// compute mask for rows
+	vcvtsi2sd	%r10d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+	vpmovq2m	%zmm25, %k1
+
+	vmovupd		0(%r11), %zmm0 {%k1}
+	vmovupd		0(%r11, %r12), %zmm1 {%k1}
+
+	vmovapd		%zmm0, 0*64(%r13) {%k1}
+	vmovapd		%zmm1, 1*64(%r13) {%k1}
+
+	leaq	0(%r11, %r10, 8), %r11
+	leaq	0(%r13, %r10, 8), %r13
+	movl	$ 0, %r10d
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dpack_tt_2_lib8)
+#endif
+
+
+
+
+
+// input arguments
+//
+// r10	<- kmax
+// r11	<- A
+// r12	<- lda
+// r13	<- C
+// r14	<- sdc
+//
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_DPACK_TT_1_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dpack_tt_1_lib8)
+#endif
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+	// TODO offsetC
+
+	cmpl	$ 7, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %zmm0
+
+	vmovapd		%zmm0, 0*64(%r13)
+
+	subl	$ 8, %r10d
+	addq	$ 64, %r11
+	addq	%r14, %r13
+
+	cmpl	$ 7, %r10d
+	jg		1b
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	// compute mask for rows
+	vcvtsi2sd	%r10d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+	vpmovq2m	%zmm25, %k1
+
+	vmovupd		0(%r11), %zmm0 {%k1}
+
+	vmovapd		%zmm0, 0*64(%r13) {%k1}
+
+	leaq	0(%r11, %r10, 8), %r11
+	leaq	0(%r13, %r10, 8), %r13
+	movl	$ 0, %r10d
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dpack_tt_1_lib8)
 #endif
 
 
@@ -4077,6 +4318,86 @@ NAME:
 	ret
 
 	FUN_END(kernel_dpack_tt_4_lib8)
+
+
+
+
+
+//                                1         2          3        4          5        6
+// void kernel_dpack_tt_4_vs_lib8(int kmax, double *A, int lda, double *C, int sdc, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpack_tt_4_vs_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$ 3, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // sdc
+	sall	$ 6, %r14d
+
+	// TODO offsetC
+
+	movq	ARG6, %r15 // m1
+	cmpl	$ 1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_DPACK_TT_1_LIB8
+#else
+	CALL(inner_kernel_dpack_tt_1_lib8)
+#endif
+
+	jmp		103f
+
+100:
+
+	movq	ARG6, %r15 // m1
+	cmpl	$ 2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_DPACK_TT_2_LIB8
+#else
+	CALL(inner_kernel_dpack_tt_2_lib8)
+#endif
+	
+	jmp		103f
+
+101:
+
+	movq	ARG6, %r15 // m1
+	cmpl	$ 3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_DPACK_TT_3_LIB8
+#else
+	CALL(inner_kernel_dpack_tt_3_lib8)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_DPACK_TT_4_LIB8
+#else
+	CALL(inner_kernel_dpack_tt_4_lib8)
+#endif
+
+103:
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpack_tt_4_vs_lib8)
 
 
 
