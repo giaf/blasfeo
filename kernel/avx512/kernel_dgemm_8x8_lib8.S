@@ -4168,7 +4168,6 @@ NAME:
 #endif
 	vbroadcastsd	%xmm25, %zmm25
 	vsubpd		%zmm25, %zmm24, %zmm25
-
 	vpmovq2m	%zmm25, %k1
 
 #else

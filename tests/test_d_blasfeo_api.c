@@ -308,8 +308,10 @@ int main()
 //	kernel_dgemm_nt_8x8_lib88cc(8, &alpha, sA.pA, sB.pA, &beta, D, n, D, n);
 //	kernel_dgemm_nt_8x8_vs_lib88cc(8, &alpha, sA.pA, sB.pA, &beta, D, n, D, n, 8, 8);
 
+	kernel_dgemm_nt_16x8_lib88cc(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, D, n, D, n);
+
 //	blasfeo_dgemm_nn(n, n, n, alpha, &sA, 4, 0, &sB, 1, 1, beta, &sA, 0, 0, &sD, 0, 0);
-	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
@@ -334,9 +336,9 @@ int main()
 //	kernel_dsyrk_dpotrf_nt_l_8x8_lib8(n, sA.pA, sA.pA, 0, sA.pA, sA.pA, sB.pA, sD.pA, sD.dA);
 //	kernel_dsyrk_dpotrf_nt_l_8x8_vs_lib8(n, sA.pA, sA.pA, 0, sA.pA, sA.pA, sB.pA, sD.pA, sD.dA, 8, 8);
 
-	blasfeo_print_dmat(n, n, &sD, 0, 0);
+//	blasfeo_print_dmat(n, n, &sD, 0, 0);
 //	blasfeo_print_dmat(n, n, &sE, 0, 0);
-//	d_print_mat(n, n, D, n);
+	d_print_mat(n, n, D, n);
 	return 0;
 #endif
 
