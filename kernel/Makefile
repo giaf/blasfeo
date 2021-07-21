@@ -40,6 +40,8 @@ OBJS =
 obj: $(OBJS)
 ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
 	( cd avx512; $(MAKE) obj)
+	( cd avx2; $(MAKE) obj)
+	( cd avx; $(MAKE) obj)
 	( cd sse3; $(MAKE) obj)
 endif
 

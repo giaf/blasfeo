@@ -36,6 +36,12 @@
 include ../../Makefile.rule
 
 
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X) # TODO remove when not needed !!!
+KERNEL_OBJS = \
+		kernel_dpack_lib4.o \
+
+endif
+
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 KERNEL_OBJS = \
 		kernel_dgemm_diag_lib4.o \

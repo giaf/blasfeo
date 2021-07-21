@@ -243,6 +243,10 @@ KERNEL_OBJS = \
 		\
 		kernel/sse3/kernel_align_x64.o \
 		\
+		\
+		\
+		kernel/avx2/kernel_dgemm_4x4_lib4.o \
+		kernel/avx/kernel_dpack_lib4.o \
 
 endif
 ifeq ($(TARGET), X64_INTEL_HASWELL)
