@@ -46,7 +46,7 @@
 // r13   <- ldc
 // zmm0 <- []
 // ...
-// zmm7 <- []
+// zmm15 <- []
 //
 // output arguments:
 // r10   <- alpha
@@ -55,7 +55,7 @@
 // r13   <- ldc
 // zmm0 <- []
 // ...
-// zmm7 <- []
+// zmm15 <- []
 
 #if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_16X8_LIB
@@ -149,6 +149,147 @@
 
 // common inner routine with file scope
 //
+// scale for generic alpha and beta
+//
+// input arguments:
+// r10   <- alpha
+// r11   <- beta
+// r12   <- C
+// r13   <- ldc
+// r14   <- m1
+// r15   <- n1
+// zmm0 <- []
+// ...
+// zmm15 <- []
+//
+// output arguments:
+// r10   <- alpha
+// r11   <- beta
+// r10   <- C
+// r13   <- ldc
+// r14   <- m1
+// r15   <- n1
+// zmm0 <- []
+// ...
+// zmm15 <- []
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_AB_16X8_VS_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_scale_ab_16x8_vs_lib)
+#endif
+	
+	// alpha
+	vbroadcastsd	0(%r10), %zmm25
+
+	vmulpd		%zmm0, %zmm25, %zmm0
+	vmulpd		%zmm1, %zmm25, %zmm1
+	vmulpd		%zmm2, %zmm25, %zmm2
+	vmulpd		%zmm3, %zmm25, %zmm3
+	vmulpd		%zmm4, %zmm25, %zmm4
+	vmulpd		%zmm5, %zmm25, %zmm5
+	vmulpd		%zmm6, %zmm25, %zmm6
+	vmulpd		%zmm7, %zmm25, %zmm7
+	vmulpd		%zmm8, %zmm25, %zmm8
+	vmulpd		%zmm9, %zmm25, %zmm9
+	vmulpd		%zmm10, %zmm25, %zmm10
+	vmulpd		%zmm11, %zmm25, %zmm11
+	vmulpd		%zmm12, %zmm25, %zmm12
+	vmulpd		%zmm13, %zmm25, %zmm13
+	vmulpd		%zmm14, %zmm25, %zmm14
+	vmulpd		%zmm15, %zmm25, %zmm15
+
+	// beta
+	vbroadcastsd	0(%r11), %zmm24
+
+	vxorpd		%zmm25, %zmm25, %zmm25 // 0.0
+
+	vucomisd	%xmm25, %xmm24 // beta==0.0 ?
+	je			0f // end
+
+	// compute mask for rows
+	vcvtsi2sd	%r14d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+	vpmovq2m	%zmm25, %k1
+
+	vmovupd		0(%r12), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm0
+	vmovupd		64(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm8
+	addq		%r13, %r12
+	cmpl		$ 2, %r15d
+	jl			0f // end
+	vmovupd		0(%r12), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm1
+	vmovupd		64(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm9
+	addq		%r13, %r12
+	cmpl		$ 3, %r15d
+	jl			0f // end
+	vmovupd		0(%r12), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm2
+	vmovupd		64(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm10
+	addq		%r13, %r12
+	cmpl		$ 4, %r15d
+	jl			0f // end
+	vmovupd		0(%r12), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm3
+	vmovupd		64(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm11
+	addq		%r13, %r12
+	cmpl		$ 5, %r15d
+	jl			0f // end
+	vmovupd		0(%r12), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm4
+	vmovupd		64(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm12
+	addq		%r13, %r12
+	cmpl		$ 6, %r15d
+	jl			0f // end
+	vmovupd		0(%r12), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm5
+	vmovupd		64(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm13
+	addq		%r13, %r12
+	cmpl		$ 7, %r15d
+	jl			0f // end
+	vmovupd		0(%r12), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm6
+	vmovupd		64(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm14
+	addq		%r13, %r12
+	cmpl		$ 7, %r15d
+	je			0f // end
+	vmovupd		0(%r12), %zmm25
+	vfmadd231pd	%zmm24, %zmm25, %zmm7
+	vmovupd		64(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm15
+//	addq		%r13, %r12
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_ab_16x8_vs_lib)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // store n
 //
 // input arguments:
@@ -156,14 +297,14 @@
 // r11  <- ldd
 // zmm0 <- []
 // ...
-// zmm7 <- []
+// zmm15 <- []
 //
 // output arguments:
 // r10  <- D
 // r11  <- ldd
 // zmm0 <- []
 // ...
-// zmm7 <- []
+// zmm15 <- []
 
 #if MACRO_LEVEL>=1
 	.macro INNER_STORE_16X8_LIB
@@ -203,6 +344,99 @@
 	ret
 
 	FUN_END(inner_store_16x8_lib)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// store n
+//
+// input arguments:
+// r10  <- D
+// r11  <- ldd
+// r12  <- m1
+// r13  <- n1
+// zmm0 <- []
+// ...
+// zmm15 <- []
+//
+// output arguments:
+// r10  <- D
+// r11  <- ldd
+// r12  <- m1
+// r13  <- n1
+// zmm0 <- []
+// ...
+// zmm15 <- []
+
+#if MACRO_LEVEL>=1
+	.macro INNER_STORE_16X8_VS_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_store_16x8_vs_lib)
+#endif
+	
+	// compute mask for rows
+	vcvtsi2sd	%r12d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+	vpmovq2m	%zmm25, %k1
+
+	vmovupd %zmm0, 0(%r10)
+	vmovupd %zmm8, 64(%r10) {%k1}
+	addq		%r11, %r10
+	cmpl		$ 2, %r13d
+	jl			0f // end
+	vmovupd %zmm1, 0(%r10)
+	vmovupd %zmm9, 64(%r10) {%k1}
+	addq		%r11, %r10
+	cmpl		$ 3, %r13d
+	jl			0f // end
+	vmovupd %zmm2, 0(%r10)
+	vmovupd %zmm10, 64(%r10) {%k1}
+	addq		%r11, %r10
+	cmpl		$ 4, %r13d
+	jl			0f // end
+	vmovupd %zmm3, 0(%r10)
+	vmovupd %zmm11, 64(%r10) {%k1}
+	addq		%r11, %r10
+	cmpl		$ 5, %r13d
+	jl			0f // end
+	vmovupd %zmm4, 0(%r10)
+	vmovupd %zmm12, 64(%r10) {%k1}
+	addq		%r11, %r10
+	cmpl		$ 6, %r13d
+	jl			0f // end
+	vmovupd %zmm5, 0(%r10)
+	vmovupd %zmm13, 64(%r10) {%k1}
+	addq		%r11, %r10
+	cmpl		$ 7, %r13d
+	jl			0f // end
+	vmovupd %zmm6, 0(%r10)
+	vmovupd %zmm14, 64(%r10) {%k1}
+	addq		%r11, %r10
+	cmpl		$ 7, %r13d
+	je			0f // end
+	vmovupd %zmm7, 0(%r10)
+	vmovupd %zmm15, 64(%r10) {%k1}
+//	addq		%r11, %r10
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_store_16x8_vs_lib)
 #endif
 
 
@@ -291,6 +525,76 @@
 	ret
 
 	FUN_END(kernel_dgemm_nt_16x8_lib88cc)
+
+
+
+
+
+//                                      1      2              3          4        5          6             7          8        9          10       11      12
+// void kernel_dgemm_nt_16x8_vs_lib88cc(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemm_nt_16x8_vs_lib88cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // sda
+	sall	$ 6, %r12d // 8*sda*sizeof(double)
+	movq	ARG5, %r13  // B
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_16X8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_16x8_lib8)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12   // C
+	movq	ARG8, %r13   // ldc
+	sall	$ 3, %r13d
+	movq	ARG11, %r14 // m1
+	movq	ARG12, %r15 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_16X8_VS_LIB
+#else
+	CALL(inner_scale_ab_16x8_vs_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$ 3, %r11d
+	movq	ARG11, %r12 // m1
+	movq	ARG12, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_16X8_VS_LIB
+#else
+	CALL(inner_store_16x8_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemm_nt_16x8_vs_lib88cc)
 
 
 

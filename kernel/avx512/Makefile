@@ -68,3 +68,4 @@ clean:
 	rm -f *.gcov
 
 kernel_dgemm_8x8_lib8.o: kernel_dgemm_8x8_lib8.S kernel_dgemm_8x8_lib.S
+kernel_dgemm_16x8_lib8.o: kernel_dgemm_16x8_lib8.S kernel_dgemm_16x8_lib.S
