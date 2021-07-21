@@ -1750,6 +1750,149 @@ NAME:
 
 
 
+// input arguments
+//
+// r10	<- kmax
+// r11	<- A
+// r12	<- lda
+// r13	<- C
+//
+#if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_DPACK_TN_8_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dpack_tn_8_lib8)
+#endif
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+	leaq	0(%r12, %r12, 2), %r14
+	leaq	0(%r11, %r12, 4), %r15
+
+	cmpl	$ 7, %r10d
+	jle		2f // clean-up loop
+
+	movl	$ 0xcc, %eax
+	kmovd	%eax, %k1
+	movl	$ 0x33, %eax
+	kmovd	%eax, %k2
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	vmovupd			0(%r11), %ymm0
+	vmovupd			0(%r15), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm0, %zmm0
+	vmovupd			0(%r11, %r12), %ymm1
+	vmovupd			0(%r15, %r12), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm1, %zmm1
+	vmovupd			0(%r11, %r12, 2), %ymm2
+	vmovupd			0(%r15, %r12, 2), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm2, %zmm2
+	vmovupd			0(%r11, %r14), %ymm3
+	vmovupd			0(%r15, %r14), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm3, %zmm3
+	vmovupd			32(%r11), %ymm4
+	vmovupd			32(%r15), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm4, %zmm4
+	vmovupd			32(%r11, %r12), %ymm5
+	vmovupd			32(%r15, %r12), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm5, %zmm5
+	vmovupd			32(%r11, %r12, 2), %ymm6
+	vmovupd			32(%r15, %r12, 2), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm6, %zmm6
+	vmovupd			32(%r11, %r14), %ymm7
+	vmovupd			32(%r15, %r14), %ymm24
+	vinsertf64x4	$ 0x1, %ymm24, %zmm7, %zmm7
+
+	vmovapd		%zmm0, %zmm24
+	vpermq		$ 0x40, %zmm2, %zmm0 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm2 {%k2}
+	vmovapd		%zmm1, %zmm24
+	vpermq		$ 0x40, %zmm3, %zmm1 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm3 {%k2}
+	vmovapd		%zmm4, %zmm24
+	vpermq		$ 0x40, %zmm6, %zmm4 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm6 {%k2}
+	vmovapd		%zmm5, %zmm24
+	vpermq		$ 0x40, %zmm7, %zmm5 {%k1}
+	vpermq		$ 0x0e, %zmm24, %zmm7 {%k2}
+
+	vunpcklpd	%zmm1, %zmm0, %zmm24
+	vmovapd		%zmm24, 0*64(%r13)
+	vunpckhpd	%zmm1, %zmm0, %zmm24
+	vmovapd		%zmm24, 1*64(%r13)
+	vunpcklpd	%zmm3, %zmm2, %zmm24
+	vmovapd		%zmm24, 2*64(%r13)
+	vunpckhpd	%zmm3, %zmm2, %zmm24
+	vmovapd		%zmm24, 3*64(%r13)
+	vunpcklpd	%zmm5, %zmm4, %zmm24
+	vmovapd		%zmm24, 4*64(%r13)
+	vunpckhpd	%zmm5, %zmm4, %zmm24
+	vmovapd		%zmm24, 5*64(%r13)
+	vunpcklpd	%zmm7, %zmm6, %zmm24
+	vmovapd		%zmm24, 6*64(%r13)
+	vunpckhpd	%zmm7, %zmm6, %zmm24
+	vmovapd		%zmm24, 7*64(%r13)
+
+	subl	$ 8, %r10d
+	addq	$ 64, %r11
+	addq	$ 64, %r15
+	addq	$ 8*64, %r13
+
+	cmpl	$ 7, %r10d
+	jg		1b
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	vmovsd		0(%r11, %r12), %xmm0
+	vmovsd		%xmm0, 8(%r13)
+	vmovsd		0(%r11, %r12, 2), %xmm0
+	vmovsd		%xmm0, 16(%r13)
+	vmovsd		0(%r11, %r14), %xmm0
+	vmovsd		%xmm0, 24(%r13)
+
+	vmovsd		0(%r15), %xmm0
+	vmovsd		%xmm0, 32(%r13)
+	vmovsd		0(%r15, %r12), %xmm0
+	vmovsd		%xmm0, 40(%r13)
+	vmovsd		0(%r15, %r12, 2), %xmm0
+	vmovsd		%xmm0, 48(%r13)
+	vmovsd		0(%r15, %r14), %xmm0
+	vmovsd		%xmm0, 56(%r13)
+
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	$ 8, %r15
+	addq	$ 64, %r13
+
+	cmpl	$ 0, %r10d
+	jg		2b
+
+
+0: // return
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dpack_tn_8_lib8)
+#endif
+
+
+
+
+
 //                              1         2            3          4        5          6
 // void kernel_dpacp_nn_16_lib8(int kmax, int offsetA, double *A, int sda, double *C, int sdc)
 
@@ -4398,6 +4541,39 @@ NAME:
 	ret
 
 	FUN_END(kernel_dpack_tt_4_vs_lib8)
+
+
+
+
+
+//                             1         2          3        4
+// void kernel_dpack_tn_8_lib8(int kmax, double *A, int lda, double *C)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpack_tn_8_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$ 3, %r12d
+	movq	ARG4, %r13 // C
+
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_DPACK_TN_8_LIB8
+#else
+	CALL(inner_kernel_dpack_tn_8_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpack_tn_8_lib8)
 
 
 
