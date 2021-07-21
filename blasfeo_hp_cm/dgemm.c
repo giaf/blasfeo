@@ -251,20 +251,27 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 			}
 		}
 #elif defined(TARGET_X64_INTEL_SKYLAKE_X)
-	for(; ii<m-7; ii+=8)
+	for(; ii<m-15; ii+=16)
 		{
 		for(jj=0; jj<n-7; jj+=8)
 			{
-			kernel_dgemm_nt_8x8_lib88cc(k, &alpha, pA+ii*sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			kernel_dgemm_nt_16x8_lib88cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
 		if(jj<n)
 			{
-			kernel_dgemm_nt_8x8_vs_lib88cc(k, &alpha, pA+ii*sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			kernel_dgemm_nt_16x8_vs_lib88cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 			}
 		}
 	if(ii<m)
 		{
-		goto nn_m1_left_8;
+		if(m-ii<=8)
+			{
+			goto nn_m1_left_8;
+			}
+		else
+			{
+			goto nn_m1_left_16;
+			}
 		}
 #else
 	for(; ii<m-3; ii+=4)
@@ -284,6 +291,15 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 		}
 #endif
 	goto nn_m1_return;
+
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+nn_m1_left_16:
+	for(jj=0; jj<n; jj+=8)
+		{
+		kernel_dgemm_nt_16x8_vs_lib88cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto nn_m1_return;
+#endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 nn_m1_left_12:
