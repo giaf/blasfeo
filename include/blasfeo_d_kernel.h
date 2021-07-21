@@ -1142,6 +1142,12 @@ void kernel_dgemm_nt_8xn_p0_lib44cc(int n, int k, double *alpha, double *A, int 
 
 
 
+// A, B panel-major bs=8; C, D column-major
+// 8x8
+void kernel_dgemm_nt_8x8_lib88cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+
+
+
 // aux
 void kernel_dvecld_inc1(int kmax, double *x);
 void kernel_dveccp_inc1(int kmax, double *x, double *y);
