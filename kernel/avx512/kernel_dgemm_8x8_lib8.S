@@ -5748,6 +5748,7 @@ NAME:
 
 	movq	ARG2, %r10 // alpha
 	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12 // C
 	movq	ARG11, %r13 // kn 
 
 #if MACRO_LEVEL>=1

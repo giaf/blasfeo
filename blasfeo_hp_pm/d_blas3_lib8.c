@@ -834,7 +834,7 @@ left_16_m0:
 
 left_8_m0:
 	kernel_dpacp_tn_8_lib8(k, offsetA, pA+ii*ps, sda, pU);
-	for(jj=0; jj<n; jj+=4)
+	for(jj=0; jj<n; jj+=8)
 		{
 		kernel_dgemm_nn_8x8_vs_lib8(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
 		}
@@ -844,7 +844,7 @@ left_8_m0:
 
 left_8_m0_g:
 	kernel_dpacp_tn_8_lib8(k, offsetA, pA+ii*ps, sda, pU);
-	for(jj=0; jj<n; jj+=4)
+	for(jj=0; jj<n; jj+=8)
 		{
 		kernel_dgemm_nn_8x8_gen_lib8(k, &alpha, pU, offsetB, pB+jj*ps, sdb, &beta, offsetC, pC+ii*sdc+jj*ps, sdc, offsetD, pD+ii*sdd+jj*ps, sdd, 0, m-ii, 0, n-jj);
 		}
@@ -865,7 +865,7 @@ left_16_n0:
 
 left_8_n0:
 	kernel_dpacp_tn_8_lib8(k, offsetB, pB+jj*ps, sdb, pU);
-	for(ii=0; ii<m; ii+=4)
+	for(ii=0; ii<m; ii+=8)
 		{
 		kernel_dgemm_tt_8x8_vs_lib8(k, &alpha, offsetA, pA+ii*ps, sda, pU, &beta, pC+ii*sdc+jj*ps, pD+ii*sdd+jj*ps, m-ii, n-jj);
 		}

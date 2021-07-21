@@ -6270,6 +6270,8 @@ NAME:
 	movq	ARG10, %r13 // C
 	movq	ARG11, %r14 // sdc
 	sall	$ 6, %r14d // 4*sdc*sizeof(double)
+	movq	ARG17, %r15 // n0
+	movq	ARG18, %rax // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_16X8_GEN_LIB8

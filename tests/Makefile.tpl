@@ -33,6 +33,7 @@ test.o:
 	$(CC) $(CFLAGS) -c $(TESTS_DIR)/test.c -o $(ABS_BINARY_PATH)/test.o
 	$(CC) $(CFLAGS) $(ABS_BINARY_PATH)/test.o -o $(ABS_BINARY_PATH)/test.out $(LIBS)
 	$(ABS_BINARY_PATH)/test.out
+#	~/sde/sde64 -- $(ABS_BINARY_PATH)/test.out
 
 
 run: test.o
