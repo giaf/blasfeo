@@ -300,7 +300,8 @@ int main()
 //	kernel_dpaad_nn_8_lib8(n, &alpha, 0, sA.pA, sA.cn, sD.pA);
 //	kernel_dpaad_nn_8_vs_lib8(n, &alpha, 0, sA.pA, sA.cn, sD.pA, 8);
 
-	kernel_dpack_nn_8_lib8(n, A, n, sD.pA);
+//	kernel_dpack_nn_8_lib8(n, A, n, sD.pA);
+	kernel_dpack_nn_8_vs_lib8(n, A, n, sD.pA, 8);
 //	kernel_dpack_tn_8_lib8(n, A, n, sD.pA);
 //	kernel_dpack_tn_8_vs_lib8(n, A, n, sD.pA, 8);
 //	kernel_dpack_tt_4_lib8(n, A, n, sD.pA, sD.cn);
