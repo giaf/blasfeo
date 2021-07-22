@@ -300,10 +300,11 @@ int main()
 //	kernel_dpaad_nn_8_lib8(n, &alpha, 0, sA.pA, sA.cn, sD.pA);
 //	kernel_dpaad_nn_8_vs_lib8(n, &alpha, 0, sA.pA, sA.cn, sD.pA, 8);
 
-//	kernel_dpack_tt_4_lib8(n, A, n, sD.pA, sD.cn);
-//	kernel_dpack_tt_4_vs_lib8(n, A, n, sD.pA, sD.cn, 4);
+	kernel_dpack_nn_8_lib8(n, A, n, sD.pA);
 //	kernel_dpack_tn_8_lib8(n, A, n, sD.pA);
 //	kernel_dpack_tn_8_vs_lib8(n, A, n, sD.pA, 8);
+//	kernel_dpack_tt_4_lib8(n, A, n, sD.pA, sD.cn);
+//	kernel_dpack_tt_4_vs_lib8(n, A, n, sD.pA, sD.cn, 4);
 
 //	kernel_dgemm_nt_8x8_lib88cc(8, &alpha, sA.pA, sB.pA, &beta, D, n, D, n);
 //	kernel_dgemm_nt_8x8_vs_lib88cc(8, &alpha, sA.pA, sB.pA, &beta, D, n, D, n, 8, 8);
@@ -312,7 +313,7 @@ int main()
 //	kernel_dgemm_nn_8x8_lib8ccc(8, &alpha, sA.pA, B, n, &beta, D, n, D, n);
 //	kernel_dgemm_nn_8x8_vs_lib8ccc(8, &alpha, sA.pA, B, n, &beta, D, n, D, n, 8, 8);
 //	kernel_dgemm_tt_8x8_libc8cc(8, &alpha, A, n, sB.pA, &beta, D, n, D, n);
-	kernel_dgemm_tt_8x8_vs_libc8cc(8, &alpha, A, n, sB.pA, &beta, D, n, D, n, 8, 8);
+//	kernel_dgemm_tt_8x8_vs_libc8cc(8, &alpha, A, n, sB.pA, &beta, D, n, D, n, 8, 8);
 
 //	kernel_dgemm_nt_16x8_lib88cc(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, D, n, D, n);
 //	kernel_dgemm_nt_16x8_vs_lib88cc(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, D, n, D, n, 16, 8);
@@ -343,9 +344,9 @@ int main()
 //	kernel_dsyrk_dpotrf_nt_l_8x8_lib8(n, sA.pA, sA.pA, 0, sA.pA, sA.pA, sB.pA, sD.pA, sD.dA);
 //	kernel_dsyrk_dpotrf_nt_l_8x8_vs_lib8(n, sA.pA, sA.pA, 0, sA.pA, sA.pA, sB.pA, sD.pA, sD.dA, 8, 8);
 
-//	blasfeo_print_dmat(n, n, &sD, 0, 0);
+	blasfeo_print_dmat(n, n, &sD, 0, 0);
 //	blasfeo_print_dmat(n, n, &sE, 0, 0);
-	d_print_mat(n, n, D, n);
+//	d_print_mat(n, n, D, n);
 	return 0;
 #endif
 

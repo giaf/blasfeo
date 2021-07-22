@@ -4617,6 +4617,157 @@ NAME:
 
 
 
+//                             1         2          3        4
+// void kernel_dpack_nn_8_lib8(int kmax, double *A, int lda, double *C)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpack_nn_8_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$ 3, %r12d
+	movq	ARG4, %r13 // C
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+	cmpl	$ 3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 0*64(%r13)
+	addq	%r12, %r11
+
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 1*64(%r13)
+	addq	%r12, %r11
+
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 2*64(%r13)
+	addq	%r12, %r11
+
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 3*64(%r13)
+	addq	%r12, %r11
+
+	subl	$ 4, %r10d
+	addq	$ 4*64, %r13
+
+	cmpl	$ 3, %r10d
+	jg		1b
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovupd		0(%r11), %zmm0
+	vmovapd		%zmm0, 0(%r13)
+	addq	%r12, %r11
+
+	subl	$ 1, %r10d
+	addq	$ 1*64, %r13
+
+	cmpl	$ 0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpack_nn_8_lib8)
+
+
+
+
+
+//                             1         2          3        4
+// void kernel_dpack_tn_8_lib8(int kmax, double *A, int lda, double *C)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpack_tn_8_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$ 3, %r12d
+	movq	ARG4, %r13 // C
+
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_DPACK_TN_8_LIB8
+#else
+	CALL(inner_kernel_dpack_tn_8_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpack_tn_8_lib8)
+
+
+
+
+
+//                                1         2          3        4          5
+// void kernel_dpack_tn_8_vs_lib8(int kmax, double *A, int lda, double *C, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpack_tn_8_vs_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$ 3, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // m1
+
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_DPACK_TN_8_VS_LIB8
+#else
+	CALL(inner_kernel_dpack_tn_8_vs_lib8)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpack_tn_8_vs_lib8)
+
+
+
+
+
 //                             1         2          3        4          5
 // void kernel_dpack_tt_4_lib8(int kmax, double *A, int lda, double *C, int sdc)
 
@@ -4728,73 +4879,6 @@ NAME:
 	ret
 
 	FUN_END(kernel_dpack_tt_4_vs_lib8)
-
-
-
-
-
-//                             1         2          3        4
-// void kernel_dpack_tn_8_lib8(int kmax, double *A, int lda, double *C)
-
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_dpack_tn_8_lib8)
-
-	PROLOGUE
-
-
-	movq	ARG1, %r10 // kmax
-	movq	ARG2, %r11 // A
-	movq	ARG3, %r12 // lda
-	sall	$ 3, %r12d
-	movq	ARG4, %r13 // C
-
-
-#if MACRO_LEVEL>=1
-	INNER_KERNEL_DPACK_TN_8_LIB8
-#else
-	CALL(inner_kernel_dpack_tn_8_lib8)
-#endif
-
-
-	EPILOGUE
-
-	ret
-
-	FUN_END(kernel_dpack_tn_8_lib8)
-
-
-
-
-
-//                                1         2          3        4          5
-// void kernel_dpack_tn_8_vs_lib8(int kmax, double *A, int lda, double *C, int m1)
-
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_dpack_tn_8_vs_lib8)
-
-	PROLOGUE
-
-
-	movq	ARG1, %r10 // kmax
-	movq	ARG2, %r11 // A
-	movq	ARG3, %r12 // lda
-	sall	$ 3, %r12d
-	movq	ARG4, %r13 // C
-	movq	ARG5, %r14 // m1
-
-
-#if MACRO_LEVEL>=1
-	INNER_KERNEL_DPACK_TN_8_VS_LIB8
-#else
-	CALL(inner_kernel_dpack_tn_8_vs_lib8)
-#endif
-
-
-	EPILOGUE
-
-	ret
-
-	FUN_END(kernel_dpack_tn_8_vs_lib8)
 
 
 
