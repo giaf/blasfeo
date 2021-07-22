@@ -310,7 +310,9 @@ int main()
 //	kernel_dgemm_nt_8x8_lib8ccc(8, &alpha, sA.pA, B, n, &beta, D, n, D, n);
 //	kernel_dgemm_nt_8x8_vs_lib8ccc(8, &alpha, sA.pA, B, n, &beta, D, n, D, n, 8, 8);
 //	kernel_dgemm_nn_8x8_lib8ccc(8, &alpha, sA.pA, B, n, &beta, D, n, D, n);
-	kernel_dgemm_nn_8x8_vs_lib8ccc(8, &alpha, sA.pA, B, n, &beta, D, n, D, n, 8, 8);
+//	kernel_dgemm_nn_8x8_vs_lib8ccc(8, &alpha, sA.pA, B, n, &beta, D, n, D, n, 8, 8);
+//	kernel_dgemm_tt_8x8_libc8cc(8, &alpha, A, n, sB.pA, &beta, D, n, D, n);
+	kernel_dgemm_tt_8x8_vs_libc8cc(8, &alpha, A, n, sB.pA, &beta, D, n, D, n, 8, 8);
 
 //	kernel_dgemm_nt_16x8_lib88cc(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, D, n, D, n);
 //	kernel_dgemm_nt_16x8_vs_lib88cc(8, &alpha, sA.pA, sA.cn, sB.pA, &beta, D, n, D, n, 16, 8);
