@@ -4999,12 +4999,12 @@
 	// compute mask for rows
 	vcvtsi2sd	%r14d, %xmm25, %xmm25
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC01(%rip), %zmm24
+	vmovupd		.LC01(%rip), %zmm26
 #elif defined(OS_MAC)
-	vmovupd		LC01(%rip), %zmm24
+	vmovupd		LC01(%rip), %zmm26
 #endif
 	vbroadcastsd	%xmm25, %zmm25
-	vsubpd		%zmm25, %zmm24, %zmm25
+	vsubpd		%zmm25, %zmm26, %zmm25
 	vpmovq2m	%zmm25, %k1
 
 	vmovupd		0(%r12), %zmm25
@@ -5140,12 +5140,12 @@
 	// compute mask for rows
 	vcvtsi2sd	%r14d, %xmm25, %xmm25
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC00(%rip), %zmm24
+	vmovupd		.LC00(%rip), %zmm26
 #elif defined(OS_MAC)
-	vmovupd		LC00(%rip), %zmm24
+	vmovupd		LC00(%rip), %zmm26
 #endif
 	vbroadcastsd	%xmm25, %zmm25
-	vsubpd		%zmm25, %zmm24, %zmm25
+	vsubpd		%zmm25, %zmm26, %zmm25
 	vpmovq2m	%zmm25, %k1
 
 	vmovupd		0(%r12), %zmm25 {%k1}{z}

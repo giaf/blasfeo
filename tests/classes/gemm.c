@@ -96,9 +96,14 @@ void set_test_args(struct TestArgs *targs)
 	targs->xjs = 2;
 #endif
 
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	targs->nis = 17;
+	targs->njs = 9;
+#else
 	targs->nis = 13;
 	targs->njs = 5;
-	targs->nks = 5;
+#endif
+	targs->nks = 6;
 
 	targs->alphas = 1;
 	}

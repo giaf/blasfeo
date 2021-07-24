@@ -1800,7 +1800,7 @@ static void blasfeo_hp_dgemm_tt_m0(int m, int n, int k, double alpha, double *A,
 		{
 		kernel_dpack_tn_8_lib8(k, A+(ii+0)*lda, lda, pU);
 		kernel_dpack_tn_8_lib8(k, A+(ii+8)*lda, lda, pU+8*sdu);
-		for(jj=0; jj<n-3; jj+=8)
+		for(jj=0; jj<n-7; jj+=8)
 			{
 			kernel_dgemm_nt_16x8_lib8ccc(k, &alpha, pU, sdu, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
 			}
