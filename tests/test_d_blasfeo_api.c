@@ -301,7 +301,7 @@ int main()
 //	kernel_dpaad_nn_8_vs_lib8(n, &alpha, 0, sA.pA, sA.cn, sD.pA, 8);
 
 //	kernel_dpack_nn_16_lib8(n, A, n, sD.pA, sD.cn);
-	kernel_dpack_nn_16_vs_lib8(n, A, n, sD.pA, sD.cn, 16);
+//	kernel_dpack_nn_16_vs_lib8(n, A, n, sD.pA, sD.cn, 16);
 //	kernel_dpack_nn_8_lib8(n, A, n, sD.pA);
 //	kernel_dpack_nn_8_vs_lib8(n, A, n, sD.pA, 8);
 //	kernel_dpack_tn_8_lib8(n, A, n, sD.pA);
@@ -331,7 +331,7 @@ int main()
 //	kernel_dgemm_tt_8x16_libc8cc(16, &alpha, A, n, sB.pA, sB.cn, &beta, D, n, D, n);
 //	kernel_dgemm_tt_8x16_vs_libc8cc(16, &alpha, A, n, sB.pA, sB.cn, &beta, D, n, D, n, 8, 16);
 
-//	blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sA, 0, 0, &sD, 0, 0);
+	blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sA, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
