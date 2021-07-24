@@ -114,6 +114,8 @@ void kernel_dsyrk_dpotrf_nt_l_8x8_vs_lib8(int kp, double *Ap, double *Bp, int km
 // 16
 void kernel_dpacp_nn_16_lib8(int kmax, int offsetA, double *A, int sda, double *B, int sdb);
 void kernel_dpacp_nn_16_vs_lib8(int kmax, int offsetA, double *A, int sda, double *B, int sdb, int m1);
+void kernel_dpack_nn_16_lib8(int kmax, double *A, int lda, double *C, int sdc);
+void kernel_dpack_nn_16_vs_lib8(int kmax, double *A, int lda, double *C, int sdc, int m1);
 // 8
 void kernel_dpacp_nn_8_lib8(int kmax, int offsetA, double *A, int sda, double *B);
 void kernel_dpacp_nn_8_vs_lib8(int kmax, int offsetA, double *A, int sda, double *B, int m1);
