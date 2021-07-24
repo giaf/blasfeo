@@ -1962,7 +1962,7 @@ NAME:
 	jle		10f
 	vmovupd			0(%rax, %r12), %ymm24
 	vinsertf64x4	$ 0x1, %ymm24, %zmm1, %zmm1
-	vmovupd			32(%r11, %r12), %ymm5
+	vmovupd			32(%rax, %r12), %ymm24
 	vinsertf64x4	$ 0x1, %ymm24, %zmm5, %zmm5
 	cmpl	$ 6, %r14d
 	jle		10f
