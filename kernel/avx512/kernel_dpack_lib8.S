@@ -4375,22 +4375,22 @@ NAME:
 11:
 	//
 	vmovupd		0(%r12), %zmm0
-	vmovapd		0(%r14), %zmm1 {%k1}
+	vmovupd		0(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
 	vmovupd		%zmm1, 0(%r14) {%k1}
 	//
 	vmovupd		64(%r12), %zmm0
-	vmovapd		64(%r14), %zmm1 {%k1}
+	vmovupd		64(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
 	vmovupd		%zmm1, 64(%r14) {%k1}
 	//
 	vmovupd		128(%r12), %zmm0
-	vmovapd		128(%r14), %zmm1 {%k1}
+	vmovupd		128(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
 	vmovupd		%zmm1, 128(%r14) {%k1}
 	//
 	vmovupd		192(%r12), %zmm0
-	vmovapd		192(%r14), %zmm1 {%k1}
+	vmovupd		192(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
 	vmovupd		%zmm1, 192(%r14) {%k1}
 
@@ -4409,7 +4409,7 @@ NAME:
 12: // clean-up loop
 	
 	vmovupd		0(%r12), %zmm0
-	vmovapd		0(%r14), %zmm1 {%k1}
+	vmovupd		0(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
 	vmovupd		%zmm1, 0(%r14) {%k1}
 
@@ -4552,25 +4552,25 @@ NAME:
 	//
 	vmovupd		0(%rax), %zmm0 {%k2}
 	vmovupd		0-64(%rax, %r13), %zmm0 {%k3}
-	vmovapd		0(%r14), %zmm1 {%k1}
+	vmovupd		0(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
 	vmovupd		%zmm0, 0(%r14) {%k1}
 	//
 	vmovupd		64(%rax), %zmm0 {%k2}
 	vmovupd		64-64(%rax, %r13), %zmm0 {%k3}
-	vmovapd		64(%r14), %zmm1 {%k1}
+	vmovupd		64(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
 	vmovupd		%zmm0, 64(%r14) {%k1}
 	//
 	vmovupd		128(%rax), %zmm0 {%k2}
 	vmovupd		128-64(%rax, %r13), %zmm0 {%k3}
-	vmovapd		128(%r14), %zmm1 {%k1}
+	vmovupd		128(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
 	vmovupd		%zmm0, 128(%r14) {%k1}
 	//
 	vmovupd		192(%rax), %zmm0 {%k2}
 	vmovupd		192-64(%rax, %r13), %zmm0 {%k3}
-	vmovapd		192(%r14), %zmm1 {%k1}
+	vmovupd		192(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
 	vmovupd		%zmm0, 192(%r14) {%k1}
 
@@ -4590,7 +4590,7 @@ NAME:
 	
 	vmovupd		0(%rax), %zmm0 {%k2}
 	vmovupd		0-64(%rax, %r13), %zmm0 {%k3}
-	vmovapd		0(%r14), %zmm1 {%k1}
+	vmovupd		0(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
 	vmovupd		%zmm0, 0(%r14) {%k1}
 
