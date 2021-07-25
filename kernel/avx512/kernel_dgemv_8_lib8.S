@@ -2224,12 +2224,12 @@ NAME:
 #endif
 	
 	vbroadcastsd	0(%r11), %zmm24
-	movl			$ 0x01, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0x01, %r13d
+	kmovd			%r13d, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 	vbroadcastsd	%xmm0, %zmm25
-	movl			$ 0xfe, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0xfe, %r13d
+	kmovd			%r13d, %k1
 	vmovapd			0(%r10), %zmm24 {%k1}{z}
 	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
 
@@ -2237,8 +2237,8 @@ NAME:
 	jl				0f // ret
 
 	vbroadcastsd	1*8(%r11), %zmm24
-	movl			$ 0x02, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0x02, %r13d
+	kmovd			%r13d, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+1*8(%rip), %zmm25
@@ -2246,8 +2246,8 @@ NAME:
 	vbroadcastsd	LC05+1*8(%rip), %zmm25
 #endif
 	vpermpd			%zmm0, %zmm25, %zmm25
-	movl			$ 0xfc, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0xfc, %r13d
+	kmovd			%r13d, %k1
 	vmovapd			1*64(%r10), %zmm24 {%k1}{z}
 	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
 
@@ -2255,8 +2255,8 @@ NAME:
 	jl				0f // ret
 
 	vbroadcastsd	2*8(%r11), %zmm24
-	movl			$ 0x04, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0x04, %r13d
+	kmovd			%r13d, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+2*8(%rip), %zmm25
@@ -2264,8 +2264,8 @@ NAME:
 	vbroadcastsd	LC05+2*8(%rip), %zmm25
 #endif
 	vpermpd			%zmm0, %zmm25, %zmm25
-	movl			$ 0xf8, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0xf8, %r13d
+	kmovd			%r13d, %k1
 	vmovapd			2*64(%r10), %zmm24 {%k1}{z}
 	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
 
@@ -2273,8 +2273,8 @@ NAME:
 	jl				0f // ret
 
 	vbroadcastsd	3*8(%r11), %zmm24
-	movl			$ 0x08, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0x08, %r13d
+	kmovd			%r13d, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+3*8(%rip), %zmm25
@@ -2282,8 +2282,8 @@ NAME:
 	vbroadcastsd	LC05+3*8(%rip), %zmm25
 #endif
 	vpermpd			%zmm0, %zmm25, %zmm25
-	movl			$ 0xf0, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0xf0, %r13d
+	kmovd			%r13d, %k1
 	vmovapd			3*64(%r10), %zmm24 {%k1}{z}
 	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
 
@@ -2291,8 +2291,8 @@ NAME:
 	jl				0f // ret
 
 	vbroadcastsd	4*8(%r11), %zmm24
-	movl			$ 0x10, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0x10, %r13d
+	kmovd			%r13d, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+4*8(%rip), %zmm25
@@ -2300,8 +2300,8 @@ NAME:
 	vbroadcastsd	LC05+4*8(%rip), %zmm25
 #endif
 	vpermpd			%zmm0, %zmm25, %zmm25
-	movl			$ 0xe0, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0xe0, %r13d
+	kmovd			%r13d, %k1
 	vmovapd			4*64(%r10), %zmm24 {%k1}{z}
 	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
 
@@ -2309,8 +2309,8 @@ NAME:
 	jl				0f // ret
 
 	vbroadcastsd	5*8(%r11), %zmm24
-	movl			$ 0x20, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0x20, %r13d
+	kmovd			%r13d, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+5*8(%rip), %zmm25
@@ -2318,8 +2318,8 @@ NAME:
 	vbroadcastsd	LC05+5*8(%rip), %zmm25
 #endif
 	vpermpd			%zmm0, %zmm25, %zmm25
-	movl			$ 0xc0, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0xc0, %r13d
+	kmovd			%r13d, %k1
 	vmovapd			5*64(%r10), %zmm24 {%k1}{z}
 	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
 
@@ -2327,8 +2327,8 @@ NAME:
 	jl				0f // ret
 
 	vbroadcastsd	6*8(%r11), %zmm24
-	movl			$ 0x40, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0x40, %r13d
+	kmovd			%r13d, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+6*8(%rip), %zmm25
@@ -2336,8 +2336,8 @@ NAME:
 	vbroadcastsd	LC05+6*8(%rip), %zmm25
 #endif
 	vpermpd			%zmm0, %zmm25, %zmm25
-	movl			$ 0x80, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0x80, %r13d
+	kmovd			%r13d, %k1
 	vmovapd			6*64(%r10), %zmm24 {%k1}{z}
 	vfnmadd231pd	%zmm24, %zmm25, %zmm0 {%k1}
 
@@ -2345,8 +2345,8 @@ NAME:
 	jl				0f // ret
 
 	vbroadcastsd	7*8(%r11), %zmm24
-	movl			$ 0x80, %r12d
-	kmovd			%r12d, %k1
+	movl			$ 0x80, %r13d
+	kmovd			%r13d, %k1
 	vmulpd			%zmm0, %zmm24, %zmm0 {%k1}
 
 0:
