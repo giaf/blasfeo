@@ -9713,7 +9713,7 @@ NAME:
 
 
 
-//                               rdi    rsi            rdx        rcx      r8         r9            rsp+8      rsp+16   rsp+24     rsp+32
+//                               1      2              3          4        5          6             7          8        9          10
 // void kernel_dgemm_nt_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
 
 	.p2align 4,,15
@@ -11178,7 +11178,7 @@ NAME:
 
 
 
-//                                  rdi    rsi            rdx        rcx      r8           r9         rsp+8    rsp+16     rsp+24
+//                                  1      2              3          4        5            6          7        8          9
 // void kernel_dtrmm_nn_rl_8x4_lib4(int k, double *alpha, double *A, int sda, int offsetB, double *B, int sdb, double *D, int sdd);
 
 	.p2align 4,,15
@@ -11596,7 +11596,7 @@ NAME:
 
 
 
-//                                  rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24
+//                                  1      2          3        4          5          6        7          8        9
 // void kernel_dpotrf_nt_l_8x4_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
 
 	.p2align 4,,15
@@ -11672,7 +11672,7 @@ NAME:
 
 
 
-//                                     rdi    rsi        rdx      rcx        r8         r9       rsp+8      rsp+16   rsp+24              rsp+32  rsp+40 
+//                                     1      2          3        4          5          6        7          8        9                   10      11
 // void kernel_dpotrf_nt_l_8x4_vs_lib4(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int km, int kn);
 
 	.p2align 4,,15
@@ -11751,7 +11751,7 @@ NAME:
 
 
 
-//                                        rdi     rsi         rdx       rcx         r8      r9          rsp+8     rsp+16      rsp+24     rsp+32   rsp+40     rsp+48   rsp+56
+//                                        1       2           3         4           5       6           7         8           9          10       11         12       13
 // void kernel_dsyrk_dpotrf_nt_l_8x4_lib4(int kp, double *Ap, int sdap, double *Bp, int km, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
 
 	.p2align 4,,15
@@ -12495,7 +12495,7 @@ NAME:
 
 
 
-//                                            rdi     rsi         rdx       rcx         r8      r9          rsp+8     rsp+16      rsp+24     rsp+32   rsp+40     rsp+48   rsp+56     rsp+64
+//                                            1       2           3         4           5       6           7         8           9          10       11         12       13         14
 // void kernel_dgemm_dtrsm_nt_rl_inv_8x4_lib4(int kp, double *Ap, int sdap, double *Bp, int km, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 	.p2align 4,,15

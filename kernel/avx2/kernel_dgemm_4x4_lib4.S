@@ -2884,19 +2884,16 @@ NAME:
 
 0:
 
-	movq	%r13, %r15 // C0
-	addq	%r14, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
-
 	cmpl	$ 1, %r12d
 	jg		1f
 
 	// offset==1
 
 	vmovapd		0(%r13), %ymm12
-	vmovapd		0(%r15), %ymm14
+	vmovapd		0(%r13, %r14), %ymm14
 	vblendpd	$ 0x1, %ymm14, %ymm12, %ymm12
 	vmovapd		32(%r13), %ymm13
-	vmovapd		32(%r15), %ymm14
+	vmovapd		32(%r13, %r14), %ymm14
 	vblendpd	$ 0x1, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm14
 	vshufpd		$ 0x5, %ymm14, %ymm12, %ymm12
@@ -2905,10 +2902,10 @@ NAME:
 	vfmadd231pd	%ymm12, %ymm15, %ymm0
 	vfmadd231pd	%ymm13, %ymm15, %ymm1
 	vmovapd		64(%r13), %ymm12
-	vmovapd		64(%r15), %ymm14
+	vmovapd		64(%r13, %r14), %ymm14
 	vblendpd	$ 0x1, %ymm14, %ymm12, %ymm12
 	vmovapd		96(%r13), %ymm13
-	vmovapd		96(%r15), %ymm14
+	vmovapd		96(%r13, %r14), %ymm14
 	vblendpd	$ 0x1, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm14
 	vshufpd		$ 0x5, %ymm14, %ymm12, %ymm12
@@ -2927,20 +2924,20 @@ NAME:
 	// offset==2
 
 	vmovapd		0(%r13), %ymm12
-	vmovapd		0(%r15), %ymm14
+	vmovapd		0(%r13, %r14), %ymm14
 	vblendpd	$ 0x3, %ymm14, %ymm12, %ymm12
 	vmovapd		32(%r13), %ymm13
-	vmovapd		32(%r15), %ymm14
+	vmovapd		32(%r13, %r14), %ymm14
 	vblendpd	$ 0x3, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm12
 	vperm2f128	$ 0x01, %ymm13, %ymm13, %ymm13
 	vfmadd231pd	%ymm12, %ymm15, %ymm0
 	vfmadd231pd	%ymm13, %ymm15, %ymm1
 	vmovapd		64(%r13), %ymm12
-	vmovapd		64(%r15), %ymm14
+	vmovapd		64(%r13, %r14), %ymm14
 	vblendpd	$ 0x3, %ymm14, %ymm12, %ymm12
 	vmovapd		96(%r13), %ymm13
-	vmovapd		96(%r15), %ymm14
+	vmovapd		96(%r13, %r14), %ymm14
 	vblendpd	$ 0x3, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm12
 	vperm2f128	$ 0x01, %ymm13, %ymm13, %ymm13
@@ -2954,10 +2951,10 @@ NAME:
 	// offset==3
 
 	vmovapd		0(%r13), %ymm12
-	vmovapd		0(%r15), %ymm14
+	vmovapd		0(%r13, %r14), %ymm14
 	vblendpd	$ 0x7, %ymm14, %ymm12, %ymm12
 	vmovapd		32(%r13), %ymm13
-	vmovapd		32(%r15), %ymm14
+	vmovapd		32(%r13, %r14), %ymm14
 	vblendpd	$ 0x7, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm14
 	vshufpd		$ 0x5, %ymm12, %ymm14, %ymm12
@@ -2966,10 +2963,10 @@ NAME:
 	vfmadd231pd	%ymm12, %ymm15, %ymm0
 	vfmadd231pd	%ymm13, %ymm15, %ymm1
 	vmovapd		64(%r13), %ymm12
-	vmovapd		64(%r15), %ymm14
+	vmovapd		64(%r13, %r14), %ymm14
 	vblendpd	$ 0x7, %ymm14, %ymm12, %ymm12
 	vmovapd		96(%r13), %ymm13
-	vmovapd		96(%r15), %ymm14
+	vmovapd		96(%r13, %r14), %ymm14
 	vblendpd	$ 0x7, %ymm14, %ymm13, %ymm13
 	vperm2f128	$ 0x01, %ymm12, %ymm12, %ymm14
 	vshufpd		$ 0x5, %ymm12, %ymm14, %ymm12
@@ -3555,7 +3552,7 @@ NAME:
 	.p2align 4,,15
 	FUN_START(inner_edge_dpotrf_4x4_vs_lib4)
 #endif
-	
+
 	vxorpd	%ymm15, %ymm15, %ymm15 // 0.0
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovsd	.LC04(%rip), %xmm14 // 1.0
@@ -5662,7 +5659,7 @@ NAME:
 	.p2align 4,,15
 	FUN_START(inner_store_4x4_gen_lib4)
 #endif
-	
+
 	// compute mask for rows
 	vcvtsi2sd	%r13d, %xmm14, %xmm14
 	vcvtsi2sd	%r14d, %xmm15, %xmm15
@@ -6653,8 +6650,6 @@ NAME:
 // transpose
 //
 // input arguments:
-// r10  <- D
-// r11  <- ldd
 // ymm0 <- [d00 d11 d22 d33]
 // ymm1 <- [d01 d10 d23 d32]
 // ymm2 <- [d03 d12 d21 d30]
@@ -6751,7 +6746,7 @@ NAME:
 
 
 
-//                                  rdi    rsi            rdx        rcx        r8            r9         rsp+8     rsp+16   rsp+24
+//                                  1      2              3          4          5             6          7          8       9
 // void kernel_dgemm_nt_4x4_vs_lib4(int k, double *alpha, double *A, double *B, double *beta, double *C, double *D, int km, int kn);
 
 	.p2align 4,,15
@@ -6813,7 +6808,7 @@ NAME:
 
 
 
-//                                   rdi    rsi            rdx        rcx        r8            r9           rsp+8      rsp+16   rsp+24       rsp+32     rsp+40   rsp+48  rsp+56  rsp+64  rsp+72
+//                                   1      2              3          4          5             6            7          8        9            10         11       12      13      14      15
 // void kernel_dgemm_nt_4x4_gen_lib4(int k, double *alpha, double *A, double *B, double *beta, int offsetC, double *C, int sdc, int offsetD, double *D, int sdd, int m0, int m1, int n0, int n1);
 
 	.p2align 4,,15
@@ -8340,7 +8335,7 @@ NAME:
 
 
 
-//                                     edi    rsi        rdx        rcx        r8         r9                  rsp+8   rsp+16
+//                                     1      2          3          4          5          6                   7       8
 // void kernel_dpotrf_nt_l_4x4_vs_lib4(int k, double *A, double *B, double *C, double *D, double *inv_diag_D, int km, int kn);
 
 	.p2align 4,,15
@@ -8675,7 +8670,7 @@ NAME:
 
 
 
-//                                            edi     rsi         rdx         ecx     r8          r9          rsp+8      rsp+16     rsp+24     rsp+32
+//                                            1       2           3           4       5           6           7          8          9          10
 // void kernel_dgemm_dtrsm_nt_rl_inv_4x4_lib4(int kp, double *Ap, double *Bp, int km, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E);
 
 	.p2align 4,,15

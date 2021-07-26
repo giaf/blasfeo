@@ -309,7 +309,7 @@ void REF_SYMV_L_MN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
-void REF_TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+static void REF_TRMV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -366,7 +366,15 @@ void REF_TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx
 
 
 	
-void REF_TRMV_LTN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void REF_TRMV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_LNN_MN(m, m, sA, ai, aj, sx, xi, sz, zi);
+	return;
+	}
+
+
+
+static void REF_TRMV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
 	REAL
@@ -412,6 +420,14 @@ void REF_TRMV_LTN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx
 			}
 		z[jj] = y_0;
 		}
+	return;
+	}
+
+
+
+void REF_TRMV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_LTN_MN(m, m, sA, ai, aj, sx, xi, sz, zi);
 	return;
 	}
 
@@ -759,10 +775,13 @@ void REF_TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC 
 			dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 		sA->use_dA = 0;
 		}
+	if(x!=z)
+		for(ii=0; ii<m; ii++)
+			z[ii] = x[ii];
 	if(n%2!=0)
 		{
 		jj = n-1;
-		y_0 = x[jj];
+		y_0 = z[jj];
 		for(ii=jj+1; ii<m; ii++)
 			{
 			y_0 -= XMATEL_A(aai+ii, aaj+jj) * z[ii];
@@ -777,8 +796,8 @@ void REF_TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC 
 		}
 	for(; jj>=0; jj-=2)
 		{
-		y_0 = x[jj+0];
-		y_1 = x[jj+1];
+		y_0 = z[jj+0];
+		y_1 = z[jj+1];
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
 			{
@@ -1309,18 +1328,16 @@ void SYMV_L_MN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-// TODO mn & remove n !!!!!
-void TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void TRMV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
-	REF_TRMV_LNN(m, n, sA, ai, aj, sx, xi, sz, zi);
+	REF_TRMV_LNN(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
 
 
-// TODO mn & remove n !!!!!
-void TRMV_LTN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void TRMV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
-	REF_TRMV_LTN(m, n, sA, ai, aj, sx, xi, sz, zi);
+	REF_TRMV_LTN(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
 

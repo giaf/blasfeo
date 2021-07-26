@@ -33,121 +33,39 @@
 #                                                                                                 #
 ###################################################################################################
 
-# ----------- Include
-include ../Makefile.rule
+include ../../Makefile.rule
 
-# ----------- Envs
 
-LIBS =
-SHARED_LIBS =
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+KERNEL_OBJS = \
+		kernel_dgemm_16x8_lib8.o \
+		kernel_dgemm_8x8_lib8.o \
+		kernel_dgemv_8_lib8.o \
+		kernel_dgemv_16_lib8.o \
+		kernel_dpack_lib8.o \
 
-LIBS += $(BINARY_DIR)/libblasfeo.a
-SHARED_LIBS += -Wl,-rpath=$(BINARY_DIR) -L $(BINARY_DIR) -lblasfeo
-
-#include ../Makefile.external_blas
-LIBS += $(LIBS_EXTERNAL_BLAS)
-SHARED_LIBS += $(SHARED_LIBS_EXTERNAL_BLAS)
-
-LIBS += -lm
-SHARED_LIBS += -lm
-
-# set test verbosity
-ifdef VERBOSE
-ifeq ($(VERBOSE), 0)
-else
-CFLAGS += -DVERBOSE=$(VERBOSE)
-endif
 endif
 
-ifndef VERBOSE
-CFLAGS += -DVERBOSE=0
-endif
-ifdef ROUTINE
-CFLAGS += -DROUTINE=$(ROUTINE)
-endif
 
-ifdef ROUTINE_CLASS_C
-CFLAGS += -DROUTINE_CLASS_C=$(ROUTINE_CLASS_C)
-endif
+OBJS = 
 
-ifeq ($(PRECISION), d)
-CFLAGS += -DPRECISION_DOUBLE
-endif
-ifeq ($(PRECISION), s)
-CFLAGS += -DPRECISION_SINGLE
-endif
+ifeq ($(LA), HIGH_PERFORMANCE)
+OBJS += $(KERNEL_OBJS)
+endif # LA choice
 
-ifeq ($(ROUTINE_API), BLAS)
-CFLAGS += -DTEST_BLAS_API
-TEST_BLAS_API=1
-endif
+ifeq ($(BLASFEO_HP_API), 1)
+OBJS += $(KERNEL_OBJS)
+endif # LA choice
 
-ifeq ($(TEST_BLAS_API), 1)
-ifeq ($(EXTERNAL_BLAS), 0)
-$(error No EXTERNAL_BLAS specified, install specify one reference blas implementation i.e. OPENBLAS)
-endif
-endif
 
-# select one single test
-ONE_OBJS = test_d_blasfeo_api.o
-# ONE_OBJS = test_s_blasfeo_api.o
-# ONE_OBJS = test_d_blas_api.o
-# ONE_OBJS = test_s_blas_api.o
-# ONE_OBJS = test_valgrind.o
-
-OBJS = test.o
-
-%.o: %.c
-	#
-	# build executable obj $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) -c $< -o $(BINARY_DIR)/$@
-	$(CC) $(CFLAGS) $(BINARY_DIR)/$@ -o $(BINARY_DIR)/$@.out $(LIBS)
-	#
-
-# ----------- Targets
-
-.DEFAULT_GOAL := obj
-.PHONY: obj
-
-obj: one
-
-bin_dir:
-	mkdir -p $(BINARY_DIR)/
-
-common: bin_dir
-	cp ../lib/libblasfeo.a ./$(BINARY_DIR)
-
-one: common $(ONE_OBJS)
-
-run_one:
-	./$(BINARY_DIR)/$(ONE_OBJS).out
-
-build: $(OBJS)
-
-run:
-	./$(BINARY_DIR)/test.o.out
-	#
-
-update: build run
-
-full: common build run
-
-adb_push:
-	adb push ./$(BINARY_DIR)/$(ONE_OBJS).out /data/local/tmp/$(ONE_OBJS).out
-
-adb_run:
-	adb shell /data/local/tmp/$(ONE_OBJS).out
-
-sde_run:
-	~/sde/sde64 -- ./$(BINARY_DIR)/$(ONE_OBJS).out
+obj: $(OBJS)
 
 clean:
-	rm -rf ./*.o
-	rm -rf ./*.out
-	rm -rf ./$(BINARY_DIR)/*
+	rm -f *.o
+	rm -f *.s
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f *.gcov
 
-deep_clean: clean
-
-purge: deep_clean
-	rm -rf ./build/
-	rm -rf ./reports/
+kernel_dgemm_8x8_lib8.o: kernel_dgemm_8x8_lib8.S kernel_dgemm_8x8_lib.S
+kernel_dgemm_16x8_lib8.o: kernel_dgemm_16x8_lib8.S kernel_dgemm_16x8_lib.S

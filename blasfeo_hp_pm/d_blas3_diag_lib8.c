@@ -35,46 +35,58 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 
 #include <blasfeo_common.h>
-#include <blasfeo_d_blas.h>
+#include <blasfeo_d_kernel.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_d_blasfeo_ref_api.h>
+#endif
 
 
 
-#define REF_BLAS
+// dgemm with A diagonal matrix (stored as strvec)
+void blasfeo_hp_dgemm_dn(int m, int n, double alpha, struct blasfeo_dvec *sA, int ai, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_dgemm_dn(m, n, alpha, sA, ai, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+#else
+	printf("\nblasfeo_dgemm_dn: feature not implemented yet\n");
+	exit(1);
+#endif
+	}
 
 
 
-#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
-#define XMATEL_B(X, Y) pB[(X)+ldb*(Y)]
-#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
-#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
+// dgemm with B diagonal matrix (stored as strvec)
+void blasfeo_hp_dgemm_nd(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sB, int bi, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_dgemm_nd(m, n, alpha, sA, ai, aj, sB, bi, beta, sC, ci, cj, sD, di, dj);
+#else
+	printf("\nblasfeo_dgemm_nd: feature not implemented yet\n");
+	exit(1);
+#endif
+	}
 
 
 
-#define SQRT sqrt
-#define REAL double
-#define XMAT blasfeo_cm_dmat
-#define XMATEL BLASFEO_CM_DMATEL
-#define XVEC blasfeo_dvec
-#define XVECEL BLASFEO_DVECEL
+#if defined(LA_HIGH_PERFORMANCE)
 
 
 
-// gemm
-#define REF_POTRF_L blasfeo_hp_cm_dpotrf_l
-#define REF_POTRF_U blasfeo_hp_cm_dpotrf_u
-#define REF_GETRF_ROWPIVOT blasfeo_hp_cm_dgetrf_rp
-
-
-// gemm
-#define POTRF_L blasfeo_cm_dpotrf_l
-#define POTRF_U blasfeo_cm_dpotrf_u
-#define GETRF_ROWPIVOT blasfeo_cm_dgetrf_rp
+void blasfeo_dgemm_dn(int m, int n, double alpha, struct blasfeo_dvec *sA, int ai, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dgemm_dn(m, n, alpha, sA, ai, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
 
 
 
-#include "x_lapack_ref.c"
+void blasfeo_dgemm_nd(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sB, int bi, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dgemm_nd(m, n, alpha, sA, ai, aj, sB, bi, beta, sC, ci, cj, sD, di, dj);
+	}
 
+
+
+#endif
 

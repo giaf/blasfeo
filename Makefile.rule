@@ -49,7 +49,10 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 
 # Select target architecture (TARGET)
 #
-# X64_INTEL_HASWELL: x86_64 architecture with AVX2 and FMA ISA (64 bit OS)
+# X64_INTEL_SKYLAKE_X: x86_64 architecture with AVX512F ISA (64 bit OS)
+# Code optimized for Intel Skylake-X architecture with 2 512-bit FMA pipes.
+#
+# X64_INTEL_HASWELL: x86_64 architecture with AVX2 and FMA ISAs (64 bit OS)
 # Code optimized for Intel Haswell, Intel Skylake, AMD Zen, AMD Zen2 and AMD Zen3 architectures.
 #
 # X64_INTEL_SANDY_BRIDGE : x86_64 architecture with AVX ISA (64 bit OS)
@@ -58,7 +61,7 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 # X64_INTEL_CORE : x86_64 architecture with SSE3 ISA (64 bit OS)
 # Code optimized for Intel Core archiecture.
 #
-# X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA ISA (64 bit OS)
+# X64_AMD_BULLDOZER : x86_64 architecture with AVX and FMA ISAs (64 bit OS)
 # Code optimized for AMD Bulldozer.
 #
 # X86_AMD_JAGUAR : x86 architecture with AVX ISA (32 bit OS)
@@ -94,6 +97,7 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 # GENERIC : generic architecture, plain C code.
 #
 #
+# TARGET = X64_INTEL_SKYLAKE_X
 TARGET = X64_INTEL_HASWELL
 # TARGET = X64_INTEL_SANDY_BRIDGE
 # TARGET = X64_INTEL_CORE
@@ -482,6 +486,9 @@ endif
 # CFLAGS  += -DEXTERNAL_BLAS=$(EXTERNAL_BLAS)
 
 # Architecture-specific flags
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+CFLAGS  += -m64 -mavx512f -mavx512vl -DTARGET_X64_INTEL_SKYLAKE_X
+endif
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 CFLAGS  += -m64 -mavx2 -mfma -DTARGET_X64_INTEL_HASWELL
 endif

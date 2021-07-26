@@ -38,6 +38,13 @@ include ../Makefile.rule
 OBJS =
 
 obj: $(OBJS)
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+	( cd avx512; $(MAKE) obj)
+	( cd avx2; $(MAKE) obj)
+	( cd avx; $(MAKE) obj)
+	( cd sse3; $(MAKE) obj)
+endif
+
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 	( cd avx2; $(MAKE) obj)
 	( cd avx; $(MAKE) obj)
@@ -93,6 +100,7 @@ clean:
 	rm -f *.gcda
 	rm -f *.gcno
 	rm -f *.gcov
+	make -C avx512 clean
 	make -C avx2 clean
 	make -C avx clean
 	make -C avx_x86 clean

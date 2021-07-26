@@ -155,6 +155,31 @@ REF_BLAS_OBJS += \
 		\
 		blasfeo_ref/s_blas3_ref_blas.o \
 
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+
+### BLASFEO HP, PANEL-MAJOR ###
+BLASFEO_HP_PM_OBJS = \
+		blasfeo_hp_pm/d_blas1_lib8.o \
+		blasfeo_hp_pm/d_blas2_lib8.o \
+		blasfeo_hp_pm/d_blas2_diag_lib.o \
+		blasfeo_hp_pm/d_blas3_lib8.o \
+		blasfeo_hp_pm/d_blas3_diag_lib8.o \
+		blasfeo_hp_pm/d_lapack_lib8.o \
+		\
+		blasfeo_hp_pm/s_blas1_lib16.o \
+		blasfeo_hp_pm/s_blas2_lib16.o \
+		blasfeo_hp_pm/s_blas2_diag_lib.o \
+		blasfeo_hp_pm/s_blas3_lib16.o \
+		blasfeo_hp_pm/s_blas3_diag_lib16.o \
+		blasfeo_hp_pm/s_lapack_lib16.o \
+
+### AUXILIARY HP, PANEL-MAJOR ###
+AUX_HP_PM_OBJS = \
+		auxiliary/d_aux_lib8.o \
+		auxiliary/s_aux_lib16.o \
+		#auxiliary/m_aux_lib48.o \
+
+endif
 ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
 
 ### BLASFEO HP, PANEL-MAJOR ###
@@ -206,6 +231,24 @@ AUX_HP_PM_OBJS = \
 
 endif
 
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+
+### KERNELS ###
+KERNEL_OBJS = \
+		kernel/avx512/kernel_dgemm_16x8_lib8.o \
+		kernel/avx512/kernel_dgemm_8x8_lib8.o \
+		kernel/avx512/kernel_dgemv_8_lib8.o \
+		kernel/avx512/kernel_dgemv_16_lib8.o \
+		kernel/avx512/kernel_dpack_lib8.o \
+		\
+		kernel/sse3/kernel_align_x64.o \
+		\
+		\
+		\
+		kernel/avx2/kernel_dgemm_4x4_lib4.o \
+		kernel/avx/kernel_dpack_lib4.o \
+
+endif
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 
 ### KERNELS ###
@@ -863,6 +906,14 @@ endif
 # generate target header
 target:
 	touch ./include/blasfeo_target.h
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+	echo "#ifndef TARGET_X64_INTEL_SKYLAKE_X"  >  ./include/blasfeo_target.h
+	echo "#define TARGET_X64_INTEL_SKYLAKE_X"  >> ./include/blasfeo_target.h
+	echo "#endif"                              >> ./include/blasfeo_target.h
+#	echo "#ifndef TARGET_NEED_FEATURE_AVX512F" >> ./include/blasfeo_target.h
+#	echo "#define TARGET_NEED_FEATURE_AVX512F" >> ./include/blasfeo_target.h
+#	echo "#endif"                              >> ./include/blasfeo_target.h
+endif
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 	echo "#ifndef TARGET_X64_INTEL_HASWELL" >  ./include/blasfeo_target.h
 	echo "#define TARGET_X64_INTEL_HASWELL" >> ./include/blasfeo_target.h
@@ -1250,6 +1301,9 @@ adb_push_tests_one:
 
 adb_run_tests_one:
 	make -C tests adb_run
+
+sde_run_tests_one:
+	make -C tests sde_run
 
 # aux test
 build_tests_aux:

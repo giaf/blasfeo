@@ -47,6 +47,12 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(MF), PANELMAJ)
 
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+OBJS += d_aux_lib8.o
+OBJS += s_aux_lib16.o
+#OBJS += m_aux_lib48.o
+endif
+
 ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
 OBJS += d_aux_lib4.o
 OBJS += s_aux_lib8.o
