@@ -363,7 +363,6 @@ NAME:
 #endif
 	vbroadcastsd	%xmm24, %zmm24
 	vsubpd			%zmm24, %zmm26, %zmm24
-
 	vpmovq2m		%zmm24, %k1
 
 	cmpl	$ 4, %r10d
@@ -517,7 +516,6 @@ NAME:
 #endif
 	vbroadcastsd	%xmm25, %zmm25
 	vsubpd			%zmm25, %zmm24, %zmm25
-
 	vpmovq2m		%zmm25, %k1
 
 	vmovupd		0(%r13), %zmm25 {%k1}{z}
@@ -671,7 +669,6 @@ NAME:
 #endif
 	vbroadcastsd	%xmm25, %zmm25
 	vsubpd			%zmm25, %zmm24, %zmm25
-
 	vpmovq2m		%zmm25, %k1
 
 	vmovupd		0(%r13), %zmm24 {%k1}{z}
@@ -798,8 +795,7 @@ NAME:
 	vsubpd			%zmm26, %zmm24, %zmm24
 	vsubpd			%zmm25, %zmm26, %zmm25
 	vandpd			%zmm25, %zmm24, %zmm24
-
-	vpmovq2m		%zmm25, %k1
+	vpmovq2m		%zmm24, %k1
 
 	vmovupd		0(%r13), %zmm25 {%k1}{z}
 
@@ -899,8 +895,7 @@ NAME:
 	vsubpd			%zmm26, %zmm24, %zmm24
 	vsubpd			%zmm25, %zmm26, %zmm25
 	vandpd			%zmm25, %zmm24, %zmm24
-
-	vpmovq2m		%zmm25, %k1
+	vpmovq2m		%zmm24, %k1
 
 	vmovupd		0(%r13), %zmm24 {%k1}{z}
 	vmovupd		0(%r14), %zmm25 {%k1}{z}
@@ -1125,7 +1120,6 @@ NAME:
 #endif
 	vbroadcastsd	%xmm24, %zmm24
 	vsubpd			%zmm24, %zmm26, %zmm24
-
 	vpmovq2m		%zmm24, %k1
 
 	vmovupd		0(%r13), %zmm24 {%k1}{z}
@@ -1276,7 +1270,6 @@ NAME:
 #endif
 	vbroadcastsd	%xmm24, %zmm24
 	vsubpd			%zmm24, %zmm26, %zmm24
-
 	vpmovq2m		%zmm24, %k1
 
 	vmovupd		0(%r13), %zmm24 {%k1}{z}
@@ -1628,7 +1621,6 @@ NAME:
 #endif
 	vbroadcastsd	%xmm24, %zmm24
 	vsubpd			%zmm24, %zmm26, %zmm24
-
 	vpmovq2m		%zmm24, %k1
 
 	vmovupd			0*64(%r11, %r14, 8), %zmm24 {%k1}{z}
@@ -1845,7 +1837,6 @@ NAME:
 #endif
 	vbroadcastsd	%xmm25, %zmm25
 	vsubpd			%zmm25, %zmm24, %zmm25
-
 	vpmovq2m		%zmm25, %k2
 
 	vmovupd		0(%r13), %zmm25 {%k2}{z}
@@ -1985,7 +1976,6 @@ NAME:
 #endif
 	vbroadcastsd	%xmm25, %zmm25
 	vsubpd			%zmm25, %zmm24, %zmm25
-
 	vpmovq2m		%zmm25, %k2
 
 	vmovupd		0(%r13), %zmm25 {%k2}{z}
@@ -3173,7 +3163,6 @@ NAME:
 	vsubpd			%zmm26, %zmm24, %zmm24
 	vsubpd			%zmm25, %zmm26, %zmm25
 	vandpd			%zmm24, %zmm25, %zmm25
-
 	vpmovq2m		%zmm25, %k1
 
 	vmovupd			%zmm0, 0(%r10) {%k1}
