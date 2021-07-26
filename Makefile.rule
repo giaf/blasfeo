@@ -49,7 +49,7 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 
 # Select target architecture (TARGET)
 #
-# X64_INTEL_SKYLAKE_X: x86_64 architecture with AVX512F ISA (64 bit OS)
+# X64_INTEL_SKYLAKE_X: x86_64 architecture with AVX512 (F+VL) ISA (64 bit OS)
 # Code optimized for Intel Skylake-X architecture with 2 512-bit FMA pipes.
 #
 # X64_INTEL_HASWELL: x86_64 architecture with AVX2 and FMA ISAs (64 bit OS)
