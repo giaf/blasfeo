@@ -4358,7 +4358,6 @@ NAME:
 #endif
 	vbroadcastsd	%xmm25, %zmm25
 	vsubpd		%zmm25, %zmm26, %zmm25
-
 	vpmovq2m	%zmm25, %k1
 
 
@@ -4554,25 +4553,25 @@ NAME:
 	vmovupd		0-64(%rax, %r13), %zmm0 {%k3}
 	vmovupd		0(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
-	vmovupd		%zmm0, 0(%r14) {%k1}
+	vmovupd		%zmm1, 0(%r14) {%k1}
 	//
 	vmovupd		64(%rax), %zmm0 {%k2}
 	vmovupd		64-64(%rax, %r13), %zmm0 {%k3}
 	vmovupd		64(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
-	vmovupd		%zmm0, 64(%r14) {%k1}
+	vmovupd		%zmm1, 64(%r14) {%k1}
 	//
 	vmovupd		128(%rax), %zmm0 {%k2}
 	vmovupd		128-64(%rax, %r13), %zmm0 {%k3}
 	vmovupd		128(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
-	vmovupd		%zmm0, 128(%r14) {%k1}
+	vmovupd		%zmm1, 128(%r14) {%k1}
 	//
 	vmovupd		192(%rax), %zmm0 {%k2}
 	vmovupd		192-64(%rax, %r13), %zmm0 {%k3}
 	vmovupd		192(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
-	vmovupd		%zmm0, 192(%r14) {%k1}
+	vmovupd		%zmm1, 192(%r14) {%k1}
 
 	subl	$ 4, %r10d
 	addq	$ 256, %rax
@@ -4592,7 +4591,7 @@ NAME:
 	vmovupd		0-64(%rax, %r13), %zmm0 {%k3}
 	vmovupd		0(%r14), %zmm1 {%k1}
 	vfmadd231pd	%zmm24, %zmm0, %zmm1
-	vmovupd		%zmm0, 0(%r14) {%k1}
+	vmovupd		%zmm1, 0(%r14) {%k1}
 
 	subl	$ 1, %r10d
 	addq	$ 64, %rax
