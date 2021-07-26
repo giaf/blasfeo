@@ -356,52 +356,46 @@ void blasfeo_hp_dtrmv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct
 	int ii;
 	int m1 = 0;
 
+	int m2 = m;
+	double *pA2 = pA;
+	double *z2 = z;
+	int idx, m3;
+
+	// dummy clean up at the beginning
+	if(air!=0)
+		{
+		m1 = ps-air;
+		m1 = m<m1 ? m : m1;
+		pA2 += sda*ps;
+		z2 += m1;
+		m2 -= m1;
+		}
+
+	ii = 0;
+	// clean up at the end
+	if(m2%8!=0)
+		{
+		m3 = m2%8;
+		idx = m2-m3;
+		kernel_dtrmv_n_ln_8_vs_lib8(m1+idx, &pA2[idx*sda], x, &z2[idx], m2-idx);
+		m2 -= m3;
+		}
+	// main loop
+	for( ; ii<m2-7; ii+=8)
+		{
+		idx = m2-ii-8;
+		kernel_dtrmv_n_ln_8_lib8(m1+idx, &pA2[idx*sda], x, &z2[idx]);
+		}
+
 	// clean up at the beginning
 	if(air!=0)
 		{
 		m1 = ps-air;
 		m1 = m<m1 ? m : m1;
-		// TODO do in assembly ???
-#if 1
 		kernel_dtrmv_n_ln_8_gen_lib8(0, air, pA, x, z, m1);
-#else
-		// 0
-		z[0] = pA[air+0+ps*0]*x[0];
-		if(m1<=1) goto update;
-		// 1
-		z[1] = pA[air+1+ps*0]*x[0] + pA[air+1+ps*1]*x[1];
-		if(m1<=2) goto update;
-		// 2
-		z[2] = pA[air+2+ps*0]*x[0] + pA[air+2+ps*1]*x[1] + pA[air+2+ps*2]*x[2];
-		if(m1<=3) goto update;
-		// 3
-		z[3] = pA[air+3+ps*0]*x[0] + pA[air+3+ps*1]*x[1] + pA[air+3+ps*2]*x[2] + pA[air+3+ps*3]*x[3];
-		if(m1<=4) goto update;
-		// 4
-		z[4] = pA[air+4+ps*0]*x[0] + pA[air+4+ps*1]*x[1] + pA[air+4+ps*2]*x[2] + pA[air+4+ps*3]*x[3] + pA[air+4+ps*4]*x[4];
-		if(m1<=5) goto update;
-		// 5
-		z[5] = pA[air+5+ps*0]*x[0] + pA[air+5+ps*1]*x[1] + pA[air+5+ps*2]*x[2] + pA[air+5+ps*3]*x[3] + pA[air+5+ps*4]*x[4] + pA[air+5+ps*5]*x[5];
-		if(m1<=6) goto update;
-		// 6
-		z[6] = pA[air+6+ps*0]*x[0] + pA[air+6+ps*1]*x[1] + pA[air+6+ps*2]*x[2] + pA[air+6+ps*3]*x[3] + pA[air+6+ps*4]*x[4] + pA[air+6+ps*5]*x[5] + pA[air+6+ps*6]*x[6];
-		//
-		update:
-#endif
 		pA += sda*ps;
 		z += m1;
 		m -= m1;
-		}
-	// main loop
-	ii = 0;
-	for( ; ii<m-7; ii+=8)
-		{
-		kernel_dtrmv_n_ln_8_lib8(m1+ii, &pA[ii*sda], x, &z[ii]);
-		}
-	// clean up at the end
-	if(ii<m)
-		{
-		kernel_dtrmv_n_ln_8_vs_lib8(m1+ii, &pA[ii*sda], x, &z[ii], m-ii);
 		}
 		
 	return;
