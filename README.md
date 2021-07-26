@@ -27,6 +27,7 @@ Currently BLASFEO supports the following architectures:
 
 | TARGET                       | Description |
 | ---------------------------- | ------------------------------------------------------------- |
+| ```X64_INTEL_SKYLAKE_X```    | Intel Skylake-X architecture or newer (optimized for 2 512-bit FMA pipes). x86_64 with AVX512 ISA, 64-bit OS |
 | ```X64_INTEL_HASWELL```      | Intel Haswell, Intel Skylake, AMD Zen, AMD Zen2, AMD Zen3 architectures or newer. x86_64 with AVX2 and FMA ISA, 64-bit OS |
 | ```X64_INTEL_SANDY_BRIDGE``` | Intel Sandy-Bridge architecture. x86_64 with AVX ISA, 64-bit OS |
 | ```X64_INTEL_CORE```         | Intel Core architecture. x86_64 with SSE3 ISA, 64-bit OS |
@@ -43,7 +44,7 @@ Currently BLASFEO supports the following architectures:
 | ```ARMV7A_ARM_CORTEX_A7```   | ARM Cortex A7 architecture. ARMv7A with VFPv4 and NEON ISAs, 32-bit OS |
 | ```GENERIC```                | Generic target, coded in C, giving better performance if the architecture provides more than 16 scalar FP registers (e.g. many RISC such as ARM) |
 
-Note that the ```ARMV8A_ARM_CORTEX_A76```, ```ARMV8A_ARM_CORTEX_A73```, ```ARMV8A_ARM_CORTEX_A55```, ```X86_AMD_JAGUAR``` and ```X86_AMD_BARCELONA``` architectures are not currently supported by the CMake build system and can only be used through the included Makefile.
+Note that the ```X64_INTEL_SKYLAKE_X```, ```ARMV8A_ARM_CORTEX_A76```, ```ARMV8A_ARM_CORTEX_A73```, ```ARMV8A_ARM_CORTEX_A55```, ```X86_AMD_JAGUAR``` and ```X86_AMD_BARCELONA``` architectures are not currently supported by the CMake build system and can only be used through the included Makefile.
 
 ### Automatic Target Detection
 
