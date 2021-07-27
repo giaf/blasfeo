@@ -858,4 +858,107 @@ void kernel_dlarft_8_lib8(int kmax, double *pD, double *dD, double *pT)
 
 
 
+void kernel_dlarfb8_rn_1_lib8(int kmax, double *pV, double *pT, double *pD)
+	{
+	const int ps = 8;
+	double pW[8];
+	int kk;
+	// 0
+	pW[0+ps*0] = pD[0+ps*0];
+	// 1
+	pW[0+ps*0] += pD[0+ps*1]*pV[0+ps*1];
+	pW[0+ps*1] = pD[0+ps*1];
+	// 2
+	pW[0+ps*0] += pD[0+ps*2]*pV[0+ps*2];
+	pW[0+ps*1] += pD[0+ps*2]*pV[1+ps*2];
+	pW[0+ps*2] = pD[0+ps*2];
+	// 3
+	pW[0+ps*0] += pD[0+ps*3]*pV[0+ps*3];
+	pW[0+ps*1] += pD[0+ps*3]*pV[1+ps*3];
+	pW[0+ps*2] += pD[0+ps*3]*pV[2+ps*3];
+	pW[0+ps*3] = pD[0+ps*3];
+	// 4
+	pW[0+ps*0] += pD[0+ps*4]*pV[0+ps*4];
+	pW[0+ps*1] += pD[0+ps*4]*pV[1+ps*4];
+	pW[0+ps*2] += pD[0+ps*4]*pV[2+ps*4];
+	pW[0+ps*3] += pD[0+ps*4]*pV[3+ps*4];
+	pW[0+ps*4] = pD[0+ps*4];
+	// 5
+	pW[0+ps*0] += pD[0+ps*5]*pV[0+ps*5];
+	pW[0+ps*1] += pD[0+ps*5]*pV[1+ps*5];
+	pW[0+ps*2] += pD[0+ps*5]*pV[2+ps*5];
+	pW[0+ps*3] += pD[0+ps*5]*pV[3+ps*5];
+	pW[0+ps*4] += pD[0+ps*5]*pV[4+ps*5];
+	pW[0+ps*5] = pD[0+ps*5];
+	// 6
+	pW[0+ps*0] += pD[0+ps*6]*pV[0+ps*6];
+	pW[0+ps*1] += pD[0+ps*6]*pV[1+ps*6];
+	pW[0+ps*2] += pD[0+ps*6]*pV[2+ps*6];
+	pW[0+ps*3] += pD[0+ps*6]*pV[3+ps*6];
+	pW[0+ps*4] += pD[0+ps*6]*pV[4+ps*6];
+	pW[0+ps*5] += pD[0+ps*6]*pV[5+ps*6];
+	pW[0+ps*6] = pD[0+ps*6];
+	// 7
+	pW[0+ps*0] += pD[0+ps*7]*pV[0+ps*7];
+	pW[0+ps*1] += pD[0+ps*7]*pV[1+ps*7];
+	pW[0+ps*2] += pD[0+ps*7]*pV[2+ps*7];
+	pW[0+ps*3] += pD[0+ps*7]*pV[3+ps*7];
+	pW[0+ps*4] += pD[0+ps*7]*pV[4+ps*7];
+	pW[0+ps*5] += pD[0+ps*7]*pV[5+ps*7];
+	pW[0+ps*6] += pD[0+ps*7]*pV[6+ps*7];
+	pW[0+ps*7] = pD[0+ps*7];
+	//
+	for(kk=8; kk<kmax; kk++)
+		{
+		pW[0+ps*0] += pD[0+ps*kk]*pV[0+ps*kk];
+		pW[0+ps*1] += pD[0+ps*kk]*pV[1+ps*kk];
+		pW[0+ps*2] += pD[0+ps*kk]*pV[2+ps*kk];
+		pW[0+ps*3] += pD[0+ps*kk]*pV[3+ps*kk];
+		pW[0+ps*4] += pD[0+ps*kk]*pV[4+ps*kk];
+		pW[0+ps*5] += pD[0+ps*kk]*pV[5+ps*kk];
+		pW[0+ps*6] += pD[0+ps*kk]*pV[6+ps*kk];
+		pW[0+ps*7] += pD[0+ps*kk]*pV[7+ps*kk];
+		}
+	//
+	pW[0+ps*7] = pW[0+ps*0]*pT[0+ps*7] + pW[0+ps*1]*pT[1+ps*7] + pW[0+ps*2]*pT[2+ps*7] + pW[0+ps*3]*pT[3+ps*7] + pW[0+ps*4]*pT[4+ps*7] + pW[0+ps*5]*pT[5+ps*7] + pW[0+ps*6]*pT[6+ps*7] + pW[0+ps*7]*pT[7+ps*7];
+	//
+	pW[0+ps*6] = pW[0+ps*0]*pT[0+ps*6] + pW[0+ps*1]*pT[1+ps*6] + pW[0+ps*2]*pT[2+ps*6] + pW[0+ps*3]*pT[3+ps*6] + pW[0+ps*4]*pT[4+ps*6] + pW[0+ps*5]*pT[5+ps*6] + pW[0+ps*6]*pT[6+ps*6];
+	//
+	pW[0+ps*5] = pW[0+ps*0]*pT[0+ps*5] + pW[0+ps*1]*pT[1+ps*5] + pW[0+ps*2]*pT[2+ps*5] + pW[0+ps*3]*pT[3+ps*5] + pW[0+ps*4]*pT[4+ps*5] + pW[0+ps*5]*pT[5+ps*5];
+	//
+	pW[0+ps*4] = pW[0+ps*0]*pT[0+ps*4] + pW[0+ps*1]*pT[1+ps*4] + pW[0+ps*2]*pT[2+ps*4] + pW[0+ps*3]*pT[3+ps*4] + pW[0+ps*4]*pT[4+ps*4];
+	//
+	pW[0+ps*3] = pW[0+ps*0]*pT[0+ps*3] + pW[0+ps*1]*pT[1+ps*3] + pW[0+ps*2]*pT[2+ps*3] + pW[0+ps*3]*pT[3+ps*3];
+	//
+	pW[0+ps*2] = pW[0+ps*0]*pT[0+ps*2] + pW[0+ps*1]*pT[1+ps*2] + pW[0+ps*2]*pT[2+ps*2];
+	//
+	pW[0+ps*1] = pW[0+ps*0]*pT[0+ps*1] + pW[0+ps*1]*pT[1+ps*1];
+	//
+	pW[0+ps*0] = pW[0+ps*0]*pT[0+ps*0];
+	//
+	pD[0+ps*0] += pW[0+ps*0];
+	//
+	pD[0+ps*1] += pW[0+ps*0]*pV[0+ps*1] + pW[0+ps*1];
+	//
+	pD[0+ps*2] += pW[0+ps*0]*pV[0+ps*2] + pW[0+ps*1]*pV[1+ps*2] + pW[0+ps*2];
+	//
+	pD[0+ps*3] += pW[0+ps*0]*pV[0+ps*3] + pW[0+ps*1]*pV[1+ps*3] + pW[0+ps*2]*pV[2+ps*3] + pW[0+ps*3];
+	//
+	pD[0+ps*4] += pW[0+ps*0]*pV[0+ps*4] + pW[0+ps*1]*pV[1+ps*4] + pW[0+ps*2]*pV[2+ps*4] + pW[0+ps*3]*pV[3+ps*4] + pW[0+ps*4];
+	//
+	pD[0+ps*5] += pW[0+ps*0]*pV[0+ps*5] + pW[0+ps*1]*pV[1+ps*5] + pW[0+ps*2]*pV[2+ps*5] + pW[0+ps*3]*pV[3+ps*5] + pW[0+ps*4]*pV[4+ps*5] + pW[0+ps*5];
+	//
+	pD[0+ps*6] += pW[0+ps*0]*pV[0+ps*6] + pW[0+ps*1]*pV[1+ps*6] + pW[0+ps*2]*pV[2+ps*6] + pW[0+ps*3]*pV[3+ps*6] + pW[0+ps*4]*pV[4+ps*6] + pW[0+ps*5]*pV[5+ps*6] + pW[0+ps*6];
+	//
+	pD[0+ps*7] += pW[0+ps*0]*pV[0+ps*7] + pW[0+ps*1]*pV[1+ps*7] + pW[0+ps*2]*pV[2+ps*7] + pW[0+ps*3]*pV[3+ps*7] + pW[0+ps*4]*pV[4+ps*7] + pW[0+ps*5]*pV[5+ps*7] + pW[0+ps*6]*pV[6+ps*7] + pW[0+ps*7];
+	//
+	for(kk=8; kk<kmax; kk++)
+		{
+		pD[0+ps*kk] += pW[0+ps*0]*pV[0+ps*kk] + pW[0+ps*1]*pV[1+ps*kk] + pW[0+ps*2]*pV[2+ps*kk] + pW[0+ps*3]*pV[3+ps*kk] + pW[0+ps*4]*pV[4+ps*kk] + pW[0+ps*5]*pV[5+ps*kk] + pW[0+ps*6]*pV[6+ps*kk] + pW[0+ps*7]*pV[7+ps*kk];
+		}
+	return;
+	}
+
+
+
 
