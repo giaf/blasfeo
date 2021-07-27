@@ -732,24 +732,100 @@ void blasfeo_hp_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 
 int blasfeo_hp_dgelqf_worksize(int m, int n)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dgelqf_worksize(m, n);
-#else
-	printf("\nblasfeo_dgelqf_worksize: feature not implemented yet\n");
-	exit(1);
-#endif
+	return 0;
 	}
 
 
 
+// LQ factorization
 void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dgelqf(m, n, sC, ci, cj, sD, di, dj, work);
+//	blasfeo_ref_dgelqf(m, n, sC, ci, cj, sD, di, dj, work);
+//	return;
+
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 8;
+
+	// extract dimensions
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+
+	// go to submatrix
+	double *pC = &(BLASFEO_DMATEL(sC,ci,cj));
+	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
+	int dir = di&(ps-1);
+
+	double *dD = sD->dA + di;
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	ALIGNED( double pT[64], 64 ) = {0}; // XXX assuming 8x8 kernel
+	ALIGNED( double pK[64], 64 ) = {0}; // XXX assuming 8x8 kernel
 #else
-	printf("\nblasfeo_dgelqf: feature not implemented yet\n");
-	exit(1);
+	double pT[144] = {0}; // XXX smaller ?
+	double pK[96] = {0}; // XXX smaller ?
 #endif
+
+	if(pC!=pD)
+		// copy strmat submatrix
+		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
+
+	int ii, jj, ll;
+	int imax0 = (ps-dir)&(ps-1);
+	int imax = m<n ? m : n;
+#if 1
+	kernel_dgelqf_vs_lib8(m, n, imax, dir, pD, sdd, dD);
+#else
+	imax0 = imax<imax0 ? imax : imax0;
+	if(imax0>0)
+		{
+		kernel_dgelqf_vs_lib4(m, n, imax0, di&(ps-1), pD, sdd, dD);
+		pD += imax0-ps+ps*sdd+imax0*ps;
+		dD += imax0;
+		m -= imax0;
+		n -= imax0;
+		imax -= imax0;
+		}
+	ii = 0;
+	for(; ii<imax-4; ii+=4)
+		{
+//		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
+//		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+//		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		kernel_dgelqf_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		jj = ii+4;
+#if 0
+		for(; jj<m-7; jj+=8)
+			{
+			kernel_dlarfb4_rn_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			}
+#endif
+		for(; jj<m-3; jj+=4)
+			{
+			kernel_dlarfb4_rn_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+			}
+		for(ll=0; ll<m-jj; ll++)
+			{
+			kernel_dlarfb4_rn_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+			}
+		}
+	if(ii<imax)
+		{
+		if(ii==imax-4)
+			{
+			kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+			}
+		else
+			{
+			kernel_dgelqf_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
+			}
+		}
+#endif
+
+	return;
 	}
 
 
@@ -781,12 +857,93 @@ void blasfeo_hp_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int
 // LQ factorization with positive diagonal elements
 void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dgelqf_pd(m, n, sC, ci, cj, sD, di, dj, work);
+//	blasfeo_ref_dgelqf_pd(m, n, sC, ci, cj, sD, di, dj, work);
+//	return;
+
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	const int ps = 8;
+
+	// extract dimensions
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+
+	// go to submatrix
+	double *pC = &(BLASFEO_DMATEL(sC,ci,cj));
+	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
+	int dir = di&(ps-1);
+
+	double *dD = sD->dA + di;
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	ALIGNED( double pT[64], 64 ) = {0}; // XXX assuming 8x8 kernel
+	ALIGNED( double pK[64], 64 ) = {0}; // XXX assuming 8x8 kernel
 #else
-	printf("\nblasfeo_dgelqf_pd: feature not implemented yet\n");
-	exit(1);
+	double pT[144] = {0};
+	double pK[96] = {0};
 #endif
+
+	if(pC!=pD)
+		// copy strmat submatrix
+		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
+
+	int ii, jj, ll;
+	int imax0 = (ps-dir)&(ps-1);
+	int imax = m<n ? m : n;
+#if 1
+	kernel_dgelqf_pd_vs_lib8(m, n, imax, dir, pD, sdd, dD);
+#else
+	imax0 = imax<imax0 ? imax : imax0;
+	if(imax0>0)
+		{
+		kernel_dgelqf_pd_vs_lib4(m, n, imax0, di&(ps-1), pD, sdd, dD);
+		pD += imax0-ps+ps*sdd+imax0*ps;
+		dD += imax0;
+		m -= imax0;
+		n -= imax0;
+		imax -= imax0;
+		}
+	ii = 0;
+	// rank 4 update
+	for(ii=0; ii<imax-4; ii+=4)
+		{
+//		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
+//		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+//		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		jj = ii+4;
+#if 0
+		for(; jj<m-7; jj+=8)
+			{
+			kernel_dlarfb4_rn_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			}
+#endif
+		for(; jj<m-3; jj+=4)
+			{
+			kernel_dlarfb4_rn_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+			}
+		for(ll=0; ll<m-jj; ll++)
+			{
+			kernel_dlarfb4_rn_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+			}
+		}
+	if(ii<imax)
+		{
+		if(ii==imax-4)
+			{
+			kernel_dgelqf_pd_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+			}
+		else
+			{
+			kernel_dgelqf_pd_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
+			}
+		}
+#endif
+
+	return;
 	}
 
 
