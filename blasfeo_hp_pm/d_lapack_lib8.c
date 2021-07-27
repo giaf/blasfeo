@@ -773,16 +773,16 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 		// copy strmat submatrix
 		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
-	int ii, jj, ll;
-	int imax0 = (ps-dir)&(ps-1);
+	int ii, jj, ll, imax0;
 	int imax = m<n ? m : n;
-#if 1
+#if 0
 	kernel_dgelqf_vs_lib8(m, n, imax, dir, pD, sdd, dD);
 #else
-	imax0 = imax<imax0 ? imax : imax0;
-	if(imax0>0)
+	if(dir>0)
 		{
-		kernel_dgelqf_vs_lib4(m, n, imax0, di&(ps-1), pD, sdd, dD);
+		imax0 = (ps-dir)&(ps-1);
+		imax0 = imax<imax0 ? imax : imax0;
+		kernel_dgelqf_vs_lib8(m, n, imax0, di&(ps-1), pD, sdd, dD);
 		pD += imax0-ps+ps*sdd+imax0*ps;
 		dD += imax0;
 		m -= imax0;
@@ -790,38 +790,48 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 		imax -= imax0;
 		}
 	ii = 0;
-	for(; ii<imax-4; ii+=4)
+	// rank 8 update
+	for(; ii<imax-8; ii+=8)
 		{
-//		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
+		kernel_dgelqf_vs_lib8(8, n-ii, 8, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
 //		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
-//		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
-		kernel_dgelqf_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
-		jj = ii+4;
+		kernel_dlarft_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+//		kernel_dgelqf_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		jj = ii+8;
 #if 0
-		for(; jj<m-7; jj+=8)
+		for(; jj<m-15; jj+=16)
 			{
-			kernel_dlarfb4_rn_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			kernel_dlarfb8_rn_16_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
 			}
 #endif
-		for(; jj<m-3; jj+=4)
+		for(; jj<m-7; jj+=8)
 			{
-			kernel_dlarfb4_rn_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+//			kernel_dlarfb8_rn_8_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+0);
+//		return;
+			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+1);
+			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+2);
+			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+3);
+			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+4);
+			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+5);
+			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+6);
+			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+7);
 			}
 		for(ll=0; ll<m-jj; ll++)
 			{
-			kernel_dlarfb4_rn_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
 			}
 		}
 	if(ii<imax)
 		{
-		if(ii==imax-4)
-			{
-			kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
-			}
-		else
-			{
-			kernel_dgelqf_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
-			}
+//		if(ii==imax-8)
+//			{
+//			kernel_dgelqf_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+//			}
+//		else
+//			{
+			kernel_dgelqf_vs_lib8(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
+//			}
 		}
 #endif
 
@@ -890,16 +900,16 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		// copy strmat submatrix
 		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
-	int ii, jj, ll;
-	int imax0 = (ps-dir)&(ps-1);
+	int ii, jj, ll, imax0;
 	int imax = m<n ? m : n;
 #if 1
 	kernel_dgelqf_pd_vs_lib8(m, n, imax, dir, pD, sdd, dD);
 #else
-	imax0 = imax<imax0 ? imax : imax0;
-	if(imax0>0)
+	if(dir>0)
 		{
-		kernel_dgelqf_pd_vs_lib4(m, n, imax0, di&(ps-1), pD, sdd, dD);
+		imax0 = (ps-dir)&(ps-1);
+		imax0 = imax<imax0 ? imax : imax0;
+		kernel_dgelqf_pd_vs_lib8(m, n, imax0, di&(ps-1), pD, sdd, dD);
 		pD += imax0-ps+ps*sdd+imax0*ps;
 		dD += imax0;
 		m -= imax0;
@@ -907,7 +917,7 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		imax -= imax0;
 		}
 	ii = 0;
-	// rank 4 update
+	// rank 8 update
 	for(ii=0; ii<imax-4; ii+=4)
 		{
 //		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
