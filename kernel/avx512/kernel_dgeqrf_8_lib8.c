@@ -662,4 +662,200 @@ void kernel_dgelqf_pd_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd
 
 
 
+// assume kmax>=4
+// 1 d d d d
+// 0 1 d d d
+// 0 0 1 d d
+// 0 0 0 1 d
+void kernel_dlarft_8_lib8(int kmax, double *pD, double *dD, double *pT)
+	{
+	const int ps = 8;
+	int kk;
+	double v10,
+	       v20, v21,
+		   v30, v31, v32,
+		   v40, v41, v42, v43,
+		   v50, v51, v52, v53, v54,
+		   v60, v61, v62, v63, v64, v65,
+		   v70, v71, v72, v73, v74, v75, v76;
+	// 0
+	// 1
+	v10 =  pD[0+ps*1];
+	// 2
+	v10 += pD[1+ps*2]*pD[0+ps*2];
+	v20 =  pD[0+ps*2];
+	v21 =  pD[1+ps*2];
+	// 3
+	v10 += pD[1+ps*3]*pD[0+ps*3];
+	v20 += pD[2+ps*3]*pD[0+ps*3];
+	v21 += pD[2+ps*3]*pD[1+ps*3];
+	v30 =  pD[0+ps*3];
+	v31 =  pD[1+ps*3];
+	v32 =  pD[2+ps*3];
+	// 4
+	v10 += pD[1+ps*4]*pD[0+ps*4];
+	v20 += pD[2+ps*4]*pD[0+ps*4];
+	v21 += pD[2+ps*4]*pD[1+ps*4];
+	v30 += pD[3+ps*4]*pD[0+ps*4];
+	v31 += pD[3+ps*4]*pD[1+ps*4];
+	v32 += pD[3+ps*4]*pD[2+ps*4];
+	v40 =  pD[0+ps*4];
+	v41 =  pD[1+ps*4];
+	v42 =  pD[2+ps*4];
+	v43 =  pD[3+ps*4];
+	// 5
+	v10 += pD[1+ps*5]*pD[0+ps*5];
+	v20 += pD[2+ps*5]*pD[0+ps*5];
+	v21 += pD[2+ps*5]*pD[1+ps*5];
+	v30 += pD[3+ps*5]*pD[0+ps*5];
+	v31 += pD[3+ps*5]*pD[1+ps*5];
+	v32 += pD[3+ps*5]*pD[2+ps*5];
+	v40 += pD[4+ps*5]*pD[0+ps*5];
+	v41 += pD[4+ps*5]*pD[1+ps*5];
+	v42 += pD[4+ps*5]*pD[2+ps*5];
+	v43 += pD[4+ps*5]*pD[3+ps*5];
+	v50 =  pD[0+ps*5];
+	v51 =  pD[1+ps*5];
+	v52 =  pD[2+ps*5];
+	v53 =  pD[3+ps*5];
+	v54 =  pD[4+ps*5];
+	// 6
+	v10 += pD[1+ps*6]*pD[0+ps*6];
+	v20 += pD[2+ps*6]*pD[0+ps*6];
+	v21 += pD[2+ps*6]*pD[1+ps*6];
+	v30 += pD[3+ps*6]*pD[0+ps*6];
+	v31 += pD[3+ps*6]*pD[1+ps*6];
+	v32 += pD[3+ps*6]*pD[2+ps*6];
+	v40 += pD[4+ps*6]*pD[0+ps*6];
+	v41 += pD[4+ps*6]*pD[1+ps*6];
+	v42 += pD[4+ps*6]*pD[2+ps*6];
+	v43 += pD[4+ps*6]*pD[3+ps*6];
+	v50 += pD[5+ps*6]*pD[0+ps*6];
+	v51 += pD[5+ps*6]*pD[1+ps*6];
+	v52 += pD[5+ps*6]*pD[2+ps*6];
+	v53 += pD[5+ps*6]*pD[3+ps*6];
+	v54 += pD[5+ps*6]*pD[4+ps*6];
+	v60 =  pD[0+ps*6];
+	v61 =  pD[1+ps*6];
+	v62 =  pD[2+ps*6];
+	v63 =  pD[3+ps*6];
+	v64 =  pD[4+ps*6];
+	v65 =  pD[5+ps*6];
+	// 7
+	v10 += pD[1+ps*7]*pD[0+ps*7];
+	v20 += pD[2+ps*7]*pD[0+ps*7];
+	v21 += pD[2+ps*7]*pD[1+ps*7];
+	v30 += pD[3+ps*7]*pD[0+ps*7];
+	v31 += pD[3+ps*7]*pD[1+ps*7];
+	v32 += pD[3+ps*7]*pD[2+ps*7];
+	v40 += pD[4+ps*7]*pD[0+ps*7];
+	v41 += pD[4+ps*7]*pD[1+ps*7];
+	v42 += pD[4+ps*7]*pD[2+ps*7];
+	v43 += pD[4+ps*7]*pD[3+ps*7];
+	v50 += pD[5+ps*7]*pD[0+ps*7];
+	v51 += pD[5+ps*7]*pD[1+ps*7];
+	v52 += pD[5+ps*7]*pD[2+ps*7];
+	v53 += pD[5+ps*7]*pD[3+ps*7];
+	v54 += pD[5+ps*7]*pD[4+ps*7];
+	v60 += pD[6+ps*7]*pD[0+ps*7];
+	v61 += pD[6+ps*7]*pD[1+ps*7];
+	v62 += pD[6+ps*7]*pD[2+ps*7];
+	v63 += pD[6+ps*7]*pD[3+ps*7];
+	v64 += pD[6+ps*7]*pD[4+ps*7];
+	v65 += pD[6+ps*7]*pD[5+ps*7];
+	v70 =  pD[0+ps*7];
+	v71 =  pD[1+ps*7];
+	v72 =  pD[2+ps*7];
+	v73 =  pD[3+ps*7];
+	v74 =  pD[4+ps*7];
+	v75 =  pD[5+ps*7];
+	v76 =  pD[6+ps*7];
+	//
+	for(kk=8; kk<kmax; kk++)
+		{
+		v10 += pD[1+ps*kk]*pD[0+ps*kk];
+		v20 += pD[2+ps*kk]*pD[0+ps*kk];
+		v30 += pD[3+ps*kk]*pD[0+ps*kk];
+		v40 += pD[4+ps*kk]*pD[0+ps*kk];
+		v50 += pD[5+ps*kk]*pD[0+ps*kk];
+		v60 += pD[6+ps*kk]*pD[0+ps*kk];
+		v70 += pD[7+ps*kk]*pD[0+ps*kk];
+		//
+		v21 += pD[2+ps*kk]*pD[1+ps*kk];
+		v31 += pD[3+ps*kk]*pD[1+ps*kk];
+		v41 += pD[4+ps*kk]*pD[1+ps*kk];
+		v51 += pD[5+ps*kk]*pD[1+ps*kk];
+		v61 += pD[6+ps*kk]*pD[1+ps*kk];
+		v71 += pD[7+ps*kk]*pD[1+ps*kk];
+		//
+		v32 += pD[3+ps*kk]*pD[2+ps*kk];
+		v42 += pD[4+ps*kk]*pD[2+ps*kk];
+		v52 += pD[5+ps*kk]*pD[2+ps*kk];
+		v62 += pD[6+ps*kk]*pD[2+ps*kk];
+		v72 += pD[7+ps*kk]*pD[2+ps*kk];
+		//
+		v43 += pD[4+ps*kk]*pD[3+ps*kk];
+		v53 += pD[5+ps*kk]*pD[3+ps*kk];
+		v63 += pD[6+ps*kk]*pD[3+ps*kk];
+		v73 += pD[7+ps*kk]*pD[3+ps*kk];
+		//
+		v54 += pD[5+ps*kk]*pD[4+ps*kk];
+		v64 += pD[6+ps*kk]*pD[4+ps*kk];
+		v74 += pD[7+ps*kk]*pD[4+ps*kk];
+		//
+		v65 += pD[6+ps*kk]*pD[4+ps*kk];
+		v75 += pD[7+ps*kk]*pD[5+ps*kk];
+		//
+		v76 += pD[7+ps*kk]*pD[6+ps*kk];
+		}
+	//
+	pT[0+ps*0] = - dD[0];
+	pT[1+ps*1] = - dD[1];
+	pT[2+ps*2] = - dD[2];
+	pT[3+ps*3] = - dD[3];
+	pT[4+ps*4] = - dD[4];
+	pT[5+ps*5] = - dD[5];
+	pT[6+ps*6] = - dD[6];
+	pT[7+ps*7] = - dD[7];
+	//
+	pT[0+ps*1] = - dD[1] * (v10*pT[0+ps*0]);
+	pT[1+ps*2] = - dD[2] * (v21*pT[1+ps*1]);
+	pT[2+ps*3] = - dD[3] * (v32*pT[2+ps*2]);
+	pT[3+ps*4] = - dD[4] * (v43*pT[3+ps*3]);
+	pT[4+ps*5] = - dD[5] * (v54*pT[4+ps*4]);
+	pT[5+ps*6] = - dD[6] * (v65*pT[5+ps*5]);
+	pT[6+ps*7] = - dD[7] * (v76*pT[6+ps*6]);
+	//
+	pT[0+ps*2] = - dD[2] * (v20*pT[0+ps*0] + v21*pT[0+ps*1]);
+	pT[1+ps*3] = - dD[3] * (v31*pT[1+ps*1] + v32*pT[1+ps*2]);
+	pT[2+ps*4] = - dD[4] * (v42*pT[2+ps*2] + v43*pT[2+ps*3]);
+	pT[3+ps*5] = - dD[5] * (v53*pT[3+ps*3] + v54*pT[3+ps*4]);
+	pT[4+ps*6] = - dD[6] * (v64*pT[4+ps*4] + v65*pT[4+ps*5]);
+	pT[5+ps*7] = - dD[7] * (v75*pT[5+ps*5] + v76*pT[5+ps*6]);
+	//
+	pT[0+ps*3] = - dD[3] * (v30*pT[0+ps*0] + v31*pT[0+ps*1] + v32*pT[0+ps*2]);
+	pT[1+ps*4] = - dD[4] * (v41*pT[1+ps*1] + v42*pT[1+ps*2] + v43*pT[1+ps*3]);
+	pT[2+ps*5] = - dD[5] * (v52*pT[2+ps*2] + v53*pT[2+ps*3] + v54*pT[2+ps*4]);
+	pT[3+ps*6] = - dD[6] * (v63*pT[3+ps*3] + v64*pT[3+ps*4] + v65*pT[3+ps*5]);
+	pT[4+ps*7] = - dD[7] * (v74*pT[4+ps*4] + v75*pT[4+ps*5] + v76*pT[4+ps*6]);
+	//
+	pT[0+ps*4] = - dD[4] * (v40*pT[0+ps*0] + v41*pT[0+ps*1] + v42*pT[0+ps*2] + v43*pT[0+ps*3]);
+	pT[1+ps*5] = - dD[5] * (v51*pT[1+ps*1] + v52*pT[1+ps*2] + v53*pT[1+ps*3] + v54*pT[1+ps*4]);
+	pT[2+ps*6] = - dD[6] * (v62*pT[2+ps*2] + v63*pT[2+ps*3] + v64*pT[2+ps*4] + v65*pT[2+ps*5]);
+	pT[3+ps*7] = - dD[7] * (v73*pT[3+ps*3] + v74*pT[3+ps*4] + v75*pT[3+ps*5] + v76*pT[3+ps*6]);
+	//
+	pT[0+ps*5] = - dD[5] * (v50*pT[0+ps*0] + v51*pT[0+ps*1] + v52*pT[0+ps*2] + v53*pT[0+ps*3] + v54*pT[0+ps*4]);
+	pT[1+ps*6] = - dD[6] * (v61*pT[1+ps*1] + v62*pT[1+ps*2] + v63*pT[1+ps*3] + v64*pT[1+ps*4] + v65*pT[1+ps*5]);
+	pT[2+ps*7] = - dD[7] * (v72*pT[2+ps*2] + v73*pT[2+ps*3] + v74*pT[2+ps*4] + v75*pT[2+ps*5] + v76*pT[2+ps*6]);
+	//
+	pT[0+ps*6] = - dD[6] * (v60*pT[0+ps*0] + v61*pT[0+ps*1] + v62*pT[0+ps*2] + v63*pT[0+ps*3] + v64*pT[0+ps*4] + v65*pT[0+ps*5]);
+	pT[1+ps*7] = - dD[7] * (v71*pT[1+ps*1] + v72*pT[1+ps*2] + v73*pT[1+ps*3] + v74*pT[1+ps*4] + v75*pT[1+ps*5] + v76*pT[1+ps*6]);
+	//
+	pT[0+ps*7] = - dD[7] * (v70*pT[0+ps*0] + v71*pT[0+ps*1] + v72*pT[0+ps*2] + v73*pT[0+ps*3] + v74*pT[0+ps*4] + v75*pT[0+ps*5] + v76*pT[0+ps*6]);
+
+	return;
+	}
+
+
+
 

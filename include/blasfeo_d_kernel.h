@@ -111,6 +111,7 @@ void kernel_dsyrk_dpotrf_nt_l_8x8_lib8(int kp, double *Ap, double *Bp, int km_, 
 void kernel_dsyrk_dpotrf_nt_l_8x8_vs_lib8(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int m1, int n1);
 void kernel_dgelqf_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
 void kernel_dgelqf_pd_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
+void kernel_dlarft_8_lib8(int kmax, double *pD, double *dD, double *pT);
 
 // panel copy / pack
 // 16
