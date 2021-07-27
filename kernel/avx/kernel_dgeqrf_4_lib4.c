@@ -43,9 +43,9 @@
 #include <smmintrin.h>  // SSE4
 #include <immintrin.h>  // AVX
 
-#include "../../include/blasfeo_common.h"
-#include "../../include/blasfeo_d_aux.h"
-#include "../../include/blasfeo_d_kernel.h"
+#include <include/blasfeo_common.h>
+#include <include/blasfeo_d_aux.h>
+#include <include/blasfeo_d_kernel.h>
 
 
 
