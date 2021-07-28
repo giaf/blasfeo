@@ -806,16 +806,7 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 #endif
 		for(; jj<m-7; jj+=8)
 			{
-//			kernel_dlarfb8_rn_8_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
-			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+0);
-//		return;
-			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+1);
-			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+2);
-			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+3);
-			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+4);
-			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+5);
-			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+6);
-			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps+7);
+			kernel_dlarfb8_rn_8_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
 			}
 		for(ll=0; ll<m-jj; ll++)
 			{

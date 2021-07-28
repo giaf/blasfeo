@@ -803,7 +803,7 @@ void kernel_dlarft_8_lib8(int kmax, double *pD, double *dD, double *pT)
 		v64 += pD[6+ps*kk]*pD[4+ps*kk];
 		v74 += pD[7+ps*kk]*pD[4+ps*kk];
 		//
-		v65 += pD[6+ps*kk]*pD[4+ps*kk];
+		v65 += pD[6+ps*kk]*pD[5+ps*kk];
 		v75 += pD[7+ps*kk]*pD[5+ps*kk];
 		//
 		v76 += pD[7+ps*kk]*pD[6+ps*kk];
