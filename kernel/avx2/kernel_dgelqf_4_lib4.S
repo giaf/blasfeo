@@ -10410,8 +10410,8 @@ LC00: // { 100...0 100...0 100...0 100...0 }
 	.align 32
 .LC01:
 #elif defined(OS_MAC)
-LC01:
 	.align 5
+LC01:
 #endif
 	.double	-1.0
 	.double	-1.0
@@ -10422,8 +10422,8 @@ LC01:
 	.align 32
 .LC02:
 #elif defined(OS_MAC)
-LC02:
 	.align 5
+LC02:
 #endif
 	.double	1.0
 	.double	1.0

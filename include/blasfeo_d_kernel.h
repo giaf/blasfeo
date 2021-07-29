@@ -114,6 +114,7 @@ void kernel_dgelqf_pd_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd
 void kernel_dlarft_8_lib8(int kmax, double *pD, double *dD, double *pT);
 void kernel_dlarfb8_rn_8_lib8(int kmax, double *pV, double *pT, double *pD);
 void kernel_dlarfb8_rn_1_lib8(int kmax, double *pV, double *pT, double *pD);
+void kernel_dgelqf_dlarft8_8_lib8(int kmax, double *pD, double *dD, double *pT);
 
 // panel copy / pack
 // 16

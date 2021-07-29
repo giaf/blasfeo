@@ -44,6 +44,7 @@ KERNEL_OBJS = \
 		kernel_dgemv_16_lib8.o \
 		kernel_dpack_lib8.o \
 		kernel_dgeqrf_8_lib8.o \
+		kernel_dgelqf_lib8.o \
 
 endif
 

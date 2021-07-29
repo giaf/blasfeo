@@ -3649,8 +3649,8 @@ col3:
 		w3 += pD[3+ps*ii] * pD[2+ps*ii];
 		}
 	//
-	pT[1+ps*2] = - dD[2] * (w1*pT[1+ps*1]);
 	pT[0+ps*2] = - dD[2] * (w0*pT[0+ps*0] + w1*pT[0+ps*1]);
+	pT[1+ps*2] = - dD[2] * (w1*pT[1+ps*1]);
 	w3 = - dD[2] * w3;
 	//
 	pD[3+ps*2] += w3;
@@ -3695,9 +3695,9 @@ col4:
 		w2 += pD[2+ps*ii] * pD[3+ps*ii];
 		}
 	//
-	pT[2+ps*3] = - dD[3] * (w2*pT[2+ps*2]);
-	pT[1+ps*3] = - dD[3] * (w1*pT[1+ps*1] + w2*pT[1+ps*2]);
 	pT[0+ps*3] = - dD[3] * (w0*pT[0+ps*0] + w1*pT[0+ps*1] + w2*pT[0+ps*2]);
+	pT[1+ps*3] = - dD[3] * (w1*pT[1+ps*1] + w2*pT[1+ps*2]);
+	pT[2+ps*3] = - dD[3] * (w2*pT[2+ps*2]);
 	return;
 	}
 #endif

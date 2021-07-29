@@ -793,10 +793,12 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 	// rank 8 update
 	for(; ii<imax-8; ii+=8)
 		{
-		kernel_dgelqf_vs_lib8(8, n-ii, 8, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
+//		kernel_dgelqf_vs_lib8(8, n-ii, 8, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
 //		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
-		kernel_dlarft_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
-//		kernel_dgelqf_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+//		kernel_dlarft_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		kernel_dgelqf_dlarft8_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+//d_print_mat(1, 8, dD+ii, 1);
+//d_print_mat(8, 8, pT, 8);
 		jj = ii+8;
 #if 0
 		for(; jj<m-15; jj+=16)

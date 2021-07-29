@@ -278,7 +278,7 @@ NAME:
 	.p2align 4,,15
 	FUN_START(inner_kernel_dgemm_nt_8x8_lib8)
 #endif
-	
+
 	cmpl	$ 0, %r10d
 	jle		2f // return
 

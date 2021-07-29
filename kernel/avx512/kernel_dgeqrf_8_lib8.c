@@ -853,6 +853,9 @@ void kernel_dlarft_8_lib8(int kmax, double *pD, double *dD, double *pT)
 	//
 	pT[0+ps*7] = - dD[7] * (v70*pT[0+ps*0] + v71*pT[0+ps*1] + v72*pT[0+ps*2] + v73*pT[0+ps*3] + v74*pT[0+ps*4] + v75*pT[0+ps*5] + v76*pT[0+ps*6]);
 
+//printf("\n%f\n", v10);
+//printf("\n%f %f\n", v20, v21);
+//printf("\n%f %f %f\n", v30, v31, v32);
 	return;
 	}
 
