@@ -352,6 +352,49 @@ NAME:
 
 
 
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DGELQF_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dgelqf_lib8)
+#endif
+
+	vmovsd			0(%r14), %xmm24 // alpha
+	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
+	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC00(%rip), %zmm31 // mask
+#else
+	vbroadcastsd	LC00(%rip), %zmm31 // mask
+#endif
+	vandpd			%xmm31, %xmm24, %xmm27
+	vxorpd			%xmm31, %xmm27, %xmm27
+	vxorpd			%xmm27, %xmm25, %xmm25 // beta
+	vmovsd			%xmm25, 0(%r14) // pD[0+ps*0]
+	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
+#else
+	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
+#endif
+	vmovsd			%xmm24, %xmm27, %xmm27
+	vmovddup		%xmm24, %xmm24
+	vmovsd			%xmm25, %xmm24, %xmm24
+	vdivpd			%xmm24, %xmm27, %xmm24
+	vmovsd			%xmm24, 0(%r15) // dD[0]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dgelqf_lib8)
+#endif
+
+
+
+
+
 //                           1      2           3
 // void kernel_dgelqf_8_lib8(int n, double *pD, double *dD)
 
@@ -385,29 +428,15 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			0+64*0(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC00(%rip), %zmm31 // mask
+
+	leaq	0+64*0(%r11), %r14 // XXX chech for reg overwrite
+	leaq	0(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vbroadcastsd	LC00(%rip), %zmm31 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm31, %xmm24, %xmm27
-	vxorpd			%xmm31, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 0+64*0(%r11) // pD[0+ps*0]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 0(%r12) // dD[0]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+1*8(%rip), %zmm27
@@ -535,29 +564,14 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			8+64*1(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC00(%rip), %zmm31 // mask
+	leaq	8+64*1(%r11), %r14 // XXX chech for reg overwrite
+	leaq	8(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vbroadcastsd	LC00(%rip), %zmm31 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm31, %xmm24, %xmm27
-	vxorpd			%xmm31, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 8+64*1(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 8(%r12) // dD[1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+1*8(%rip), %zmm27
@@ -686,29 +700,14 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			16+64*2(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC00(%rip), %zmm31 // mask
+	leaq	16+64*2(%r11), %r14 // XXX chech for reg overwrite
+	leaq	16(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vbroadcastsd	LC00(%rip), %zmm31 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm31, %xmm24, %xmm27
-	vxorpd			%xmm31, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 16+64*2(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 16(%r12) // dD[1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+1*8(%rip), %zmm27
@@ -838,29 +837,15 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			24+64*3(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC00(%rip), %zmm31 // mask
+
+	leaq	24+64*3(%r11), %r14 // XXX chech for reg overwrite
+	leaq	24(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vbroadcastsd	LC00(%rip), %zmm31 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm31, %xmm24, %xmm27
-	vxorpd			%xmm31, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 24+64*3(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 24(%r12) // dD[1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+1*8(%rip), %zmm27
@@ -991,29 +976,15 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			32+64*4(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC00(%rip), %zmm31 // mask
+
+	leaq	32+64*4(%r11), %r14 // XXX chech for reg overwrite
+	leaq	32(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vbroadcastsd	LC00(%rip), %zmm31 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm31, %xmm24, %xmm27
-	vxorpd			%xmm31, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 32+64*4(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 32(%r12) // dD[1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+1*8(%rip), %zmm27
@@ -1145,29 +1116,15 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			40+64*5(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC00(%rip), %zmm31 // mask
+
+	leaq	40+64*5(%r11), %r14 // XXX chech for reg overwrite
+	leaq	40(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vbroadcastsd	LC00(%rip), %zmm31 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm31, %xmm24, %xmm27
-	vxorpd			%xmm31, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 40+64*5(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 40(%r12) // dD[1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+1*8(%rip), %zmm27
@@ -1300,29 +1257,15 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			48+64*6(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC00(%rip), %zmm31 // mask
+
+	leaq	48+64*6(%r11), %r14 // XXX chech for reg overwrite
+	leaq	48(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vbroadcastsd	LC00(%rip), %zmm31 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm31, %xmm24, %xmm27
-	vxorpd			%xmm31, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 48+64*6(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 48(%r12) // dD[1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+1*8(%rip), %zmm27
@@ -1456,29 +1399,15 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			56+64*7(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC00(%rip), %zmm31 // mask
+
+	leaq	56+64*7(%r11), %r14 // XXX chech for reg overwrite
+	leaq	56(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vbroadcastsd	LC00(%rip), %zmm31 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm31, %xmm24, %xmm27
-	vxorpd			%xmm31, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 56+64*7(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 56(%r12) // dD[1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC05+1*8(%rip), %zmm27
@@ -1590,30 +1519,17 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			0+64*0(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd			.LC00(%rip), %xmm26 // mask
+
+	leaq	0+64*0(%r11), %r14 // XXX chech for reg overwrite
+	leaq	0(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vmovsd			LC00(%rip), %xmm26 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm26, %xmm24, %xmm27
-	vxorpd			%xmm26, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 0+64*0(%r11) // pD[0+ps*0]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 0(%r12) // dD[0]
-	vxorpd			%xmm26, %xmm24, %xmm27
+
+	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 0+64*0(%r13) // pT[0+ps*0]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -1741,30 +1657,17 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			8+64*1(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd			.LC00(%rip), %xmm26 // mask
+
+	leaq	8+64*1(%r11), %r14 // XXX chech for reg overwrite
+	leaq	8(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vmovsd			LC00(%rip), %xmm26 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm26, %xmm24, %xmm27
-	vxorpd			%xmm26, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 8+64*1(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 8(%r12) // dD[1]
-	vxorpd			%xmm26, %xmm24, %xmm27
+
+	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 8+64*1(%r13) // pT[1+ps*1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -1905,30 +1808,17 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			16+64*2(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd			.LC00(%rip), %xmm26 // mask
+
+	leaq	16+64*2(%r11), %r14 // XXX chech for reg overwrite
+	leaq	16(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vmovsd			LC00(%rip), %xmm26 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm26, %xmm24, %xmm27
-	vxorpd			%xmm26, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 16+64*2(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 16(%r12) // dD[1]
-	vxorpd			%xmm26, %xmm24, %xmm27
+
+	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 16+64*2(%r13) // pT[1+ps*1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -2076,30 +1966,17 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			24+64*3(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd			.LC00(%rip), %xmm26 // mask
+
+	leaq	24+64*3(%r11), %r14 // XXX chech for reg overwrite
+	leaq	24(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vmovsd			LC00(%rip), %xmm26 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm26, %xmm24, %xmm27
-	vxorpd			%xmm26, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 24+64*3(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 24(%r12) // dD[1]
-	vxorpd			%xmm26, %xmm24, %xmm27
+
+	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 24+64*3(%r13) // pT[1+ps*1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -2258,30 +2135,17 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			32+64*4(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd			.LC00(%rip), %xmm26 // mask
+
+	leaq	32+64*4(%r11), %r14 // XXX chech for reg overwrite
+	leaq	32(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vmovsd			LC00(%rip), %xmm26 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm26, %xmm24, %xmm27
-	vxorpd			%xmm26, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 32+64*4(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 32(%r12) // dD[1]
-	vxorpd			%xmm26, %xmm24, %xmm27
+
+	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 32+64*4(%r13) // pT[1+ps*1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -2455,30 +2319,17 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			40+64*5(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd			.LC00(%rip), %xmm26 // mask
+
+	leaq	40+64*5(%r11), %r14 // XXX chech for reg overwrite
+	leaq	40(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vmovsd			LC00(%rip), %xmm26 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm26, %xmm24, %xmm27
-	vxorpd			%xmm26, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 40+64*5(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 40(%r12) // dD[1]
-	vxorpd			%xmm26, %xmm24, %xmm27
+
+	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 40+64*5(%r13) // pT[1+ps*1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -2664,30 +2515,17 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			48+64*6(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd			.LC00(%rip), %xmm26 // mask
+
+	leaq	48+64*6(%r11), %r14 // XXX chech for reg overwrite
+	leaq	48(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vmovsd			LC00(%rip), %xmm26 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm26, %xmm24, %xmm27
-	vxorpd			%xmm26, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 48+64*6(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 48(%r12) // dD[1]
-	vxorpd			%xmm26, %xmm24, %xmm27
+
+	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 48+64*6(%r13) // pT[1+ps*1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -2885,30 +2723,17 @@ NAME:
 
 101:
 	movq	ARG2, %r11 // D
-	vmovsd			56+64*7(%r11), %xmm24 // alpha
-	vfmadd231sd		%xmm24, %xmm24, %xmm25 // beta
-	vsqrtsd			%xmm25, %xmm25, %xmm25 // beta
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd			.LC00(%rip), %xmm26 // mask
+
+	leaq	56+64*7(%r11), %r14 // XXX chech for reg overwrite
+	leaq	56(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_LIB8
 #else
-	vmovsd			LC00(%rip), %xmm26 // mask
+	CALL(inner_edge_dgelqf_lib8)
 #endif
-	vandpd			%xmm26, %xmm24, %xmm27
-	vxorpd			%xmm26, %xmm27, %xmm27
-	vxorpd			%xmm27, %xmm25, %xmm25 // beta
-	vmovsd			%xmm25, 56+64*7(%r11) // pD[1+ps*1]
-	vsubsd			%xmm24, %xmm25, %xmm24 // beta-alpha
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovddup		.LC00+1*8(%rip), %xmm27 // -1.0
-#else
-	vmovddup		LC00+1*8(%rip), %xmm27 // -1.0
-#endif
-	vmovsd			%xmm24, %xmm27, %xmm27
-	vmovddup		%xmm24, %xmm24
-	vmovsd			%xmm25, %xmm24, %xmm24
-	vdivpd			%xmm24, %xmm27, %xmm24
-	vmovsd			%xmm24, 56(%r12) // dD[1]
-	vxorpd			%xmm26, %xmm24, %xmm27
+
+	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 56+64*7(%r13) // pT[1+ps*1]
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
