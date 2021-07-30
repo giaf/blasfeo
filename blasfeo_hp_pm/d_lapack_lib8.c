@@ -800,7 +800,7 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 //d_print_mat(1, 8, dD+ii, 1);
 //d_print_mat(8, 8, pT, 8);
 		jj = ii+8;
-#if 0
+#if 1
 		for(; jj<m-15; jj+=16)
 			{
 			kernel_dlarfb8_rn_16_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
@@ -920,7 +920,7 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		jj = ii+8;
 //d_print_mat(1, 8, dD+ii, 1);
 //d_print_mat(8, 8, pT, 8);
-#if 0
+#if 1
 		for(; jj<m-15; jj+=16)
 			{
 			kernel_dlarfb8_rn_16_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
