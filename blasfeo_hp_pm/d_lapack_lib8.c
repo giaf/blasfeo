@@ -895,7 +895,7 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 
 	int ii, jj, ll, imax0;
 	int imax = m<n ? m : n;
-#if 1
+#if 0
 	kernel_dgelqf_pd_vs_lib8(m, n, imax, dir, pD, sdd, dD);
 #else
 	if(dir>0)
@@ -911,37 +911,39 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		}
 	ii = 0;
 	// rank 8 update
-	for(ii=0; ii<imax-4; ii+=4)
+	for(ii=0; ii<imax-8; ii+=8)
 		{
-//		kernel_dgelqf_vs_lib4(4, n-ii, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
-//		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
-//		kernel_dlarft_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
-		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
-		jj = ii+4;
+//		kernel_dgelqf_pd_vs_lib8(8, n-ii, 8, 0, pD+ii*sdd+ii*ps, sdd, dD+ii);
+//		kernel_dgelqf_pd_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+//		kernel_dlarft_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		kernel_dgelqf_pd_dlarft8_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		jj = ii+8;
+//d_print_mat(1, 8, dD+ii, 1);
+//d_print_mat(8, 8, pT, 8);
 #if 0
-		for(; jj<m-7; jj+=8)
+		for(; jj<m-15; jj+=16)
 			{
-			kernel_dlarfb4_rn_8_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			kernel_dlarfb8_rn_16_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
 			}
 #endif
-		for(; jj<m-3; jj+=4)
+		for(; jj<m-7; jj+=8)
 			{
-			kernel_dlarfb4_rn_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+			kernel_dlarfb8_rn_8_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
 			}
 		for(ll=0; ll<m-jj; ll++)
 			{
-			kernel_dlarfb4_rn_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
 			}
 		}
 	if(ii<imax)
 		{
-		if(ii==imax-4)
+		if(ii==imax-8)
 			{
-			kernel_dgelqf_pd_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+			kernel_dgelqf_pd_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii);
 			}
 		else
 			{
-			kernel_dgelqf_pd_vs_lib4(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
+			kernel_dgelqf_pd_vs_lib8(m-ii, n-ii, imax-ii, ii&(ps-1), pD+ii*sdd+ii*ps, sdd, dD+ii);
 			}
 		}
 #endif
