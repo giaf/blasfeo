@@ -755,10 +755,12 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 
+	int cir = ci & (ps-1);
+	int dir = di & (ps-1);
+
 	// go to submatrix
-	double *pC = &(BLASFEO_DMATEL(sC,ci,cj));
-	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
-	int dir = di&(ps-1);
+	double *pC = sC->pA + cj*ps + (ci-cir)*sdc;
+	double *pD = sD->pA + dj*ps + (di-dir)*sdd;
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
@@ -782,7 +784,7 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 		{
 		imax0 = (ps-dir)&(ps-1);
 		imax0 = imax<imax0 ? imax : imax0;
-		kernel_dgelqf_vs_lib8(m, n, imax0, di&(ps-1), pD, sdd, dD);
+		kernel_dgelqf_vs_lib8(m, n, imax0, dir, pD, sdd, dD);
 		pD += imax0-ps+ps*sdd+imax0*ps;
 		dD += imax0;
 		m -= imax0;
@@ -875,10 +877,12 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	int sdc = sC->cn;
 	int sdd = sD->cn;
 
+	int cir = ci & (ps-1);
+	int dir = di & (ps-1);
+
 	// go to submatrix
-	double *pC = &(BLASFEO_DMATEL(sC,ci,cj));
-	double *pD = &(BLASFEO_DMATEL(sD,di,dj));
-	int dir = di&(ps-1);
+	double *pC = sC->pA + cj*ps + (ci-cir)*sdc;
+	double *pD = sD->pA + dj*ps + (di-dir)*sdd;
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
@@ -902,7 +906,7 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		{
 		imax0 = (ps-dir)&(ps-1);
 		imax0 = imax<imax0 ? imax : imax0;
-		kernel_dgelqf_pd_vs_lib8(m, n, imax0, di&(ps-1), pD, sdd, dD);
+		kernel_dgelqf_pd_vs_lib8(m, n, imax0, dir, pD, sdd, dD);
 		pD += imax0-ps+ps*sdd+imax0*ps;
 		dD += imax0;
 		m -= imax0;
@@ -968,17 +972,18 @@ void blasfeo_hp_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int
 	sD->use_dA = 0;
 	sA->use_dA = 0;
 
-	const int ps = 4;
+	const int ps = 8;
 
 	// extract dimensions
 	int sda = sA->cn;
 	int sdd = sD->cn;
 
+	int air = ai & (ps-1);
+	int dir = di & (ps-1);
+
 	// go to submatrix
-	double *pA = &(BLASFEO_DMATEL(sA, ai, aj)); // TODO ?????????????????
-	double *pD = &(BLASFEO_DMATEL(sD, di, dj)); // TODO ?????????????????
-	int air = ai&(ps-1);
-	int dir = di&(ps-1);
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pD = sD->pA + dj*ps + (di-dir)*sdd;
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
