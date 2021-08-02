@@ -763,10 +763,10 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 	ALIGNED( double pT[64], 64 ) = {0}; // XXX assuming 8x8 kernel
-	ALIGNED( double pK[64], 64 ) = {0}; // XXX assuming 8x8 kernel
+//	ALIGNED( double pK[64], 64 ) = {0};
 #else
 	double pT[144] = {0}; // XXX smaller ?
-	double pK[96] = {0}; // XXX smaller ?
+//	double pK[96] = {0}; // XXX smaller ?
 #endif
 
 	if(pC!=pD)
@@ -883,10 +883,10 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 	ALIGNED( double pT[64], 64 ) = {0}; // XXX assuming 8x8 kernel
-	ALIGNED( double pK[64], 64 ) = {0}; // XXX assuming 8x8 kernel
+//	ALIGNED( double pK[64], 64 ) = {0};
 #else
 	double pT[144] = {0};
-	double pK[96] = {0};
+//	double pK[96] = {0};
 #endif
 
 	if(pC!=pD)
@@ -959,12 +959,103 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 // A full of size (m)x(n1)
 void blasfeo_hp_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sA, int ai, int aj, void *work)
 	{
-#if defined(BLASFEO_REF_API)
-	blasfeo_ref_dgelqf_pd_la(m, n1, sD, di, dj, sA, ai, aj, work);
+	if(m<=0)
+		return;
+//	printf("\nblasfeo_dgelqf_pd_la: feature not implemented yet\n");
+//	exit(1);
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+	sA->use_dA = 0;
+
+	const int ps = 4;
+
+	// extract dimensions
+	int sda = sA->cn;
+	int sdd = sD->cn;
+
+	// go to submatrix
+	double *pA = &(BLASFEO_DMATEL(sA, ai, aj)); // TODO ?????????????????
+	double *pD = &(BLASFEO_DMATEL(sD, di, dj)); // TODO ?????????????????
+	int air = ai&(ps-1);
+	int dir = di&(ps-1);
+
+	double *dD = sD->dA + di;
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	ALIGNED( double pT[64], 64 ) = {0}; // XXX assuming 8x8 kernel
+//	ALIGNED( double pK[96], 64 ) = {0};
 #else
-	printf("\nblasfeo_dgelqf_pd_la: feature not implemented yet\n");
-	exit(1);
+	double pT[144] = {0};
+//	double pK[96] = {0};
 #endif
+
+	int ii, jj, ll;
+	int imax0 = (ps-dir)&(ps-1);
+	int imax = m;
+	imax0 = imax<imax0 ? imax : imax0;
+	// different block alignment
+	if( dir != air )
+		{
+		// XXX vecorized kernel requires air==dir
+//		kernel_dgelqf_pd_la_vs_lib4(m, n1, imax, dir, pD, sdd, dD, air, pA, sda);
+//		return;
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgelqf_pd_la(m, n1, sD, di, dj, sA, ai, aj, work);
+		return;
+#else
+		printf("\nblasfeo_dgelqf_pd_la: feature not implemented yet: ai!=di\n");
+		exit(1);
+#endif
+		}
+	// same block alignment
+#if 1
+	kernel_dgelqf_pd_la_vs_lib8(m, n1, imax, dir, pD, sdd, dD, air, pA, sda);
+#else
+	if(imax0>0)
+		{
+		kernel_dgelqf_pd_la_vs_lib4(m, n1, imax0, di&(ps-1), pD, sdd, dD, ai&(ps-1), pA, sda);
+		pD += imax0-ps+ps*sdd+imax0*ps;
+		dD += imax0;
+		pA += imax0-ps+ps*sda+0*ps;
+		m -= imax0;
+		imax -= imax0;
+		}
+	ii = 0;
+	for(ii=0; ii<imax-4; ii+=4)
+		{
+		kernel_dgelqf_pd_la_vs_lib4(4, n1, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pA+ii*sda+0*ps, sda);
+//		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+		kernel_dlarft_4_la_lib4(n1, dD+ii, pA+ii*sda+0*ps, pT);
+//		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		jj = ii+4;
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+		for(; jj<m-7; jj+=8)
+			{
+			kernel_dlarfb4_rn_8_la_lib4(n1, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, sdd, pA+jj*sda+0*ps, sda);
+			}
+#endif
+		for(; jj<m-3; jj+=4)
+			{
+			kernel_dlarfb4_rn_4_la_lib4(n1, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, pA+jj*sda+0*ps);
+			}
+		for(ll=0; ll<m-jj; ll++)
+			{
+			kernel_dlarfb4_rn_1_la_lib4(n1, pA+ii*sda+0*ps, pT, pD+ll+jj*sdd+ii*ps, pA+ll+jj*sda+0*ps);
+			}
+		}
+	if(ii<imax)
+		{
+//		if(ii==imax-4)
+//			{
+//			kernel_dgelqf_pd_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+//			}
+//		else
+//			{
+			kernel_dgelqf_pd_la_vs_lib4(m-ii, n1, imax-ii, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pA+ii*sda+0*ps, sda);
+//			}
+		}
+#endif
+	return;
 	}
 
 
