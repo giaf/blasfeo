@@ -615,7 +615,7 @@ int main()
 
 	blasfeo_print_dmat(n, 2*n, &lq0, 0, 0);
 //	blasfeo_print_dmat(n, n, &lq0, 0, 0);
-//	return 0;
+	return 0;
 
 	blasfeo_dtrcp_l(n, &lq0, 0, 0, &lq1, 0, 0);
 	blasfeo_pack_dmat(n, n, B, n, &lq1, 0, n);
