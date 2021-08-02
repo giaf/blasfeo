@@ -642,7 +642,7 @@ void kernel_dgelqf_pd_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd
 
 
 
-// assume kmax>=4
+// assume kmax>=8
 // 1 d d d d
 // 0 1 d d d
 // 0 0 1 d d
@@ -1115,7 +1115,7 @@ void kernel_dgelqf_pd_la_vs_lib8(int m, int n1, int k, int offD, double *pD, int
 				_a0 = _mm512_fmadd_pd( _w1, _b0, _a0 );
 				_mm512_store_pd( &pA20[0+ps*kk], _a0 );
 				}
-			pA20 += ps*sdd;
+			pA20 += ps*sda;
 			}
 		for(ll=0; ll<jmax-jj; ll++)
 			{
@@ -1240,6 +1240,579 @@ void kernel_dgelqf_pd_la_vs_lib8(int m, int n1, int k, int offD, double *pD, int
 			pA10 += 1;
 			}
 		}
+	return;
+	}
+
+
+
+// unblocked algorithm
+// positive diagonal; array algorithm [L, L, A]
+// assume offL==offA
+void kernel_dgelqf_pd_lla_vs_lib8(int m, int n0, int n1, int k, int offD, double *pD, int sdd, double *dD, int offL, double *pL, int sdl, int offA, double *pA, int sda)
+	{
+	if(m<=0)
+		return;
+	int ii, jj, kk, ll, imax, jmax, jmax0;
+	const int ps = 8;
+	imax = k;//m<n ? m : n;
+	double alpha, beta, sigma, tmp;
+	double w00, w01,
+		   w10, w11,
+		   w20, w21,
+		   w30, w31;
+	__m512d
+		_a0, _b0, _t0, _w0, _w1;
+	double *pD00, *pD10, *pD20, *pD01, *pD11;
+	double *pL00, *pL10, *pL20, *pL01, *pL11;
+	double *pA00, *pA10, *pA20, *pA01, *pA11;
+	double pT[4];
+	int ldt = 2;
+	ii = 0;
+#if 1 // rank 2
+	for(; ii<imax-1; ii+=2)
+		{
+		// first row
+		pD00 = &pD[((offD+ii)&(ps-1))+((offD+ii)-((offD+ii)&(ps-1)))*sdd+ii*ps];
+		pL00 = &pL[((offL+ii)&(ps-1))+((offL+ii)-((offL+ii)&(ps-1)))*sdl+0*ps];
+		pA00 = &pA[((offA+ii)&(ps-1))+((offA+ii)-((offA+ii)&(ps-1)))*sda+0*ps];
+		sigma = 0.0;
+		for(jj=0; jj<=n0+ii; jj++)
+			{
+			tmp = pL00[0+ps*jj];
+			sigma += tmp*tmp;
+			}
+		for(jj=0; jj<n1; jj++)
+			{
+			tmp = pA00[0+ps*jj];
+			sigma += tmp*tmp;
+			}
+		if(sigma==0.0)
+			{
+			dD[ii] = 0.0;
+			}
+		else
+			{
+			alpha = pD00[0];
+			beta = sigma + alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha<=0)
+				tmp = alpha-beta;
+			else
+				tmp = -sigma / (alpha+beta);
+			dD[ii] = 2*tmp*tmp / (sigma+tmp*tmp);
+			tmp = 1.0 / tmp;
+			pD00[0] = beta;
+			for(jj=0; jj<=n0+ii; jj++)
+				{
+				pL00[0+ps*jj] *= tmp;
+				}
+			for(jj=0; jj<n1; jj++)
+				{
+				pA00[0+ps*jj] *= tmp;
+				}
+			}
+		pD10 = &pD[((offD+ii+1)&(ps-1))+((offD+ii+1)-((offD+ii+1)&(ps-1)))*sdd+ii*ps];
+		pL10 = &pL[((offL+ii+1)&(ps-1))+((offL+ii+1)-((offL+ii+1)&(ps-1)))*sdl+0*ps];
+		pA10 = &pA[((offA+ii+1)&(ps-1))+((offA+ii+1)-((offA+ii+1)&(ps-1)))*sda+0*ps];
+		w00 = pD10[0+ps*0]; // pD00[0+ps*0] = 1.0
+		for(kk=0; kk<=n0+ii; kk++)
+			{
+			w00 += pL10[0+ps*kk] * pL00[0+ps*kk];
+			}
+		for(kk=0; kk<n1; kk++)
+			{
+			w00 += pA10[0+ps*kk] * pA00[0+ps*kk];
+			}
+		w00 = - w00*dD[ii];
+		pD10[0+ps*0] += w00; // pC00[0+ps*0] = 1.0
+		for(kk=0; kk<=n0+ii; kk++)
+			{
+			pL10[0+ps*kk] += w00 * pL00[0+ps*kk];
+			}
+		for(kk=0; kk<n1; kk++)
+			{
+			pA10[0+ps*kk] += w00 * pA00[0+ps*kk];
+			}
+		// second row
+		pD11 = pD10+ps*1;
+		sigma = 0.0;
+		for(jj=0; jj<=n0+ii+1; jj++)
+			{
+			tmp = pL10[0+ps*jj];
+			sigma += tmp*tmp;
+			}
+		for(jj=0; jj<n1; jj++)
+			{
+			tmp = pA10[0+ps*jj];
+			sigma += tmp*tmp;
+			}
+		if(sigma==0.0)
+			{
+			dD[(ii+1)] = 0.0;
+			}
+		else
+			{
+			alpha = pD11[0+ps*0];
+			beta = sigma + alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha<=0)
+				tmp = alpha-beta;
+			else
+				tmp = -sigma / (alpha+beta);
+			dD[ii+1] = 2*tmp*tmp / (sigma+tmp*tmp);
+			tmp = 1.0 / tmp;
+			pD11[0+ps*0] = beta;
+			for(jj=0; jj<=n0+ii+1; jj++)
+				{
+				pL10[0+ps*jj] *= tmp;
+				}
+			for(jj=0; jj<n1; jj++)
+				{
+				pA10[0+ps*jj] *= tmp;
+				}
+			}
+		// compute T
+		tmp = 1.0*0.0 + pD00[0+ps*1]*1.0;
+		for(kk=0; kk<=n0+ii; kk++)
+			{
+			tmp += pL00[0+ps*kk]*pL10[0+ps*kk];
+			}
+		for(kk=0; kk<n1; kk++)
+			{
+			tmp += pA00[0+ps*kk]*pA10[0+ps*kk];
+			}
+		pT[0+ldt*0] = - dD[ii+0];
+		pT[0+ldt*1] = + dD[ii+1] * tmp * dD[ii+0];
+		pT[1+ldt*1] = - dD[ii+1];
+		// downgrade
+		jmax = m-ii-2;
+		jmax0 = (ps-((ii+2+offA)&(ps-1)))&(ps-1);
+		jmax0 = jmax<jmax0 ? jmax : jmax0;
+		jj = 0;
+		pA20 = &pA[((offA+ii+2)&(ps-1))+((offA+ii+2)-((offA+ii+2)&(ps-1)))*sda+0*ps];
+		pL20 = &pL[((offL+ii+2)&(ps-1))+((offL+ii+2)-((offL+ii+2)&(ps-1)))*sdl+0*ps];
+		if(jmax0>0)
+			{
+			for( ; jj<jmax0; jj++)
+				{
+				pD20 = &pD[((offD+ii+jj+2)&(ps-1))+((offD+ii+jj+2)-((offD+ii+jj+2)&(ps-1)))*sdd+ii*ps];
+				w00 = pD20[0+ps*0]*1.0 + pD20[0+ps*1]*pD00[0+ps*1];
+				w01 = pD20[0+ps*0]*0.0 + pD20[0+ps*1]*1.0;
+				for(kk=0; kk<=n0+ii; kk++)
+					{
+					w00 += pL20[0+ps*kk]*pL00[0+ps*kk];
+					w01 += pL20[0+ps*kk]*pL10[0+ps*kk];
+					}
+				w01 += pL20[0+ps*kk]*pL10[0+ps*kk]; // XXX
+				for(kk=0; kk<n1; kk++)
+					{
+					w00 += pA20[0+ps*kk]*pA00[0+ps*kk];
+					w01 += pA20[0+ps*kk]*pA10[0+ps*kk];
+					}
+				w01 = w00*pT[0+ldt*1] + w01*pT[1+ldt*1];
+				w00 = w00*pT[0+ldt*0];
+				pD20[0+ps*0] += w00*1.0          + w01*0.0;
+				pD20[0+ps*1] += w00*pD00[0+ps*1] + w01*1.0;
+				for(kk=0; kk<=n0+ii; kk++)
+					{
+					pL20[0+ps*kk] += w00*pL00[0+ps*kk] + w01*pL10[0+ps*kk];
+					}
+				pL20[0+ps*kk] += w01*pL10[0+ps*kk]; // XXX
+				for(kk=0; kk<n1; kk++)
+					{
+					pA20[0+ps*kk] += w00*pA00[0+ps*kk] + w01*pA10[0+ps*kk];
+					}
+				pA20 += 1;
+				pL20 += 1;
+				}
+			pA20 += -ps+ps*sda;
+			pL20 += -ps+ps*sdl;
+			}
+		for( ; jj<jmax-7; jj+=8)
+			{
+			//
+			pD20 = &pD[((offD+ii+jj+2)&(ps-1))+((offD+ii+jj+2)-((offD+ii+jj+2)&(ps-1)))*sdd+ii*ps];
+			_w0 = _mm512_load_pd( &pD20[0+ps*0] );
+			_a0 = _mm512_load_pd( &pD20[0+ps*1] );
+			_b0 = _mm512_set1_pd( pD00[0+ps*1] );
+			_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
+			_w1 = _mm512_load_pd( &pD20[0+ps*1] );
+			for(kk=0; kk<=n0+ii; kk++)
+				{
+				_a0 = _mm512_load_pd( &pL20[0+ps*kk] );
+				_b0 = _mm512_set1_pd( pL00[0+ps*kk] );
+				_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
+				_b0 = _mm512_set1_pd( pL10[0+ps*kk] );
+				_w1 = _mm512_fmadd_pd( _a0, _b0, _w1 );
+				}
+			_a0 = _mm512_load_pd( &pL20[0+ps*kk] ); // XXX
+			_b0 = _mm512_set1_pd( pL10[0+ps*kk] ); // XXX
+			_w1 = _mm512_fmadd_pd( _a0, _b0, _w1 ); // XXX
+			for(kk=0; kk<n1; kk++)
+				{
+				_a0 = _mm512_load_pd( &pA20[0+ps*kk] );
+				_b0 = _mm512_set1_pd( pA00[0+ps*kk] );
+				_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
+				_b0 = _mm512_set1_pd( pA10[0+ps*kk] );
+				_w1 = _mm512_fmadd_pd( _a0, _b0, _w1 );
+				}
+			//
+			_b0 = _mm512_set1_pd( pT[1+ldt*1] );
+			_w1 = _mm512_mul_pd( _w1, _b0 );
+			_b0 = _mm512_set1_pd( pT[0+ldt*1] );
+			_w1 = _mm512_fmadd_pd( _w0, _b0, _w1 );
+			_b0 = _mm512_set1_pd( pT[0+ldt*0] );
+			_w0 = _mm512_mul_pd( _w0, _b0 );
+			//
+			_a0 = _mm512_load_pd( &pD20[0+ps*0] );
+			_a0 = _mm512_add_pd( _a0, _w0 );
+			_mm512_store_pd( &pD20[0+ps*0], _a0 );
+			_a0 = _mm512_load_pd( &pD20[0+ps*1] );
+			_b0 = _mm512_set1_pd( pD00[0+ps*1] );
+			_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
+			_a0 = _mm512_add_pd( _a0, _w1 );
+			_mm512_store_pd( &pD20[0+ps*1], _a0 );
+			for(kk=0; kk<=n0+ii; kk++)
+				{
+				_a0 = _mm512_load_pd( &pL20[0+ps*kk] );
+				_b0 = _mm512_set1_pd( pL00[0+ps*kk] );
+				_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
+				_b0 = _mm512_set1_pd( pL10[0+ps*kk] );
+				_a0 = _mm512_fmadd_pd( _w1, _b0, _a0 );
+				_mm512_store_pd( &pL20[0+ps*kk], _a0 );
+				}
+			_a0 = _mm512_load_pd( &pL20[0+ps*kk] ); // XXX
+			_b0 = _mm512_set1_pd( pL10[0+ps*kk] ); // XXX
+			_a0 = _mm512_fmadd_pd( _w1, _b0, _a0 ); // XXX
+			_mm512_store_pd( &pL20[0+ps*kk], _a0 ); // XXX
+			for(kk=0; kk<n1; kk++)
+				{
+				_a0 = _mm512_load_pd( &pA20[0+ps*kk] );
+				_b0 = _mm512_set1_pd( pA00[0+ps*kk] );
+				_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
+				_b0 = _mm512_set1_pd( pA10[0+ps*kk] );
+				_a0 = _mm512_fmadd_pd( _w1, _b0, _a0 );
+				_mm512_store_pd( &pA20[0+ps*kk], _a0 );
+				}
+			pA20 += ps*sda;
+			pL20 += ps*sdl;
+			}
+		for(ll=0; ll<jmax-jj; ll++)
+			{
+			pD20 = &pD[((offD+ii+jj+ll+2)&(ps-1))+((offD+ii+jj+ll+2)-((offD+ii+jj+ll+2)&(ps-1)))*sdd+ii*ps];
+			w00 = pD20[0+ps*0]*1.0 + pD20[0+ps*1]*pD00[0+ps*1];
+			w01 = pD20[0+ps*0]*0.0 + pD20[0+ps*1]*1.0;
+			for(kk=0; kk<=n0+ii; kk++)
+				{
+				w00 += pL20[0+ps*kk]*pL00[0+ps*kk];
+				w01 += pL20[0+ps*kk]*pL10[0+ps*kk];
+				}
+			w01 += pL20[0+ps*kk]*pL10[0+ps*kk]; // XXX
+			for(kk=0; kk<n1; kk++)
+				{
+				w00 += pA20[0+ps*kk]*pA00[0+ps*kk];
+				w01 += pA20[0+ps*kk]*pA10[0+ps*kk];
+				}
+			w01 = w00*pT[0+ldt*1] + w01*pT[1+ldt*1];
+			w00 = w00*pT[0+ldt*0];
+			pD20[0+ps*0] += w00*1.0          + w01*0.0;
+			pD20[0+ps*1] += w00*pD00[0+ps*1] + w01*1.0;
+			for(kk=0; kk<=n0+ii; kk++)
+				{
+				pL20[0+ps*kk] += w00*pL00[0+ps*kk] + w01*pL10[0+ps*kk];
+				}
+			pL20[0+ps*kk] += w01*pL10[0+ps*kk]; // XXX
+			for(kk=0; kk<n1; kk++)
+				{
+				pA20[0+ps*kk] += w00*pA00[0+ps*kk] + w01*pA10[0+ps*kk];
+				}
+			pA20 += 1;
+			pL20 += 1;
+			}
+		}
+#endif
+	for(; ii<imax; ii++)
+		{
+		pD00 = &pD[((offD+ii)&(ps-1))+((offD+ii)-((offD+ii)&(ps-1)))*sdd+ii*ps];
+		pL00 = &pL[((offL+ii)&(ps-1))+((offL+ii)-((offL+ii)&(ps-1)))*sdl+0*ps];
+		pA00 = &pA[((offA+ii)&(ps-1))+((offA+ii)-((offA+ii)&(ps-1)))*sda+0*ps];
+		sigma = 0.0;
+		for(jj=0; jj<=n0+ii; jj++)
+			{
+			tmp = pL00[0+ps*jj];
+			sigma += tmp*tmp;
+			}
+		for(jj=0; jj<n1; jj++)
+			{
+			tmp = pA00[0+ps*jj];
+			sigma += tmp*tmp;
+			}
+		if(sigma==0.0)
+			{
+			dD[ii] = 0.0;
+			}
+		else
+			{
+			alpha = pD00[0];
+			beta = sigma + alpha*alpha;
+			beta = sqrt(beta);
+			if(alpha<=0)
+				tmp = alpha-beta;
+			else
+				tmp = -sigma / (alpha+beta);
+			dD[ii] = 2*tmp*tmp / (sigma+tmp*tmp);
+			tmp = 1.0 / tmp;
+			pD00[0] = beta;
+			for(jj=0; jj<=n0+ii; jj++)
+				{
+				pL00[0+ps*jj] *= tmp;
+				}
+			for(jj=0; jj<n1; jj++)
+				{
+				pA00[0+ps*jj] *= tmp;
+				}
+			}
+		// compute T
+		pT[0+ldt*0] = - dD[ii+0];
+		// downgrade
+		jmax = m-ii-1;
+		jmax0 = (ps-((ii+1+offA)&(ps-1)))&(ps-1);
+		jmax0 = jmax<jmax0 ? jmax : jmax0;
+		jj = 0;
+		pL10 = &pL[((offL+ii+1)&(ps-1))+((offL+ii+1)-((offL+ii+1)&(ps-1)))*sdl+0*ps];
+		pA10 = &pA[((offA+ii+1)&(ps-1))+((offA+ii+1)-((offA+ii+1)&(ps-1)))*sda+0*ps];
+		if(jmax0>0)
+			{
+			for( ; jj<jmax0; jj++)
+				{
+				pD10 = &pD[((offD+ii+jj+1)&(ps-1))+((offD+ii+jj+1)-((offD+ii+jj+1)&(ps-1)))*sdd+ii*ps];
+				w00 = pD10[0+ps*0];
+				for(kk=0; kk<=n0+ii; kk++)
+					{
+					w00 += pL10[0+ps*kk] * pL00[0+ps*kk];
+					}
+				for(kk=0; kk<n1; kk++)
+					{
+					w00 += pA10[0+ps*kk] * pA00[0+ps*kk];
+					}
+				w00 = w00*pT[0+ldt*0];
+				pD10[0+ps*0] += w00;
+				for(kk=0; kk<=n0+ii; kk++)
+					{
+					pL10[0+ps*kk] += w00 * pL00[0+ps*kk];
+					}
+				for(kk=0; kk<n1; kk++)
+					{
+					pA10[0+ps*kk] += w00 * pA00[0+ps*kk];
+					}
+				pL10 += 1;
+				pA10 += 1;
+				}
+			pL10 += -ps+ps*sdl;
+			pA10 += -ps+ps*sda;
+			}
+		for( ; jj<jmax-7; jj+=8)
+			{
+			//
+			pD10 = &pD[((offD+ii+jj+1)&(ps-1))+((offD+ii+jj+1)-((offD+ii+jj+1)&(ps-1)))*sdd+ii*ps];
+			_w0 = _mm512_load_pd( &pD10[0+ps*0] );
+			for(kk=0; kk<=n0+ii; kk++)
+				{
+				_a0 = _mm512_load_pd( &pL10[0+ps*kk] );
+				_b0 = _mm512_set1_pd( pL00[0+ps*kk] );
+				_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
+				}
+			for(kk=0; kk<n1; kk++)
+				{
+				_a0 = _mm512_load_pd( &pA10[0+ps*kk] );
+				_b0 = _mm512_set1_pd( pA00[0+ps*kk] );
+				_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
+				}
+			//
+			_b0 = _mm512_set1_pd( pT[0+ldt*0] );
+			_w0 = _mm512_mul_pd( _w0, _b0 );
+			//
+			_a0 = _mm512_load_pd( &pD10[0+ps*0] );
+			_a0 = _mm512_add_pd( _a0, _w0 );
+			_mm512_store_pd( &pD10[0+ps*0], _a0 );
+			for(kk=0; kk<=n0+ii; kk++)
+				{
+				_a0 = _mm512_load_pd( &pL10[0+ps*kk] );
+				_b0 = _mm512_set1_pd( pL00[0+ps*kk] );
+				_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
+				_mm512_store_pd( &pL10[0+ps*kk], _a0 );
+				}
+			for(kk=0; kk<n1; kk++)
+				{
+				_a0 = _mm512_load_pd( &pA10[0+ps*kk] );
+				_b0 = _mm512_set1_pd( pA00[0+ps*kk] );
+				_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
+				_mm512_store_pd( &pA10[0+ps*kk], _a0 );
+				}
+			pL10 += ps*sdl;
+			pA10 += ps*sda;
+			}
+		for(ll=0; ll<jmax-jj; ll++)
+			{
+			pD10 = &pD[((offD+ii+jj+ll+1)&(ps-1))+((offD+ii+jj+ll+1)-((offD+ii+jj+ll+1)&(ps-1)))*sdd+ii*ps];
+			w00 = pD10[0+ps*0];
+			for(kk=0; kk<=n0+ii; kk++)
+				{
+				w00 += pL10[0+ps*kk] * pL00[0+ps*kk];
+				}
+			for(kk=0; kk<n1; kk++)
+				{
+				w00 += pA10[0+ps*kk] * pA00[0+ps*kk];
+				}
+			w00 = w00*pT[0+ldt*0];
+			pD10[0+ps*0] += w00;
+			for(kk=0; kk<=n0+ii; kk++)
+				{
+				pL10[0+ps*kk] += w00 * pL00[0+ps*kk];
+				}
+			for(kk=0; kk<n1; kk++)
+				{
+				pA10[0+ps*kk] += w00 * pA00[0+ps*kk];
+				}
+			pL10 += 1;
+			pA10 += 1;
+			}
+		}
+	return;
+	}
+
+
+
+// assume kmax>=8
+// 1 d d d d
+// 0 1 d d d
+// 0 0 1 d d
+// 0 0 0 1 d
+void kernel_dlarft_la_8_lib8(int kmax, double *dD, double *pA, double *pT)
+	{
+	const int ps = 8;
+	int kk;
+	double v10,
+	       v20, v21,
+		   v30, v31, v32,
+		   v40, v41, v42, v43,
+		   v50, v51, v52, v53, v54,
+		   v60, v61, v62, v63, v64, v65,
+		   v70, v71, v72, v73, v74, v75, v76;
+	v10 = 0.0;
+	v20 = 0.0;
+	v21 = 0.0;
+	v30 = 0.0;
+	v31 = 0.0;
+	v32 = 0.0;
+	v40 = 0.0;
+	v41 = 0.0;
+	v42 = 0.0;
+	v43 = 0.0;
+	v50 = 0.0;
+	v51 = 0.0;
+	v52 = 0.0;
+	v53 = 0.0;
+	v54 = 0.0;
+	v60 = 0.0;
+	v61 = 0.0;
+	v62 = 0.0;
+	v63 = 0.0;
+	v64 = 0.0;
+	v65 = 0.0;
+	v70 = 0.0;
+	v71 = 0.0;
+	v72 = 0.0;
+	v73 = 0.0;
+	v74 = 0.0;
+	v75 = 0.0;
+	v76 = 0.0;
+	//
+	for(kk=0; kk<kmax; kk++)
+		{
+		v10 += pA[1+ps*kk]*pA[0+ps*kk];
+		v20 += pA[2+ps*kk]*pA[0+ps*kk];
+		v30 += pA[3+ps*kk]*pA[0+ps*kk];
+		v40 += pA[4+ps*kk]*pA[0+ps*kk];
+		v50 += pA[5+ps*kk]*pA[0+ps*kk];
+		v60 += pA[6+ps*kk]*pA[0+ps*kk];
+		v70 += pA[7+ps*kk]*pA[0+ps*kk];
+		//
+		v21 += pA[2+ps*kk]*pA[1+ps*kk];
+		v31 += pA[3+ps*kk]*pA[1+ps*kk];
+		v41 += pA[4+ps*kk]*pA[1+ps*kk];
+		v51 += pA[5+ps*kk]*pA[1+ps*kk];
+		v61 += pA[6+ps*kk]*pA[1+ps*kk];
+		v71 += pA[7+ps*kk]*pA[1+ps*kk];
+		//
+		v32 += pA[3+ps*kk]*pA[2+ps*kk];
+		v42 += pA[4+ps*kk]*pA[2+ps*kk];
+		v52 += pA[5+ps*kk]*pA[2+ps*kk];
+		v62 += pA[6+ps*kk]*pA[2+ps*kk];
+		v72 += pA[7+ps*kk]*pA[2+ps*kk];
+		//
+		v43 += pA[4+ps*kk]*pA[3+ps*kk];
+		v53 += pA[5+ps*kk]*pA[3+ps*kk];
+		v63 += pA[6+ps*kk]*pA[3+ps*kk];
+		v73 += pA[7+ps*kk]*pA[3+ps*kk];
+		//
+		v54 += pA[5+ps*kk]*pA[4+ps*kk];
+		v64 += pA[6+ps*kk]*pA[4+ps*kk];
+		v74 += pA[7+ps*kk]*pA[4+ps*kk];
+		//
+		v65 += pA[6+ps*kk]*pA[5+ps*kk];
+		v75 += pA[7+ps*kk]*pA[5+ps*kk];
+		//
+		v76 += pA[7+ps*kk]*pA[6+ps*kk];
+		}
+	//
+	pT[0+ps*0] = - dD[0];
+	pT[1+ps*1] = - dD[1];
+	pT[2+ps*2] = - dD[2];
+	pT[3+ps*3] = - dD[3];
+	pT[4+ps*4] = - dD[4];
+	pT[5+ps*5] = - dD[5];
+	pT[6+ps*6] = - dD[6];
+	pT[7+ps*7] = - dD[7];
+	//
+	pT[0+ps*1] = - dD[1] * (v10*pT[0+ps*0]);
+	pT[1+ps*2] = - dD[2] * (v21*pT[1+ps*1]);
+	pT[2+ps*3] = - dD[3] * (v32*pT[2+ps*2]);
+	pT[3+ps*4] = - dD[4] * (v43*pT[3+ps*3]);
+	pT[4+ps*5] = - dD[5] * (v54*pT[4+ps*4]);
+	pT[5+ps*6] = - dD[6] * (v65*pT[5+ps*5]);
+	pT[6+ps*7] = - dD[7] * (v76*pT[6+ps*6]);
+	//
+	pT[0+ps*2] = - dD[2] * (v20*pT[0+ps*0] + v21*pT[0+ps*1]);
+	pT[1+ps*3] = - dD[3] * (v31*pT[1+ps*1] + v32*pT[1+ps*2]);
+	pT[2+ps*4] = - dD[4] * (v42*pT[2+ps*2] + v43*pT[2+ps*3]);
+	pT[3+ps*5] = - dD[5] * (v53*pT[3+ps*3] + v54*pT[3+ps*4]);
+	pT[4+ps*6] = - dD[6] * (v64*pT[4+ps*4] + v65*pT[4+ps*5]);
+	pT[5+ps*7] = - dD[7] * (v75*pT[5+ps*5] + v76*pT[5+ps*6]);
+	//
+	pT[0+ps*3] = - dD[3] * (v30*pT[0+ps*0] + v31*pT[0+ps*1] + v32*pT[0+ps*2]);
+	pT[1+ps*4] = - dD[4] * (v41*pT[1+ps*1] + v42*pT[1+ps*2] + v43*pT[1+ps*3]);
+	pT[2+ps*5] = - dD[5] * (v52*pT[2+ps*2] + v53*pT[2+ps*3] + v54*pT[2+ps*4]);
+	pT[3+ps*6] = - dD[6] * (v63*pT[3+ps*3] + v64*pT[3+ps*4] + v65*pT[3+ps*5]);
+	pT[4+ps*7] = - dD[7] * (v74*pT[4+ps*4] + v75*pT[4+ps*5] + v76*pT[4+ps*6]);
+	//
+	pT[0+ps*4] = - dD[4] * (v40*pT[0+ps*0] + v41*pT[0+ps*1] + v42*pT[0+ps*2] + v43*pT[0+ps*3]);
+	pT[1+ps*5] = - dD[5] * (v51*pT[1+ps*1] + v52*pT[1+ps*2] + v53*pT[1+ps*3] + v54*pT[1+ps*4]);
+	pT[2+ps*6] = - dD[6] * (v62*pT[2+ps*2] + v63*pT[2+ps*3] + v64*pT[2+ps*4] + v65*pT[2+ps*5]);
+	pT[3+ps*7] = - dD[7] * (v73*pT[3+ps*3] + v74*pT[3+ps*4] + v75*pT[3+ps*5] + v76*pT[3+ps*6]);
+	//
+	pT[0+ps*5] = - dD[5] * (v50*pT[0+ps*0] + v51*pT[0+ps*1] + v52*pT[0+ps*2] + v53*pT[0+ps*3] + v54*pT[0+ps*4]);
+	pT[1+ps*6] = - dD[6] * (v61*pT[1+ps*1] + v62*pT[1+ps*2] + v63*pT[1+ps*3] + v64*pT[1+ps*4] + v65*pT[1+ps*5]);
+	pT[2+ps*7] = - dD[7] * (v72*pT[2+ps*2] + v73*pT[2+ps*3] + v74*pT[2+ps*4] + v75*pT[2+ps*5] + v76*pT[2+ps*6]);
+	//
+	pT[0+ps*6] = - dD[6] * (v60*pT[0+ps*0] + v61*pT[0+ps*1] + v62*pT[0+ps*2] + v63*pT[0+ps*3] + v64*pT[0+ps*4] + v65*pT[0+ps*5]);
+	pT[1+ps*7] = - dD[7] * (v71*pT[1+ps*1] + v72*pT[1+ps*2] + v73*pT[1+ps*3] + v74*pT[1+ps*4] + v75*pT[1+ps*5] + v76*pT[1+ps*6]);
+	//
+	pT[0+ps*7] = - dD[7] * (v70*pT[0+ps*0] + v71*pT[0+ps*1] + v72*pT[0+ps*2] + v73*pT[0+ps*3] + v74*pT[0+ps*4] + v75*pT[0+ps*5] + v76*pT[0+ps*6]);
+
+//printf("\n%f\n", v10);
+//printf("\n%f %f\n", v20, v21);
+//printf("\n%f %f %f\n", v30, v31, v32);
 	return;
 	}
 

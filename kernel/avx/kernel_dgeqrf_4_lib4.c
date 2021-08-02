@@ -4654,7 +4654,7 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 	double *pL0 = pL-offL;
 	double *pA0 = pA-offA;
 	ii = 0;
-#if 0 // rank 2
+#if 0 // TODO rank 2
 	for(; ii<imax-1; ii+=2)
 		{
 		// first row

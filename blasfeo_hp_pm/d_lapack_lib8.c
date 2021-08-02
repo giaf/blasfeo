@@ -1033,7 +1033,7 @@ void blasfeo_hp_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int
 		kernel_dlarft_4_la_lib4(n1, dD+ii, pA+ii*sda+0*ps, pT);
 //		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
 		jj = ii+4;
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if 0
 		for(; jj<m-7; jj+=8)
 			{
 			kernel_dlarfb4_rn_8_la_lib4(n1, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, sdd, pA+jj*sda+0*ps, sda);
@@ -1071,12 +1071,117 @@ void blasfeo_hp_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int
 // A full of size (m)x(n1)
 void blasfeo_hp_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, int dj, struct blasfeo_dmat *sL, int li, int lj, struct blasfeo_dmat *sA, int ai, int aj, void *work)
 	{
+	if(m<=0)
+		return;
+
+	if(li!=ai)
+		{
 #if defined(BLASFEO_REF_API)
-	blasfeo_ref_dgelqf_pd_lla(m, n1, sD, di, dj, sL, li, lj, sA, ai, aj, work);
+		blasfeo_ref_dgelqf_pd_lla(m, n1, sD, di, dj, sL, li, lj, sA, ai, aj, work);
+		return;
 #else
-	printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet\n");
-	exit(1);
+		printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet: li!=ai\n");
+		exit(1);
 #endif
+		}
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+	sL->use_dA = 0;
+	sA->use_dA = 0;
+
+	const int ps = 8;
+
+	// extract dimensions
+	int sda = sA->cn;
+	int sdl = sL->cn;
+	int sdd = sD->cn;
+
+	int air = ai & (ps-1);
+	int lir = li & (ps-1);
+	int dir = di & (ps-1);
+
+	// go to submatrix
+	double *pA = sA->pA + aj*ps + (ai-air)*sda;
+	double *pL = sL->pA + lj*ps + (li-lir)*sdl;
+	double *pD = sD->pA + dj*ps + (di-dir)*sdd;
+
+	double *dD = sD->dA + di;
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	ALIGNED( double pT[144], 64 ) = {0}; // XXX assuming 8x8 kernel
+//	ALIGNED( double pK[96], 64 ) = {0};
+#else
+	double pT[144] = {0};
+//	double pK[96] = {0};
+#endif
+
+	int ii, jj, ll;
+	int imax0 = (ps-(di&(ps-1)))&(ps-1);
+	int imax = m;
+	imax0 = imax<imax0 ? imax : imax0;
+	// different block alignment
+	if( (di&(ps-1)) != (ai&(ps-1)) | imax0>0 )
+		{
+//		kernel_dgelqf_pd_lla_vs_lib4(m, 0, n1, imax, di&(ps-1), pD, sdd, dD, li&(ps-1), pL, sdl, ai&(ps-1), pA, sda);
+//		return;
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgelqf_pd_lla(m, n1, sD, di, dj, sL, li, lj, sA, ai, aj, work);
+		return;
+#else
+		printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet: ai!=di\n");
+		exit(1);
+#endif
+		}
+	// same block alignment
+#if 1
+	kernel_dgelqf_pd_lla_vs_lib8(m, 0, n1, imax, dir, pD, sdd, dD, lir, pL, sdl, air, pA, sda);
+#else
+	if(imax0>0)
+		{
+		kernel_dgelqf_pd_lla_vs_lib4(m, 0, n1, imax0, dir, pD, sdd, dD, lir, pL, sdl, air, pA, sda);
+		pD += imax0-ps+ps*sdd+imax0*ps;
+		dD += imax0;
+		pA += imax0-ps+ps*sda+0*ps;
+		pL += imax0-ps+ps*sdl+0*ps;
+		m -= imax0;
+		imax -= imax0;
+		}
+	ii = 0;
+	for(ii=0; ii<imax-4; ii+=4)
+		{
+		kernel_dgelqf_pd_lla_vs_lib4(4, imax0+ii, n1, 4, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pL+ii*sdl+0*ps, sdl, 0, pA+ii*sda+0*ps, sda);
+//		kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+		kernel_dlarft_4_lla_lib4(imax0+ii, n1, dD+ii, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT);
+//		kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+		jj = ii+4;
+#if 0
+		for(; jj<m-7; jj+=8)
+			{
+			kernel_dlarfb4_rn_8_lla_lib4(imax0+ii, n1, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, sdd, pL+jj*sdl+0*ps, sdl, pA+jj*sda+0*ps, sda);
+			}
+#endif
+		for(; jj<m-3; jj+=4)
+			{
+			kernel_dlarfb4_rn_4_lla_lib4(imax0+ii, n1, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, pL+jj*sdl+0*ps, pA+jj*sda+0*ps);
+			}
+		for(ll=0; ll<m-jj; ll++)
+			{
+			kernel_dlarfb4_rn_1_lla_lib4(imax0+ii, n1, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT, pD+ll+jj*sdd+ii*ps, pL+ll+jj*sdl+0*ps, pA+ll+jj*sda+0*ps);
+			}
+		}
+	if(ii<imax)
+		{
+//		if(ii==imax-4)
+//			{
+//			kernel_dgelqf_pd_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+//			}
+//		else
+//			{
+			kernel_dgelqf_pd_lla_vs_lib4(m-ii, imax0+ii, n1, imax-ii, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pL+ii*sdl+0*ps, sdl, 0, pA+ii*sda+0*ps, sda);
+//			}
+		}
+#endif
+	return;
 	}
 
 
