@@ -179,25 +179,21 @@ void kernel_dgelqf_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd, d
 			_w0 = _mm512_load_pd( &pC20[0+ps*0] );
 			_a0 = _mm512_load_pd( &pC20[0+ps*1] );
 			_b0 = _mm512_set1_pd( pC00[0+ps*1] );
-			_t0 = _mm512_mul_pd( _a0, _b0 );
-			_w0 = _mm512_add_pd( _w0, _t0 );
+			_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
 			_w1 = _mm512_load_pd( &pC20[0+ps*1] );
 			for(kk=2; kk<kmax; kk++)
 				{
 				_a0 = _mm512_load_pd( &pC20[0+ps*kk] );
 				_b0 = _mm512_set1_pd( pC00[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _a0, _b0 );
-				_w0 = _mm512_add_pd( _w0, _t0 );
+				_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
 				_b0 = _mm512_set1_pd( pC10[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _a0, _b0 );
-				_w1 = _mm512_add_pd( _w1, _t0 );
+				_w1 = _mm512_fmadd_pd( _a0, _b0, _w1 );
 				}
 			//
 			_b0 = _mm512_set1_pd( pT[1+ldt*1] );
 			_w1 = _mm512_mul_pd( _w1, _b0 );
 			_b0 = _mm512_set1_pd( pT[0+ldt*1] );
-			_t0 = _mm512_mul_pd( _w0, _b0 );
-			_w1 = _mm512_add_pd( _w1, _t0 );
+			_w1 = _mm512_fmadd_pd( _w0, _b0, _w1 );
 			_b0 = _mm512_set1_pd( pT[0+ldt*0] );
 			_w0 = _mm512_mul_pd( _w0, _b0 );
 			//
@@ -206,19 +202,16 @@ void kernel_dgelqf_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd, d
 			_mm512_store_pd( &pC20[0+ps*0], _a0 );
 			_a0 = _mm512_load_pd( &pC20[0+ps*1] );
 			_b0 = _mm512_set1_pd( pC00[0+ps*1] );
-			_t0 = _mm512_mul_pd( _w0, _b0 );
-			_a0 = _mm512_add_pd( _a0, _t0 );
+			_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
 			_a0 = _mm512_add_pd( _a0, _w1 );
 			_mm512_store_pd( &pC20[0+ps*1], _a0 );
 			for(kk=2; kk<kmax; kk++)
 				{
 				_a0 = _mm512_load_pd( &pC20[0+ps*kk] );
 				_b0 = _mm512_set1_pd( pC00[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _w0, _b0 );
-				_a0 = _mm512_add_pd( _a0, _t0 );
+				_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
 				_b0 = _mm512_set1_pd( pC10[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _w1, _b0 );
-				_a0 = _mm512_add_pd( _a0, _t0 );
+				_a0 = _mm512_fmadd_pd( _w1, _b0, _a0 );
 				_mm512_store_pd( &pC20[0+ps*kk], _a0 );
 				}
 			pC20 += ps*sdd;
@@ -309,8 +302,7 @@ void kernel_dgelqf_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd, d
 					{
 					_a0 = _mm512_load_pd( &pC10[0+ps*kk] );
 					_b0 = _mm512_set1_pd( pC00[0+ps*kk] );
-					_t0 = _mm512_mul_pd( _a0, _b0 );
-					_w0 = _mm512_add_pd( _w0, _t0 );
+					_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
 					}
 				//
 				_b0 = _mm512_set1_pd( pT[0+ldt*0] );
@@ -323,8 +315,7 @@ void kernel_dgelqf_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd, d
 					{
 					_a0 = _mm512_load_pd( &pC10[0+ps*kk] );
 					_b0 = _mm512_set1_pd( pC00[0+ps*kk] );
-					_t0 = _mm512_mul_pd( _w0, _b0 );
-					_a0 = _mm512_add_pd( _a0, _t0 );
+					_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
 					_mm512_store_pd( &pC10[0+ps*kk], _a0 );
 					}
 				pC10 += ps*sdd;
@@ -486,25 +477,21 @@ void kernel_dgelqf_pd_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd
 			_w0 = _mm512_load_pd( &pC20[0+ps*0] );
 			_a0 = _mm512_load_pd( &pC20[0+ps*1] );
 			_b0 = _mm512_set1_pd( pC00[0+ps*1] );
-			_t0 = _mm512_mul_pd( _a0, _b0 );
-			_w0 = _mm512_add_pd( _w0, _t0 );
+			_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
 			_w1 = _mm512_load_pd( &pC20[0+ps*1] );
 			for(kk=2; kk<kmax; kk++)
 				{
 				_a0 = _mm512_load_pd( &pC20[0+ps*kk] );
 				_b0 = _mm512_set1_pd( pC00[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _a0, _b0 );
-				_w0 = _mm512_add_pd( _w0, _t0 );
+				_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
 				_b0 = _mm512_set1_pd( pC10[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _a0, _b0 );
-				_w1 = _mm512_add_pd( _w1, _t0 );
+				_w1 = _mm512_fmadd_pd( _a0, _b0, _w1 );
 				}
 			//
 			_b0 = _mm512_set1_pd( pT[1+ldt*1] );
 			_w1 = _mm512_mul_pd( _w1, _b0 );
 			_b0 = _mm512_set1_pd( pT[0+ldt*1] );
-			_t0 = _mm512_mul_pd( _w0, _b0 );
-			_w1 = _mm512_add_pd( _w1, _t0 );
+			_w1 = _mm512_fmadd_pd( _w0, _b0, _w1 );
 			_b0 = _mm512_set1_pd( pT[0+ldt*0] );
 			_w0 = _mm512_mul_pd( _w0, _b0 );
 			//
@@ -513,19 +500,16 @@ void kernel_dgelqf_pd_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd
 			_mm512_store_pd( &pC20[0+ps*0], _a0 );
 			_a0 = _mm512_load_pd( &pC20[0+ps*1] );
 			_b0 = _mm512_set1_pd( pC00[0+ps*1] );
-			_t0 = _mm512_mul_pd( _w0, _b0 );
-			_a0 = _mm512_add_pd( _a0, _t0 );
+			_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
 			_a0 = _mm512_add_pd( _a0, _w1 );
 			_mm512_store_pd( &pC20[0+ps*1], _a0 );
 			for(kk=2; kk<kmax; kk++)
 				{
 				_a0 = _mm512_load_pd( &pC20[0+ps*kk] );
 				_b0 = _mm512_set1_pd( pC00[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _w0, _b0 );
-				_a0 = _mm512_add_pd( _a0, _t0 );
+				_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
 				_b0 = _mm512_set1_pd( pC10[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _w1, _b0 );
-				_a0 = _mm512_add_pd( _a0, _t0 );
+				_a0 = _mm512_fmadd_pd( _w1, _b0, _a0 );
 				_mm512_store_pd( &pC20[0+ps*kk], _a0 );
 				}
 			pC20 += ps*sdd;
@@ -618,8 +602,7 @@ void kernel_dgelqf_pd_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd
 					{
 					_a0 = _mm512_load_pd( &pC10[0+ps*kk] );
 					_b0 = _mm512_set1_pd( pC00[0+ps*kk] );
-					_t0 = _mm512_mul_pd( _a0, _b0 );
-					_w0 = _mm512_add_pd( _w0, _t0 );
+					_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
 					}
 				//
 				_b0 = _mm512_set1_pd( pT[0+ldt*0] );
@@ -632,8 +615,7 @@ void kernel_dgelqf_pd_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd
 					{
 					_a0 = _mm512_load_pd( &pC10[0+ps*kk] );
 					_b0 = _mm512_set1_pd( pC00[0+ps*kk] );
-					_t0 = _mm512_mul_pd( _w0, _b0 );
-					_a0 = _mm512_add_pd( _a0, _t0 );
+					_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
 					_mm512_store_pd( &pC10[0+ps*kk], _a0 );
 					}
 				pC10 += ps*sdd;
@@ -1098,25 +1080,21 @@ void kernel_dgelqf_pd_la_vs_lib8(int m, int n1, int k, int offD, double *pD, int
 			_w0 = _mm512_load_pd( &pD20[0+ps*0] );
 			_a0 = _mm512_load_pd( &pD20[0+ps*1] );
 			_b0 = _mm512_set1_pd( pD00[0+ps*1] );
-			_t0 = _mm512_mul_pd( _a0, _b0 );
-			_w0 = _mm512_add_pd( _w0, _t0 );
+			_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
 			_w1 = _mm512_load_pd( &pD20[0+ps*1] );
 			for(kk=0; kk<n1; kk++)
 				{
 				_a0 = _mm512_load_pd( &pA20[0+ps*kk] );
 				_b0 = _mm512_set1_pd( pA00[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _a0, _b0 );
-				_w0 = _mm512_add_pd( _w0, _t0 );
+				_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
 				_b0 = _mm512_set1_pd( pA10[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _a0, _b0 );
-				_w1 = _mm512_add_pd( _w1, _t0 );
+				_w1 = _mm512_fmadd_pd( _a0, _b0, _w1 );
 				}
 			//
 			_b0 = _mm512_set1_pd( pT[1+ldt*1] );
 			_w1 = _mm512_mul_pd( _w1, _b0 );
 			_b0 = _mm512_set1_pd( pT[0+ldt*1] );
-			_t0 = _mm512_mul_pd( _w0, _b0 );
-			_w1 = _mm512_add_pd( _w1, _t0 );
+			_w1 = _mm512_fmadd_pd( _w0, _b0, _w1 );
 			_b0 = _mm512_set1_pd( pT[0+ldt*0] );
 			_w0 = _mm512_mul_pd( _w0, _b0 );
 			//
@@ -1125,19 +1103,16 @@ void kernel_dgelqf_pd_la_vs_lib8(int m, int n1, int k, int offD, double *pD, int
 			_mm512_store_pd( &pD20[0+ps*0], _a0 );
 			_a0 = _mm512_load_pd( &pD20[0+ps*1] );
 			_b0 = _mm512_set1_pd( pD00[0+ps*1] );
-			_t0 = _mm512_mul_pd( _w0, _b0 );
-			_a0 = _mm512_add_pd( _a0, _t0 );
+			_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
 			_a0 = _mm512_add_pd( _a0, _w1 );
 			_mm512_store_pd( &pD20[0+ps*1], _a0 );
 			for(kk=0; kk<n1; kk++)
 				{
 				_a0 = _mm512_load_pd( &pA20[0+ps*kk] );
 				_b0 = _mm512_set1_pd( pA00[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _w0, _b0 );
-				_a0 = _mm512_add_pd( _a0, _t0 );
+				_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
 				_b0 = _mm512_set1_pd( pA10[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _w1, _b0 );
-				_a0 = _mm512_add_pd( _a0, _t0 );
+				_a0 = _mm512_fmadd_pd( _w1, _b0, _a0 );
 				_mm512_store_pd( &pA20[0+ps*kk], _a0 );
 				}
 			pA20 += ps*sdd;
@@ -1230,8 +1205,7 @@ void kernel_dgelqf_pd_la_vs_lib8(int m, int n1, int k, int offD, double *pD, int
 				{
 				_a0 = _mm512_load_pd( &pA10[0+ps*kk] );
 				_b0 = _mm512_set1_pd( pA00[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _a0, _b0 );
-				_w0 = _mm512_add_pd( _w0, _t0 );
+				_w0 = _mm512_fmadd_pd( _a0, _b0, _w0 );
 				}
 			//
 			_b0 = _mm512_set1_pd( pT[0+ldt*0] );
@@ -1244,8 +1218,7 @@ void kernel_dgelqf_pd_la_vs_lib8(int m, int n1, int k, int offD, double *pD, int
 				{
 				_a0 = _mm512_load_pd( &pA10[0+ps*kk] );
 				_b0 = _mm512_set1_pd( pA00[0+ps*kk] );
-				_t0 = _mm512_mul_pd( _w0, _b0 );
-				_a0 = _mm512_add_pd( _a0, _t0 );
+				_a0 = _mm512_fmadd_pd( _w0, _b0, _a0 );
 				_mm512_store_pd( &pA10[0+ps*kk], _a0 );
 				}
 			pA10 += ps*sda;
