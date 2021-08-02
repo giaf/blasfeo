@@ -1036,7 +1036,7 @@ void blasfeo_hp_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int
 //d_print_mat(1, 8, dD+ii, 1);
 //d_print_mat(8, 8, pT, 8);
 //return;
-#if 0
+#if 1
 		for(; jj<m-15; jj+=16)
 			{
 			kernel_dlarfb8_rn_la_16_lib8(n1, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, sdd, pA+jj*sda+0*ps, sda);

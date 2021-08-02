@@ -7437,7 +7437,6 @@ NAME:
 	//
 	vmovapd			7*64(%r10), %zmm7
 
-
 	movq	ARG1, %r10 // k
 	movq	ARG5, %r11 // A
 	movq	ARG2, %r12 // VA
@@ -7530,7 +7529,6 @@ NAME:
 	vfmadd231pd		%zmm0, %zmm24, %zmm1
 	vbroadcastsd	0+0*64(%r10), %zmm24
 	vmulpd			%zmm0, %zmm24, %zmm0
-
 
 	movq	ARG4, %r10 // D
 
