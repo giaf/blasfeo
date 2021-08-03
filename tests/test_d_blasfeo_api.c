@@ -54,7 +54,7 @@ int main()
 
 	int ii;
 
-	int n = 24;
+	int n = 16;
 
 	//
 	// matrices in column-major format
@@ -613,9 +613,9 @@ int main()
 //	blasfeo_dgelqf_pd(n, 2*n, &lq0, 0, 0, &lq0, 0, 0, lq0_work);
 	blasfeo_dgelqf_pd_la(n, n, &lq0, 0, 0, &lq0, 0, n, lq0_work);
 
-//	blasfeo_print_dmat(n, 2*n, &lq0, 0, 0);
-	blasfeo_print_dmat(n, n, &lq0, 0, 0);
-	return 0;
+	blasfeo_print_dmat(n, 2*n, &lq0, 0, 0);
+//	blasfeo_print_dmat(n, n, &lq0, 0, 0);
+//	return 0;
 
 	blasfeo_dtrcp_l(n, &lq0, 0, 0, &lq1, 0, 0);
 	blasfeo_pack_dmat(n, n, B, n, &lq1, 0, n);
