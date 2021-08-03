@@ -7597,7 +7597,7 @@ NAME:
 
 //	ZERO_ACC
 
-	movq	ARG4, %r10 // D
+	movq	ARG6, %r10 // D
 
 	// D
 	//
