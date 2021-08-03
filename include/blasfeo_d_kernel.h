@@ -125,6 +125,7 @@ void kernel_dlarft_la_8_lib8(int n1, double *dD, double *pA, double *pT);
 void kernel_dlarfb8_rn_la_8_lib8(int n1, double *pVA, double *pT, double *pD, double *pA);
 void kernel_dlarfb8_rn_la_1_lib8(int n1, double *pVA, double *pT, double *pD, double *pA);
 void kernel_dgelqf_pd_lla_vs_lib8(int m, int n0, int n1, int k, int offD, double *pD, int sdd, double *dD, int offL, double *pL, int sdl, int offA, double *pA, int sda);
+void kernel_dlarft_8_lla_lib8(int n0, int n1, double *dD, double *pL, double *pA, double *pT);
 
 // panel copy / pack
 // 16
@@ -151,7 +152,7 @@ void kernel_dpack_tn_8_vs_lib8(int kmax, double *A, int lda, double *C, int m1);
 void kernel_dpack_tt_4_lib8(int kmax, double *A, int lda, double *C, int sdc); // TODO offsetC 
 void kernel_dpack_tt_4_vs_lib8(int kmax, double *A, int lda, double *C, int sdc, int m1); // TODO offsetC 
 
-// levle 2 BLAS
+// level 2 BLAS
 // 16
 void kernel_dgemv_n_16_lib8(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 // 8
