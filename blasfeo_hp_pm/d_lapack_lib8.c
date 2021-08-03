@@ -1160,10 +1160,10 @@ void blasfeo_hp_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, in
 //d_print_mat(1, 8, dD+ii, 1);
 //d_print_mat(8, 8, pT, 8);
 //return;
-#if 0
+#if 1
 		for(; jj<m-15; jj+=16)
 			{
-			kernel_dlarfb8_rn_16_lla_lib8(imax0+ii, n1, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, sdd, pL+jj*sdl+0*ps, sdl, pA+jj*sda+0*ps, sda);
+			kernel_dlarfb8_rn_lla_16_lib8(imax0+ii, n1, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT, pD+jj*sdd+ii*ps, sdd, pL+jj*sdl+0*ps, sdl, pA+jj*sda+0*ps, sda);
 			}
 #endif
 		for(; jj<m-7; jj+=8)
