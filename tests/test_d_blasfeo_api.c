@@ -54,7 +54,7 @@ int main()
 
 	int ii;
 
-	int n = 16;
+	int n = 24;
 
 	//
 	// matrices in column-major format
@@ -233,10 +233,10 @@ int main()
 	
 #endif
 
-#if 0
+#if 1
 	// gemm_nt
 	alpha = 1.0;
-	beta = 0.0;
+	beta = 1.0;
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 //	d_print_mat(n, n, D, n);
@@ -331,15 +331,15 @@ int main()
 //	kernel_dgemm_tt_8x16_libc8cc(16, &alpha, A, n, sB.pA, sB.cn, &beta, D, n, D, n);
 //	kernel_dgemm_tt_8x16_vs_libc8cc(16, &alpha, A, n, sB.pA, sB.cn, &beta, D, n, D, n, 8, 16);
 
-	blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sA, 0, 0, &sD, 0, 0);
+//	blasfeo_dgemm_nn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sA, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
-//	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dsyrk_ln_mn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
-//	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
+	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dpotrf_l_mn(n, n, &sD, 0, 0, &sD, 0, 0);
-//	blasfeo_dtrsm_rltn(n, n, alpha, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
+	blasfeo_dtrsm_rltn(n, n, alpha, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
 //	blasfeo_dsyrk_dpotrf_ln(n, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dsyrk_dpotrf_ln_mn(n, n, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dtrmm_rlnn(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
@@ -358,7 +358,7 @@ int main()
 //	kernel_dsyrk_dpotrf_nt_l_8x8_vs_lib8(n, sA.pA, sA.pA, 0, sA.pA, sA.pA, sB.pA, sD.pA, sD.dA, 8, 8);
 
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
-//	blasfeo_print_dmat(n, n, &sE, 0, 0);
+	blasfeo_print_dmat(n, n, &sE, 0, 0);
 //	d_print_mat(n, n, D, n);
 	return 0;
 #endif

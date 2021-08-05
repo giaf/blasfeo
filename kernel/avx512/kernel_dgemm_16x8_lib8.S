@@ -7314,17 +7314,6 @@ NAME:
 
 
 
-//#if defined(BLAS_API)
-#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
-
-//#include "kernel_dgemm_16x8_lib.S"
-
-#endif
-
-
-
-
-
 //                                          1      2          3        4          5             6          7        8          9        10         11                  12      13
 // void kernel_dtrsm_nt_rl_inv_16x8_vs_lib8(int k, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int m1, int n1);
 
