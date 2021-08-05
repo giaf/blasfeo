@@ -3060,50 +3060,8 @@ NAME:
 #elif defined(OS_MAC)
 	vbroadcastsd	LC05+1*8(%rip), %zmm27
 #endif
-	vpermpd			%zmm0, %zmm27, %zmm26
-	vfnmadd231pd	%zmm0, %zmm26, %zmm1
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+2*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+2*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm0, %zmm27, %zmm26
-	vfnmadd231pd	%zmm0, %zmm26, %zmm2
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+3*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+3*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm0, %zmm27, %zmm26
-	vfnmadd231pd	%zmm0, %zmm26, %zmm3
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+4*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+4*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm0, %zmm27, %zmm26
-	vfnmadd231pd	%zmm0, %zmm26, %zmm4
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+5*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+5*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm0, %zmm27, %zmm26
-	vfnmadd231pd	%zmm0, %zmm26, %zmm5
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+6*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+6*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm0, %zmm27, %zmm26
-	vfnmadd231pd	%zmm0, %zmm26, %zmm6
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+7*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+7*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm0, %zmm27, %zmm26
-	vfnmadd231pd	%zmm0, %zmm26, %zmm7
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm1
 
 	// 1
 //	vpermilpd		$ 0x3, %xmm1, %xmm26
@@ -3118,6 +3076,48 @@ NAME:
 	vsqrtsd			%xmm26, %xmm26, %xmm26
 	vdivsd			%xmm26, %xmm24, %xmm26
 4:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+2*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+2*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm2
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm3
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm4
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm5
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm6
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm7
 	vmovsd			%xmm26, 8(%r10)
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm1, %zmm26, %zmm1
@@ -3128,43 +3128,8 @@ NAME:
 #elif defined(OS_MAC)
 	vbroadcastsd	LC05+2*8(%rip), %zmm27
 #endif
-	vpermpd			%zmm1, %zmm27, %zmm26
-	vfnmadd231pd	%zmm1, %zmm26, %zmm2
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+3*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+3*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm1, %zmm27, %zmm26
-	vfnmadd231pd	%zmm1, %zmm26, %zmm3
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+4*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+4*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm1, %zmm27, %zmm26
-	vfnmadd231pd	%zmm1, %zmm26, %zmm4
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+5*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+5*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm1, %zmm27, %zmm26
-	vfnmadd231pd	%zmm1, %zmm26, %zmm5
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+6*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+6*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm1, %zmm27, %zmm26
-	vfnmadd231pd	%zmm1, %zmm26, %zmm6
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+7*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+7*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm1, %zmm27, %zmm26
-	vfnmadd231pd	%zmm1, %zmm26, %zmm7
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm2
 
 	// 2
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -3178,6 +3143,41 @@ NAME:
 	vsqrtsd			%xmm26, %xmm26, %xmm26
 	vdivsd			%xmm26, %xmm24, %xmm26
 6:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm3
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm4
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm5
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm6
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm7
 	vmovsd			%xmm26, 16(%r10)
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm2, %zmm26, %zmm2
@@ -3188,36 +3188,8 @@ NAME:
 #elif defined(OS_MAC)
 	vbroadcastsd	LC05+3*8(%rip), %zmm27
 #endif
-	vpermpd			%zmm2, %zmm27, %zmm26
-	vfnmadd231pd	%zmm2, %zmm26, %zmm3
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+4*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+4*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm2, %zmm27, %zmm26
-	vfnmadd231pd	%zmm2, %zmm26, %zmm4
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+5*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+5*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm2, %zmm27, %zmm26
-	vfnmadd231pd	%zmm2, %zmm26, %zmm5
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+6*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+6*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm2, %zmm27, %zmm26
-	vfnmadd231pd	%zmm2, %zmm26, %zmm6
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+7*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+7*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm2, %zmm27, %zmm26
-	vfnmadd231pd	%zmm2, %zmm26, %zmm7
+	vpermpd			%zmm2, %zmm27, %zmm27
+	vfnmadd231pd	%zmm2, %zmm27, %zmm3
 
 	// 3
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -3231,6 +3203,34 @@ NAME:
 	vsqrtsd			%xmm26, %xmm26, %xmm26
 	vdivsd			%xmm26, %xmm24, %xmm26
 8:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm2, %zmm27, %zmm27
+	vfnmadd231pd	%zmm2, %zmm27, %zmm4
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm2, %zmm27, %zmm27
+	vfnmadd231pd	%zmm2, %zmm27, %zmm5
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm2, %zmm27, %zmm27
+	vfnmadd231pd	%zmm2, %zmm27, %zmm6
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm2, %zmm27, %zmm27
+	vfnmadd231pd	%zmm2, %zmm27, %zmm7
 	vmovsd			%xmm26, 24(%r10)
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm3, %zmm26, %zmm3
@@ -3241,29 +3241,8 @@ NAME:
 #elif defined(OS_MAC)
 	vbroadcastsd	LC05+4*8(%rip), %zmm27
 #endif
-	vpermpd			%zmm3, %zmm27, %zmm26
-	vfnmadd231pd	%zmm3, %zmm26, %zmm4
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+5*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+5*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm3, %zmm27, %zmm26
-	vfnmadd231pd	%zmm3, %zmm26, %zmm5
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+6*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+6*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm3, %zmm27, %zmm26
-	vfnmadd231pd	%zmm3, %zmm26, %zmm6
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+7*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+7*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm3, %zmm27, %zmm26
-	vfnmadd231pd	%zmm3, %zmm26, %zmm7
+	vpermpd			%zmm3, %zmm27, %zmm27
+	vfnmadd231pd	%zmm3, %zmm27, %zmm4
 
 	// 4
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -3277,6 +3256,27 @@ NAME:
 	vsqrtsd			%xmm26, %xmm26, %xmm26
 	vdivsd			%xmm26, %xmm24, %xmm26
 10:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm3, %zmm27, %zmm27
+	vfnmadd231pd	%zmm3, %zmm27, %zmm5
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm3, %zmm27, %zmm27
+	vfnmadd231pd	%zmm3, %zmm27, %zmm6
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm3, %zmm27, %zmm27
+	vfnmadd231pd	%zmm3, %zmm27, %zmm7
 	vmovsd			%xmm26, 32(%r10)
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm4, %zmm26, %zmm4
@@ -3287,22 +3287,8 @@ NAME:
 #elif defined(OS_MAC)
 	vbroadcastsd	LC05+5*8(%rip), %zmm27
 #endif
-	vpermpd			%zmm4, %zmm27, %zmm26
-	vfnmadd231pd	%zmm4, %zmm26, %zmm5
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+6*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+6*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm4, %zmm27, %zmm26
-	vfnmadd231pd	%zmm4, %zmm26, %zmm6
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+7*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+7*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm4, %zmm27, %zmm26
-	vfnmadd231pd	%zmm4, %zmm26, %zmm7
+	vpermpd			%zmm4, %zmm27, %zmm27
+	vfnmadd231pd	%zmm4, %zmm27, %zmm5
 
 	// 5
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -3316,6 +3302,20 @@ NAME:
 	vsqrtsd			%xmm26, %xmm26, %xmm26
 	vdivsd			%xmm26, %xmm24, %xmm26
 12:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm4, %zmm27, %zmm27
+	vfnmadd231pd	%zmm4, %zmm27, %zmm6
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm4, %zmm27, %zmm27
+	vfnmadd231pd	%zmm4, %zmm27, %zmm7
 	vmovsd			%xmm26, 40(%r10)
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm5, %zmm26, %zmm5
@@ -3326,15 +3326,8 @@ NAME:
 #elif defined(OS_MAC)
 	vbroadcastsd	LC05+6*8(%rip), %zmm27
 #endif
-	vpermpd			%zmm5, %zmm27, %zmm26
-	vfnmadd231pd	%zmm5, %zmm26, %zmm6
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vbroadcastsd	.LC05+7*8(%rip), %zmm27
-#elif defined(OS_MAC)
-	vbroadcastsd	LC05+7*8(%rip), %zmm27
-#endif
-	vpermpd			%zmm5, %zmm27, %zmm26
-	vfnmadd231pd	%zmm5, %zmm26, %zmm7
+	vpermpd			%zmm5, %zmm27, %zmm27
+	vfnmadd231pd	%zmm5, %zmm27, %zmm6
 
 	// 6
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -3348,6 +3341,13 @@ NAME:
 	vsqrtsd			%xmm26, %xmm26, %xmm26
 	vdivsd			%xmm26, %xmm24, %xmm26
 14:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm5, %zmm27, %zmm27
+	vfnmadd231pd	%zmm5, %zmm27, %zmm7
 	vmovsd			%xmm26, 48(%r10)
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm6, %zmm26, %zmm6
