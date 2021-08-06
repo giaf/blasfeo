@@ -52,7 +52,7 @@
 // double
 #define D_PS 8 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
-#define D_M_KERNEL 16 // max kernel size
+#define D_M_KERNEL 24 // max kernel size
 #define D_KC 128 //256 // 192
 #define D_NC 128 //72 //96 //72 // 120 // 512
 #define D_MC 1500 // 6000
