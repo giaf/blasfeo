@@ -51,14 +51,14 @@
 #define LLC_CACHE_SIZE (6*1024*1024) // LLC cache size: 6 MB ; TLB 1536*4 kB = 6 MB
 // double
 #define D_PS 8 // panel size
-#define D_PLD 4 // 2 // GCD of panel length
+#define D_PLD 8 // 4 // GCD of panel length
 #define D_M_KERNEL 24 // max kernel size
 #define D_KC 128 //256 // 192
 #define D_NC 128 //72 //96 //72 // 120 // 512
 #define D_MC 1500 // 6000
 // single
 #define S_PS 16 // panel size
-#define S_PLD 4 // 2 // GCD of panel length
+#define S_PLD 4 // GCD of panel length TODO probably 16 when writing assebly
 #define S_M_KERNEL 32 // max kernel size
 #define S_KC 128 //256
 #define S_NC 128 //144
