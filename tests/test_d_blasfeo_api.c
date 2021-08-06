@@ -335,14 +335,14 @@ int main()
 //	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dgemm_tt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
-	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
+//	blasfeo_dsyrk_ln(n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dsyrk_ln_mn(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
-	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
 //	blasfeo_dpotrf_l_mn(n, n, &sD, 0, 0, &sD, 0, 0);
-	blasfeo_dtrsm_rltn(n, n, alpha, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
-//	blasfeo_dsyrk_dpotrf_ln(n, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dsyrk_dpotrf_ln(n, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dsyrk_dpotrf_ln_mn(n, n, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //	blasfeo_dtrmm_rlnn(n, n, alpha, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
+	blasfeo_dtrsm_rltn(n, n, alpha, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
 
 //	blasfeo_dgecp(n, n, &sA, 0, 0, &sD, 0, 0);
 //	blasfeo_dtrcp_l(n, &sA, 0, 0, &sD, 0, 0);
@@ -597,7 +597,7 @@ int main()
 	return 0;
 #endif
 
-#if 1
+#if 0
 	// array lq
 	struct blasfeo_dmat lq0; blasfeo_allocate_dmat(n, 2*n, &lq0);
 	struct blasfeo_dmat lq1; blasfeo_allocate_dmat(n, 2*n, &lq1);
@@ -1220,8 +1220,8 @@ int main()
 //	blasfeo_free_dmat(&sB);
 //	blasfeo_free_dmat(&sD);
 	v_free_align(memory_strmat);
-	blasfeo_free_dmat(&lq0);
-	free(lq0_work);
+//	blasfeo_free_dmat(&lq0);
+//	free(lq0_work);
 
 	return 0;
 
