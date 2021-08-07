@@ -1870,6 +1870,36 @@ static void blasfeo_hp_dgemm_tt_m0(int m, int n, int k, double alpha, double *A,
 			}
 		}
 #elif defined(TARGET_X64_INTEL_SKYLAKE_X)
+	for(; ii<m-23; ii+=24)
+		{
+		kernel_dpack_tn_8_lib8(k, A+(ii+0)*lda, lda, pU);
+		kernel_dpack_tn_8_lib8(k, A+(ii+8)*lda, lda, pU+8*sdu);
+		kernel_dpack_tn_8_lib8(k, A+(ii+16)*lda, lda, pU+16*sdu);
+		for(jj=0; jj<n-7; jj+=8)
+			{
+			kernel_dgemm_nt_24x8_lib8ccc(k, &alpha, pU, sdu, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_24x8_vs_lib8ccc(k, &alpha, pU, sdu, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=8)
+			{
+			goto tt_m0_left_8;
+			}
+		else if(m-ii<=16)
+			{
+			goto tt_m0_left_16;
+			}
+		else
+			{
+			goto tt_m0_left_24;
+			}
+		}
+#elif 0 //defined(TARGET_X64_INTEL_SKYLAKE_X)
 	for(; ii<m-15; ii+=16)
 		{
 		kernel_dpack_tn_8_lib8(k, A+(ii+0)*lda, lda, pU);
@@ -1930,6 +1960,18 @@ static void blasfeo_hp_dgemm_tt_m0(int m, int n, int k, double alpha, double *A,
 		}
 #endif
 	goto tt_m0_return;
+
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+tt_m0_left_24:
+	kernel_dpack_tn_8_lib8(k, A+(ii+0)*lda, lda, pU);
+	kernel_dpack_tn_8_lib8(k, A+(ii+8)*lda, lda, pU+8*sdu);
+	kernel_dpack_tn_8_vs_lib8(k, A+(ii+16)*lda, lda, pU+16*sdu, m-ii-16);
+	for(jj=0; jj<n; jj+=8)
+		{
+		kernel_dgemm_nt_24x8_vs_lib8ccc(k, &alpha, pU, sdu, B+jj, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto tt_m0_return;
+#endif
 
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 tt_m0_left_16:
@@ -3367,6 +3409,8 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int m_a = m==lda ? m : m_cache;
 	int m_a_kernel = m<=m_kernel ? m_a : m_kernel_cache;
 	int n_b = n==ldb ? n : n_cache;
+	int k_block = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	k_block = k<=k_block ? k : k_block; // m1 and n1 alg are blocked !!!
 
 #if defined(PACKING_ALG_2)
 #if defined(TARGET_X64_INTEL_SKYLAKE_X) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -3418,7 +3462,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SKYLAKE_X)
 	if( m<=n )
 		{
-		if( m<=2*m_kernel | n_b*k <= l2_cache_el )
+		if( m<=2*m_kernel | n_b*k_block <= l2_cache_el )
 			{
 //			printf("\nalg m0\n");
 			goto nt_m0; // long matrix: pack A
@@ -3426,7 +3470,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		}
 	else
 		{
-		if( n<=2*m_kernel | m_a*k <= l2_cache_el )
+		if( n<=2*m_kernel | m_a*k_block <= l2_cache_el )
 			{
 //			printf("\nalg n0\n");
 			goto nt_n0; // tall matrix: pack B
