@@ -4617,6 +4617,247 @@ NAME:
 
 
 //                              1         2          3        4          5
+// void kernel_dpack_nn_24_lib8(int kmax, double *A, int lda, double *C, int sdc)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpack_nn_24_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$ 3, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // sdc
+	sall	$ 6, %r14d //8*sizeof(double)*sdc
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+	cmpl	$ 3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 0*64(%r13)
+	vmovupd		64(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 0*64(%r13, %r14)
+	vmovupd		128(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 0*64(%r13, %r14, 2)
+	addq	%r12, %r11
+
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 1*64(%r13)
+	vmovupd		64(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 1*64(%r13, %r14)
+	vmovupd		128(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 1*64(%r13, %r14, 2)
+	addq	%r12, %r11
+
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 2*64(%r13)
+	vmovupd		64(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 2*64(%r13, %r14)
+	vmovupd		128(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 2*64(%r13, %r14, 2)
+	addq	%r12, %r11
+
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 3*64(%r13)
+	vmovupd		64(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 3*64(%r13, %r14)
+	vmovupd		128(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 3*64(%r13, %r14, 2)
+	addq	%r12, %r11
+
+	subl	$ 4, %r10d
+	addq	$ 4*64, %r13
+
+	cmpl	$ 3, %r10d
+	jg		1b
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovupd		0(%r11), %zmm0
+	vmovapd		%zmm0, 0(%r13)
+	vmovupd		64(%r11), %zmm0
+	vmovapd		%zmm0, 0(%r13, %r14)
+	vmovupd		128(%r11), %zmm0
+	vmovapd		%zmm0, 0*64(%r13, %r14, 2)
+	addq	%r12, %r11
+
+	subl	$ 1, %r10d
+	addq	$ 1*64, %r13
+
+	cmpl	$ 0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpack_nn_24_lib8)
+
+
+
+
+
+//                                 1         2          3        4          5        6
+// void kernel_dpack_nn_24_vs_lib8(int kmax, double *A, int lda, double *C, int sdc, int m1)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dpack_nn_24_vs_lib8)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$ 3, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // sdc
+	sall	$ 6, %r14d //8*sizeof(double)*sdc
+	movq	ARG6, %r15 // m1
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+	// compute mask
+	vcvtsi2sd	%r15d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+	vpmovq2m	%zmm25, %k1
+
+
+	cmpl	$ 3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 0*64(%r13)
+	vmovupd		64(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 0*64(%r13, %r14)
+	vmovupd		128(%r11), %zmm0 {%k1}
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 0*64(%r13, %r14, 2) {%k1}
+	addq	%r12, %r11
+
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 1*64(%r13)
+	vmovupd		64(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 1*64(%r13, %r14)
+	vmovupd		128(%r11), %zmm0 {%k1}
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 1*64(%r13, %r14, 2) {%k1}
+	addq	%r12, %r11
+
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 2*64(%r13)
+	vmovupd		64(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 2*64(%r13, %r14)
+	vmovupd		128(%r11), %zmm0 {%k1}
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 2*64(%r13, %r14, 2) {%k1}
+	addq	%r12, %r11
+
+	vmovupd		0(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 3*64(%r13)
+	vmovupd		64(%r11), %zmm0
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 3*64(%r13, %r14)
+	vmovupd		128(%r11), %zmm0 {%k1}
+//	prefetcht0	0(%r11, %r12, 4)
+	vmovapd		%zmm0, 3*64(%r13, %r14, 2) {%k1}
+	addq	%r12, %r11
+
+	subl	$ 4, %r10d
+	addq	$ 4*64, %r13
+
+	cmpl	$ 3, %r10d
+	jg		1b
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovupd		0(%r11), %zmm0
+	vmovapd		%zmm0, 0(%r13)
+	vmovupd		64(%r11), %zmm0
+	vmovapd		%zmm0, 0*64(%r13, %r14)
+	vmovupd		128(%r11), %zmm0 {%k1}
+	vmovapd		%zmm0, 0*64(%r13, %r14, 2) {%k1}
+	addq	%r12, %r11
+
+	subl	$ 1, %r10d
+	addq	$ 1*64, %r13
+
+	cmpl	$ 0, %r10d
+	jg		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dpack_nn_24_vs_lib8)
+
+
+
+
+
+//                              1         2          3        4          5
 // void kernel_dpack_nn_16_lib8(int kmax, double *A, int lda, double *C, int sdc)
 
 	.p2align 4,,15
@@ -5235,6 +5476,23 @@ LC01:
 	.double 13.5
 	.double 14.5
 	.double 15.5
+
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	.align 64
+.LC02:
+#elif defined(OS_MAC)
+	.align 6
+LC02:
+#endif
+	.double 16.5
+	.double 17.5
+	.double 18.5
+	.double 19.5
+	.double 20.5
+	.double 21.5
+	.double 22.5
+	.double 23.5
 
 
 #if defined(OS_LINUX)
