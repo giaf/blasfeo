@@ -4935,6 +4935,55 @@
 
 
 
+// common inner routine with file scope
+//
+// prefetch
+//
+// input arguments:
+// r10  <- D
+// r11  <- ldd
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_PREFETCH0_8X8_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_prefetch0_8x8_lib)
+#endif
+
+	leaq		0(%r11, %r11, 2), %r12
+	leaq		0(%r10, %r11, 4), %r13
+
+	prefetcht0	0(%r10)
+	prefetcht0	63(%r10)
+	prefetcht0	0(%r10, %r11)
+	prefetcht0	63(%r10, %r11)
+	prefetcht0	0(%r10, %r11, 2)
+	prefetcht0	63(%r10, %r11, 2)
+	prefetcht0	0(%r10, %r12)
+	prefetcht0	63(%r10, %r12)
+	prefetcht0	0(%r13)
+	prefetcht0	63(%r13)
+	prefetcht0	0(%r13, %r11)
+	prefetcht0	63(%r13, %r11)
+	prefetcht0	0(%r13, %r11, 2)
+	prefetcht0	63(%r13, %r11, 2)
+	prefetcht0	0(%r13, %r12)
+	prefetcht0	63(%r13, %r12)
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_prefetch0_8x8_lib)
+#endif
+
+
+
+
+
 //                                  1      2              3          4          5        6             7          8        9          10
 // void kernel_dgemm_nt_8x8_lib8ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 
@@ -5115,23 +5164,23 @@
 
 	// prefetch C
 
-//	movq		ARG5, %r10 // beta
-//	vmovsd		0(%r10), %xmm14
-//	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
-//	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
-//	je			100f // end
+	movq		ARG5, %r10 // beta
+	vmovsd		0(%r10), %xmm14
+	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			100f // end
 
-//	movq	ARG6, %r10 // C
-//	movq	ARG7, %r11 // ldc
-//	sall	$ 3, %r11d
+	movq	ARG6, %r10 // C
+	movq	ARG7, %r11 // ldc
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
-//	INNER_PREFETCH0_4X4_LIB
+	INNER_PREFETCH0_8X8_LIB
 #else
-//	CALL(inner_prefetch0_4x4_lib)
+	CALL(inner_prefetch0_8x8_lib)
 #endif
 
-//100:
+100:
 
 
 	// call inner dgemm kernel nn

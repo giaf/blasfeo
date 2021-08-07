@@ -283,8 +283,10 @@ NAME:
 	jle		2f // return
 
 	// prefetch
-//	prefetcht0	0(%r12) // software prefetch
-//	prefetcht0	0+64(%r12) // software prefetch
+	prefetcht0	0+0*64(%r12) // software prefetch
+	prefetcht0	0+1*64(%r12) // software prefetch
+	prefetcht0	0+2*64(%r12) // software prefetch
+	prefetcht0	0+3*64(%r12) // software prefetch
 
 	// preload
 	vmovapd 		0(%r11), %zmm25 // A
@@ -302,10 +304,10 @@ NAME:
 	vmovapd			64(%r11), %zmm26 // A
 	vbroadcastsd	8(%r12), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm1
-//	prefetcht0	128(%r12) // software prefetch
+	prefetcht0	256+0*64(%r12) // software prefetch
 	vbroadcastsd	16(%r12), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm2
-//	prefetcht0	128+64(%r12) // software prefetch
+	prefetcht0	256+1*64(%r12) // software prefetch
 	vbroadcastsd	24(%r12), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm3
 	vbroadcastsd	32(%r12), %zmm24 // B
@@ -343,10 +345,10 @@ NAME:
 	vmovapd			192(%r11), %zmm26 // A
 	vbroadcastsd	8+128(%r12), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm1
-//	prefetcht0	128(%r12) // software prefetch
+	prefetcht0	256+2*64(%r12) // software prefetch
 	vbroadcastsd	16+128(%r12), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm2
-//	prefetcht0	128+64(%r12) // software prefetch
+	prefetcht0	256+3*64(%r12) // software prefetch
 	vbroadcastsd	24+128(%r12), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm3
 	vbroadcastsd	32+128(%r12), %zmm24 // B

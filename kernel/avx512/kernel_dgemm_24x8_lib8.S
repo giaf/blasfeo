@@ -381,13 +381,15 @@ NAME:
 	jle		2f // return
 
 	// prefetch
-//	prefetcht0	0(%r13) // software prefetch
-//	prefetcht0	0+64(%r13) // software prefetch
+	prefetcht0	0+0*64(%r13) // software prefetch
+	prefetcht0	0+1*64(%r13) // software prefetch
+	prefetcht0	0+2*64(%r13) // software prefetch
+	prefetcht0	0+3*64(%r13) // software prefetch
 
 	// preload
 	vmovapd 		0(%r11), %zmm25 // A0
 	vmovapd 		0(%r11, %r12), %zmm27 // A1
-	vmovapd 		0(%r11, %r12, 2), %zmm29 // A1
+	vmovapd 		0(%r11, %r12, 2), %zmm29 // A2
 
 	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
@@ -407,13 +409,13 @@ NAME:
 	vfmadd231pd		%zmm27, %zmm24, %zmm9
 	vfmadd231pd		%zmm29, %zmm24, %zmm17
 	vmovapd			64(%r11, %r12), %zmm28 // A
-//	prefetcht0	128(%r13) // software prefetch
+	prefetcht0	256+0*64(%r13) // software prefetch
 	vbroadcastsd	16(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm2
 	vfmadd231pd		%zmm27, %zmm24, %zmm10
 	vfmadd231pd		%zmm29, %zmm24, %zmm18
 	vmovapd			64(%r11, %r12, 2), %zmm30 // A
-//	prefetcht0	128+64(%r13) // software prefetch
+	prefetcht0	256+1*64(%r13) // software prefetch
 	vbroadcastsd	24(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm3
 	vfmadd231pd		%zmm27, %zmm24, %zmm11
@@ -484,13 +486,13 @@ NAME:
 	vfmadd231pd		%zmm27, %zmm24, %zmm9
 	vfmadd231pd		%zmm29, %zmm24, %zmm17
 	vmovapd			192(%r11, %r12), %zmm28 // A
-//	prefetcht0	128(%r13) // software prefetch
+	prefetcht0	256+2*64(%r13) // software prefetch
 	vbroadcastsd	16+128(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm2
 	vfmadd231pd		%zmm27, %zmm24, %zmm10
 	vfmadd231pd		%zmm29, %zmm24, %zmm18
 	vmovapd			192(%r11, %r12, 2), %zmm30 // A
-//	prefetcht0	128+64(%r13) // software prefetch
+	prefetcht0	256+3*64(%r13) // software prefetch
 	vbroadcastsd	24+128(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm3
 	vfmadd231pd		%zmm27, %zmm24, %zmm11
