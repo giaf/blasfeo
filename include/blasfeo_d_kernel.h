@@ -1178,6 +1178,9 @@ void kernel_dgemm_nt_8xn_p0_lib44cc(int n, int k, double *alpha, double *A, int 
 
 
 // A, B panel-major bs=8; C, D column-major
+// 24x8
+void kernel_dgemm_nt_24x8_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_24x8_vs_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 16x8
 void kernel_dgemm_nt_16x8_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_16x8_vs_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);

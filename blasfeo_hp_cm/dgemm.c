@@ -251,6 +251,33 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 			}
 		}
 #elif defined(TARGET_X64_INTEL_SKYLAKE_X)
+	for(; ii<m-23; ii+=24)
+		{
+		for(jj=0; jj<n-7; jj+=8)
+			{
+			kernel_dgemm_nt_24x8_lib88cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+			}
+		if(jj<n)
+			{
+			kernel_dgemm_nt_24x8_vs_lib88cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=8)
+			{
+			goto nn_m1_left_8;
+			}
+		else if(m-ii<=16)
+			{
+			goto nn_m1_left_16;
+			}
+		else
+			{
+			goto nn_m1_left_24;
+			}
+		}
+#elif 0 //defined(TARGET_X64_INTEL_SKYLAKE_X)
 	for(; ii<m-15; ii+=16)
 		{
 		for(jj=0; jj<n-7; jj+=8)
@@ -307,6 +334,15 @@ static void blasfeo_hp_dgemm_nt_m1(int m, int n, int k, double alpha, double *pA
 		}
 #endif
 	goto nn_m1_return;
+
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+nn_m1_left_24:
+	for(jj=0; jj<n; jj+=8)
+		{
+		kernel_dgemm_nt_24x8_vs_lib88cc(k, &alpha, pA+ii*sda, sda, pB+jj*sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
+		}
+	goto nn_m1_return;
+#endif
 
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 nn_m1_left_16:
@@ -3311,6 +3347,9 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	goto nt_1; // pack A and B
 #endif
 
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	goto nt_1; // pack A and B
+#endif
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) 
 	if( (m<=m_kernel & n<=m_kernel) | (m_a_kernel*k + n_b*k <= l1_cache_el) )
 		{
@@ -3964,6 +4003,9 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	goto tn_1; // pack A and B
 #endif
 
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	goto tn_1; // pack A and B
+#endif
 	// no algorithm for small matrix
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if( m<=2*m_kernel | n<=2*m_kernel | ( k<=KC & (k_a*m + k_b*n + m_c*n + m_d*n <= llc_cache_el) ) )
@@ -4492,6 +4534,9 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	goto tt_1; // pack A and B
 #endif
 
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	goto tt_1; // pack A and B
+#endif
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if( (m<=m_kernel & n<=m_kernel) | (k_a*m + n_b_kernel*k <= l1_cache_el) )
 		{

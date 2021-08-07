@@ -2740,6 +2740,7 @@
 // output arguments:
 // r10d  <- 0
 // r11   <- A+8*k*sizeof(double)
+// r12   <- 4*sda*sizeof(double)
 // r13   <- B+8*k*sizeof(double)
 // r14   <- ldb
 // r15   <- m1
