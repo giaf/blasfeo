@@ -3002,7 +3002,7 @@ NAME:
 // r15   <- n1
 // zmm0  <- []
 // ...
-// zmm7  <- []
+// zmm15 <- []
 
 //
 // output arguments:
@@ -3013,7 +3013,7 @@ NAME:
 // r15   <- n1
 // zmm0  <- []
 // ...
-// zmm7  <- []
+// zmm15 <- []
 
 #if MACRO_LEVEL>=2
 	.macro INNER_KERNEL_DGEMM_NT_16X8_VS_LIB8
