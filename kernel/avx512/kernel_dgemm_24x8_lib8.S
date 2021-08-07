@@ -5710,6 +5710,137 @@ NAME:
 
 
 
+// common inner routine with file scope
+//
+// transpose
+//
+// input arguments:
+// zmm0  <- []
+// ...
+// zmm15  <- []
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_TRAN_24X8_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_tran_24x8_lib8)
+#endif
+
+	movl	$ 0xcc, %r10d
+	kmovd	%r10d, %k1
+	movl	$ 0x33, %r10d
+	kmovd	%r10d, %k2
+
+
+	vunpcklpd	%zmm1, %zmm0, %zmm24
+	vunpckhpd	%zmm1, %zmm0, %zmm25
+	vunpcklpd	%zmm3, %zmm2, %zmm26
+	vunpckhpd	%zmm3, %zmm2, %zmm27
+	vunpcklpd	%zmm5, %zmm4, %zmm28
+	vunpckhpd	%zmm5, %zmm4, %zmm29
+	vunpcklpd	%zmm7, %zmm6, %zmm30
+	vunpckhpd	%zmm7, %zmm6, %zmm31
+
+	vmovapd		%zmm24, %zmm0
+	vpermq		$ 0x40, %zmm26, %zmm24 {%k1}
+	vpermq		$ 0x0e, %zmm0, %zmm26 {%k2}
+	vmovapd		%zmm25, %zmm0
+	vpermq		$ 0x40, %zmm27, %zmm25 {%k1}
+	vpermq		$ 0x0e, %zmm0, %zmm27 {%k2}
+	vmovapd		%zmm28, %zmm0
+	vpermq		$ 0x40, %zmm30, %zmm28 {%k1}
+	vpermq		$ 0x0e, %zmm0, %zmm30 {%k2}
+	vmovapd		%zmm29, %zmm0
+	vpermq		$ 0x40, %zmm31, %zmm29 {%k1}
+	vpermq		$ 0x0e, %zmm0, %zmm31 {%k2}
+
+	vshuff64x2	$ 0x44, %zmm28, %zmm24, %zmm0
+	vshuff64x2	$ 0xee, %zmm28, %zmm24, %zmm4
+	vshuff64x2	$ 0x44, %zmm29, %zmm25, %zmm1
+	vshuff64x2	$ 0xee, %zmm29, %zmm25, %zmm5
+	vshuff64x2	$ 0x44, %zmm30, %zmm26, %zmm2
+	vshuff64x2	$ 0xee, %zmm30, %zmm26, %zmm6
+	vshuff64x2	$ 0x44, %zmm31, %zmm27, %zmm3
+	vshuff64x2	$ 0xee, %zmm31, %zmm27, %zmm7
+
+
+	vunpcklpd	%zmm9, %zmm8, %zmm24
+	vunpckhpd	%zmm9, %zmm8, %zmm25
+	vunpcklpd	%zmm11, %zmm10, %zmm26
+	vunpckhpd	%zmm11, %zmm10, %zmm27
+	vunpcklpd	%zmm13, %zmm12, %zmm28
+	vunpckhpd	%zmm13, %zmm12, %zmm29
+	vunpcklpd	%zmm15, %zmm14, %zmm30
+	vunpckhpd	%zmm15, %zmm14, %zmm31
+
+	vmovapd		%zmm24, %zmm8
+	vpermq		$ 0x40, %zmm26, %zmm24 {%k1}
+	vpermq		$ 0x0e, %zmm8, %zmm26 {%k2}
+	vmovapd		%zmm25, %zmm8
+	vpermq		$ 0x40, %zmm27, %zmm25 {%k1}
+	vpermq		$ 0x0e, %zmm8, %zmm27 {%k2}
+	vmovapd		%zmm28, %zmm8
+	vpermq		$ 0x40, %zmm30, %zmm28 {%k1}
+	vpermq		$ 0x0e, %zmm8, %zmm30 {%k2}
+	vmovapd		%zmm29, %zmm8
+	vpermq		$ 0x40, %zmm31, %zmm29 {%k1}
+	vpermq		$ 0x0e, %zmm8, %zmm31 {%k2}
+
+	vshuff64x2	$ 0x44, %zmm28, %zmm24, %zmm8
+	vshuff64x2	$ 0xee, %zmm28, %zmm24, %zmm12
+	vshuff64x2	$ 0x44, %zmm29, %zmm25, %zmm9
+	vshuff64x2	$ 0xee, %zmm29, %zmm25, %zmm13
+	vshuff64x2	$ 0x44, %zmm30, %zmm26, %zmm10
+	vshuff64x2	$ 0xee, %zmm30, %zmm26, %zmm14
+	vshuff64x2	$ 0x44, %zmm31, %zmm27, %zmm11
+	vshuff64x2	$ 0xee, %zmm31, %zmm27, %zmm15
+
+
+	vunpcklpd	%zmm17, %zmm16, %zmm24
+	vunpckhpd	%zmm17, %zmm16, %zmm25
+	vunpcklpd	%zmm19, %zmm18, %zmm26
+	vunpckhpd	%zmm19, %zmm18, %zmm27
+	vunpcklpd	%zmm21, %zmm20, %zmm28
+	vunpckhpd	%zmm21, %zmm20, %zmm29
+	vunpcklpd	%zmm23, %zmm22, %zmm30
+	vunpckhpd	%zmm23, %zmm22, %zmm31
+
+	vmovapd		%zmm24, %zmm16
+	vpermq		$ 0x40, %zmm26, %zmm24 {%k1}
+	vpermq		$ 0x0e, %zmm16, %zmm26 {%k2}
+	vmovapd		%zmm25, %zmm16
+	vpermq		$ 0x40, %zmm27, %zmm25 {%k1}
+	vpermq		$ 0x0e, %zmm16, %zmm27 {%k2}
+	vmovapd		%zmm28, %zmm16
+	vpermq		$ 0x40, %zmm30, %zmm28 {%k1}
+	vpermq		$ 0x0e, %zmm16, %zmm30 {%k2}
+	vmovapd		%zmm29, %zmm16
+	vpermq		$ 0x40, %zmm31, %zmm29 {%k1}
+	vpermq		$ 0x0e, %zmm16, %zmm31 {%k2}
+
+	vshuff64x2	$ 0x44, %zmm28, %zmm24, %zmm16
+	vshuff64x2	$ 0xee, %zmm28, %zmm24, %zmm20
+	vshuff64x2	$ 0x44, %zmm29, %zmm25, %zmm17
+	vshuff64x2	$ 0xee, %zmm29, %zmm25, %zmm21
+	vshuff64x2	$ 0x44, %zmm30, %zmm26, %zmm18
+	vshuff64x2	$ 0xee, %zmm30, %zmm26, %zmm22
+	vshuff64x2	$ 0x44, %zmm31, %zmm27, %zmm19
+	vshuff64x2	$ 0xee, %zmm31, %zmm27, %zmm23
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_tran_24x8_lib8)
+#endif
+
+
+
+
+
 //                                1      2              3          4        5          6             7          8        9          10
 // void kernel_dgemm_nt_24x8_lib8(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd);
 
