@@ -61,6 +61,15 @@
 
 	// preload
 
+	prefetcht0		0(%r13)
+	prefetcht0		63(%r13)
+	prefetcht0		0(%r13, %r14)
+	prefetcht0		63(%r13, %r14)
+	prefetcht0		0(%r13, %r14, 2)
+	prefetcht0		63(%r13, %r14, 2)
+	leaq			0(%r14, %r14, 2), %r15
+	prefetcht0		0(%r13, %r15)
+	prefetcht0		63(%r13, %r15)
 
 	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
@@ -70,7 +79,8 @@
 1: // main loop
 
 	// unroll 0
-//	prefetcht0		0(%r13, %r14, 8)
+	prefetcht0		0(%r13, %r14, 4)
+	prefetcht0		63(%r13, %r14, 4)
 	vmovapd			0*64(%r11), %zmm25 // A
 	vmovapd			0*64(%r11, %r12), %zmm26 // A
 	vbroadcastsd	0(%r13), %zmm24 // B
@@ -100,7 +110,8 @@
 	addq	%r14, %r13
 
 	// unroll 1
-//	prefetcht0		0(%r13, %r14, 8)
+	prefetcht0		0(%r13, %r14, 4)
+	prefetcht0		63(%r13, %r14, 4)
 	vmovapd			1*64(%r11), %zmm25 // A
 	vmovapd			1*64(%r11, %r12), %zmm26 // A
 	vbroadcastsd	0(%r13), %zmm24 // B
@@ -130,7 +141,8 @@
 	addq	%r14, %r13
 
 	// unroll 2
-//	prefetcht0		0(%r13, %r14, 8)
+	prefetcht0		0(%r13, %r14, 4)
+	prefetcht0		63(%r13, %r14, 4)
 	vmovapd			2*64(%r11), %zmm25 // A
 	vmovapd			2*64(%r11, %r12), %zmm26 // A
 	vbroadcastsd	0(%r13), %zmm24 // B
@@ -160,7 +172,8 @@
 	addq	%r14, %r13
 
 	// unroll 3
-//	prefetcht0		0(%r13, %r14, 8)
+	prefetcht0		0(%r13, %r14, 4)
+	prefetcht0		63(%r13, %r14, 4)
 	vmovapd			3*64(%r11), %zmm25 // A
 	vmovapd			3*64(%r11, %r12), %zmm26 // A
 	vbroadcastsd	0(%r13), %zmm24 // B
