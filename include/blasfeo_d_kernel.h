@@ -1195,6 +1195,8 @@ void kernel_dgemm_nt_8x8_vs_lib88cc(int kmax, double *alpha, double *A, double *
 // 24x8
 void kernel_dgemm_nt_24x8_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_24x8_vs_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dgemm_nn_24x8_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nn_24x8_vs_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 16x8
 void kernel_dgemm_nt_16x8_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_16x8_vs_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
@@ -1210,6 +1212,8 @@ void kernel_dgemm_nn_8x8_vs_lib8ccc(int kmax, double *alpha, double *A, double *
 // 8x24
 void kernel_dgemm_nt_8x24_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_8x24_vs_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dgemm_tt_8x24_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_tt_8x24_vs_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 8x16
 void kernel_dgemm_nt_8x16_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_8x16_vs_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);

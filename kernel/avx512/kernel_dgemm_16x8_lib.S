@@ -3244,6 +3244,7 @@
 // r12   <- sda
 // r13   <- B
 // r14   <- ldb
+// k1    <- m_mask
 // zmm0  <- []
 // ...
 // zmm15 <- []
@@ -7238,14 +7239,14 @@
 
 	// prefetch D
 
-//	movq	ARG10, %r10 // D
-//	movq	ARG11, %r11 // ldd
-//	sall	$ 3, %r11d
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
-//	INNER_PREFETCH0_8X4_LIB
+	INNER_PREFETCH0_16X8_LIB
 #else
-//	CALL(inner_prefetch0_8x4_lib)
+	CALL(inner_prefetch0_16x8_lib)
 #endif
 
 
@@ -7413,14 +7414,14 @@
 
 	// prefetch D
 
-//	movq	ARG10, %r10 // D
-//	movq	ARG11, %r11 // ldd
-//	sall	$ 3, %r11d
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
-//	INNER_PREFETCH0_8X4_LIB
+	INNER_PREFETCH0_8X16_LIB
 #else
-//	CALL(inner_prefetch0_8x4_lib)
+	CALL(inner_prefetch0_8x16_lib)
 #endif
 
 
