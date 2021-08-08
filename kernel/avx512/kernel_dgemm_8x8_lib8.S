@@ -6169,10 +6169,10 @@ NAME:
 // zmm7  <- [a07 ... a77]
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_DGEBP_NN_VX8_VS_LIB8
+	.macro INNER_KERNEL_DGEBP_NN_VX8_LIB8
 #else
 	.p2align 4,,15
-	FUN_START(inner_kernel_dgebp_nn_vx8_vs_lib8)
+	FUN_START(inner_kernel_dgebp_nn_vx8_lib8)
 #endif
 
 	cmpl	$ 0, %r10d
@@ -6311,7 +6311,7 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_kernel_dgebp_nn_vx8_vs_lib8)
+	FUN_END(inner_kernel_dgebp_nn_vx8_lib8)
 #endif
 
 
@@ -12701,6 +12701,7 @@ NAME:
 	vsubpd		%zmm25, %zmm24, %zmm25
 	vpmovq2m	%zmm25, %k1
 
+
 	// zero accumulation registers
 
 //	ZERO_ACC
@@ -12973,9 +12974,9 @@ NAME:
 	addq	$ 512, %r12
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_DGEBP_NN_VX8_VS_LIB8
+	INNER_KERNEL_DGEBP_NN_VX8_LIB8
 #else
-	CALL(inner_kernel_dgebp_nn_vx8_vs_lib8)
+	CALL(inner_kernel_dgebp_nn_vx8_lib8)
 #endif
 
 1000:
@@ -13164,6 +13165,200 @@ NAME:
 	ret
 
 	FUN_END(kernel_dlarfb8_rn_la_8_lib8)
+
+
+
+
+
+//                                     1         2            3           4           5           6
+// void kernel_dlarfb8_rn_la_8_vs_lib8(int kmax, double *pVA, double *pT, double *pD, double *pA, int m1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dlarfb8_rn_la_8_vs_lib8)
+	
+	PROLOGUE
+
+
+	movq	ARG6, %r10 // k
+
+	// compute mask for rows
+	vcvtsi2sd	%r10d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+	vpmovq2m	%zmm25, %k1
+
+
+	// zero accumulation registers
+
+//	ZERO_ACC
+
+	movq	ARG4, %r10 // D
+
+	//
+	vmovapd			0*64(%r10), %zmm0 {%k1}{z}
+	//
+	vmovapd			1*64(%r10), %zmm1 {%k1}{z}
+	//
+	vmovapd			2*64(%r10), %zmm2 {%k1}{z}
+	//
+	vmovapd			3*64(%r10), %zmm3 {%k1}{z}
+	//
+	vmovapd			4*64(%r10), %zmm4 {%k1}{z}
+	//
+	vmovapd			5*64(%r10), %zmm5 {%k1}{z}
+	//
+	vmovapd			6*64(%r10), %zmm6 {%k1}{z}
+	//
+	vmovapd			7*64(%r10), %zmm7 {%k1}{z}
+
+	movq	ARG1, %r10 // k
+	movq	ARG5, %r11 // A
+	movq	ARG2, %r12 // VA
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_VX8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_vx8_lib8)
+#endif
+
+	movq	ARG3, %r10 // T
+
+	//
+	vbroadcastsd	56+7*64(%r10), %zmm24
+	vmulpd			%zmm7, %zmm24, %zmm7
+	//
+	vbroadcastsd	48+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm6, %zmm24, %zmm7
+	vbroadcastsd	48+6*64(%r10), %zmm24
+	vmulpd			%zmm6, %zmm24, %zmm6
+	//
+	vbroadcastsd	40+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm5, %zmm24, %zmm7
+	vbroadcastsd	40+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm5, %zmm24, %zmm6
+	vbroadcastsd	40+5*64(%r10), %zmm24
+	vmulpd			%zmm5, %zmm24, %zmm5
+	//
+	vbroadcastsd	32+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm4, %zmm24, %zmm7
+	vbroadcastsd	32+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm4, %zmm24, %zmm6
+	vbroadcastsd	32+5*64(%r10), %zmm24
+	vfmadd231pd		%zmm4, %zmm24, %zmm5
+	vbroadcastsd	32+4*64(%r10), %zmm24
+	vmulpd			%zmm4, %zmm24, %zmm4
+	//
+	vbroadcastsd	24+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm3, %zmm24, %zmm7
+	vbroadcastsd	24+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm3, %zmm24, %zmm6
+	vbroadcastsd	24+5*64(%r10), %zmm24
+	vfmadd231pd		%zmm3, %zmm24, %zmm5
+	vbroadcastsd	24+4*64(%r10), %zmm24
+	vfmadd231pd		%zmm3, %zmm24, %zmm4
+	vbroadcastsd	24+3*64(%r10), %zmm24
+	vmulpd			%zmm3, %zmm24, %zmm3
+	//
+	vbroadcastsd	16+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm2, %zmm24, %zmm7
+	vbroadcastsd	16+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm2, %zmm24, %zmm6
+	vbroadcastsd	16+5*64(%r10), %zmm24
+	vfmadd231pd		%zmm2, %zmm24, %zmm5
+	vbroadcastsd	16+4*64(%r10), %zmm24
+	vfmadd231pd		%zmm2, %zmm24, %zmm4
+	vbroadcastsd	16+3*64(%r10), %zmm24
+	vfmadd231pd		%zmm2, %zmm24, %zmm3
+	vbroadcastsd	16+2*64(%r10), %zmm24
+	vmulpd			%zmm2, %zmm24, %zmm2
+	//
+	vbroadcastsd	8+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm7
+	vbroadcastsd	8+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm6
+	vbroadcastsd	8+5*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm5
+	vbroadcastsd	8+4*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm4
+	vbroadcastsd	8+3*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm3
+	vbroadcastsd	8+2*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm2
+	vbroadcastsd	8+1*64(%r10), %zmm24
+	vmulpd			%zmm1, %zmm24, %zmm1
+	//
+	vbroadcastsd	0+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm7
+	vbroadcastsd	0+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm6
+	vbroadcastsd	0+5*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm5
+	vbroadcastsd	0+4*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm4
+	vbroadcastsd	0+3*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm3
+	vbroadcastsd	0+2*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm2
+	vbroadcastsd	0+1*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm1
+	vbroadcastsd	0+0*64(%r10), %zmm24
+	vmulpd			%zmm0, %zmm24, %zmm0
+
+	movq	ARG4, %r10 // D
+
+	//
+	vmovapd			0+0*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm0, %zmm24
+	vmovapd			%zmm24, 0+0*64(%r10) {%k1}
+	//
+	vmovapd			0+1*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm1, %zmm24
+	vmovapd			%zmm24, 0+1*64(%r10) {%k1}
+	//
+	vmovapd			0+2*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm2, %zmm24
+	vmovapd			%zmm24, 0+2*64(%r10) {%k1}
+	//
+	vmovapd			0+3*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm3, %zmm24
+	vmovapd			%zmm24, 0+3*64(%r10) {%k1}
+	//
+	vmovapd			0+4*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm4, %zmm24
+	vmovapd			%zmm24, 0+4*64(%r10) {%k1}
+	//
+	vmovapd			0+5*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm5, %zmm24
+	vmovapd			%zmm24, 0+5*64(%r10) {%k1}
+	//
+	vmovapd			0+6*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm6, %zmm24
+	vmovapd			%zmm24, 0+6*64(%r10) {%k1}
+	//
+	vmovapd			0+7*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm7, %zmm24
+	vmovapd			%zmm24, 0+7*64(%r10) {%k1}
+
+	movq	ARG1, %r10 // k
+	movq	ARG2, %r11 // VA
+	movq	ARG5, %r12 // A
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEBP_NN_VX8_LIB8
+#else
+	CALL(inner_kernel_dgebp_nn_vx8_lib8)
+#endif
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dlarfb8_rn_la_8_vs_lib8)
 
 
 
@@ -13565,6 +13760,429 @@ NAME:
 	INNER_KERNEL_DGEBP_NN_8X8_LIB8
 #else
 	CALL(inner_kernel_dgebp_nn_8x8_lib8)
+#endif
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dlarfb8_rn_lla_8_lib8)
+
+
+
+
+
+//                                      1       2       3            4            5           6           7           8          9
+// void kernel_dlarfb8_rn_lla_8_vs_lib8(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, double *pL, double *pA, int m1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dlarfb8_rn_lla_8_vs_lib8)
+	
+	PROLOGUE
+
+
+	movq	ARG9, %r10 // k
+
+	// compute mask for rows
+	vcvtsi2sd	%r10d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+	vpmovq2m	%zmm25, %k1
+
+
+	// zero accumulation registers
+
+//	ZERO_ACC
+
+	movq	ARG6, %r10 // D
+
+	// D
+	//
+	vmovapd			0*64(%r10), %zmm0 {%k1}{z}
+	//
+	vmovapd			1*64(%r10), %zmm1 {%k1}{z}
+	//
+	vmovapd			2*64(%r10), %zmm2 {%k1}{z}
+	//
+	vmovapd			3*64(%r10), %zmm3 {%k1}{z}
+	//
+	vmovapd			4*64(%r10), %zmm4 {%k1}{z}
+	//
+	vmovapd			5*64(%r10), %zmm5 {%k1}{z}
+	//
+	vmovapd			6*64(%r10), %zmm6 {%k1}{z}
+	//
+	vmovapd			7*64(%r10), %zmm7 {%k1}{z}
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG7, %r11 // L
+	movq	ARG3, %r12 // VL
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_VX8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_vx8_lib8)
+#endif
+	
+	// L final 8x8 lower triangle
+	movq	ARG1, %r10 // n0
+	sall	$ 6, %r10d // n0*ps*sizeof(double)
+	movq	ARG7, %r11 // L
+	addq	%r10, %r11
+	movq	ARG3, %r12 // VL
+	addq	%r10, %r12
+
+	// L 7
+	vmovapd			0+0*64(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastsd	0+0*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm0
+	vbroadcastsd	8+0*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm1
+	vbroadcastsd	16+0*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm2
+	vbroadcastsd	24+0*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm3
+	vbroadcastsd	32+0*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm4
+	vbroadcastsd	40+0*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm5
+	vbroadcastsd	48+0*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm6
+	vbroadcastsd	56+0*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm7
+	// L 6
+	vmovapd			0+1*64(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastsd	8+1*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm1
+	vbroadcastsd	16+1*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm2
+	vbroadcastsd	24+1*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm3
+	vbroadcastsd	32+1*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm4
+	vbroadcastsd	40+1*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm5
+	vbroadcastsd	48+1*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm6
+	vbroadcastsd	56+1*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm7
+	// L 5
+	vmovapd			0+2*64(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastsd	16+2*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm2
+	vbroadcastsd	24+2*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm3
+	vbroadcastsd	32+2*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm4
+	vbroadcastsd	40+2*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm5
+	vbroadcastsd	48+2*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm6
+	vbroadcastsd	56+2*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm7
+	// L 4
+	vmovapd			0+3*64(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastsd	24+3*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm3
+	vbroadcastsd	32+3*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm4
+	vbroadcastsd	40+3*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm5
+	vbroadcastsd	48+3*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm6
+	vbroadcastsd	56+3*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm7
+	// L 3
+	vmovapd			0+4*64(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastsd	32+4*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm4
+	vbroadcastsd	40+4*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm5
+	vbroadcastsd	48+4*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm6
+	vbroadcastsd	56+4*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm7
+	// L 2
+	vmovapd			0+5*64(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastsd	40+5*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm5
+	vbroadcastsd	48+5*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm6
+	vbroadcastsd	56+5*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm7
+	// L 1
+	vmovapd			0+6*64(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastsd	48+6*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm6
+	vbroadcastsd	56+6*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm7
+	// L 0
+	vmovapd			0+7*64(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastsd	56+7*64(%r12), %zmm24 // B
+	vfmadd231pd		%zmm25, %zmm24, %zmm7
+
+	// A
+	movq	ARG2, %r10 // n1
+	movq	ARG8, %r11 // A
+	movq	ARG4, %r12 // VA
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_VX8_LIB8
+#else
+	CALL(inner_kernel_dgemm_nt_vx8_lib8)
+#endif
+
+	// T
+	movq	ARG5, %r10 // T
+
+	//
+	vbroadcastsd	56+7*64(%r10), %zmm24
+	vmulpd			%zmm7, %zmm24, %zmm7
+	//
+	vbroadcastsd	48+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm6, %zmm24, %zmm7
+	vbroadcastsd	48+6*64(%r10), %zmm24
+	vmulpd			%zmm6, %zmm24, %zmm6
+	//
+	vbroadcastsd	40+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm5, %zmm24, %zmm7
+	vbroadcastsd	40+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm5, %zmm24, %zmm6
+	vbroadcastsd	40+5*64(%r10), %zmm24
+	vmulpd			%zmm5, %zmm24, %zmm5
+	//
+	vbroadcastsd	32+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm4, %zmm24, %zmm7
+	vbroadcastsd	32+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm4, %zmm24, %zmm6
+	vbroadcastsd	32+5*64(%r10), %zmm24
+	vfmadd231pd		%zmm4, %zmm24, %zmm5
+	vbroadcastsd	32+4*64(%r10), %zmm24
+	vmulpd			%zmm4, %zmm24, %zmm4
+	//
+	vbroadcastsd	24+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm3, %zmm24, %zmm7
+	vbroadcastsd	24+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm3, %zmm24, %zmm6
+	vbroadcastsd	24+5*64(%r10), %zmm24
+	vfmadd231pd		%zmm3, %zmm24, %zmm5
+	vbroadcastsd	24+4*64(%r10), %zmm24
+	vfmadd231pd		%zmm3, %zmm24, %zmm4
+	vbroadcastsd	24+3*64(%r10), %zmm24
+	vmulpd			%zmm3, %zmm24, %zmm3
+	//
+	vbroadcastsd	16+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm2, %zmm24, %zmm7
+	vbroadcastsd	16+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm2, %zmm24, %zmm6
+	vbroadcastsd	16+5*64(%r10), %zmm24
+	vfmadd231pd		%zmm2, %zmm24, %zmm5
+	vbroadcastsd	16+4*64(%r10), %zmm24
+	vfmadd231pd		%zmm2, %zmm24, %zmm4
+	vbroadcastsd	16+3*64(%r10), %zmm24
+	vfmadd231pd		%zmm2, %zmm24, %zmm3
+	vbroadcastsd	16+2*64(%r10), %zmm24
+	vmulpd			%zmm2, %zmm24, %zmm2
+	//
+	vbroadcastsd	8+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm7
+	vbroadcastsd	8+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm6
+	vbroadcastsd	8+5*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm5
+	vbroadcastsd	8+4*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm4
+	vbroadcastsd	8+3*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm3
+	vbroadcastsd	8+2*64(%r10), %zmm24
+	vfmadd231pd		%zmm1, %zmm24, %zmm2
+	vbroadcastsd	8+1*64(%r10), %zmm24
+	vmulpd			%zmm1, %zmm24, %zmm1
+	//
+	vbroadcastsd	0+7*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm7
+	vbroadcastsd	0+6*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm6
+	vbroadcastsd	0+5*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm5
+	vbroadcastsd	0+4*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm4
+	vbroadcastsd	0+3*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm3
+	vbroadcastsd	0+2*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm2
+	vbroadcastsd	0+1*64(%r10), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm1
+	vbroadcastsd	0+0*64(%r10), %zmm24
+	vmulpd			%zmm0, %zmm24, %zmm0
+
+	// D
+	movq	ARG6, %r10 // D
+
+	//
+	vmovapd			0+0*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm0, %zmm24
+	vmovapd			%zmm24, 0+0*64(%r10) {%k1}
+	//
+	vmovapd			0+1*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm1, %zmm24
+	vmovapd			%zmm24, 0+1*64(%r10) {%k1}
+	//
+	vmovapd			0+2*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm2, %zmm24
+	vmovapd			%zmm24, 0+2*64(%r10) {%k1}
+	//
+	vmovapd			0+3*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm3, %zmm24
+	vmovapd			%zmm24, 0+3*64(%r10) {%k1}
+	//
+	vmovapd			0+4*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm4, %zmm24
+	vmovapd			%zmm24, 0+4*64(%r10) {%k1}
+	//
+	vmovapd			0+5*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm5, %zmm24
+	vmovapd			%zmm24, 0+5*64(%r10) {%k1}
+	//
+	vmovapd			0+6*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm6, %zmm24
+	vmovapd			%zmm24, 0+6*64(%r10) {%k1}
+	//
+	vmovapd			0+7*64(%r10), %zmm24 {%k1}{z}
+	vaddpd			%zmm24, %zmm7, %zmm24
+	vmovapd			%zmm24, 0+7*64(%r10) {%k1}
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG3, %r11 // VL
+	movq	ARG7, %r12 // L
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEBP_NN_VX8_LIB8
+#else
+	CALL(inner_kernel_dgebp_nn_vx8_lib8)
+#endif
+
+	// L final 8x8 lower triangle
+	movq	ARG1, %r10 // n0
+	sall	$ 6, %r10d // n0*ps*sizeof(double)
+	movq	ARG3, %r11 // VL
+	addq	%r10, %r11
+	movq	ARG7, %r12 // L
+	addq	%r10, %r12
+
+	// L 7
+	vmovapd			0*64(%r12), %zmm28 {%k1}{z}
+	vbroadcastsd	0+0*64(%r11), %zmm25
+	vfmadd231pd		%zmm0, %zmm25, %zmm28
+	vbroadcastsd	8+0*64(%r11), %zmm25
+	vfmadd231pd		%zmm1, %zmm25, %zmm28
+	vbroadcastsd	16+0*64(%r11), %zmm25
+	vfmadd231pd		%zmm2, %zmm25, %zmm28
+	vbroadcastsd	24+0*64(%r11), %zmm25
+	vfmadd231pd		%zmm3, %zmm25, %zmm28
+	vbroadcastsd	32+0*64(%r11), %zmm25
+	vfmadd231pd		%zmm4, %zmm25, %zmm28
+	vbroadcastsd	40+0*64(%r11), %zmm25
+	vfmadd231pd		%zmm5, %zmm25, %zmm28
+	vbroadcastsd	48+0*64(%r11), %zmm25
+	vfmadd231pd		%zmm6, %zmm25, %zmm28
+	vbroadcastsd	56+0*64(%r11), %zmm25
+	vfmadd231pd		%zmm7, %zmm25, %zmm28
+	vmovapd			%zmm28, 0*64(%r12) {%k1}
+	// L 6
+	vmovapd			1*64(%r12), %zmm28 {%k1}{z}
+	vbroadcastsd	8+1*64(%r11), %zmm25
+	vfmadd231pd		%zmm1, %zmm25, %zmm28
+	vbroadcastsd	16+1*64(%r11), %zmm25
+	vfmadd231pd		%zmm2, %zmm25, %zmm28
+	vbroadcastsd	24+1*64(%r11), %zmm25
+	vfmadd231pd		%zmm3, %zmm25, %zmm28
+	vbroadcastsd	32+1*64(%r11), %zmm25
+	vfmadd231pd		%zmm4, %zmm25, %zmm28
+	vbroadcastsd	40+1*64(%r11), %zmm25
+	vfmadd231pd		%zmm5, %zmm25, %zmm28
+	vbroadcastsd	48+1*64(%r11), %zmm25
+	vfmadd231pd		%zmm6, %zmm25, %zmm28
+	vbroadcastsd	56+1*64(%r11), %zmm25
+	vfmadd231pd		%zmm7, %zmm25, %zmm28
+	vmovapd			%zmm28, 1*64(%r12) {%k1}
+	// L 5
+	vmovapd			2*64(%r12), %zmm28 {%k1}{z}
+	vbroadcastsd	16+2*64(%r11), %zmm25
+	vfmadd231pd		%zmm2, %zmm25, %zmm28
+	vbroadcastsd	24+2*64(%r11), %zmm25
+	vfmadd231pd		%zmm3, %zmm25, %zmm28
+	vbroadcastsd	32+2*64(%r11), %zmm25
+	vfmadd231pd		%zmm4, %zmm25, %zmm28
+	vbroadcastsd	40+2*64(%r11), %zmm25
+	vfmadd231pd		%zmm5, %zmm25, %zmm28
+	vbroadcastsd	48+2*64(%r11), %zmm25
+	vfmadd231pd		%zmm6, %zmm25, %zmm28
+	vbroadcastsd	56+2*64(%r11), %zmm25
+	vfmadd231pd		%zmm7, %zmm25, %zmm28
+	vmovapd			%zmm28, 2*64(%r12) {%k1}
+	// L 4
+	vmovapd			3*64(%r12), %zmm28 {%k1}{z}
+	vbroadcastsd	24+3*64(%r11), %zmm25
+	vfmadd231pd		%zmm3, %zmm25, %zmm28
+	vbroadcastsd	32+3*64(%r11), %zmm25
+	vfmadd231pd		%zmm4, %zmm25, %zmm28
+	vbroadcastsd	40+3*64(%r11), %zmm25
+	vfmadd231pd		%zmm5, %zmm25, %zmm28
+	vbroadcastsd	48+3*64(%r11), %zmm25
+	vfmadd231pd		%zmm6, %zmm25, %zmm28
+	vbroadcastsd	56+3*64(%r11), %zmm25
+	vfmadd231pd		%zmm7, %zmm25, %zmm28
+	vmovapd			%zmm28, 3*64(%r12) {%k1}
+	// L 3
+	vmovapd			4*64(%r12), %zmm28 {%k1}{z}
+	vbroadcastsd	32+4*64(%r11), %zmm25
+	vfmadd231pd		%zmm4, %zmm25, %zmm28
+	vbroadcastsd	40+4*64(%r11), %zmm25
+	vfmadd231pd		%zmm5, %zmm25, %zmm28
+	vbroadcastsd	48+4*64(%r11), %zmm25
+	vfmadd231pd		%zmm6, %zmm25, %zmm28
+	vbroadcastsd	56+4*64(%r11), %zmm25
+	vfmadd231pd		%zmm7, %zmm25, %zmm28
+	vmovapd			%zmm28, 4*64(%r12) {%k1}
+	// L 2
+	vmovapd			5*64(%r12), %zmm28 {%k1}{z}
+	vbroadcastsd	40+5*64(%r11), %zmm25
+	vfmadd231pd		%zmm5, %zmm25, %zmm28
+	vbroadcastsd	48+5*64(%r11), %zmm25
+	vfmadd231pd		%zmm6, %zmm25, %zmm28
+	vbroadcastsd	56+5*64(%r11), %zmm25
+	vfmadd231pd		%zmm7, %zmm25, %zmm28
+	vmovapd			%zmm28, 5*64(%r12) {%k1}
+	// L 1
+	vmovapd			6*64(%r12), %zmm28 {%k1}{z}
+	vbroadcastsd	48+6*64(%r11), %zmm25
+	vfmadd231pd		%zmm6, %zmm25, %zmm28
+	vbroadcastsd	56+6*64(%r11), %zmm25
+	vfmadd231pd		%zmm7, %zmm25, %zmm28
+	vmovapd			%zmm28, 6*64(%r12) {%k1}
+	// L 0
+	vmovapd			7*64(%r12), %zmm28 {%k1}{z}
+	vbroadcastsd	56+7*64(%r11), %zmm25
+	vfmadd231pd		%zmm7, %zmm25, %zmm28
+	vmovapd			%zmm28, 7*64(%r12) {%k1}
+
+	// A
+	movq	ARG2, %r10 // n1
+	movq	ARG4, %r11 // VA
+	movq	ARG8, %r12 // A
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEBP_NN_VX8_LIB8
+#else
+	CALL(inner_kernel_dgebp_nn_vx8_lib8)
 #endif
 
 	EPILOGUE
