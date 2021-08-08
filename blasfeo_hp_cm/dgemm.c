@@ -2652,9 +2652,13 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #if defined(TARGET_X64_INTEL_SKYLAKE_X) | defined(TARGET_X64_INTEL_HASWELL)
 	if( m<n*4 )
 		{
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+//		if( n<=2*m_kernel | k_b*n <= l2_cache_el ) // TODO k_block
+		if( n<=2*m_kernel | k_block*n <= l2_cache_el )
+#else
 //		if( m<=2*m_kernel | m_a*k + k_b*n <= llc_cache_el )
 		if( m<=2*m_kernel | ( k<=KC & (m_a*k + k_b*n + m_c*n + m_d*n <= llc_cache_el) ) )
-//		if( n<=2*m_kernel | m_a*k_block <= l2_cache_el )
+#endif
 			{
 //			printf("\nalg m0\n");
 			goto nn_m0; // long matrix: pack A
@@ -4308,6 +4312,9 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	const int ps = PS;
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
+#if defined(TARGET_X64_INTEL_SKYLAKE_X) | defined(TARGET_X64_INTEL_HASWELL)
+	const int l2_cache_el = L2_CACHE_EL;
+#endif
 #if defined(TARGET_X64_INTEL_SKYLAKE_X) | defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	const int llc_cache_el = LLC_CACHE_EL;
 #endif
@@ -4338,7 +4345,25 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #endif
 
 	// no algorithm for small matrix
-#if defined(TARGET_X64_INTEL_SKYLAKE_X) | defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	if( m<=n )
+		{
+		if( n<=2*m_kernel | k_block*n <= l2_cache_el )
+			{
+//			printf("\nalg m0\n");
+			goto tn_m0; // long matrix: pack A
+			}
+		}
+	else
+		{
+		if( n<=2*m_kernel | k_block*m <= l2_cache_el )
+			{
+//			printf("\nalg n0\n");
+			goto tn_n0; // tall matrix: pack B
+			}
+		}
+#else
+#if defined(TARGET_X64_INTEL_HASWELL)
 	if( m<=2*m_kernel | n<=2*m_kernel | ( k<=KC & (k_a*m + k_b*n + m_c*n + m_d*n <= llc_cache_el) ) )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if( m<=2*m_kernel | n<=2*m_kernel | k<56 )
@@ -4363,6 +4388,7 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 			goto tn_n0; // tall matrix: pack B
 			}
 		}
+#endif
 //	printf("\nalg 1\n");
 	goto tn_1; // big matrix: pack A and B
 
@@ -4906,7 +4932,11 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		}
 	else
 		{
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+		if( n<=2*m_kernel | k_block*m <= l2_cache_el )
+#elif defined(TARGET_X64_INTEL_HASWELL)
 		if( n<=2*m_kernel | ( k<=KC & (k_a*m + n_b*k + m_c*n + m_d*n <= llc_cache_el) ) )
+#endif
 			{
 //			printf("\nalg n0\n");
 			goto tt_n0; // tall matrix: pack B
