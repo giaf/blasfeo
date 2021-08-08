@@ -6696,7 +6696,7 @@
 
 
 
-//                                 1      2              3          4        5          6             7          8        9          10
+//                                   1      2              3          4        5          6             7          8        9          10
 // void kernel_dgemm_nt_16x8_lib88cc(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
@@ -6712,9 +6712,9 @@
 	// prefetch C
 
 	movq		ARG6, %r10 // beta
-	vmovsd		0(%r10), %xmm14
-	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
-	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	vmovsd		0(%r10), %xmm24
+	vxorpd		%xmm25, %xmm25, %xmm25 // 0.0
+	vucomisd	%xmm25, %xmm24 // beta==0.0 ?
 	je			100f // end
 
 	movq	ARG7, %r10 // C

@@ -5028,14 +5028,14 @@
 
 	// prefetch D
 
-//	movq	ARG9, %r10 // D
-//	movq	ARG10, %r11 // ldd
-//	sall	$ 3, %r11d
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
-//	INNER_PREFETCH0_8X8_LIB
+	INNER_PREFETCH0_8X8_LIB
 #else
-//	CALL(inner_prefetch0_8x8_lib)
+	CALL(inner_prefetch0_8x8_lib)
 #endif
 
 
@@ -5179,9 +5179,9 @@
 	// prefetch C
 
 	movq		ARG5, %r10 // beta
-	vmovsd		0(%r10), %xmm14
-	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
-	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	vmovsd		0(%r10), %xmm24
+	vxorpd		%xmm25, %xmm25, %xmm25 // 0.0
+	vucomisd	%xmm25, %xmm24 // beta==0.0 ?
 	je			100f // end
 
 	movq	ARG6, %r10 // C
@@ -5512,14 +5512,14 @@
 
 	// prefetch D
 
-//	movq	ARG9, %r10 // D
-//	movq	ARG10, %r11 // ldd
-//	sall	$ 3, %r11d
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
-//	INNER_PREFETCH0_8X8_LIB
+	INNER_PREFETCH0_8X8_LIB
 #else
-//	CALL(inner_prefetch0_8x8_lib)
+	CALL(inner_prefetch0_8x8_lib)
 #endif
 
 
