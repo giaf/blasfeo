@@ -1012,7 +1012,7 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 
 	double *dD = sD->dA + di;
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
-	ALIGNED( double pT[64], 64 ) = {0}; // XXX assuming 8x8 kernel
+	ALIGNED( double pT[64], 64 ) = {0}; // XXX assuming rank-8 update
 //	ALIGNED( double pK[64], 64 ) = {0};
 #else
 	double pT[144] = {0}; // XXX smaller ?
@@ -1051,6 +1051,12 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 //d_print_mat(8, 8, pT, 8);
 		jj = ii+8;
 #if 1
+		for(; jj<m-23; jj+=24)
+			{
+			kernel_dlarfb8_rn_24_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			}
+#endif
+#if 1
 		for(; jj<m-15; jj+=16)
 			{
 			kernel_dlarfb8_rn_16_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
@@ -1060,6 +1066,10 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 			{
 			kernel_dlarfb8_rn_8_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
 			}
+//		if(jj<m)
+//			{
+//			kernel_dlarfb8_rn_8_vs_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, m-jj); // TODO
+//			}
 		for(ll=0; ll<m-jj; ll++)
 			{
 			kernel_dlarfb8_rn_1_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
