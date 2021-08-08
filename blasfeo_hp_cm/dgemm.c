@@ -719,7 +719,7 @@ nn_m0_left_8:
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 nn_m0_left_8:
 	kernel_dpack_nn_8_vs_lib8(k, A+ii, lda, pU, m-ii);
-	for(jj=0; jj<n; jj+=4)
+	for(jj=0; jj<n; jj+=8)
 		{
 		kernel_dgemm_nn_8x8_vs_lib8ccc(k, &alpha, pU, B+jj*ldb, ldb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 		}
