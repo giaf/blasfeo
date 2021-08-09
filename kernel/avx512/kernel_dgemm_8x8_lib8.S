@@ -2565,8 +2565,14 @@ NAME:
 	jle		2f // return
 
 	// prefetch
-//	prefetcht0	0(%r12) // software prefetch
-//	prefetcht0	0+64(%r12) // software prefetch
+	prefetcht0	0*64(%r12) // software prefetch
+	prefetcht0	1*64(%r12) // software prefetch
+	prefetcht0	2*64(%r12) // software prefetch
+	prefetcht0	3*64(%r12) // software prefetch
+	prefetcht0	4*64(%r12) // software prefetch
+	prefetcht0	5*64(%r12) // software prefetch
+	prefetcht0	6*64(%r12) // software prefetch
+	prefetcht0	7*64(%r12) // software prefetch
 
 	// preload
 	vmovapd 		0(%r11), %zmm25 // A
@@ -2578,28 +2584,32 @@ NAME:
 	.p2align 3
 1: // main loop
 
-//	prefetcht0	128(%r12) // software prefetch
-//	prefetcht0	128+64(%r12) // software prefetch
-
 	// unroll 0
 	vbroadcastsd	0*64(%r12), %zmm24 // B
+	prefetcht0	0*64(%r12, %r13) // software prefetch
 	vfmadd231pd		%zmm25, %zmm24, %zmm0
 	vmovapd			1*64(%r11), %zmm26 // A
 	vbroadcastsd	1*64(%r12), %zmm24 // B
+	prefetcht0	1*64(%r12, %r13) // software prefetch
 	vfmadd231pd		%zmm25, %zmm24, %zmm1
 	vbroadcastsd	2*64(%r12), %zmm24 // B
+	prefetcht0	2*64(%r12, %r13) // software prefetch
 	vfmadd231pd		%zmm25, %zmm24, %zmm2
 	vbroadcastsd	3*64(%r12), %zmm24 // B
+	prefetcht0	3*64(%r12, %r13) // software prefetch
 	vfmadd231pd		%zmm25, %zmm24, %zmm3
 	vbroadcastsd	4*64(%r12), %zmm24 // B
+	prefetcht0	4*64(%r12, %r13) // software prefetch
 	vfmadd231pd		%zmm25, %zmm24, %zmm4
 	vbroadcastsd	5*64(%r12), %zmm24 // B
+	prefetcht0	5*64(%r12, %r13) // software prefetch
 	vfmadd231pd		%zmm25, %zmm24, %zmm5
 	vbroadcastsd	6*64(%r12), %zmm24 // B
+	prefetcht0	6*64(%r12, %r13) // software prefetch
 	vfmadd231pd		%zmm25, %zmm24, %zmm6
 	vbroadcastsd	7*64(%r12), %zmm24 // B
+	prefetcht0	7*64(%r12, %r13) // software prefetch
 	vfmadd231pd		%zmm25, %zmm24, %zmm7
-	subl	$ 8, %r10d
 
 	// unroll 1
 	vbroadcastsd	8+0*64(%r12), %zmm24 // B
@@ -2619,6 +2629,7 @@ NAME:
 	vfmadd231pd		%zmm26, %zmm24, %zmm6
 	vbroadcastsd	8+7*64(%r12), %zmm24 // B
 	vfmadd231pd		%zmm26, %zmm24, %zmm7
+	subl	$ 8, %r10d
 
 	// unroll 2
 	vbroadcastsd	16+0*64(%r12), %zmm24 // B

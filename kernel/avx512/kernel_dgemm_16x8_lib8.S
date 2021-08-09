@@ -3180,8 +3180,14 @@ NAME:
 	jle		2f // return
 
 	// prefetch
-//	prefetcht0	0(%r13) // software prefetch
-//	prefetcht0	0+64(%r13) // software prefetch
+	prefetcht0	0*64(%r13) // software prefetch
+	prefetcht0	1*64(%r13) // software prefetch
+	prefetcht0	2*64(%r13) // software prefetch
+	prefetcht0	3*64(%r13) // software prefetch
+	prefetcht0	4*64(%r13) // software prefetch
+	prefetcht0	5*64(%r13) // software prefetch
+	prefetcht0	6*64(%r13) // software prefetch
+	prefetcht0	7*64(%r13) // software prefetch
 
 	// preload
 	vmovapd 		0(%r11), %zmm25 // A0
@@ -3194,35 +3200,40 @@ NAME:
 	.p2align 3
 1: // main loop
 
-//	prefetcht0	128(%r13) // software prefetch
-//	prefetcht0	128+64(%r13) // software prefetch
-
 	// unroll 0
 	vbroadcastsd	0*64(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm0
+	prefetcht0	0*64(%r13, %r14) // software prefetch
 	vfmadd231pd		%zmm27, %zmm24, %zmm8
 	vmovapd			1*64(%r11), %zmm26 // A
 	vbroadcastsd	1*64(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm1
+	prefetcht0	1*64(%r13, %r14) // software prefetch
 	vfmadd231pd		%zmm27, %zmm24, %zmm9
 	vmovapd			1*64(%r11, %r12), %zmm28 // A
 	vbroadcastsd	2*64(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm2
+	prefetcht0	2*64(%r13, %r14) // software prefetch
 	vfmadd231pd		%zmm27, %zmm24, %zmm10
 	vbroadcastsd	3*64(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm3
+	prefetcht0	3*64(%r13, %r14) // software prefetch
 	vfmadd231pd		%zmm27, %zmm24, %zmm11
 	vbroadcastsd	4*64(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm4
+	prefetcht0	4*64(%r13, %r14) // software prefetch
 	vfmadd231pd		%zmm27, %zmm24, %zmm12
 	vbroadcastsd	5*64(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm5
+	prefetcht0	5*64(%r13, %r14) // software prefetch
 	vfmadd231pd		%zmm27, %zmm24, %zmm13
 	vbroadcastsd	6*64(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm6
+	prefetcht0	6*64(%r13, %r14) // software prefetch
 	vfmadd231pd		%zmm27, %zmm24, %zmm14
 	vbroadcastsd	7*64(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm7
+	prefetcht0	7*64(%r13, %r14) // software prefetch
 	vfmadd231pd		%zmm27, %zmm24, %zmm15
 	subl	$ 8, %r10d
 
