@@ -454,17 +454,17 @@ NAME:
 	vmulsd			%xmm24, %xmm24, %xmm27 // tmp*tmp
 	vaddsd			%xmm27, %xmm25, %xmm25 // sigma+tmp*tmp
 	vaddsd			%xmm27, %xmm27, %xmm27 // 2*tmp*tmp
-	vdivsd			%xmm25, %xmm27, %xmm26
-	vmovsd			%xmm26, 0(%r15) // dD[0]
-
+	vmovlhps		%xmm24, %xmm25, %xmm25
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd			.LC00+16(%rip), %xmm27
+	vmovsd			.LC00+16(%rip), %xmm26
 #else
-	vmovsd			LC00+16(%rip), %xmm27
+	vmovsd			LC00+16(%rip), %xmm26
 #endif
-	vdivsd			%xmm24, %xmm27, %xmm24 // tmp
+	vmovlhps		%xmm26, %xmm27, %xmm27
+	vdivpd			%xmm25, %xmm27, %xmm26
+	vmovhlps		%xmm26, %xmm24, %xmm24 // tmp
+	vmovsd			%xmm26, 0(%r15) // dD[0]
 	vbroadcastsd	%xmm24, %zmm25
-	
 	vmovapd			%xmm26, %xmm24
 
 #if MACRO_LEVEL>=1
