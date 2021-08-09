@@ -441,12 +441,30 @@ void ORGLQ(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct XMAT *sD
 
 
 // LQ factorization with positive diagonal elements
+// XXX this is a hack that only returns the correct L matrix
+// TODO fix also Q !!!!
 void GELQF_PD(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, void *work)
 	{
-	if(m<=0 | n<=0)
-		return;
-	printf("\nblasfeo_gelqf_pd: feature not implemented yet\n");
-	exit(1);
+//	if(m<=0 | n<=0)
+//		return;
+//	printf("\nblasfeo_gelqf_pd: feature not implemented yet\n");
+//	exit(1);
+	GELQF(m, n, sC, ci, cj, sD, di, dj, work);
+	int ldd = sD->m;
+	REAL *pD = sD->pA+di+dj*ldd;
+	int ii, jj;
+	int imax = m<=n ? m : n;
+	for(ii=0; ii<imax; ii++)
+		{
+		if(pD[ii+ldd*ii]<0.0)
+			{
+			for(jj=ii; jj<m; jj++)
+				{
+				pD[jj+ldd*ii] = - pD[jj+ldd*ii];
+				}
+			}
+		}
+	return;
 	}
 
 
