@@ -8614,23 +8614,21 @@ NAME:
 //
 // input arguments:
 // r10  <- inv_diag_E
-// r11d <- kn
 // zmm0 <- []
 // ...
 // ymm15 <- []
 //
 // output arguments:
 // r10  <- inv_diag_E
-// r11d <- kn
 // zmm0 <- []
 // ...
 // ymm15 <- []
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DPOTRF_16X8_VS_LIB8
+	.macro INNER_EDGE_DPOTRF_16X8_LIB8
 #else
 	.p2align 4,,15
-	FUN_START(inner_edge_dpotrf_16x8_vs_lib8)
+	FUN_START(inner_edge_dpotrf_16x8_lib8)
 #endif
 
 	vxorpd	%ymm25, %ymm25, %ymm25 // 0.0
@@ -8651,7 +8649,478 @@ NAME:
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm0, %zmm26, %zmm0
 	vmulpd			%zmm8, %zmm26, %zmm8
-	cmpl			$ 2, %r11d
+	vmovapd			%zmm1, %zmm26
+	vfnmadd231pd	%zmm0, %zmm0, %zmm26
+
+	// 1
+//	vpermilpd		$ 0x3, %xmm1, %xmm26
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+1*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+1*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm26, %zmm27, %zmm26
+	vucomisd		%xmm25, %xmm26 // d_11 > 0.0 ?
+	jbe				3f
+	vsqrtsd			%xmm26, %xmm26, %xmm26
+	vdivsd			%xmm26, %xmm24, %xmm26
+4:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+//	vbroadcastsd	.LC05+1*8(%rip), %zmm27
+#elif defined(OS_MAC)
+//	vbroadcastsd	LC05+1*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm1
+	vfnmadd231pd	%zmm8, %zmm27, %zmm9
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+2*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+2*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm2
+	vfnmadd231pd	%zmm8, %zmm27, %zmm10
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm3
+	vfnmadd231pd	%zmm8, %zmm27, %zmm11
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm4
+	vfnmadd231pd	%zmm8, %zmm27, %zmm12
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm5
+	vfnmadd231pd	%zmm8, %zmm27, %zmm13
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm6
+	vfnmadd231pd	%zmm8, %zmm27, %zmm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm27
+	vfnmadd231pd	%zmm0, %zmm27, %zmm7
+	vfnmadd231pd	%zmm8, %zmm27, %zmm15
+	vmovsd			%xmm26, 8(%r10)
+	vbroadcastsd	%xmm26, %zmm26
+	vmulpd			%zmm1, %zmm26, %zmm1
+	vmulpd			%zmm9, %zmm26, %zmm9
+	vmovapd			%zmm2, %zmm26
+	vfnmadd231pd	%zmm1, %zmm1, %zmm26
+
+	// 2
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+2*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+2*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm26, %zmm27, %zmm26
+	vucomisd		%xmm25, %xmm26 // d_22 > 0.0 ?
+	jbe				5f
+	vsqrtsd			%xmm26, %xmm26, %xmm26
+	vdivsd			%xmm26, %xmm24, %xmm26
+6:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+//	vbroadcastsd	.LC05+2*8(%rip), %zmm27
+#elif defined(OS_MAC)
+//	vbroadcastsd	LC05+2*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm2
+	vfnmadd231pd	%zmm9, %zmm27, %zmm10
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm3
+	vfnmadd231pd	%zmm9, %zmm27, %zmm11
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm4
+	vfnmadd231pd	%zmm9, %zmm27, %zmm12
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm5
+	vfnmadd231pd	%zmm9, %zmm27, %zmm13
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm6
+	vfnmadd231pd	%zmm9, %zmm27, %zmm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm1, %zmm27, %zmm27
+	vfnmadd231pd	%zmm1, %zmm27, %zmm7
+	vfnmadd231pd	%zmm9, %zmm27, %zmm15
+	vmovsd			%xmm26, 16(%r10)
+	vbroadcastsd	%xmm26, %zmm26
+	vmulpd			%zmm2, %zmm26, %zmm2
+	vmulpd			%zmm10, %zmm26, %zmm10
+	vmovapd			%zmm3, %zmm26
+	vfnmadd231pd	%zmm2, %zmm2, %zmm26
+
+	// 3
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm26, %zmm27, %zmm26
+	vucomisd		%xmm25, %xmm26 // d_22 > 0.0 ?
+	jbe				7f
+	vsqrtsd			%xmm26, %xmm26, %xmm26
+	vdivsd			%xmm26, %xmm24, %xmm26
+8:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+//	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+//	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm2, %zmm27, %zmm28
+	vfnmadd231pd	%zmm2, %zmm28, %zmm3
+	vfnmadd231pd	%zmm10, %zmm28, %zmm11
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm2, %zmm27, %zmm28
+	vfnmadd231pd	%zmm2, %zmm28, %zmm4
+	vfnmadd231pd	%zmm10, %zmm28, %zmm12
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm2, %zmm27, %zmm28
+	vfnmadd231pd	%zmm2, %zmm28, %zmm5
+	vfnmadd231pd	%zmm10, %zmm28, %zmm13
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm2, %zmm27, %zmm28
+	vfnmadd231pd	%zmm2, %zmm28, %zmm6
+	vfnmadd231pd	%zmm10, %zmm28, %zmm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm2, %zmm27, %zmm28
+	vfnmadd231pd	%zmm2, %zmm28, %zmm7
+	vfnmadd231pd	%zmm10, %zmm28, %zmm15
+	vmovsd			%xmm26, 24(%r10)
+	vbroadcastsd	%xmm26, %zmm26
+	vmulpd			%zmm3, %zmm26, %zmm3
+	vmulpd			%zmm11, %zmm26, %zmm11
+	vmovapd			%zmm4, %zmm26
+	vfnmadd231pd	%zmm3, %zmm3, %zmm26
+
+	// 4
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm26, %zmm27, %zmm26
+	vucomisd		%xmm25, %xmm26 // d_22 > 0.0 ?
+	jbe				9f
+	vsqrtsd			%xmm26, %xmm26, %xmm26
+	vdivsd			%xmm26, %xmm24, %xmm26
+10:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+//	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+//	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm3, %zmm27, %zmm27
+	vfnmadd231pd	%zmm3, %zmm27, %zmm4
+	vfnmadd231pd	%zmm11, %zmm27, %zmm12
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm3, %zmm27, %zmm27
+	vfnmadd231pd	%zmm3, %zmm27, %zmm5
+	vfnmadd231pd	%zmm11, %zmm27, %zmm13
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm3, %zmm27, %zmm27
+	vfnmadd231pd	%zmm3, %zmm27, %zmm6
+	vfnmadd231pd	%zmm11, %zmm27, %zmm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm3, %zmm27, %zmm27
+	vfnmadd231pd	%zmm3, %zmm27, %zmm7
+	vfnmadd231pd	%zmm11, %zmm27, %zmm15
+	vmovsd			%xmm26, 32(%r10)
+	vbroadcastsd	%xmm26, %zmm26
+	vmulpd			%zmm4, %zmm26, %zmm4
+	vmulpd			%zmm12, %zmm26, %zmm12
+	vmovapd			%zmm5, %zmm26
+	vfnmadd231pd	%zmm4, %zmm4, %zmm26
+
+	// 5
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm26, %zmm27, %zmm26
+	vucomisd		%xmm25, %xmm26 // d_22 > 0.0 ?
+	jbe				11f
+	vsqrtsd			%xmm26, %xmm26, %xmm26
+	vdivsd			%xmm26, %xmm24, %xmm26
+12:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+//	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+//	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm4, %zmm27, %zmm27
+	vfnmadd231pd	%zmm4, %zmm27, %zmm5
+	vfnmadd231pd	%zmm12, %zmm27, %zmm13
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm4, %zmm27, %zmm27
+	vfnmadd231pd	%zmm4, %zmm27, %zmm6
+	vfnmadd231pd	%zmm12, %zmm27, %zmm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm4, %zmm27, %zmm27
+	vfnmadd231pd	%zmm4, %zmm27, %zmm7
+	vfnmadd231pd	%zmm12, %zmm27, %zmm15
+	vmovsd			%xmm26, 40(%r10)
+	vbroadcastsd	%xmm26, %zmm26
+	vmulpd			%zmm5, %zmm26, %zmm5
+	vmulpd			%zmm13, %zmm26, %zmm13
+	vmovapd			%zmm6, %zmm26
+	vfnmadd231pd	%zmm5, %zmm5, %zmm26
+
+	// 6
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm26, %zmm27, %zmm26
+	vucomisd		%xmm25, %xmm26 // d_22 > 0.0 ?
+	jbe				13f
+	vsqrtsd			%xmm26, %xmm26, %xmm26
+	vdivsd			%xmm26, %xmm24, %xmm26
+14:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+//	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+//	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm5, %zmm27, %zmm27
+	vfnmadd231pd	%zmm5, %zmm27, %zmm6
+	vfnmadd231pd	%zmm13, %zmm27, %zmm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm5, %zmm27, %zmm27
+	vfnmadd231pd	%zmm5, %zmm27, %zmm7
+	vfnmadd231pd	%zmm13, %zmm27, %zmm15
+	vmovsd			%xmm26, 48(%r10)
+	vbroadcastsd	%xmm26, %zmm26
+	vmulpd			%zmm6, %zmm26, %zmm6
+	vmulpd			%zmm14, %zmm26, %zmm14
+	vmovapd			%zmm7, %zmm26
+	vfnmadd231pd	%zmm6, %zmm6, %zmm26
+
+	// 7
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm26, %zmm27, %zmm26
+	vucomisd		%xmm25, %xmm26 // d_22 > 0.0 ?
+	jbe				15f
+	vsqrtsd			%xmm26, %xmm26, %xmm26
+	vdivsd			%xmm26, %xmm24, %xmm26
+16:
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+//	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+//	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm6, %zmm27, %zmm27
+	vfnmadd231pd	%zmm6, %zmm27, %zmm7
+	vfnmadd231pd	%zmm14, %zmm27, %zmm15
+	vmovsd			%xmm26, 56(%r10)
+	vbroadcastsd	%xmm26, %zmm26
+	vmulpd			%zmm7, %zmm26, %zmm7
+	vmulpd			%zmm15, %zmm26, %zmm15
+
+	jmp				0f
+
+1:
+	vxorpd			%zmm26, %zmm26, %zmm26
+	jmp				2b
+
+3:
+	vxorpd			%zmm26, %zmm26, %zmm26
+	jmp				4b
+
+5:
+	vxorpd			%zmm26, %zmm26, %zmm26
+	jmp				6b
+
+7:
+	vxorpd			%zmm26, %zmm26, %zmm26
+	jmp				8b
+
+9:
+	vxorpd			%zmm26, %zmm26, %zmm26
+	jmp				10b
+
+11:
+	vxorpd			%zmm26, %zmm26, %zmm26
+	jmp				12b
+
+13:
+	vxorpd			%zmm26, %zmm26, %zmm26
+	jmp				14b
+
+15:
+	vxorpd			%zmm26, %zmm26, %zmm26
+	jmp				16b
+
+0:
+	#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dpotrf_16x8_lib8)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// cholesky factorization 
+//
+// input arguments:
+// r10  <- inv_diag_E
+// r11d <- m1
+// r12d <- n1
+// zmm0 <- []
+// ...
+// ymm15 <- []
+//
+// output arguments:
+// r10  <- inv_diag_E
+// r11d <- m1
+// r12d <- n1
+// zmm0 <- []
+// ...
+// ymm15 <- []
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DPOTRF_16X8_VS_LIB8
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dpotrf_16x8_vs_lib8)
+#endif
+
+	// compute mask for rows
+	vcvtsi2sd	%r11d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %zmm24
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %zmm24
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm24, %zmm25
+	vpmovq2m	%zmm25, %k1
+
+	vmovapd		%zmm8, %zmm8 {%k1}{z}
+	vmovapd		%zmm9, %zmm9 {%k1}{z}
+	vmovapd		%zmm10, %zmm10 {%k1}{z}
+	vmovapd		%zmm11, %zmm11 {%k1}{z}
+	vmovapd		%zmm12, %zmm12 {%k1}{z}
+	vmovapd		%zmm13, %zmm13 {%k1}{z}
+	vmovapd		%zmm14, %zmm14 {%k1}{z}
+	vmovapd		%zmm15, %zmm15 {%k1}{z}
+
+	vxorpd	%ymm25, %ymm25, %ymm25 // 0.0
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovsd	.LC04(%rip), %xmm24 // 1.0
+#elif defined(OS_MAC)
+	vmovsd	LC04(%rip), %xmm24 // 1.0
+#endif
+
+	// 0
+	vmovsd			%xmm0, %xmm0, %xmm26
+	vucomisd		%xmm25, %xmm26 // d_00 > 0.0 ?
+	jbe				1f
+	vsqrtsd			%xmm26, %xmm26, %xmm26
+	vdivsd			%xmm26, %xmm24, %xmm26
+2:
+	vmovsd			%xmm26, 0(%r10)
+	vbroadcastsd	%xmm26, %zmm26
+	vmulpd			%zmm0, %zmm26, %zmm0
+	vmulpd			%zmm8, %zmm26, %zmm8
+	cmpl			$ 2, %r12d
 	jl				0f // ret
 	vmovapd			%zmm1, %zmm26
 	vfnmadd231pd	%zmm0, %zmm0, %zmm26
@@ -8729,7 +9198,7 @@ NAME:
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm1, %zmm26, %zmm1
 	vmulpd			%zmm9, %zmm26, %zmm9
-	cmpl			$ 3, %r11d
+	cmpl			$ 3, %r12d
 	jl				0f // ret
 	vmovapd			%zmm2, %zmm26
 	vfnmadd231pd	%zmm1, %zmm1, %zmm26
@@ -8798,7 +9267,7 @@ NAME:
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm2, %zmm26, %zmm2
 	vmulpd			%zmm10, %zmm26, %zmm10
-	cmpl			$ 4, %r11d
+	cmpl			$ 4, %r12d
 	jl				0f // ret
 	vmovapd			%zmm3, %zmm26
 	vfnmadd231pd	%zmm2, %zmm2, %zmm26
@@ -8859,7 +9328,7 @@ NAME:
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm3, %zmm26, %zmm3
 	vmulpd			%zmm11, %zmm26, %zmm11
-	cmpl			$ 5, %r11d
+	cmpl			$ 5, %r12d
 	jl				0f // ret
 	vmovapd			%zmm4, %zmm26
 	vfnmadd231pd	%zmm3, %zmm3, %zmm26
@@ -8912,7 +9381,7 @@ NAME:
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm4, %zmm26, %zmm4
 	vmulpd			%zmm12, %zmm26, %zmm12
-	cmpl			$ 6, %r11d
+	cmpl			$ 6, %r12d
 	jl				0f // ret
 	vmovapd			%zmm5, %zmm26
 	vfnmadd231pd	%zmm4, %zmm4, %zmm26
@@ -8957,7 +9426,7 @@ NAME:
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm5, %zmm26, %zmm5
 	vmulpd			%zmm13, %zmm26, %zmm13
-	cmpl			$ 7, %r11d
+	cmpl			$ 7, %r12d
 	jl				0f // ret
 	vmovapd			%zmm6, %zmm26
 	vfnmadd231pd	%zmm5, %zmm5, %zmm26
@@ -8994,7 +9463,7 @@ NAME:
 	vbroadcastsd	%xmm26, %zmm26
 	vmulpd			%zmm6, %zmm26, %zmm6
 	vmulpd			%zmm14, %zmm26, %zmm14
-	cmpl			$ 8, %r11d
+	cmpl			$ 8, %r12d
 	jl				0f // ret
 	vmovapd			%zmm7, %zmm26
 	vfnmadd231pd	%zmm6, %zmm6, %zmm26
@@ -9288,7 +9757,8 @@ NAME:
 // r11   <- beta
 // r12   <- C
 // r13   <- 8*sdc*sizeof(double)
-// r14   <- n1
+// r14   <- m1
+// r15   <- n1
 // zmm0 <- []
 // ...
 // zmm15 <- []
@@ -9298,7 +9768,8 @@ NAME:
 // r11   <- beta
 // r10   <- C
 // r13   <- 8*sdc*sizeof(double)
-// r14   <- n1
+// r14   <- m1
+// r15   <- n1
 // zmm0 <- []
 // ...
 // zmm15 <- []
@@ -9338,51 +9809,62 @@ NAME:
 	vucomisd	%xmm25, %xmm24 // beta==0.0 ?
 	je			0f // end
 
+	// compute mask for rows
+	vcvtsi2sd	%r14d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %zmm26
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %zmm26
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm26, %zmm25
+	vpmovq2m	%zmm25, %k1
+
 	vmovapd		0(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm0
-	vmovapd		0(%r12, %r13), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm8
-	cmpl	$ 2, %r14d
+	vmovapd		0(%r12, %r13), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm8 {%k1}
+	cmpl	$ 2, %r15d
 	jl		0f // end
 	vmovapd		64(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm1
-	vmovapd		64(%r12, %r13), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm9
-	cmpl	$ 3, %r14d
+	vmovapd		64(%r12, %r13), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm9 {%k1}
+	cmpl	$ 3, %r15d
 	jl		0f // end
 	vmovapd		128(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm2
-	vmovapd		128(%r12, %r13), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm10
-	cmpl	$ 4, %r14d
+	vmovapd		128(%r12, %r13), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm10 {%k1}
+	cmpl	$ 4, %r15d
 	jl		0f // end
 	vmovapd		192(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm3
-	vmovapd		192(%r12, %r13), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm11
-	cmpl	$ 5, %r14d
+	vmovapd		192(%r12, %r13), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm11 {%k1}
+	cmpl	$ 5, %r15d
 	jl		0f // end
 	vmovapd		0+256(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm4
-	vmovapd		0+256(%r12, %r13), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm12
-	cmpl	$ 6, %r14d
+	vmovapd		0+256(%r12, %r13), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm12 {%k1}
+	cmpl	$ 6, %r15d
 	jl		0f // end
 	vmovapd		64+256(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm5
-	vmovapd		64+256(%r12, %r13), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm13
-	cmpl	$ 7, %r14d
+	vmovapd		64+256(%r12, %r13), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm13 {%k1}
+	cmpl	$ 7, %r15d
 	jl		0f // end
 	vmovapd		128+256(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm6
-	vmovapd		128+256(%r12, %r13), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm14
+	vmovapd		128+256(%r12, %r13), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm14 {%k1}
 	je		0f // end
 	vmovapd		192+256(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm7
-	vmovapd		192+256(%r12, %r13), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm15
+	vmovapd		192+256(%r12, %r13), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm15 {%k1}
 
 0:
 
@@ -9406,7 +9888,8 @@ NAME:
 // r10   <- alpha
 // r11   <- beta
 // r12   <- C
-// r13d  <- n1
+// r13d  <- m1
+// r14d  <- n1
 // zmm0 <- []
 // ...
 // zmm15 <- []
@@ -9415,7 +9898,8 @@ NAME:
 // r10   <- alpha
 // r11   <- beta
 // r12   <- C
-// r13d  <- n1
+// r13d  <- m1
+// r14d  <- n1
 // zmm0 <- []
 // ...
 // zmm15 <- []
@@ -9455,6 +9939,17 @@ NAME:
 	vucomisd	%xmm25, %xmm24 // beta==0.0 ?
 	je			0f // end
 
+	// compute mask for rows
+	vcvtsi2sd	%r13d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC00(%rip), %zmm26
+#elif defined(OS_MAC)
+	vmovupd		LC00(%rip), %zmm26
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm26, %zmm25
+	vpmovq2m	%zmm25, %k1
+
 	vmovapd		0(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm0
 	vmovapd		64(%r12), %zmm25
@@ -9472,35 +9967,35 @@ NAME:
 	vmovapd		192+256(%r12), %zmm25
 	vfmadd231pd	%zmm24, %zmm25, %zmm7
 
-	vmovapd		0+2*256(%r12), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm8
-	cmpl	$ 10, %r13d
+	vmovapd		0+2*256(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm8 {%k1}
+	cmpl	$ 10, %r14d
 	jl		0f // end
-	vmovapd		64+2*256(%r12), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm9
-	cmpl	$ 11, %r13d
+	vmovapd		64+2*256(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm9 {%k1}
+	cmpl	$ 11, %r14d
 	jl		0f // end
-	vmovapd		128+2*256(%r12), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm10
-	cmpl	$ 12, %r13d
+	vmovapd		128+2*256(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm10 {%k1}
+	cmpl	$ 12, %r14d
 	jl		0f // end
-	vmovapd		192+2*256(%r12), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm11
-	cmpl	$ 13, %r13d
+	vmovapd		192+2*256(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm11 {%k1}
+	cmpl	$ 13, %r14d
 	jl		0f // end
-	vmovapd		0+3*256(%r12), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm12
-	cmpl	$ 14, %r13d
+	vmovapd		0+3*256(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm12 {%k1}
+	cmpl	$ 14, %r14d
 	jl		0f // end
-	vmovapd		64+3*256(%r12), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm13
-	cmpl	$ 15, %r13d
+	vmovapd		64+3*256(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm13 {%k1}
+	cmpl	$ 15, %r14d
 	jl		0f // end
-	vmovapd		128+3*256(%r12), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm14
+	vmovapd		128+3*256(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm14 {%k1}
 	je		0f // end
-	vmovapd		192+3*256(%r12), %zmm25
-	vfmadd231pd	%zmm24, %zmm25, %zmm15
+	vmovapd		192+3*256(%r12), %zmm25 {%k1}{z}
+	vfmadd231pd	%zmm24, %zmm25, %zmm15 {%k1}
 
 0:
 
@@ -9543,6 +10038,8 @@ NAME:
 // zmm0 <- []
 // ...
 // ymm15 <- []
+
+// TODO m-mask !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_16X8_GEN_LIB8
@@ -9940,6 +10437,8 @@ NAME:
 // zmm0 <- []
 // ...
 // zmm7 <- []
+
+// TODO m-mask !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_8X16_GEN_LIB8
@@ -10459,7 +10958,8 @@ NAME:
 // r10   <- beta
 // r11   <- C
 // r12   <- sdc
-// r13d  <- n1
+// r13d  <- m1
+// r14d  <- n1
 // zmm0 <- []
 // ...
 // zmm15 <- []
@@ -10467,8 +10967,9 @@ NAME:
 // output arguments:
 // r10   <- beta
 // r11   <- C
-// r13d  <- n1
 // r12   <- sdc
+// r13d  <- m1
+// r14d  <- n1
 // zmm0 <- []
 // ...
 // zmm15 <- []
@@ -10488,51 +10989,62 @@ NAME:
 	vucomisd	%xmm25, %xmm24 // beta==0.0 ?
 	je			0f // end
 
+	// compute mask for rows
+	vcvtsi2sd	%r13d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %zmm26
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %zmm26
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm26, %zmm25
+	vpmovq2m	%zmm25, %k1
+
 	vmovapd		0(%r11), %zmm25
 	vfmsub231pd	%zmm24, %zmm25, %zmm0
-	vmovapd		0(%r11, %r12), %zmm25
-	vfmsub231pd	%zmm24, %zmm25, %zmm8
-	cmpl	$ 2, %r13d
+	vmovapd		0(%r11, %r12), %zmm25 {%k1}{z}
+	vfmsub231pd	%zmm24, %zmm25, %zmm8 {%k1}
+	cmpl	$ 2, %r14d
 	jl		0f // end
 	vmovapd		1*64(%r11), %zmm25
 	vfmsub231pd	%zmm24, %zmm25, %zmm1
-	vmovapd		1*64(%r11, %r12), %zmm25
-	vfmsub231pd	%zmm24, %zmm25, %zmm9
-	cmpl	$ 3, %r13d
+	vmovapd		1*64(%r11, %r12), %zmm25 {%k1}{z}
+	vfmsub231pd	%zmm24, %zmm25, %zmm9 {%k1}
+	cmpl	$ 3, %r14d
 	jl		0f // end
 	vmovapd		2*64(%r11), %zmm25
 	vfmsub231pd	%zmm24, %zmm25, %zmm2
-	vmovapd		2*64(%r11, %r12), %zmm25
-	vfmsub231pd	%zmm24, %zmm25, %zmm10
-	cmpl	$ 4, %r13d
+	vmovapd		2*64(%r11, %r12), %zmm25 {%k1}{z}
+	vfmsub231pd	%zmm24, %zmm25, %zmm10 {%k1}
+	cmpl	$ 4, %r14d
 	jl		0f // end
 	vmovapd		3*64(%r11), %zmm25
 	vfmsub231pd	%zmm24, %zmm25, %zmm3
-	vmovapd		3*64(%r11, %r12), %zmm25
-	vfmsub231pd	%zmm24, %zmm25, %zmm11
-	cmpl	$ 5, %r13d
+	vmovapd		3*64(%r11, %r12), %zmm25 {%k1}{z}
+	vfmsub231pd	%zmm24, %zmm25, %zmm11 {%k1}
+	cmpl	$ 5, %r14d
 	jl		0f // end
 	vmovapd		4*64(%r11), %zmm25
 	vfmsub231pd	%zmm24, %zmm25, %zmm4
-	vmovapd		4*64(%r11, %r12), %zmm25
-	vfmsub231pd	%zmm24, %zmm25, %zmm12
-	cmpl	$ 6, %r13d
+	vmovapd		4*64(%r11, %r12), %zmm25 {%k1}{z}
+	vfmsub231pd	%zmm24, %zmm25, %zmm12 {%k1}
+	cmpl	$ 6, %r14d
 	jl		0f // end
 	vmovapd		5*64(%r11), %zmm25
 	vfmsub231pd	%zmm24, %zmm25, %zmm5
-	vmovapd		5*64(%r11, %r12), %zmm25
-	vfmsub231pd	%zmm24, %zmm25, %zmm13
-	cmpl	$ 7, %r13d
+	vmovapd		5*64(%r11, %r12), %zmm25 {%k1}{z}
+	vfmsub231pd	%zmm24, %zmm25, %zmm13 {%k1}
+	cmpl	$ 7, %r14d
 	jl		0f // end
 	vmovapd		6*64(%r11), %zmm25
 	vfmsub231pd	%zmm24, %zmm25, %zmm6
-	vmovapd		6*64(%r11, %r12), %zmm25
-	vfmsub231pd	%zmm24, %zmm25, %zmm14
+	vmovapd		6*64(%r11, %r12), %zmm25 {%k1}{z}
+	vfmsub231pd	%zmm24, %zmm25, %zmm14 {%k1}
 	je		0f // end
 	vmovapd		7*64(%r11), %zmm25
 	vfmsub231pd	%zmm24, %zmm25, %zmm7
-	vmovapd		7*64(%r11, %r12), %zmm25
-	vfmsub231pd	%zmm24, %zmm25, %zmm15
+	vmovapd		7*64(%r11, %r12), %zmm25 {%k1}{z}
+	vfmsub231pd	%zmm24, %zmm25, %zmm15 {%k1}
 
 0:
 
@@ -10626,7 +11138,8 @@ NAME:
 // input arguments:
 // r10   <- C
 // r11   <- sdc
-// r12   <- n1
+// r12   <- m1
+// r13   <- n1
 // zmm0 <- []
 // ...
 // zmm15 <- []
@@ -10634,7 +11147,8 @@ NAME:
 // output arguments:
 // r10   <- C
 // r11   <- sdc
-// r12   <- n1
+// r12   <- m1
+// r13   <- n1
 // zmm0 <- []
 // ...
 // zmm15 <- []
@@ -10646,51 +11160,62 @@ NAME:
 	FUN_START(inner_scale_m11_16x8_vs_lib8)
 #endif	
 	
+	// compute mask for rows
+	vcvtsi2sd	%r12d, %xmm25, %xmm25
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC01(%rip), %zmm26
+#elif defined(OS_MAC)
+	vmovupd		LC01(%rip), %zmm26
+#endif
+	vbroadcastsd	%xmm25, %zmm25
+	vsubpd		%zmm25, %zmm26, %zmm25
+	vpmovq2m	%zmm25, %k1
+
 	vmovapd		0(%r10), %zmm24
 	vsubpd		%zmm0, %zmm24, %zmm0
-	vmovapd		0(%r10, %r11), %zmm24
-	vsubpd		%zmm8, %zmm24, %zmm8
-	cmpl	$ 2, %r12d
+	vmovapd		0(%r10, %r11), %zmm24 {%k1}{z}
+	vsubpd		%zmm8, %zmm24, %zmm8 {%k1}
+	cmpl	$ 2, %r13d
 	jl		0f // end
 	vmovapd		1*64(%r10), %zmm24
 	vsubpd		%zmm1, %zmm24, %zmm1
-	vmovapd		1*64(%r10, %r11), %zmm24
-	vsubpd		%zmm9, %zmm24, %zmm9
-	cmpl	$ 3, %r12d
+	vmovapd		1*64(%r10, %r11), %zmm24 {%k1}{z}
+	vsubpd		%zmm9, %zmm24, %zmm9 {%k1}
+	cmpl	$ 3, %r13d
 	jl		0f // end
 	vmovapd		2*64(%r10), %zmm24
 	vsubpd		%zmm2, %zmm24, %zmm2
-	vmovapd		2*64(%r10, %r11), %zmm24
-	vsubpd		%zmm10, %zmm24, %zmm10
-	cmpl	$ 4, %r12d
+	vmovapd		2*64(%r10, %r11), %zmm24 {%k1}{z}
+	vsubpd		%zmm10, %zmm24, %zmm10 {%k1}
+	cmpl	$ 4, %r13d
 	jl		0f // end
 	vmovapd		3*64(%r10), %zmm24
 	vsubpd		%zmm3, %zmm24, %zmm3
-	vmovapd		3*64(%r10, %r11), %zmm24
-	vsubpd		%zmm11, %zmm24, %zmm11
-	cmpl	$ 5, %r12d
+	vmovapd		3*64(%r10, %r11), %zmm24 {%k1}{z}
+	vsubpd		%zmm11, %zmm24, %zmm11 {%k1}
+	cmpl	$ 5, %r13d
 	jl		0f // end
 	vmovapd		4*64(%r10), %zmm24
 	vsubpd		%zmm4, %zmm24, %zmm4
-	vmovapd		4*64(%r10, %r11), %zmm24
-	vsubpd		%zmm12, %zmm24, %zmm12
-	cmpl	$ 6, %r12d
+	vmovapd		4*64(%r10, %r11), %zmm24 {%k1}{z}
+	vsubpd		%zmm12, %zmm24, %zmm12 {%k1}
+	cmpl	$ 6, %r13d
 	jl		0f // end
 	vmovapd		5*64(%r10), %zmm24
 	vsubpd		%zmm5, %zmm24, %zmm5
-	vmovapd		5*64(%r10, %r11), %zmm24
-	vsubpd		%zmm13, %zmm24, %zmm13
-	cmpl	$ 7, %r12d
+	vmovapd		5*64(%r10, %r11), %zmm24 {%k1}{z}
+	vsubpd		%zmm13, %zmm24, %zmm13 {%k1}
+	cmpl	$ 7, %r13d
 	jl		0f // end
 	vmovapd		6*64(%r10), %zmm24
 	vsubpd		%zmm6, %zmm24, %zmm6
-	vmovapd		6*64(%r10, %r11), %zmm24
-	vsubpd		%zmm14, %zmm24, %zmm14
+	vmovapd		6*64(%r10, %r11), %zmm24 {%k1}{z}
+	vsubpd		%zmm14, %zmm24, %zmm14 {%k1}
 	je		0f // end
 	vmovapd		7*64(%r10), %zmm24
 	vsubpd		%zmm7, %zmm24, %zmm7
-	vmovapd		7*64(%r10, %r11), %zmm24
-	vsubpd		%zmm15, %zmm24, %zmm15
+	vmovapd		7*64(%r10, %r11), %zmm24 {%k1}{z}
+	vsubpd		%zmm15, %zmm24, %zmm15 {%k1}
 
 0:
 
@@ -12524,7 +13049,8 @@ NAME:
 	movq	ARG7, %r12 // C
 	movq	ARG8, %r13 // sdc
 	sall	$ 6, %r13d // 8*sdc*sizeof(double)
-	movq	ARG12, %r14 // n1
+	movq	ARG11, %r14 // m1
+	movq	ARG12, %r15 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_16X8_VS_LIB8
@@ -12745,7 +13271,8 @@ NAME:
 	movq	ARG2, %r10 // alpha
 	movq	ARG6, %r11 // beta
 	movq	ARG7, %r12 // C
-	movq	ARG10, %r13 // n1
+	movq	ARG9, %r13 // m1
+	movq	ARG10, %r14 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X16_VS_LIB8
@@ -12901,7 +13428,8 @@ NAME:
 	movq	ARG9, %r12   // C
 	movq	ARG10, %r13 // sdc
 	sall	$ 6, %r13d // 8*sdc*sizeof(double)
-	movq	ARG14, %r14 // n1
+	movq	ARG13, %r14 // m1
+	movq	ARG14, %r15 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_16X8_VS_LIB8
@@ -13153,7 +13681,8 @@ NAME:
 	movq	ARG2, %r10 // alpha
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12 // C
-	movq	ARG12, %r13 // n1
+	movq	ARG11, %r13 // m1
+	movq	ARG12, %r14 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X16_VS_LIB8
@@ -13383,7 +13912,8 @@ NAME:
 	movq	ARG7, %r12 // C
 	movq	ARG8, %r13 // sdc
 	sall	$ 6, %r13d // 8*sdc*sizeof(double)
-	movq	ARG12, %r14 // n1
+	movq	ARG11, %r14 // m1
+	movq	ARG12, %r15 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_16X8_VS_LIB8
@@ -13858,7 +14388,8 @@ NAME:
 	movq	ARG6, %r11 // C
 	movq	ARG7, %r12 // sdc
 	sall	$ 6, %r12d // 4*sdc*sizeof(double)
-	movq	ARG13, %r13 // n1
+	movq	ARG12, %r13 // m1
+	movq	ARG13, %r14 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M1B_16X8_VS_LIB8
@@ -14056,7 +14587,8 @@ NAME:
 	movq	ARG9, %r10  // C
 	movq	ARG10, %r11 // sdc
 	sall	$ 6, %r11d // 4*sdc*sizeof(double)
-	movq	ARG16, %r12 // n1
+	movq	ARG15, %r12 // m1
+	movq	ARG16, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_16X8_VS_LIB8
@@ -14147,12 +14679,11 @@ NAME:
 	// factorization
 
 	movq	ARG9, %r10  // inv_diag_D 
-	movl	$ 8, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DPOTRF_16X8_VS_LIB8
+	INNER_EDGE_DPOTRF_16X8_LIB8
 #else
-	CALL(inner_edge_dpotrf_16x8_vs_lib8)
+	CALL(inner_edge_dpotrf_16x8_lib8)
 #endif
 
 
@@ -14214,7 +14745,8 @@ NAME:
 	movq	ARG5, %r10 // C
 	movq	ARG6, %r11 // sdc
 	sall	$ 6, %r11d // 8*sdc*sizeof(double)
-	movq	ARG11, %r12 // n1
+	movq	ARG10, %r12 // m1
+	movq	ARG11, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_16X8_VS_LIB8
@@ -14226,7 +14758,8 @@ NAME:
 	// factorization
 
 	movq	ARG9, %r10  // inv_diag_D 
-	movq	ARG11, %r11 // n1
+	movq	ARG10, %r11 // m1
+	movq	ARG11, %r12 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_16X8_VS_LIB8
@@ -14323,12 +14856,11 @@ NAME:
 	// factorization
 
 	movq	ARG13, %r10  // inv_diag_D 
-	movl	$ 8, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DPOTRF_16X8_VS_LIB8
+	INNER_EDGE_DPOTRF_16X8_LIB8
 #else
-	CALL(inner_edge_dpotrf_16x8_vs_lib8)
+	CALL(inner_edge_dpotrf_16x8_lib8)
 #endif
 
 
@@ -14411,7 +14943,8 @@ NAME:
 	movq	ARG9, %r10 // C
 	movq	ARG10, %r11 // sdc
 	sall	$ 6, %r11d // 4*sdc*sizeof(double)
-	movq	ARG15, %r12 // n1
+	movq	ARG14, %r12 // m1
+	movq	ARG15, %r13 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_16X8_VS_LIB8
@@ -14423,7 +14956,8 @@ NAME:
 	// factorization
 
 	movq	ARG13, %r10  // inv_diag_D 
-	movq	ARG15, %r11 // n1
+	movq	ARG14, %r11 // m1
+	movq	ARG15, %r12 // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DPOTRF_16X8_VS_LIB8
