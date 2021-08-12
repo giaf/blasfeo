@@ -1407,10 +1407,10 @@ void blasfeo_hp_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, in
 	ii = 0;
 	for(ii=0; ii<imax-8; ii+=8)
 		{
-		kernel_dgelqf_pd_lla_vs_lib8(8, imax0+ii, n1, 8, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pL+ii*sdl+0*ps, sdl, 0, pA+ii*sda+0*ps, sda);
+//		kernel_dgelqf_pd_lla_vs_lib8(8, imax0+ii, n1, 8, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pL+ii*sdl+0*ps, sdl, 0, pA+ii*sda+0*ps, sda);
 //		kernel_dgelqf_pd_lla_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii);
-		kernel_dlarft_lla_8_lib8(imax0+ii, n1, dD+ii, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT);
-//		kernel_dgelqf_pd_lla_dlarft8_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+//		kernel_dlarft_lla_8_lib8(imax0+ii, n1, dD+ii, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT);
+		kernel_dgelqf_pd_lla_dlarft8_8_lib8(imax0+ii, n1, pD+ii*sdd+ii*ps, dD+ii, pL+ii*sdl+0*ps, pA+ii*sda+0*ps, pT);
 		jj = ii+8;
 //d_print_mat(1, 8, dD+ii, 1);
 //d_print_mat(8, 8, pT, 8);

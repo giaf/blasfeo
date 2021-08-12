@@ -5236,15 +5236,14 @@ NAME:
 
 	// first column
 
-//	movq	ARG2, %r11 // D
+	movq	ARG1, %r10 // n
 	movq	ARG4, %r11 // A
-	movq	ARG3, %r12 // dD
-	movq	ARG5, %r13 // T
 
 	vxorpd			%xmm25, %xmm25, %xmm25
-	movq	ARG1, %r10 // n
 //	subl	$ 1, %r10d
 //	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jle		101f
 100:
 	vmovsd			0(%r11), %xmm24
 	vfmadd231sd		%xmm24, %xmm24, %xmm25
@@ -5252,6 +5251,10 @@ NAME:
 	addq	$ 64, %r11
 	cmpl	$ 0, %r10d
 	jg		100b
+101:
+
+	movq	ARG3, %r12 // dD
+	movq	ARG5, %r13 // T
 
 	vxorpd			%xmm24, %xmm24, %xmm24
 	vucomisd		%xmm24, %xmm25
@@ -5275,8 +5278,8 @@ NAME:
 	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 0+64*0(%r13) // pT[0+ps*0]
 
-//	vmovapd			0*64(%r11), %zmm0
-	vxorpd			%zmm0, %zmm0, %zmm0
+	vmovapd			0*64(%r11), %zmm0
+//	vxorpd			%zmm0, %zmm0, %zmm0
 	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
 //	vbroadcastsd	0+1*64(%r11), %zmm17
 //	vmulpd			%zmm25, %zmm17, %zmm17
@@ -5365,7 +5368,7 @@ NAME:
 //	vmovapd			%zmm23, 7*64(%r11)
 
 	movq	ARG1, %r10 // n
-	movq	ARG4, %r11
+	movq	ARG4, %r11 // A
 
 	movq	$ 0, %r14 // XXX chech for reg overwrite
 
@@ -5407,8 +5410,10 @@ NAME:
 	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 8+64*1(%r13) // pT[1+ps*1]
 
-//	vmovapd			1*64(%r11), %zmm0
-	vxorpd			%zmm0, %zmm0, %zmm0
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			1*64(%r11), %zmm0 {%k1}{z}
+//	vxorpd			%zmm0, %zmm0, %zmm0
 	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
 ////	vbroadcastsd	8+1*64(%r11), %zmm17
 ////	vmulpd			%zmm25, %zmm17, %zmm17
@@ -5552,8 +5557,10 @@ NAME:
 	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 16+64*2(%r13) // pT[1+ps*1]
 
-//	vmovapd			2*64(%r11), %zmm0
-	vxorpd			%zmm0, %zmm0, %zmm0
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			2*64(%r11), %zmm0 {%k1}{z}
+//	vxorpd			%zmm0, %zmm0, %zmm0
 	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
 ////	vbroadcastsd	16+1*64(%r11), %zmm17
 ////	vmulpd			%zmm25, %zmm17, %zmm17
@@ -5704,8 +5711,10 @@ NAME:
 	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 24+64*3(%r13) // pT[1+ps*1]
 
-//	vmovapd			3*64(%r11), %zmm0
-	vxorpd			%zmm0, %zmm0, %zmm0
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			3*64(%r11), %zmm0 {%k1}{z}
+//	vxorpd			%zmm0, %zmm0, %zmm0
 	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
 ////	vbroadcastsd	24+1*64(%r11), %zmm17
 ////	vmulpd			%zmm25, %zmm17, %zmm17
@@ -5867,8 +5876,10 @@ NAME:
 	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 32+64*4(%r13) // pT[1+ps*1]
 
-//	vmovapd			4*64(%r11), %zmm0
-	vxorpd			%zmm0, %zmm0, %zmm0
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			4*64(%r11), %zmm0 {%k1}{z}
+//	vxorpd			%zmm0, %zmm0, %zmm0
 	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
 ////	vbroadcastsd	32+1*64(%r11), %zmm17
 ////	vmulpd			%zmm25, %zmm17, %zmm17
@@ -6045,8 +6056,10 @@ NAME:
 	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 40+64*5(%r13) // pT[1+ps*1]
 
-//	vmovapd			5*64(%r11), %zmm0
-	vxorpd			%zmm0, %zmm0, %zmm0
+	movl	$ 0xe0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			5*64(%r11), %zmm0 {%k1}{z}
+//	vxorpd			%zmm0, %zmm0, %zmm0
 	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
 ////	vbroadcastsd	40+1*64(%r11), %zmm17
 ////	vmulpd			%zmm25, %zmm17, %zmm17
@@ -6235,8 +6248,10 @@ NAME:
 	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 48+64*6(%r13) // pT[1+ps*1]
 
-//	vmovapd			6*64(%r11), %zmm0
-	vxorpd			%zmm0, %zmm0, %zmm0
+	movl	$ 0xc0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			6*64(%r11), %zmm0 {%k1}{z}
+//	vxorpd			%zmm0, %zmm0, %zmm0
 	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
 ////	vbroadcastsd	48+1*64(%r11), %zmm17
 ////	vmulpd			%zmm25, %zmm17, %zmm17
@@ -6437,8 +6452,10 @@ NAME:
 	vxorpd			%xmm31, %xmm24, %xmm27
 	vmovsd			%xmm27, 56+64*7(%r13) // pT[1+ps*1]
 
-//	vmovapd			7*64(%r11), %zmm0
-	vxorpd			%zmm0, %zmm0, %zmm0
+	movl	$ 0x80, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			7*64(%r11), %zmm0 {%k1}{z}
+//	vxorpd			%zmm0, %zmm0, %zmm0
 	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
 ////	vbroadcastsd	56+1*64(%r11), %zmm17
 ////	vmulpd			%zmm25, %zmm17, %zmm17
@@ -6564,6 +6581,1859 @@ NAME:
 	ret
 
 	FUN_END(kernel_dgelqf_pd_la_dlarft8_8_lib8)
+
+
+
+
+
+//                                          1       2       3           4           5           6           7
+// void kernel_dgelqf_pd_lla_dlarft8_8_lib8(int n0, int n1, double *pD, double *dD, double *pL, double *pA, double *pT)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgelqf_pd_lla_dlarft8_8_lib8)
+	
+	PROLOGUE
+
+	// zero T
+
+	movq	ARG7, %r10 // T
+
+	vxorpd			%zmm24, %zmm24, %zmm24
+	vmovapd			%zmm24, 0*64(%r10)
+	vmovapd			%zmm24, 1*64(%r10)
+	vmovapd			%zmm24, 2*64(%r10)
+	vmovapd			%zmm24, 3*64(%r10)
+	vmovapd			%zmm24, 4*64(%r10)
+	vmovapd			%zmm24, 5*64(%r10)
+	vmovapd			%zmm24, 6*64(%r10)
+	vmovapd			%zmm24, 7*64(%r10)
+
+	// first column
+
+	movq	ARG5, %r11 // L
+
+	vxorpd			%xmm25, %xmm25, %xmm25
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11 // A
+
+//	subl	$ 1, %r10d
+//	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jle		101f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+101:
+
+	movq	ARG4, %r12 // dD
+	movq	ARG7, %r13 // T
+
+	vxorpd			%xmm24, %xmm24, %xmm24
+	vucomisd		%xmm24, %xmm25
+	jne		101f
+//	jp		101f
+	vmovsd			%xmm24, 0(%r12)
+	jmp		102f
+
+101:
+	movq	ARG3, %r11 // D
+
+	leaq	0+64*0(%r11), %r14 // XXX chech for reg overwrite
+	leaq	0(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_PD_LIB8
+#else
+	CALL(inner_edge_dgelqf_pd_lib8)
+#endif
+
+	vxorpd			%xmm31, %xmm24, %xmm27
+	vmovsd			%xmm27, 0+64*0(%r13) // pT[0+ps*0]
+
+	// D
+
+	vmovapd			0*64(%r11), %zmm0 // TODO k1 for next cols
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG5, %r11 // L
+
+	movq	$ 0, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vbroadcastsd	0*64(%r11, %r14), %zmm16
+	vmulpd			%zmm25, %zmm16, %zmm16
+//	vbroadcastsd	1*64(%r11, %r14), %zmm17
+//	vmulpd			%zmm25, %zmm17, %zmm17
+//	vbroadcastsd	2*64(%r11, %r14), %zmm18
+//	vmulpd			%zmm25, %zmm18, %zmm18
+//	vbroadcastsd	3*64(%r11, %r14), %zmm19
+//	vmulpd			%zmm25, %zmm19, %zmm19
+//	vbroadcastsd	4*64(%r11, %r14), %zmm20
+//	vmulpd			%zmm25, %zmm20, %zmm20
+//	vbroadcastsd	5*64(%r11, %r14), %zmm21
+//	vmulpd			%zmm25, %zmm21, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm22
+//	vmulpd			%zmm25, %zmm22, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm23
+//	vmulpd			%zmm25, %zmm23, %zmm23
+	vfmadd231pd		0*64(%r11), %zmm16, %zmm0 // TODO k1 for next cols
+	vmovsd			%xmm16, 0*64(%r11, %r14)
+//	vfmadd231pd		1*64(%r11), %zmm17, %zmm1
+//	vmovsd			%xmm17, 1*64(%r11, %r14)
+//	vfmadd231pd		2*64(%r11), %zmm18, %zmm0
+//	vmovsd			%xmm18, 2*64(%r11, %r14)
+//	vfmadd231pd		3*64(%r11), %zmm19, %zmm1
+//	vmovsd			%xmm19, 3*64(%r11, %r14)
+//	vfmadd231pd		4*64(%r11), %zmm20, %zmm0
+//	vmovsd			%xmm20, 4*64(%r11, %r14)
+//	vfmadd231pd		5*64(%r11), %zmm21, %zmm1
+//	vmovsd			%xmm21, 5*64(%r11, %r14)
+//	vfmadd231pd		6*64(%r11), %zmm22, %zmm0
+//	vmovsd			%xmm22, 6*64(%r11, %r14)
+//	vfmadd231pd		7*64(%r11), %zmm23, %zmm1
+//	vmovsd			%xmm23, 7*64(%r11, %r14)
+
+	// A
+	movq	ARG2, %r10 // n1
+	movq	ARG6, %r11 // A
+
+	movq	$ 0, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vbroadcastsd	0(%r13), %zmm25
+	vmulpd			%zmm25, %zmm0, %zmm0 {%k1}{z}
+
+	// D
+	movq	ARG3, %r11 // D
+	vmovapd			0*64(%r11), %zmm16
+	vaddpd			%zmm0, %zmm16, %zmm16
+	vmovapd			%zmm16, 0*64(%r11)
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG5, %r11 // L
+
+	movq	$ 0, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm25, %zmm25, %zmm25
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vmovapd			0*64(%r11), %zmm16
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			1*64(%r11), %zmm17 {%k1}{z}
+//	vmovapd			2*64(%r11), %zmm18
+//	vmovapd			3*64(%r11), %zmm19
+//	vmovapd			4*64(%r11), %zmm20
+//	vmovapd			5*64(%r11), %zmm21
+//	vmovapd			6*64(%r11), %zmm22
+//	vmovapd			7*64(%r11), %zmm23
+	vbroadcastsd	0*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm16
+//	vbroadcastsd	1*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm17
+//	vbroadcastsd	2*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm18
+//	vbroadcastsd	3*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm19
+//	vbroadcastsd	4*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm20
+//	vbroadcastsd	5*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm23
+	vfmadd231pd		%zmm16, %zmm16, %zmm25
+	vmovapd			%zmm16, 0*64(%r11)
+	vfmadd231pd		%zmm17, %zmm17, %zmm25
+//	vmovapd			%zmm17, 1*64(%r11)
+//	vfmadd231pd		%zmm18, %zmm18, %zmm25
+//	vmovapd			%zmm18, 2*64(%r11)
+//	vfmadd231pd		%zmm19, %zmm19, %zmm25
+//	vmovapd			%zmm19, 3*64(%r11)
+//	vfmadd231pd		%zmm20, %zmm20, %zmm25
+//	vmovapd			%zmm20, 4*64(%r11)
+//	vfmadd231pd		%zmm21, %zmm21, %zmm25
+//	vmovapd			%zmm21, 5*64(%r11)
+//	vfmadd231pd		%zmm22, %zmm22, %zmm25
+//	vmovapd			%zmm22, 6*64(%r11)
+//	vfmadd231pd		%zmm23, %zmm23, %zmm25
+//	vmovapd			%zmm23, 7*64(%r11)
+
+	// A
+	movq	ARG2, %r10 // n1
+	movq	ARG6, %r11 // A
+
+	movq	$ 0, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+1*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+1*8(%rip), %zmm27
+#endif
+	vpermpd	%zmm25, %zmm27, %zmm25  // beta
+
+
+	// second column
+102:
+	vxorpd			%xmm24, %xmm24, %xmm24
+	vucomisd		%xmm24, %xmm25
+	jne		101f
+//	jp		111f
+	vmovsd			%xmm24, 8(%r12)
+	jmp		102f
+
+101:
+	movq	ARG3, %r11 // D
+
+	leaq	8+64*1(%r11), %r14 // XXX chech for reg overwrite
+	leaq	8(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_PD_LIB8
+#else
+	CALL(inner_edge_dgelqf_pd_lib8)
+#endif
+
+	vxorpd			%xmm31, %xmm24, %xmm27
+	vmovsd			%xmm27, 8+64*1(%r13) // pT[1+ps*1]
+
+	// D
+	movq	ARG3, %r11 // D
+
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			1*64(%r11), %zmm0 {%k1}{z}
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG5, %r11 // L
+
+	movq	$ 8, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vbroadcastsd	0*64(%r11, %r14), %zmm16
+	vmulpd			%zmm25, %zmm16, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm17
+	vmulpd			%zmm25, %zmm17, %zmm17
+//	vbroadcastsd	2*64(%r11, %r14), %zmm18
+//	vmulpd			%zmm25, %zmm18, %zmm18
+//	vbroadcastsd	3*64(%r11, %r14), %zmm19
+//	vmulpd			%zmm25, %zmm19, %zmm19
+//	vbroadcastsd	4*64(%r11, %r14), %zmm20
+//	vmulpd			%zmm25, %zmm20, %zmm20
+//	vbroadcastsd	5*64(%r11, %r14), %zmm21
+//	vmulpd			%zmm25, %zmm21, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm22
+//	vmulpd			%zmm25, %zmm22, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm23
+//	vmulpd			%zmm25, %zmm23, %zmm23
+	vfmadd231pd		0*64(%r11), %zmm16, %zmm0 // TODO k1 for next cols
+	vmovsd			%xmm16, 0*64(%r11, %r14)
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		1*64(%r11), %zmm17, %zmm0 {%k1}
+	vmovsd			%xmm17, 1*64(%r11, %r14)
+//	vfmadd231pd		2*64(%r11), %zmm18, %zmm0
+//	vmovsd			%xmm18, 2*64(%r11, %r14)
+//	vfmadd231pd		3*64(%r11), %zmm19, %zmm0
+//	vmovsd			%xmm19, 3*64(%r11, %r14)
+//	vfmadd231pd		4*64(%r11), %zmm20, %zmm0
+//	vmovsd			%xmm20, 4*64(%r11, %r14)
+//	vfmadd231pd		5*64(%r11), %zmm21, %zmm0
+//	vmovsd			%xmm21, 5*64(%r11, %r14)
+//	vfmadd231pd		6*64(%r11), %zmm22, %zmm0
+//	vmovsd			%xmm22, 6*64(%r11, %r14)
+//	vfmadd231pd		7*64(%r11), %zmm23, %zmm0
+//	vmovsd			%xmm23, 7*64(%r11, %r14)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 8, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC00+16(%rip), %zmm27 // 1.0
+#else
+	vbroadcastsd	LC00+16(%rip), %zmm27 // 1.0
+#endif
+	movl	$ 0x01, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			0+64*0(%r13), %zmm27 {%k1}
+	vmulpd			%zmm27, %zmm0, %zmm0
+	vbroadcastsd	8+64*1(%r13), %zmm25
+	vmulpd			%zmm25, %zmm0, %zmm0
+	vmovapd			%zmm0, 1*64(%r13) {%k1}
+
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm0, %zmm0 {%k1}{z}
+
+	// D
+	movq	ARG3, %r11 // D
+	vmovapd			1*64(%r11), %zmm17
+	vaddpd			%zmm0, %zmm17, %zmm17
+	vmovapd			%zmm17, 1*64(%r11)
+
+	// L
+	movq	ARG1, %r10 // n
+	movq	ARG5, %r11
+
+	vxorpd			%zmm25, %zmm25, %zmm25
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+	movq	$ 8, %r14 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vmovapd			0*64(%r11), %zmm16
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			1*64(%r11), %zmm17 {%k1}{z}
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			2*64(%r11), %zmm18 {%k1}{z}
+//	vmovapd			3*64(%r11), %zmm19
+//	vmovapd			4*64(%r11), %zmm20
+//	vmovapd			5*64(%r11), %zmm21
+//	vmovapd			6*64(%r11), %zmm22
+//	vmovapd			7*64(%r11), %zmm23
+	vbroadcastsd	0*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm17
+//	vbroadcastsd	2*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm18
+//	vbroadcastsd	3*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm19
+//	vbroadcastsd	4*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm20
+//	vbroadcastsd	5*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm23
+	vfmadd231pd		%zmm16, %zmm16, %zmm25
+	vmovapd			%zmm16, 0*64(%r11)
+	vfmadd231pd		%zmm17, %zmm17, %zmm25
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm17, 1*64(%r11) {%k1}
+	vfmadd231pd		%zmm18, %zmm18, %zmm25
+//	vmovapd			%zmm18, 2*64(%r11)
+//	vfmadd231pd		%zmm19, %zmm19, %zmm25
+//	vmovapd			%zmm19, 3*64(%r11)
+//	vfmadd231pd		%zmm20, %zmm20, %zmm25
+//	vmovapd			%zmm20, 4*64(%r11)
+//	vfmadd231pd		%zmm21, %zmm21, %zmm25
+//	vmovapd			%zmm21, 5*64(%r11)
+//	vfmadd231pd		%zmm22, %zmm22, %zmm25
+//	vmovapd			%zmm22, 6*64(%r11)
+//	vfmadd231pd		%zmm23, %zmm23, %zmm25
+//	vmovapd			%zmm23, 7*64(%r11)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+	movq	$ 8, %r14 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+2*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+2*8(%rip), %zmm27
+#endif
+	vpermpd	%zmm25, %zmm27, %zmm25  // beta
+
+
+	// third column
+102:
+	vxorpd			%xmm24, %xmm24, %xmm24
+	vucomisd		%xmm24, %xmm25
+	jne		101f
+//	jp		111f
+	vmovsd			%xmm24, 16(%r12)
+	jmp		102f
+
+101:
+	movq	ARG3, %r11 // D
+
+	leaq	16+64*2(%r11), %r14 // XXX chech for reg overwrite
+	leaq	16(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_PD_LIB8
+#else
+	CALL(inner_edge_dgelqf_pd_lib8)
+#endif
+
+	vxorpd			%xmm31, %xmm24, %xmm27
+	vmovsd			%xmm27, 16+64*2(%r13) // pT[1+ps*1]
+
+	// D
+	movq	ARG3, %r11 // D
+
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			2*64(%r11), %zmm0 {%k1}{z}
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG5, %r11 // L
+
+	movq	$ 16, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vbroadcastsd	0*64(%r11, %r14), %zmm16
+	vmulpd			%zmm25, %zmm16, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm17
+	vmulpd			%zmm25, %zmm17, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm18
+	vmulpd			%zmm25, %zmm18, %zmm18
+//	vbroadcastsd	3*64(%r11, %r14), %zmm19
+//	vmulpd			%zmm25, %zmm19, %zmm19
+//	vbroadcastsd	4*64(%r11, %r14), %zmm20
+//	vmulpd			%zmm25, %zmm20, %zmm20
+//	vbroadcastsd	5*64(%r11, %r14), %zmm21
+//	vmulpd			%zmm25, %zmm21, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm22
+//	vmulpd			%zmm25, %zmm22, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm23
+//	vmulpd			%zmm25, %zmm23, %zmm23
+	vfmadd231pd		0*64(%r11), %zmm16, %zmm0 // TODO k1 for next cols
+	vmovsd			%xmm16, 0*64(%r11, %r14)
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		1*64(%r11), %zmm17, %zmm0 {%k1}
+	vmovsd			%xmm17, 1*64(%r11, %r14)
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		2*64(%r11), %zmm18, %zmm0 {%k1}
+	vmovsd			%xmm18, 2*64(%r11, %r14)
+//	vfmadd231pd		3*64(%r11), %zmm19, %zmm0
+//	vmovsd			%xmm19, 3*64(%r11, %r14)
+//	vfmadd231pd		4*64(%r11), %zmm20, %zmm0
+//	vmovsd			%xmm20, 4*64(%r11, %r14)
+//	vfmadd231pd		5*64(%r11), %zmm21, %zmm0
+//	vmovsd			%xmm21, 5*64(%r11, %r14)
+//	vfmadd231pd		6*64(%r11), %zmm22, %zmm0
+//	vmovsd			%xmm22, 6*64(%r11, %r14)
+//	vfmadd231pd		7*64(%r11), %zmm23, %zmm0
+//	vmovsd			%xmm23, 7*64(%r11, %r14)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 16, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+
+	movl	$ 0x01, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			0*64(%r13), %zmm24
+	vmulpd			%zmm24, %zmm0, %zmm1 {%k1}{z}
+	vmovapd			1*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+1*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+1*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x03, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	vmovapd			%zmm1, %zmm0 {%k1}
+	vbroadcastsd	16+2*64(%r13), %zmm25
+	vmulpd			%zmm25, %zmm0, %zmm0
+	vmovapd			%zmm0, 2*64(%r13) {%k1}
+
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm0, %zmm0 {%k1}{z}
+
+	// D
+	movq	ARG3, %r11 // D
+	vmovapd			2*64(%r11), %zmm18
+	vaddpd			%zmm0, %zmm18, %zmm18
+	vmovapd			%zmm18, 2*64(%r11)
+
+	// L
+	movq	ARG1, %r10 // n
+	movq	ARG5, %r11
+
+	vxorpd			%zmm25, %zmm25, %zmm25
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+	movq	$ 16, %r14 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vmovapd			0*64(%r11), %zmm16
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			1*64(%r11), %zmm17 {%k1}{z}
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			2*64(%r11), %zmm18 {%k1}{z}
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			3*64(%r11), %zmm19 {%k1}{z}
+//	vmovapd			4*64(%r11), %zmm20
+//	vmovapd			5*64(%r11), %zmm21
+//	vmovapd			6*64(%r11), %zmm22
+//	vmovapd			7*64(%r11), %zmm23
+	vbroadcastsd	0*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm18
+//	vbroadcastsd	3*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm19
+//	vbroadcastsd	4*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm20
+//	vbroadcastsd	5*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm23
+	vfmadd231pd		%zmm16, %zmm16, %zmm25
+	vmovapd			%zmm16, 0*64(%r11)
+	vfmadd231pd		%zmm17, %zmm17, %zmm25
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm17, 1*64(%r11) {%k1}
+	vfmadd231pd		%zmm18, %zmm18, %zmm25
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm18, 2*64(%r11) {%k1}
+	vfmadd231pd		%zmm19, %zmm19, %zmm25
+//	vmovapd			%zmm19, 3*64(%r11)
+//	vfmadd231pd		%zmm20, %zmm20, %zmm25
+//	vmovapd			%zmm20, 4*64(%r11)
+//	vfmadd231pd		%zmm21, %zmm21, %zmm25
+//	vmovapd			%zmm21, 5*64(%r11)
+//	vfmadd231pd		%zmm22, %zmm22, %zmm25
+//	vmovapd			%zmm22, 6*64(%r11)
+//	vfmadd231pd		%zmm23, %zmm23, %zmm25
+//	vmovapd			%zmm23, 7*64(%r11)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+	movq	$ 16, %r14 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd	%zmm25, %zmm27, %zmm25  // beta
+
+
+	// fourth column
+102:
+	vxorpd			%xmm24, %xmm24, %xmm24
+	vucomisd		%xmm24, %xmm25
+	jne		101f
+//	jp		111f
+	vmovsd			%xmm24, 24(%r12)
+	jmp		102f
+
+101:
+	movq	ARG3, %r11 // D
+
+	leaq	24+64*3(%r11), %r14 // XXX chech for reg overwrite
+	leaq	24(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_PD_LIB8
+#else
+	CALL(inner_edge_dgelqf_pd_lib8)
+#endif
+
+	vxorpd			%xmm31, %xmm24, %xmm27
+	vmovsd			%xmm27, 24+64*3(%r13) // pT[1+ps*1]
+
+	// D
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			3*64(%r11), %zmm0 {%k1}{z}
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG5, %r11 // L
+
+	movq	$ 24, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vbroadcastsd	0*64(%r11, %r14), %zmm16
+	vmulpd			%zmm25, %zmm16, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm17
+	vmulpd			%zmm25, %zmm17, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm18
+	vmulpd			%zmm25, %zmm18, %zmm18
+	vbroadcastsd	3*64(%r11, %r14), %zmm19
+	vmulpd			%zmm25, %zmm19, %zmm19
+//	vbroadcastsd	4*64(%r11, %r14), %zmm20
+//	vmulpd			%zmm25, %zmm20, %zmm20
+//	vbroadcastsd	5*64(%r11, %r14), %zmm21
+//	vmulpd			%zmm25, %zmm21, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm22
+//	vmulpd			%zmm25, %zmm22, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm23
+//	vmulpd			%zmm25, %zmm23, %zmm23
+	vfmadd231pd		0*64(%r11), %zmm16, %zmm0
+	vmovsd			%xmm16, 0*64(%r11, %r14)
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		1*64(%r11), %zmm17, %zmm0 {%k1}
+	vmovsd			%xmm17, 1*64(%r11, %r14)
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		2*64(%r11), %zmm18, %zmm0 {%k1}
+	vmovsd			%xmm18, 2*64(%r11, %r14)
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		3*64(%r11), %zmm19, %zmm0 {%k1}
+	vmovsd			%xmm19, 3*64(%r11, %r14)
+//	vfmadd231pd		4*64(%r11), %zmm20, %zmm0
+//	vmovsd			%xmm20, 4*64(%r11, %r14)
+//	vfmadd231pd		5*64(%r11), %zmm21, %zmm0
+//	vmovsd			%xmm21, 5*64(%r11, %r14)
+//	vfmadd231pd		6*64(%r11), %zmm22, %zmm0
+//	vmovsd			%xmm22, 6*64(%r11, %r14)
+//	vfmadd231pd		7*64(%r11), %zmm23, %zmm0
+//	vmovsd			%xmm23, 7*64(%r11, %r14)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 24, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+
+	movl	$ 0x01, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			0*64(%r13), %zmm24
+	vmulpd			%zmm24, %zmm0, %zmm1 {%k1}{z}
+	vmovapd			1*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+1*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+1*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x03, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	vmovapd			2*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+2*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+2*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x07, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	vmovapd			%zmm1, %zmm0 {%k1}
+	vbroadcastsd	24+3*64(%r13), %zmm25
+	vmulpd			%zmm25, %zmm0, %zmm0
+	vmovapd			%zmm0, 3*64(%r13) {%k1}
+
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm0, %zmm0 {%k1}{z}
+
+	// D
+	movq	ARG3, %r11 // D
+	vmovapd			3*64(%r11), %zmm19
+	vaddpd			%zmm0, %zmm19, %zmm19
+	vmovapd			%zmm19, 3*64(%r11)
+
+	// L
+	movq	ARG1, %r10 // n
+	movq	ARG5, %r11
+
+	vxorpd			%zmm25, %zmm25, %zmm25
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+	movq	$ 24, %r14 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vmovapd			0*64(%r11), %zmm16
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			1*64(%r11), %zmm17 {%k1}{z}
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			2*64(%r11), %zmm18 {%k1}{z}
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			3*64(%r11), %zmm19 {%k1}{z}
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			4*64(%r11), %zmm20 {%k1}{z}
+//	vmovapd			5*64(%r11), %zmm21
+//	vmovapd			6*64(%r11), %zmm22
+//	vmovapd			7*64(%r11), %zmm23
+	vbroadcastsd	0*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm18
+	vbroadcastsd	3*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm19
+//	vbroadcastsd	4*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm20
+//	vbroadcastsd	5*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm23
+	vfmadd231pd		%zmm16, %zmm16, %zmm25
+	vmovapd			%zmm16, 0*64(%r11)
+	vfmadd231pd		%zmm17, %zmm17, %zmm25
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm17, 1*64(%r11) {%k1}
+	vfmadd231pd		%zmm18, %zmm18, %zmm25
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm18, 2*64(%r11) {%k1}
+	vfmadd231pd		%zmm19, %zmm19, %zmm25
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm19, 3*64(%r11) {%k1}
+	vfmadd231pd		%zmm20, %zmm20, %zmm25
+//	vmovapd			%zmm20, 4*64(%r11)
+//	vfmadd231pd		%zmm21, %zmm21, %zmm25
+//	vmovapd			%zmm21, 5*64(%r11)
+//	vfmadd231pd		%zmm22, %zmm22, %zmm25
+//	vmovapd			%zmm22, 6*64(%r11)
+//	vfmadd231pd		%zmm23, %zmm23, %zmm25
+//	vmovapd			%zmm23, 7*64(%r11)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 24, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd	%zmm25, %zmm27, %zmm25  // beta
+
+
+	// fifth column
+102:
+	vxorpd			%xmm24, %xmm24, %xmm24
+	vucomisd		%xmm24, %xmm25
+	jne		101f
+//	jp		111f
+	vmovsd			%xmm24, 32(%r12)
+	jmp		102f
+
+101:
+	movq	ARG3, %r11 // D
+
+	leaq	32+64*4(%r11), %r14 // XXX chech for reg overwrite
+	leaq	32(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_PD_LIB8
+#else
+	CALL(inner_edge_dgelqf_pd_lib8)
+#endif
+
+	vxorpd			%xmm31, %xmm24, %xmm27
+	vmovsd			%xmm27, 32+64*4(%r13) // pT[1+ps*1]
+
+	// D
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			4*64(%r11), %zmm0 {%k1}{z}
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG5, %r11 // L
+
+	movq	$ 32, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vbroadcastsd	0*64(%r11, %r14), %zmm16
+	vmulpd			%zmm25, %zmm16, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm17
+	vmulpd			%zmm25, %zmm17, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm18
+	vmulpd			%zmm25, %zmm18, %zmm18
+	vbroadcastsd	3*64(%r11, %r14), %zmm19
+	vmulpd			%zmm25, %zmm19, %zmm19
+	vbroadcastsd	4*64(%r11, %r14), %zmm20
+	vmulpd			%zmm25, %zmm20, %zmm20
+//	vbroadcastsd	5*64(%r11, %r14), %zmm21
+//	vmulpd			%zmm25, %zmm21, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm22
+//	vmulpd			%zmm25, %zmm22, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm23
+//	vmulpd			%zmm25, %zmm23, %zmm23
+	vfmadd231pd		0*64(%r11), %zmm16, %zmm0
+	vmovsd			%xmm16, 0*64(%r11, %r14)
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		1*64(%r11), %zmm17, %zmm0 {%k1}
+	vmovsd			%xmm17, 1*64(%r11, %r14)
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		2*64(%r11), %zmm18, %zmm0 {%k1}
+	vmovsd			%xmm18, 2*64(%r11, %r14)
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		3*64(%r11), %zmm19, %zmm0 {%k1}
+	vmovsd			%xmm19, 3*64(%r11, %r14)
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		4*64(%r11), %zmm20, %zmm0 {%k1}
+	vmovsd			%xmm20, 4*64(%r11, %r14)
+//	vfmadd231pd		5*64(%r11), %zmm21, %zmm0
+//	vmovsd			%xmm21, 5*64(%r11, %r14)
+//	vfmadd231pd		6*64(%r11), %zmm22, %zmm0
+//	vmovsd			%xmm22, 6*64(%r11, %r14)
+//	vfmadd231pd		7*64(%r11), %zmm23, %zmm0
+//	vmovsd			%xmm23, 7*64(%r11, %r14)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 32, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+
+	movl	$ 0x01, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			0*64(%r13), %zmm24
+	vmulpd			%zmm24, %zmm0, %zmm1 {%k1}{z}
+	//
+	vmovapd			1*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+1*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+1*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x03, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			2*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+2*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+2*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x07, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			3*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x0f, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			%zmm1, %zmm0 {%k1}
+	vbroadcastsd	32+4*64(%r13), %zmm25
+	vmulpd			%zmm25, %zmm0, %zmm0
+	vmovapd			%zmm0, 4*64(%r13) {%k1}
+
+	movl	$ 0xe0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm0, %zmm0 {%k1}{z}
+
+	// D
+	movq	ARG3, %r11 // D
+	vmovapd			4*64(%r11), %zmm20
+	vaddpd			%zmm0, %zmm20, %zmm20
+	vmovapd			%zmm20, 4*64(%r11)
+
+	// L
+	movq	ARG1, %r10 // n
+	movq	ARG5, %r11
+
+	vxorpd			%zmm25, %zmm25, %zmm25
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+	movq	$ 32, %r14 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vmovapd			0*64(%r11), %zmm16
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			1*64(%r11), %zmm17 {%k1}{z}
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			2*64(%r11), %zmm18 {%k1}{z}
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			3*64(%r11), %zmm19 {%k1}{z}
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			4*64(%r11), %zmm20 {%k1}{z}
+	movl	$ 0xe0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			5*64(%r11), %zmm21 {%k1}{z}
+//	vmovapd			6*64(%r11), %zmm22
+//	vmovapd			7*64(%r11), %zmm23
+	vbroadcastsd	0*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm18
+	vbroadcastsd	3*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm19
+	vbroadcastsd	4*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm20
+//	vbroadcastsd	5*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm23
+	vfmadd231pd		%zmm16, %zmm16, %zmm25
+	vmovapd			%zmm16, 0*64(%r11)
+	vfmadd231pd		%zmm17, %zmm17, %zmm25
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm17, 1*64(%r11) {%k1}
+	vfmadd231pd		%zmm18, %zmm18, %zmm25
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm18, 2*64(%r11) {%k1}
+	vfmadd231pd		%zmm19, %zmm19, %zmm25
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm19, 3*64(%r11) {%k1}
+	vfmadd231pd		%zmm20, %zmm20, %zmm25
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm20, 4*64(%r11) {%k1}
+	vfmadd231pd		%zmm21, %zmm21, %zmm25
+//	vmovapd			%zmm21, 5*64(%r11)
+//	vfmadd231pd		%zmm22, %zmm22, %zmm25
+//	vmovapd			%zmm22, 6*64(%r11)
+//	vfmadd231pd		%zmm23, %zmm23, %zmm25
+//	vmovapd			%zmm23, 7*64(%r11)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 32, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd	%zmm25, %zmm27, %zmm25  // beta
+
+
+	// sixth column
+102:
+	vxorpd			%xmm24, %xmm24, %xmm24
+	vucomisd		%xmm24, %xmm25
+	jne		101f
+//	jp		111f
+	vmovsd			%xmm24, 40(%r12)
+	jmp		102f
+
+101:
+	movq	ARG3, %r11 // D
+
+	leaq	40+64*5(%r11), %r14 // XXX chech for reg overwrite
+	leaq	40(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_PD_LIB8
+#else
+	CALL(inner_edge_dgelqf_pd_lib8)
+#endif
+
+	vxorpd			%xmm31, %xmm24, %xmm27
+	vmovsd			%xmm27, 40+64*5(%r13) // pT[1+ps*1]
+
+	// D
+	movl	$ 0xc0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			5*64(%r11), %zmm0 {%k1}{z}
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG5, %r11 // L
+
+	movq	$ 40, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vbroadcastsd	0*64(%r11, %r14), %zmm16
+	vmulpd			%zmm25, %zmm16, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm17
+	vmulpd			%zmm25, %zmm17, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm18
+	vmulpd			%zmm25, %zmm18, %zmm18
+	vbroadcastsd	3*64(%r11, %r14), %zmm19
+	vmulpd			%zmm25, %zmm19, %zmm19
+	vbroadcastsd	4*64(%r11, %r14), %zmm20
+	vmulpd			%zmm25, %zmm20, %zmm20
+	vbroadcastsd	5*64(%r11, %r14), %zmm21
+	vmulpd			%zmm25, %zmm21, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm22
+//	vmulpd			%zmm25, %zmm22, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm23
+//	vmulpd			%zmm25, %zmm23, %zmm23
+	vfmadd231pd		0*64(%r11), %zmm16, %zmm0
+	vmovsd			%xmm16, 0*64(%r11, %r14)
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		1*64(%r11), %zmm17, %zmm0 {%k1}
+	vmovsd			%xmm17, 1*64(%r11, %r14)
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		2*64(%r11), %zmm18, %zmm0 {%k1}
+	vmovsd			%xmm18, 2*64(%r11, %r14)
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		3*64(%r11), %zmm19, %zmm0 {%k1}
+	vmovsd			%xmm19, 3*64(%r11, %r14)
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		4*64(%r11), %zmm20, %zmm0 {%k1}
+	vmovsd			%xmm20, 4*64(%r11, %r14)
+	movl	$ 0xe0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		5*64(%r11), %zmm21, %zmm0 {%k1}
+	vmovsd			%xmm21, 5*64(%r11, %r14)
+//	vfmadd231pd		6*64(%r11), %zmm22, %zmm0
+//	vmovsd			%xmm22, 6*64(%r11, %r14)
+//	vfmadd231pd		7*64(%r11), %zmm23, %zmm0
+//	vmovsd			%xmm23, 7*64(%r11, %r14)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 40, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+
+	movl	$ 0x01, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			0*64(%r13), %zmm24
+	vmulpd			%zmm24, %zmm0, %zmm1 {%k1}{z}
+	//
+	vmovapd			1*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+1*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+1*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x03, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			2*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+2*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+2*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x07, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			3*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x0f, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			4*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x1f, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			%zmm1, %zmm0 {%k1}
+	vbroadcastsd	40+5*64(%r13), %zmm25
+	vmulpd			%zmm25, %zmm0, %zmm0
+	vmovapd			%zmm0, 5*64(%r13) {%k1}
+
+	movl	$ 0xc0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm0, %zmm0 {%k1}{z}
+
+	// D
+	movq	ARG3, %r11 // D
+	vmovapd			5*64(%r11), %zmm21
+	vaddpd			%zmm0, %zmm21, %zmm21
+	vmovapd			%zmm21, 5*64(%r11)
+
+	// L
+	movq	ARG1, %r10 // n
+	movq	ARG5, %r11
+
+	vxorpd			%zmm25, %zmm25, %zmm25
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+	movq	$ 40, %r14 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vmovapd			0*64(%r11), %zmm16
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			1*64(%r11), %zmm17 {%k1}{z}
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			2*64(%r11), %zmm18 {%k1}{z}
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			3*64(%r11), %zmm19 {%k1}{z}
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			4*64(%r11), %zmm20 {%k1}{z}
+	movl	$ 0xe0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			5*64(%r11), %zmm21 {%k1}{z}
+	movl	$ 0xc0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			6*64(%r11), %zmm22 {%k1}{z}
+//	vmovapd			7*64(%r11), %zmm23
+	vbroadcastsd	0*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm18
+	vbroadcastsd	3*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm19
+	vbroadcastsd	4*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm20
+	vbroadcastsd	5*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm21
+//	vbroadcastsd	6*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm23
+	vfmadd231pd		%zmm16, %zmm16, %zmm25
+	vmovapd			%zmm16, 0*64(%r11)
+	vfmadd231pd		%zmm17, %zmm17, %zmm25
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm17, 1*64(%r11) {%k1}
+	vfmadd231pd		%zmm18, %zmm18, %zmm25
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm18, 2*64(%r11) {%k1}
+	vfmadd231pd		%zmm19, %zmm19, %zmm25
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm19, 3*64(%r11) {%k1}
+	vfmadd231pd		%zmm20, %zmm20, %zmm25
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm20, 4*64(%r11) {%k1}
+	vfmadd231pd		%zmm21, %zmm21, %zmm25
+	movl	$ 0xe0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm21, 5*64(%r11) {%k1}
+	vfmadd231pd		%zmm22, %zmm22, %zmm25
+//	vmovapd			%zmm22, 6*64(%r11)
+//	vfmadd231pd		%zmm23, %zmm23, %zmm25
+//	vmovapd			%zmm23, 7*64(%r11)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 40, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd	%zmm25, %zmm27, %zmm25  // beta
+
+
+	// seventh column
+102:
+	vxorpd			%xmm24, %xmm24, %xmm24
+	vucomisd		%xmm24, %xmm25
+	jne		101f
+//	jp		111f
+	vmovsd			%xmm24, 48(%r12)
+	jmp		102f
+
+101:
+	movq	ARG3, %r11 // D
+
+	leaq	48+64*6(%r11), %r14 // XXX chech for reg overwrite
+	leaq	48(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_PD_LIB8
+#else
+	CALL(inner_edge_dgelqf_pd_lib8)
+#endif
+
+	vxorpd			%xmm31, %xmm24, %xmm27
+	vmovsd			%xmm27, 48+64*6(%r13) // pT[1+ps*1]
+
+	// D
+	movl	$ 0xc0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			6*64(%r11), %zmm0 {%k1}{z}
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG5, %r11 // L
+
+	movq	$ 48, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vbroadcastsd	0*64(%r11, %r14), %zmm16
+	vmulpd			%zmm25, %zmm16, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm17
+	vmulpd			%zmm25, %zmm17, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm18
+	vmulpd			%zmm25, %zmm18, %zmm18
+	vbroadcastsd	3*64(%r11, %r14), %zmm19
+	vmulpd			%zmm25, %zmm19, %zmm19
+	vbroadcastsd	4*64(%r11, %r14), %zmm20
+	vmulpd			%zmm25, %zmm20, %zmm20
+	vbroadcastsd	5*64(%r11, %r14), %zmm21
+	vmulpd			%zmm25, %zmm21, %zmm21
+	vbroadcastsd	6*64(%r11, %r14), %zmm22
+	vmulpd			%zmm25, %zmm22, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm23
+//	vmulpd			%zmm25, %zmm23, %zmm23
+	vfmadd231pd		0*64(%r11), %zmm16, %zmm0
+	vmovsd			%xmm16, 0*64(%r11, %r14)
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		1*64(%r11), %zmm17, %zmm0 {%k1}
+	vmovsd			%xmm17, 1*64(%r11, %r14)
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		2*64(%r11), %zmm18, %zmm0 {%k1}
+	vmovsd			%xmm18, 2*64(%r11, %r14)
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		3*64(%r11), %zmm19, %zmm0 {%k1}
+	vmovsd			%xmm19, 3*64(%r11, %r14)
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		4*64(%r11), %zmm20, %zmm0 {%k1}
+	vmovsd			%xmm20, 4*64(%r11, %r14)
+	movl	$ 0xe0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		5*64(%r11), %zmm21, %zmm0 {%k1}
+	vmovsd			%xmm21, 5*64(%r11, %r14)
+	movl	$ 0xc0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		6*64(%r11), %zmm22, %zmm0 {%k1}
+	vmovsd			%xmm22, 6*64(%r11, %r14)
+//	vfmadd231pd		7*64(%r11), %zmm23, %zmm0
+//	vmovsd			%xmm23, 7*64(%r11, %r14)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 48, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+
+	movl	$ 0x01, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			0*64(%r13), %zmm24
+	vmulpd			%zmm24, %zmm0, %zmm1 {%k1}{z}
+	//
+	vmovapd			1*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+1*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+1*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x03, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			2*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+2*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+2*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x07, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			3*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x0f, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			4*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x1f, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			5*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x3f, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			%zmm1, %zmm0 {%k1}
+	vbroadcastsd	48+6*64(%r13), %zmm25
+	vmulpd			%zmm25, %zmm0, %zmm0
+	vmovapd			%zmm0, 6*64(%r13) {%k1}
+
+	movl	$ 0x80, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm0, %zmm0 {%k1}{z}
+
+	// D
+	movq	ARG3, %r11 // D
+	vmovapd			6*64(%r11), %zmm22
+	vaddpd			%zmm0, %zmm22, %zmm22
+	vmovapd			%zmm22, 6*64(%r11)
+
+	// L
+	movq	ARG1, %r10 // n
+	movq	ARG5, %r11
+
+	vxorpd			%zmm25, %zmm25, %zmm25
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+	movq	$ 48, %r14 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vmovapd			0*64(%r11), %zmm16
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			1*64(%r11), %zmm17 {%k1}{z}
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			2*64(%r11), %zmm18 {%k1}{z}
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			3*64(%r11), %zmm19 {%k1}{z}
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			4*64(%r11), %zmm20 {%k1}{z}
+	movl	$ 0xe0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			5*64(%r11), %zmm21 {%k1}{z}
+	movl	$ 0xc0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			6*64(%r11), %zmm22 {%k1}{z}
+	movl	$ 0x80, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			7*64(%r11), %zmm23 {%k1}{z}
+	vbroadcastsd	0*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm18
+	vbroadcastsd	3*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm19
+	vbroadcastsd	4*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm20
+	vbroadcastsd	5*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm21
+	vbroadcastsd	6*64(%r11, %r14), %zmm24
+	vfmadd231pd		%zmm0, %zmm24, %zmm22
+//	vbroadcastsd	7*64(%r11, %r14), %zmm24
+//	vfmadd231pd		%zmm0, %zmm24, %zmm23
+	vfmadd231pd		%zmm16, %zmm16, %zmm25
+	vmovapd			%zmm16, 0*64(%r11)
+	vfmadd231pd		%zmm17, %zmm17, %zmm25
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm17, 1*64(%r11) {%k1}
+	vfmadd231pd		%zmm18, %zmm18, %zmm25
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm18, 2*64(%r11) {%k1}
+	vfmadd231pd		%zmm19, %zmm19, %zmm25
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm19, 3*64(%r11) {%k1}
+	vfmadd231pd		%zmm20, %zmm20, %zmm25
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm20, 4*64(%r11) {%k1}
+	vfmadd231pd		%zmm21, %zmm21, %zmm25
+	movl	$ 0xe0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm21, 5*64(%r11) {%k1}
+	vfmadd231pd		%zmm22, %zmm22, %zmm25
+	movl	$ 0xc0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			%zmm22, 6*64(%r11) {%k1}
+	vfmadd231pd		%zmm23, %zmm23, %zmm25
+//	vmovapd			%zmm23, 7*64(%r11)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 48, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm26, %zmm26, %zmm26 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_2_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_2_dgelqf_8_lib8)
+#endif
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+7*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+7*8(%rip), %zmm27
+#endif
+	vpermpd	%zmm25, %zmm27, %zmm25  // beta
+
+
+	// eigth column
+102:
+	vxorpd			%xmm24, %xmm24, %xmm24
+	vucomisd		%xmm24, %xmm25
+	jne		101f
+//	jp		111f
+	vmovsd			%xmm24, 56(%r12)
+	jmp		102f
+
+101:
+	movq	ARG3, %r11 // D
+
+	leaq	56+64*7(%r11), %r14 // XXX chech for reg overwrite
+	leaq	56(%r12), %r15 // XXX chech for reg overwrite
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DGELQF_PD_LIB8
+#else
+	CALL(inner_edge_dgelqf_pd_lib8)
+#endif
+
+	vxorpd			%xmm31, %xmm24, %xmm27
+	vmovsd			%xmm27, 56+64*7(%r13) // pT[1+ps*1]
+
+	// D
+	movl	$ 0x80, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			7*64(%r11), %zmm0 {%k1}{z}
+
+	// L
+	movq	ARG1, %r10 // n0
+	movq	ARG5, %r11 // L
+
+	movq	$ 56, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+	// final triangle
+	vbroadcastsd	0*64(%r11, %r14), %zmm16
+	vmulpd			%zmm25, %zmm16, %zmm16
+	vbroadcastsd	1*64(%r11, %r14), %zmm17
+	vmulpd			%zmm25, %zmm17, %zmm17
+	vbroadcastsd	2*64(%r11, %r14), %zmm18
+	vmulpd			%zmm25, %zmm18, %zmm18
+	vbroadcastsd	3*64(%r11, %r14), %zmm19
+	vmulpd			%zmm25, %zmm19, %zmm19
+	vbroadcastsd	4*64(%r11, %r14), %zmm20
+	vmulpd			%zmm25, %zmm20, %zmm20
+	vbroadcastsd	5*64(%r11, %r14), %zmm21
+	vmulpd			%zmm25, %zmm21, %zmm21
+	vbroadcastsd	6*64(%r11, %r14), %zmm22
+	vmulpd			%zmm25, %zmm22, %zmm22
+	vbroadcastsd	7*64(%r11, %r14), %zmm23
+	vmulpd			%zmm25, %zmm23, %zmm23
+	vfmadd231pd		0*64(%r11), %zmm16, %zmm0
+	vmovsd			%xmm16, 0*64(%r11, %r14)
+	movl	$ 0xfe, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		1*64(%r11), %zmm17, %zmm0 {%k1}
+	vmovsd			%xmm17, 1*64(%r11, %r14)
+	movl	$ 0xfc, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		2*64(%r11), %zmm18, %zmm0 {%k1}
+	vmovsd			%xmm18, 2*64(%r11, %r14)
+	movl	$ 0xf8, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		3*64(%r11), %zmm19, %zmm0 {%k1}
+	vmovsd			%xmm19, 3*64(%r11, %r14)
+	movl	$ 0xf0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		4*64(%r11), %zmm20, %zmm0 {%k1}
+	vmovsd			%xmm20, 4*64(%r11, %r14)
+	movl	$ 0xe0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		5*64(%r11), %zmm21, %zmm0 {%k1}
+	vmovsd			%xmm21, 5*64(%r11, %r14)
+	movl	$ 0xc0, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		6*64(%r11), %zmm22, %zmm0 {%k1}
+	vmovsd			%xmm22, 6*64(%r11, %r14)
+	movl	$ 0x80, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		7*64(%r11), %zmm23, %zmm0 {%k1}
+	vmovsd			%xmm23, 7*64(%r11, %r14)
+
+	// A
+	movq	ARG2, %r10 // n
+	movq	ARG6, %r11
+
+	movq	$ 56, %r14 // XXX chech for reg overwrite
+
+	vxorpd			%zmm1, %zmm1, %zmm1 // part acc
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_1_DGELQF_8_LIB8
+#else
+	CALL(inner_kernel_1_dgelqf_8_lib8)
+#endif
+
+	movl	$ 0x01, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vmovapd			0*64(%r13), %zmm24
+	vmulpd			%zmm24, %zmm0, %zmm1 {%k1}{z}
+	//
+	vmovapd			1*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+1*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+1*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x03, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			2*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+2*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+2*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x07, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			3*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+3*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+3*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x0f, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			4*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+4*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+4*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x1f, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			5*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+5*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+5*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x3f, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			6*64(%r13), %zmm24
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC05+6*8(%rip), %zmm27
+#elif defined(OS_MAC)
+	vbroadcastsd	LC05+6*8(%rip), %zmm27
+#endif
+	vpermpd			%zmm0, %zmm27, %zmm26
+	movl	$ 0x7f, %ebx // XXX check for not reg overwrite
+	kmovd	%ebx, %k1 // XXX check for not reg overwrite
+	vfmadd231pd		%zmm24, %zmm26, %zmm1 {%k1}
+	//
+	vmovapd			%zmm1, %zmm0 {%k1}
+	vbroadcastsd	56+7*64(%r13), %zmm25
+	vmulpd			%zmm25, %zmm0, %zmm0
+	vmovapd			%zmm0, 7*64(%r13) {%k1}
+
+102:
+
+1000:
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dgelqf_pd_lla_dlarft8_8_lib8)
 
 
 
