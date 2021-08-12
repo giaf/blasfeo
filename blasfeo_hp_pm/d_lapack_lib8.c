@@ -1178,6 +1178,7 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		jj = ii+8;
 //d_print_mat(1, 8, dD+ii, 1);
 //d_print_mat(8, 8, pT, 8);
+//return;
 #if 1
 		for(; jj<m-15; jj+=16)
 			{
@@ -1282,10 +1283,10 @@ void blasfeo_hp_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int
 	ii = 0;
 	for(ii=0; ii<imax-8; ii+=8)
 		{
-		kernel_dgelqf_pd_la_vs_lib8(8, n1, 8, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pA+ii*sda+0*ps, sda);
+//		kernel_dgelqf_pd_la_vs_lib8(8, n1, 8, 0, pD+ii*sdd+ii*ps, sdd, dD+ii, 0, pA+ii*sda+0*ps, sda);
 //		kernel_dgelqf_pd_la_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii);
-		kernel_dlarft_la_8_lib8(n1, dD+ii, pA+ii*sda+0*ps, pT);
-//		kernel_dgelqf_pd_la_dlarft8_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+//		kernel_dlarft_la_8_lib8(n1, dD+ii, pA+ii*sda+0*ps, pT);
+		kernel_dgelqf_pd_la_dlarft8_8_lib8(n1, pD+ii*sdd+ii*ps, dD+ii, pA+ii*sda+0*ps, pT);
 		jj = ii+8;
 //d_print_mat(1, 8, dD+ii, 1);
 //d_print_mat(8, 8, pT, 8);
