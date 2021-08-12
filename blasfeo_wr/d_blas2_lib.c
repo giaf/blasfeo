@@ -64,7 +64,9 @@
 #define SYMV_L blasfeo_dsymv_l
 #define SYMV_L_MN blasfeo_dsymv_l_mn
 #define TRMV_LNN blasfeo_dtrmv_lnn
+#define TRMV_LNN_MN blasfeo_dtrmv_lnn_mn
 #define TRMV_LTN blasfeo_dtrmv_ltn
+#define TRMV_LTN_MN blasfeo_dtrmv_ltn_mn
 #define TRMV_UNN blasfeo_dtrmv_unn
 #define TRMV_UTN blasfeo_dtrmv_utn
 #define TRSV_LNN blasfeo_dtrsv_lnn
