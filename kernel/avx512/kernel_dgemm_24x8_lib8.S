@@ -4293,7 +4293,7 @@ NAME:
 	vbroadcastsd	0(%r11), %zmm24
 	vmulpd			%zmm0, %zmm24, %zmm0
 	vmulpd			%zmm8, %zmm24, %zmm8
-	vmulpd			%zmm26, %zmm24, %zmm26
+	vmulpd			%zmm16, %zmm24, %zmm16
 
 	cmpl			$ 2, %r12d
 	jl				0f // ret
@@ -4987,13 +4987,6 @@ NAME:
 	FUN_START(inner_edge_dpotrf_24x8_vs_lib8)
 #endif
 
-	vxorpd	%ymm25, %ymm25, %ymm25 // 0.0
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd	.LC04(%rip), %xmm24 // 1.0
-#elif defined(OS_MAC)
-	vmovsd	LC04(%rip), %xmm24 // 1.0
-#endif
-
 	// compute mask for rows
 	vcvtsi2sd	%r11d, %xmm25, %xmm25
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
@@ -5013,6 +5006,13 @@ NAME:
 	vmovapd		%zmm21, %zmm21 {%k1}{z}
 	vmovapd		%zmm22, %zmm22 {%k1}{z}
 	vmovapd		%zmm23, %zmm23 {%k1}{z}
+
+	vxorpd	%ymm25, %ymm25, %ymm25 // 0.0
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovsd	.LC04(%rip), %xmm24 // 1.0
+#elif defined(OS_MAC)
+	vmovsd	LC04(%rip), %xmm24 // 1.0
+#endif
 
 	// 0
 	vmovsd			%xmm0, %xmm0, %xmm26

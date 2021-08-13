@@ -279,12 +279,16 @@ void blasfeo_hp_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 			if(j<i) // dtrsm
 				{
 				kernel_dtrsm_nt_rl_inv_24x8_vs_lib8(j, &pD[i*sdd], sdd, &pD[j*sdd], &alpha, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, &pD[j*ps+j*sdd], &dD[j], m-i, n-j);
+//				kernel_dtrsm_nt_rl_inv_16x8_vs_lib8(j, &pD[i*sdd], sdd, &pD[j*sdd], &alpha, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, &pD[j*ps+j*sdd], &dD[j], m-i, n-j);
+//				kernel_dtrsm_nt_rl_inv_8x8_vs_lib8(j, &pD[(i+16)*sdd], &pD[j*sdd], &alpha, &pC[j*ps+(i+16)*sdc], &pD[j*ps+(i+16)*sdd], &pD[j*ps+j*sdd], &dD[j], m-(i+16), n-j);
 				}
-			else // dpptrf
+			else // dpotrf
 				{
 				if(j<n-23)
 					{
 					kernel_dpotrf_nt_l_24x8_lib8(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+j*sdc], sdc, &pD[j*ps+j*sdd], sdd, &dD[j]);
+//					kernel_dpotrf_nt_l_16x8_lib8(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+j*sdc], sdc, &pD[j*ps+j*sdd], sdd, &dD[j]);
+//					kernel_dtrsm_nt_rl_inv_8x8_lib8(j, &pD[(i+16)*sdd], &pD[j*sdd], &alpha, &pC[j*ps+(i+16)*sdc], &pD[j*ps+(i+16)*sdd], &pD[j*ps+j*sdd], &dD[j]);
 #if 0 // TODO ???
 					kernel_dpotrf_nt_l_16x16_lib8(j+8, &pD[(i+8)*sdd], sdd, &pD[(j+8)*sdd], sdd, &pC[(j+8)*ps+(i+8)*sdc], sdc, &pD[(j+8)*ps+(i+8)*sdd], sdd, &dD[j+8]);
 #else
@@ -295,6 +299,8 @@ void blasfeo_hp_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 				else
 					{
 					kernel_dpotrf_nt_l_24x8_vs_lib8(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+j*sdc], sdc, &pD[j*ps+j*sdd], sdd, &dD[j], m-i, n-j);
+//					kernel_dpotrf_nt_l_16x8_vs_lib8(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+j*sdc], sdc, &pD[j*ps+j*sdd], sdd, &dD[j], m-i, n-j);
+//					kernel_dtrsm_nt_rl_inv_8x8_vs_lib8(j, &pD[(i+16)*sdd], &pD[j*sdd], &alpha, &pC[j*ps+(i+16)*sdc], &pD[j*ps+(i+16)*sdd], &pD[j*ps+j*sdd], &dD[j], m-i-16, n-j);
 					if(j<n-8)
 						{
 						kernel_dpotrf_nt_l_16x8_vs_lib8(j+8, &pD[(i+8)*sdd], sdd, &pD[(j+8)*sdd], &pC[(j+8)*ps+(i+8)*sdc], sdc, &pD[(j+8)*ps+(i+8)*sdd], sdd, &dD[j+8], m-i-8, n-j-8);
@@ -322,7 +328,7 @@ void blasfeo_hp_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 			goto left_24;
 			}
 		}
-#elif 0
+#elif 1
 	for(; i<m-15; i+=16)
 		{
 		j = 0;
@@ -433,7 +439,7 @@ void blasfeo_hp_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 	if(j<n)
 		{
 		kernel_dpotrf_nt_l_16x8_vs_lib8(j, &pD[i*sdd], sdd, &pD[j*sdd], &pC[j*ps+j*sdc], sdc, &pD[j*ps+j*sdd], sdd, &dD[j], m-i, n-j);
-		if(j<n-4)
+		if(j<n-8)
 			{
 			kernel_dpotrf_nt_l_8x8_vs_lib8(j+8, &pD[(i+8)*sdd], &pD[(j+8)*sdd], &pC[(j+8)*ps+(i+8)*sdc], &pD[(j+8)*ps+(i+8)*sdd], &dD[j+8], m-i-8, n-j-8);
 			}
