@@ -586,6 +586,7 @@ int main()
 
 		int n = nn[ll];
 		int nrep = nnrep[ll];
+//		nrep = nrep>1 ? nrep : 1;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
 //		n = n<12 ? 12 : n;
@@ -671,6 +672,8 @@ int main()
 		struct blasfeo_dmat sB; blasfeo_allocate_dmat(n, n, &sB);
 		struct blasfeo_dmat sB2; blasfeo_allocate_dmat(n, n, &sB2);
 		struct blasfeo_dmat sB3; blasfeo_allocate_dmat(n, n, &sB3);
+		struct blasfeo_dmat sB4; blasfeo_allocate_dmat(n, 2*n, &sB4);
+		struct blasfeo_dmat sB5; blasfeo_allocate_dmat(n, 3*n, &sB5);
 		struct blasfeo_dmat sC; blasfeo_allocate_dmat(n, n, &sC);
 		struct blasfeo_dmat sD; blasfeo_allocate_dmat(n, n, &sD);
 		struct blasfeo_dmat sE; blasfeo_allocate_dmat(n, n, &sE);
@@ -697,13 +700,21 @@ int main()
 		blasfeo_pack_dvec(n, x, 1, &sx, 0);
 		int ii;
 
+		blasfeo_dgese(n, n, 1e-3, &sB3, 0, 0);
 		for(ii=0; ii<n; ii++)
 			{
 			BLASFEO_DMATEL(&sB3, ii, ii) = 1.0;
-			// BLASFEO_DMATEL(&sB3, n-1, ii) = 1.0;
+			BLASFEO_DMATEL(&sB3, n-1, ii) = 1.0;
 			BLASFEO_DMATEL(&sB3, ii, n-1) = 1.0;
 			BLASFEO_DVECEL(&sx, ii) = 1.0;
 			}
+		// B4
+		blasfeo_dgecp(n, n, &sB3, 0, 0, &sB4, 0, 0);
+		blasfeo_dgecp(n, n, &sA, 0, 0, &sB4, 0, n);
+		// B5
+		blasfeo_dgecp(n, n, &sB3, 0, 0, &sB5, 0, 0);
+		blasfeo_dgecp(n, n, &sB, 0, 0, &sB5, 0, n);
+		blasfeo_dgecp(n, n, &sA, 0, 0, &sB5, 0, 2*n);
 
 		int qr_work_size = blasfeo_dgeqrf_worksize(n, n);
 		void *qr_work;
@@ -785,7 +796,7 @@ int main()
 
 
 //				blasfeo_dgemm_nn(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-				blasfeo_dgemm_nt(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_dgemm_nt(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tn(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dgemm_tt(m0, n0, k0, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 
@@ -802,19 +813,24 @@ int main()
 //				blasfeo_dsyrk3_un(n, n, 1.0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk_ut(n, n, 1.0, &sA, 0, 0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dsyrk3_ut(n, n, 1.0, &sA, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
-//				blasfeo_dpotrf_l(n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_dpotrf_l_mn(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dpotrf_u(n, &sB, 0, 0, &sB, 0, 0);
+//				blasfeo_dsyrk_dpotrf_ln(n, n, &sA, 0, 0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //				blasfeo_dgetrf_np(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgetrf_np_test(n, n, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgetrf_rp(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //				blasfeo_dgetrf_rp_test(n, n, &sB, 0, 0, &sB, 0, 0, ipiv);
 //				blasfeo_dgeqrf(n, n, &sC, 0, 0, &sD, 0, 0, qr_work);
-//				blasfeo_dcolin(n, &sx, 0, &sB3, 0, n-1);
+				blasfeo_dcolin(n, &sx, 0, &sB3, 0, n-1);
 //				blasfeo_dgelqf(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
-//				blasfeo_dgelqf_pd(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
-//				blasfeo_dgelqf_pd_la(n, n, &sB3, 0, 0, &sA, 0, 0, lq_work);
-//				blasfeo_dgelqf_pd_lla(n, n, &sB3, 0, 0, &sB, 0, 0, &sA, 0, 0, lq_work);
+				blasfeo_dgelqf_pd(n, n, &sB3, 0, 0, &sB3, 0, 0, lq_work);
+//				blasfeo_dcolin(n, &sx, 0, &sB4, 0, 2*n-1);
+//				blasfeo_dgelqf_pd_la(n, n, &sB4, 0, 0, &sB4, 0, n, lq_work);
+//				blasfeo_dgelqf_pd(n, 2*n, &sB4, 0, 0, &sB4, 0, 0, lq_work);
+//				blasfeo_dcolin(n, &sx, 0, &sB5, 0, 3*n-1);
+//				blasfeo_dgelqf_pd_lla(n, n, &sB5, 0, 0, &sB5, 0, n, &sB5, 0, 2*n, lq_work);
+//				blasfeo_dgelqf_pd(n, 3*n, &sB5, 0, 0, &sB5, 0, 0, lq_work);
 //				blasfeo_dtrmm_rlnn(n, n, 1.0, &sA, 0, 0, &sD, 0, 0, &sD, 0, 0); //
 //				blasfeo_dtrmm_rutn(n, n, 1.0, &sA, 0, 0, &sB, 0, 0, &sD, 0, 0);
 //				blasfeo_dtrsm_llnn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
@@ -823,13 +839,17 @@ int main()
 //				blasfeo_dtrsm2_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0);
 //				blasfeo_dtrsm2_rutu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0);
 //				blasfeo_dtrsm_lunn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
-//				blasfeo_dtrsm_rltn(n, n, 1.0, &sB2, 0, 0, &sD, 0, 0, &sD, 0, 0); //
+//				blasfeo_dtrsm_rltn(n, n, 1.0, &sB, 0, 0, &sD, 0, 0, &sD, 0, 0); // B2?
 //				blasfeo_dtrsm_rltu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dtrsm_rutn(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sB, 0, 0);
 //				blasfeo_dgemv_n(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //				blasfeo_dgemv_t(n, n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
-//				blasfeo_dsymv_l(n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sy, 0, &sz, 0);
 //				blasfeo_dgemv_nt(n, n, 1.0, 1.0, &sA, 0, 0, &sx, 0, &sx, 0, 0.0, 0.0, &sy, 0, &sy, 0, &sz, 0, &sz, 0);
+//				blasfeo_dsymv_l(n, 1.0, &sA, 0, 0, &sx, 0, 0.0, &sz, 0, &sz, 0);
+//				blasfeo_dtrmv_lnn(n, &sB, 0, 0, &sx, 0, &sz, 0);
+//				blasfeo_dtrmv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
+//				blasfeo_dtrsv_lnn(n, &sB, 0, 0, &sx, 0, &sz, 0);
+//				blasfeo_dtrsv_ltn(n, &sB, 0, 0, &sx, 0, &sz, 0);
 				}
 
 			tmp_time_blasfeo = blasfeo_toc(&timer) / nrep;
@@ -892,13 +912,13 @@ int main()
 //		float flop_operation = 1*16.0*2*n; // kernel 4x4
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
-		float flop_operation = 2.0*m0*n0*k0; // gemm
+//		float flop_operation = 2.0*m0*n0*k0; // gemm
 
 //		float flop_operation = 2.0*n*n*n; // gemm
 //		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
 //		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
 //		float flop_operation = 2.0/3.0*n*n*n; // getrf
-//		float flop_operation = 4.0/3.0*n*n*n; // geqrf gelqf
+		float flop_operation = 4.0/3.0*n*n*n; // geqrf gelqf
 //		float flop_operation = 2.0*n*n*n; // geqrf_la
 //		float flop_operation = 8.0/3.0*n*n*n; // geqrf_lla
 //		float flop_operation = 2.0*n*n; // gemv symv
@@ -942,6 +962,8 @@ int main()
 		blasfeo_free_dmat(&sB);
 		blasfeo_free_dmat(&sB2);
 		blasfeo_free_dmat(&sB3);
+		blasfeo_free_dmat(&sB4);
+		blasfeo_free_dmat(&sB5);
 		blasfeo_free_dmat(&sC);
 		blasfeo_free_dmat(&sD);
 		blasfeo_free_dmat(&sE);

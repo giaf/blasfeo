@@ -63,8 +63,10 @@ ifeq ($(EXTERNAL_BLAS), MKL)
 #LIBS_EXTERNAL_BLAS += -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
 #INCLUDE_EXTERNAL_BLAS += -I/opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/include
 #LIBS_EXTERNAL_BLAS += -Wl,--start-group /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_core.a /opt/intel/compilers_and_libraries_2019.1.144/linux/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
-INCLUDE_EXTERNAL_BLAS += -I/opt/intel/compilers_and_libraries_2020.3.279/linux/mkl/include
-LIBS_EXTERNAL_BLAS += -Wl,--start-group /opt/intel/compilers_and_libraries_2020.3.279/linux/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/compilers_and_libraries_2020.3.279/linux/mkl/lib/intel64/libmkl_core.a /opt/intel/compilers_and_libraries_2020.3.279/linux/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
+#INCLUDE_EXTERNAL_BLAS += -I/opt/intel/compilers_and_libraries_2020.3.279/linux/mkl/include
+#LIBS_EXTERNAL_BLAS += -Wl,--start-group /opt/intel/compilers_and_libraries_2020.3.279/linux/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/compilers_and_libraries_2020.3.279/linux/mkl/lib/intel64/libmkl_core.a /opt/intel/compilers_and_libraries_2020.3.279/linux/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
+INCLUDE_EXTERNAL_BLAS += -I ~/intel/oneapi/mkl/latest/include
+LIBS_EXTERNAL_BLAS += -Wl,--start-group ~/intel/oneapi/mkl/latest/lib/intel64/libmkl_gf_lp64.a ~/intel/oneapi/mkl/latest/lib/intel64/libmkl_core.a ~/intel/oneapi/mkl/latest/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm
 endif
 
 ifeq ($(EXTERNAL_BLAS), ATLAS)

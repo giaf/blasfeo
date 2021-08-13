@@ -149,7 +149,30 @@ void SYMV_L_MN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
-void TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void TRMV_LNN(int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	REAL d1 = 1.0;
+	REAL d0 = 0.0;
+	REAL dm1 = -1.0;
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *x = sx->pa + xi;
+	REAL *z = sz->pa + zi;
+	if(x!=z)
+		COPY(&n, x, &i1, z, &i1);
+	TRMV(&cl, &cn, &cn, &n, pA, &lda, z, &i1);
+	return;
+	}
+
+
+
+void TRMV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';
@@ -174,7 +197,29 @@ void TRMV_LNN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, in
 
 
 
-void TRMV_LTN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+void TRMV_LTN(int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	int i1 = 1;
+	REAL d1 = 1.0;
+	REAL dm1 = -1.0;
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	REAL *x = sx->pa + xi;
+	REAL *z = sz->pa + zi;
+	if(x!=z)
+		COPY(&n, x, &i1, z, &i1);
+	TRMV(&cl, &ct, &cn, &n, pA, &lda, z, &i1);
+	return;
+	}
+
+
+
+void TRMV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	char cl = 'l';
 	char cn = 'n';

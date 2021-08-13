@@ -43,9 +43,9 @@
 #include <smmintrin.h>  // SSE4
 #include <immintrin.h>  // AVX
 
-#include "../../include/blasfeo_common.h"
-#include "../../include/blasfeo_d_aux.h"
-#include "../../include/blasfeo_d_kernel.h"
+#include <blasfeo_common.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_d_kernel.h>
 
 
 
@@ -3649,8 +3649,8 @@ col3:
 		w3 += pD[3+ps*ii] * pD[2+ps*ii];
 		}
 	//
-	pT[1+ps*2] = - dD[2] * (w1*pT[1+ps*1]);
 	pT[0+ps*2] = - dD[2] * (w0*pT[0+ps*0] + w1*pT[0+ps*1]);
+	pT[1+ps*2] = - dD[2] * (w1*pT[1+ps*1]);
 	w3 = - dD[2] * w3;
 	//
 	pD[3+ps*2] += w3;
@@ -3695,9 +3695,9 @@ col4:
 		w2 += pD[2+ps*ii] * pD[3+ps*ii];
 		}
 	//
-	pT[2+ps*3] = - dD[3] * (w2*pT[2+ps*2]);
-	pT[1+ps*3] = - dD[3] * (w1*pT[1+ps*1] + w2*pT[1+ps*2]);
 	pT[0+ps*3] = - dD[3] * (w0*pT[0+ps*0] + w1*pT[0+ps*1] + w2*pT[0+ps*2]);
+	pT[1+ps*3] = - dD[3] * (w1*pT[1+ps*1] + w2*pT[1+ps*2]);
+	pT[2+ps*3] = - dD[3] * (w2*pT[2+ps*2]);
 	return;
 	}
 #endif
@@ -4253,7 +4253,7 @@ void kernel_dgelqf_pd_la_vs_lib4(int m, int n1, int k, int offD, double *pD, int
 	double *pD0 = pD-offD;
 	double *pA0 = pA-offA;
 	ii = 0;
-#if 0 // rank 2
+#if 0 // TODO rank 2
 	for(; ii<imax-1; ii+=2)
 		{
 		// first row
@@ -4654,7 +4654,7 @@ void kernel_dgelqf_pd_lla_vs_lib4(int m, int n0, int n1, int k, int offD, double
 	double *pL0 = pL-offL;
 	double *pA0 = pA-offA;
 	ii = 0;
-#if 0 // rank 2
+#if 0 // TODO rank 2
 	for(; ii<imax-1; ii+=2)
 		{
 		// first row

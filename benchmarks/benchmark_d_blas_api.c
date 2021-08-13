@@ -108,7 +108,10 @@ openblas_set_num_threads(1);
 	printf("\n");
 
 	// maximum flops per cycle, double precision
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	const float flops_max = 32;
+	printf("Testing BLASFEO version for AVX512F instruction set, 64 bit (optimized for Intel Skylake-X): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X64_INTEL_HASWELL)
 	const float flops_max = 16;
 	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit (optimized for Intel Haswell): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)

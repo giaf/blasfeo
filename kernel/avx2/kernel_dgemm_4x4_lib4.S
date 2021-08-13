@@ -10973,7 +10973,7 @@ NAME:
 	vbroadcastsd	88(%r11), %ymm13
 	vfmadd231pd		%ymm3, %ymm13, %ymm12
 	vmovapd			%ymm12, 64(%r12)
-	// 3
+	// 1
 	vmovapd			96(%r12), %ymm12
 	vbroadcastsd	120(%r11), %ymm13
 	vfmadd231pd		%ymm3, %ymm13, %ymm12

@@ -27,7 +27,7 @@ Currently BLASFEO supports the following architectures:
 
 | TARGET                       | Description |
 | ---------------------------- | ------------------------------------------------------------- |
-| ```X64_INTEL_SKYLAKE_X```    | Intel Skylake-X architecture or newer (optimized for 2 512-bit FMA pipes). x86_64 with AVX512 ISA, 64-bit OS |
+| ```X64_INTEL_SKYLAKE_X```    | Intel Skylake-X architecture or newer (optimized for 2 512-bit FMA pipes). x86_64 with AVX512 (F+VL) ISA, 64-bit OS |
 | ```X64_INTEL_HASWELL```      | Intel Haswell, Intel Skylake, AMD Zen, AMD Zen2, AMD Zen3 architectures or newer. x86_64 with AVX2 and FMA ISA, 64-bit OS |
 | ```X64_INTEL_SANDY_BRIDGE``` | Intel Sandy-Bridge architecture. x86_64 with AVX ISA, 64-bit OS |
 | ```X64_INTEL_CORE```         | Intel Core architecture. x86_64 with SSE3 ISA, 64-bit OS |

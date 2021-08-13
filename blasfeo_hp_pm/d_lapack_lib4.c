@@ -4029,8 +4029,16 @@ void blasfeo_hp_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int
 	// different block alignment
 	if( (di&(ps-1)) != (ai&(ps-1)) )
 		{
-		kernel_dgelqf_pd_la_vs_lib4(m, n1, imax, di&(ps-1), pD, sdd, dD, ai&(ps-1), pA, sda);
+		// XXX vecorized kernel requires same offset modulo ps
+//		kernel_dgelqf_pd_la_vs_lib4(m, n1, imax, di&(ps-1), pD, sdd, dD, ai&(ps-1), pA, sda);
+//		return;
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgelqf_pd_la(m, n1, sD, di, dj, sA, ai, aj, work);
 		return;
+#else
+		printf("\nblasfeo_dgelqf_pd_la: feature not implemented yet: ai!=di\n");
+		exit(1);
+#endif
 		}
 	// same block alignment
 #if 0
@@ -4150,8 +4158,15 @@ void blasfeo_hp_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, in
 	// different block alignment
 	if( (di&(ps-1)) != (ai&(ps-1)) | imax0>0 )
 		{
-		kernel_dgelqf_pd_lla_vs_lib4(m, 0, n1, imax, di&(ps-1), pD, sdd, dD, li&(ps-1), pL, sdl, ai&(ps-1), pA, sda);
+//		kernel_dgelqf_pd_lla_vs_lib4(m, 0, n1, imax, di&(ps-1), pD, sdd, dD, li&(ps-1), pL, sdl, ai&(ps-1), pA, sda);
+//		return;
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dgelqf_pd_lla(m, n1, sD, di, dj, sL, li, lj, sA, ai, aj, work);
 		return;
+#else
+		printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet: ai!=di\n");
+		exit(1);
+#endif
 		}
 	// same block alignment
 #if 0

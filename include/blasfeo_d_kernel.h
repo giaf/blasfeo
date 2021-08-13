@@ -58,6 +58,18 @@ void blasfeo_align_64_byte(void *ptr, void **ptr_align);
 // lib8
 //
 
+// 24x8
+void kernel_dgemm_nt_24x8_lib8(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd); //
+void kernel_dgemm_nt_24x8_vs_lib8(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1); //
+void kernel_dtrsm_nt_rl_inv_24x8_lib8(int k, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E); //
+void kernel_dpotrf_nt_l_24x8_lib8(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
+void kernel_dpotrf_nt_l_24x8_vs_lib8(int k, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int m1, int n1);
+void kernel_dtrsm_nt_rl_inv_24x8_vs_lib8(int k, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int m1, int n1); //
+void kernel_dgemm_dtrsm_nt_rl_inv_24x8_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
+void kernel_dgemm_dtrsm_nt_rl_inv_24x8_vs_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int m1, int n1);
+void kernel_dsyrk_dpotrf_nt_l_24x8_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
+void kernel_dsyrk_dpotrf_nt_l_24x8_vs_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int m1, int n1);
+void kernel_dlarfb8_rn_24_lib8(int kmax, double *pV, double *pT, double *pD, int sdd);
 // 16x8
 void kernel_dgemm_nt_16x8_lib8(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd); //
 void kernel_dgemm_nt_16x8_vs_lib8(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1); //
@@ -79,6 +91,9 @@ void kernel_dgemm_dtrsm_nt_rl_inv_16x8_lib8(int kp, double *Ap, int sdap, double
 void kernel_dgemm_dtrsm_nt_rl_inv_16x8_vs_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int m1, int n1);
 void kernel_dsyrk_dpotrf_nt_l_16x8_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
 void kernel_dsyrk_dpotrf_nt_l_16x8_vs_lib8(int kp, double *Ap, int sdap, double *Bp, int km_, double *Am, int sdam, double *Bm, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int m1, int n1);
+void kernel_dlarfb8_rn_16_lib8(int kmax, double *pV, double *pT, double *pD, int sdd);
+void kernel_dlarfb8_rn_la_16_lib8(int n1, double *pVA, double *pT, double *pD, int sdd, double *pA, int sda);
+void kernel_dlarfb8_rn_lla_16_lib8(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, int sdd, double *pL, int sdl, double *pA, int sda);
 // 8x16
 void kernel_dgemm_tt_8x16_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D); //
 void kernel_dgemm_tt_8x16_vs_lib8(int k, double *alpha, int offA, double *A, int sda, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1); //
@@ -109,8 +124,33 @@ void kernel_dgemm_dtrsm_nt_rl_inv_8x8_lib8(int kp, double *Ap, double *Bp, int k
 void kernel_dgemm_dtrsm_nt_rl_inv_8x8_vs_lib8(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *E, double *inv_diag_E, int m1, int n1);
 void kernel_dsyrk_dpotrf_nt_l_8x8_lib8(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D);
 void kernel_dsyrk_dpotrf_nt_l_8x8_vs_lib8(int kp, double *Ap, double *Bp, int km_, double *Am, double *Bm, double *C, double *D, double *inv_diag_D, int m1, int n1);
+void kernel_dgelqf_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
+void kernel_dgelqf_pd_vs_lib8(int m, int n, int k, int offD, double *pD, int sdd, double *dD);
+void kernel_dgelqf_8_lib8(int kmax, double *pD, double *dD);
+void kernel_dgelqf_pd_8_lib8(int kmax, double *pD, double *dD);
+void kernel_dlarft_8_lib8(int kmax, double *pD, double *dD, double *pT);
+void kernel_dlarfb8_rn_8_lib8(int kmax, double *pV, double *pT, double *pD);
+void kernel_dlarfb8_rn_8_vs_lib8(int kmax, double *pV, double *pT, double *pD, int m1);
+void kernel_dlarfb8_rn_1_lib8(int kmax, double *pV, double *pT, double *pD);
+void kernel_dgelqf_dlarft8_8_lib8(int kmax, double *pD, double *dD, double *pT);
+void kernel_dgelqf_pd_dlarft8_8_lib8(int kmax, double *pD, double *dD, double *pT);
+void kernel_dgelqf_pd_la_vs_lib8(int m, int n1, int k, int offD, double *pD, int sdd, double *dD, int offA, double *pA, int sda);
+void kernel_dgelqf_pd_la_dlarft8_8_lib8(int kmax, double *pD, double *dD, double *pA, double *pT);
+void kernel_dlarft_la_8_lib8(int n1, double *dD, double *pA, double *pT);
+void kernel_dlarfb8_rn_la_8_lib8(int n1, double *pVA, double *pT, double *pD, double *pA);
+void kernel_dlarfb8_rn_la_8_vs_lib8(int n1, double *pVA, double *pT, double *pD, double *pA, int m1);
+void kernel_dlarfb8_rn_la_1_lib8(int n1, double *pVA, double *pT, double *pD, double *pA);
+void kernel_dgelqf_pd_lla_vs_lib8(int m, int n0, int n1, int k, int offD, double *pD, int sdd, double *dD, int offL, double *pL, int sdl, int offA, double *pA, int sda);
+void kernel_dgelqf_pd_lla_dlarft8_8_lib8(int n0, int n1, double *pD, double *dD, double *pL, double *pA, double *pT);
+void kernel_dlarft_lla_8_lib8(int n0, int n1, double *dD, double *pL, double *pA, double *pT);
+void kernel_dlarfb8_rn_lla_8_lib8(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, double *pL, double *pA);
+void kernel_dlarfb8_rn_lla_8_vs_lib8(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, double *pL, double *pA, int m1);
+void kernel_dlarfb8_rn_lla_1_lib8(int n0, int n1, double *pVL, double *pVA, double *pT, double *pD, double *pL, double *pA);
 
 // panel copy / pack
+// 24
+void kernel_dpack_nn_24_lib8(int kmax, double *A, int lda, double *C, int sdc);
+void kernel_dpack_nn_24_vs_lib8(int kmax, double *A, int lda, double *C, int sdc, int m1);
 // 16
 void kernel_dpacp_nn_16_lib8(int kmax, int offsetA, double *A, int sda, double *B, int sdb);
 void kernel_dpacp_nn_16_vs_lib8(int kmax, int offsetA, double *A, int sda, double *B, int sdb, int m1);
@@ -135,7 +175,7 @@ void kernel_dpack_tn_8_vs_lib8(int kmax, double *A, int lda, double *C, int m1);
 void kernel_dpack_tt_4_lib8(int kmax, double *A, int lda, double *C, int sdc); // TODO offsetC 
 void kernel_dpack_tt_4_vs_lib8(int kmax, double *A, int lda, double *C, int sdc, int m1); // TODO offsetC 
 
-// levle 2 BLAS
+// level 2 BLAS
 // 16
 void kernel_dgemv_n_16_lib8(int k, double *alpha, double *A, int sda, double *x, double *beta, double *y, double *z);
 // 8
@@ -1147,6 +1187,9 @@ void kernel_dgemm_nt_8xn_p0_lib44cc(int n, int k, double *alpha, double *A, int 
 
 
 // A, B panel-major bs=8; C, D column-major
+// 24x8
+void kernel_dgemm_nt_24x8_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_24x8_vs_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 16x8
 void kernel_dgemm_nt_16x8_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_16x8_vs_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
@@ -1155,6 +1198,11 @@ void kernel_dgemm_nt_8x8_lib88cc(int kmax, double *alpha, double *A, double *B, 
 void kernel_dgemm_nt_8x8_vs_lib88cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 // A, panel-major bs=8; B, C, D column-major
+// 24x8
+void kernel_dgemm_nt_24x8_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_24x8_vs_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dgemm_nn_24x8_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nn_24x8_vs_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 16x8
 void kernel_dgemm_nt_16x8_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_16x8_vs_lib8ccc(int kmax, double *alpha, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
@@ -1167,6 +1215,11 @@ void kernel_dgemm_nn_8x8_lib8ccc(int kmax, double *alpha, double *A, double *B, 
 void kernel_dgemm_nn_8x8_vs_lib8ccc(int kmax, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 // B, panel-major bs=8; A, C, D column-major
+// 8x24
+void kernel_dgemm_nt_8x24_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_nt_8x24_vs_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dgemm_tt_8x24_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dgemm_tt_8x24_vs_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 8x16
 void kernel_dgemm_nt_8x16_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_8x16_vs_libc8cc(int kmax, double *alpha, double *A, int lda, double *B, int sdb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);

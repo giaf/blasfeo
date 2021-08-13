@@ -404,6 +404,48 @@ clear_air:
 loop_00:
 	i = 0;
 #if 1
+	for(; i<m-23; i+=24)
+		{
+		j = 0;
+		idxB = 0;
+		// clean up at the beginning
+		if(bir!=0)
+			{
+#if 0
+			kernel_dgemm_nt_24x8_gen_lib8(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
+#else
+			kernel_dgemm_nt_16x8_gen_lib8(k, &alpha, &pA[(i+0)*sda], sda, &pB[idxB*sdb], &beta, 0, &pC[j*ps+(i+0)*sdc]-bir*ps, sdc, 0, &pD[j*ps+(i+0)*sdd]-bir*ps, sdd, 0, m-(i+0), bir, bir+n-j);
+			kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[(i+16)*sda], &pB[idxB*sdb], &beta, 0, &pC[j*ps+(i+16)*sdc]-bir*ps, sdc, 0, &pD[j*ps+(i+16)*sdd]-bir*ps, sdd, 0, m-(i+16), bir, bir+n-j);
+#endif
+			j += ps-bir;
+			idxB += 8;
+			}
+		// main loop
+		for(; j<n-7; j+=8, idxB+=8)
+			{
+			kernel_dgemm_nt_24x8_lib8(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd);
+			}
+		if(j<n)
+			{
+			kernel_dgemm_nt_24x8_vs_lib8(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=8)
+			{
+			goto left_8;
+			}
+		else if(m-i<=16)
+			{
+			goto left_16;
+			}
+		else
+			{
+			goto left_24;
+			}
+		}
+#elif 1
 	for(; i<m-15; i+=16)
 		{
 		j = 0;
@@ -523,6 +565,30 @@ loop_CD:
 
 
 	// clean up loops definitions
+
+	left_24:
+	j = 0;
+	idxB = 0;
+	// clean up at the beginning
+	if(bir!=0)
+		{
+#if 0
+		kernel_dgemm_nt_24x8_gen_lib8(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+i*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+i*sdd]-bir*ps, sdd, 0, m-i, bir, bir+n-j);
+#else
+		kernel_dgemm_nt_16x8_gen_lib8(k, &alpha, &pA[(i+0)*sda], sda, &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+(i+0)*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+(i+0)*sdd]-bir*ps, sdd, 0, m-(i+0), bir, bir+n-j);
+		kernel_dgemm_nt_8x8_gen_lib8(k, &alpha, &pA[(i+16)*sda], &pB[idxB*sdb], &beta, offsetC, &pC[j*ps+(i+16)*sdc]-bir*ps, sdc, offsetD, &pD[j*ps+(i+16)*sdd]-bir*ps, sdd, 0, m-(i+16), bir, bir+n-j);
+#endif
+		j += ps-bir;
+		idxB += 8;
+		}
+	// main loop
+	for(; j<n; j+=8, idxB+=8)
+		{
+		kernel_dgemm_nt_24x8_vs_lib8(k, &alpha, &pA[i*sda], sda, &pB[idxB*sdb], &beta, &pC[j*ps+i*sdc], sdc, &pD[j*ps+i*sdd], sdd, m-i, n-j);
+		}
+	return;
+
+
 
 	left_16:
 	j = 0;
@@ -1254,8 +1320,6 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	// invalidate stored inverse diagonal of result matrix
 	sD->use_dA = 0;
 
-	// TODO alpha !!!!!
-
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdd = sD->cn;
@@ -1266,13 +1330,13 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	double *pD = sD->pA + dj*ps + (di-dir)*sdd;
 	double *dA = sA->dA;
 
-	if(ai!=0 | bir!=0 | dir!=0 | alpha!=1.0)
+	if(ai!=0 | bir!=0 | dir!=0)
 		{
 #if defined(BLASFEO_REF_API)
 		blasfeo_ref_dtrsm_rltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 		return;
 #else
-		printf("\nblasfeo_dtrsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d, alpha=%f\n", ai, bi, di, alpha);
+		printf("\nblasfeo_dtrsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
 		exit(1);
 #endif
 		}
@@ -1304,6 +1368,34 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 	i = 0;
 #if 1
+	for(; i<m-23; i+=24)
+		{
+		j = 0;
+		for(; j<n-7; j+=8)
+			{
+			kernel_dtrsm_nt_rl_inv_24x8_lib8(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j]);
+			}
+		if(j<n)
+			{
+			kernel_dtrsm_nt_rl_inv_24x8_vs_lib8(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+			}
+		}
+	if(m>i)
+		{
+		if(m-i<=8)
+			{
+			goto left_8;
+			}
+		else if(m-i<=16)
+			{
+			goto left_16;
+			}
+		else
+			{
+			goto left_24;
+			}
+		}
+#elif 1
 	for(; i<m-15; i+=16)
 		{
 		j = 0;
@@ -1348,6 +1440,16 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 	// common return if i==m
 	return;
+
+#if 1
+	left_24:
+	j = 0;
+	for(; j<n; j+=8)
+		{
+		kernel_dtrsm_nt_rl_inv_24x8_vs_lib8(j, &pD[i*sdd], sdd, &pA[j*sda], &alpha, &pB[j*ps+i*sdb], sdb, &pD[j*ps+i*sdd], sdd, &pA[j*ps+j*sda], &dA[j], m-i, n-j);
+		}
+	return;
+#endif
 
 #if 1
 	left_16:
