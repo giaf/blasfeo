@@ -1646,7 +1646,6 @@ loop_0:
 	for(; ii<m-15; ii+=16)
 		{
 		jj = 0;
-#if 1
 		for(; jj<n-7; jj+=8)
 			{
 			kernel_dtrmm_nn_rl_16x8_lib8(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd);
@@ -1655,16 +1654,6 @@ loop_0:
 			{
 			kernel_dtrmm_nn_rl_16x8_vs_lib8(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, 16, n-jj);
 			}
-#else
-		for(; jj<n-5; jj+=4)
-			{
-			kernel_dtrmm_nn_rl_8x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd);
-			}
-		for(; jj<n; jj+=4)
-			{
-			kernel_dtrmm_nn_rl_8x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], sda, offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], sdd, 8, n-jj);
-			}
-#endif
 		}
 	if(ii<m)
 		{
@@ -1681,7 +1670,6 @@ loop_0:
 	for(; ii<m-7; ii+=8)
 		{
 		jj = 0;
-#if 1
 		for(; jj<n-7; jj+=8)
 			{
 			kernel_dtrmm_nn_rl_8x8_lib8(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps]);
@@ -1690,16 +1678,6 @@ loop_0:
 			{
 			kernel_dtrmm_nn_rl_8x8_vs_lib8(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], 8, n-jj);
 			}
-#else
-		for(; jj<n-5; jj+=4)
-			{
-			kernel_dtrmm_nn_rl_4x4_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps]);
-			}
-		for(; jj<n; jj+=4)
-			{
-			kernel_dtrmm_nn_rl_4x4_vs_lib4(n-jj, &alpha, &pA[ii*sda+jj*ps], offsetB, &pB[jj*sdb+jj*ps], sdb, &pD[ii*sdd+jj*ps], 4, n-jj);
-			}
-#endif
 		}
 	if(ii<m)
 		{

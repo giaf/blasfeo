@@ -12085,8 +12085,8 @@ NAME:
 
 	// call inner dgemm kernel nn after initial triangle
 
-	movq	ARG8, %r13 // m1
-	movq	ARG9, %r14 // n1
+	movq	ARG8, %r14 // m1
+	movq	ARG9, %r15 // n1
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_DGEMM_NN_8X8_VS_LIB8
