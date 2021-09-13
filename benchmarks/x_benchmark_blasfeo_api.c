@@ -93,7 +93,9 @@ int main()
 #if defined(DOUBLE_PRECISION)
 
 	// maximum flops per cycle, double precision
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	const double flops_max = 32;
+#elif defined(TARGET_X64_INTEL_HASWELL)
 	const double flops_max = 16;
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	const double flops_max = 8;
@@ -123,7 +125,9 @@ int main()
 
 #elif defined(SINGLE_PRECISION)
 
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	const double flops_max = 64; // 2x512 bit fma
+#elif defined(TARGET_X64_INTEL_HASWELL)
 	const double flops_max = 32; // 2x256 bit fma
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	const double flops_max = 16; // 1x256 bit mul + 1x256 bit add
