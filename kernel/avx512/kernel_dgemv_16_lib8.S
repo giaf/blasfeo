@@ -249,10 +249,10 @@ NAME:
 // zmm7  <- []_d
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMV_ADD_N_16_LIB8
+	.macro INNER_KERNEL_GEMV_N_16_LIB8
 #else
 	.p2align 4,,15
-	FUN_START(inner_kernel_gemv_add_n_16_lib8)
+	FUN_START(inner_kernel_gemv_n_16_lib8)
 #endif
 	
 	cmpl	$ 0, %r10d
@@ -312,7 +312,7 @@ NAME:
 	vfmadd231pd		%zmm24, %zmm25, %zmm4
 	
 	subl	$ 1, %r10d
-	addq	$ 32, %r11
+	addq	$ 64, %r11
 	addq	$ 8, %r13
 	
 	cmpl	$ 0, %r10d
@@ -325,7 +325,7 @@ NAME:
 #else
 	ret
 
-	FUN_END(inner_kernel_gemv_add_n_16_lib8)
+	FUN_END(inner_kernel_gemv_n_16_lib8)
 #endif
 
 
@@ -486,9 +486,9 @@ NAME:
 	movq	ARG5, %r13  // x
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_N_16_LIB8
+	INNER_KERNEL_GEMV_N_16_LIB8
 #else
-	CALL(inner_kernel_gemv_add_n_16_lib8)
+	CALL(inner_kernel_gemv_n_16_lib8)
 #endif
 
 
