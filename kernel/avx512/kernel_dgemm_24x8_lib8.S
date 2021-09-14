@@ -7558,7 +7558,7 @@ NAME:
 	//
 	vmovapd			1*64(%r11), %zmm1
 	vmovapd			1*64(%r11, %r12), %zmm9
-	vmovapd			1*64(%r11, %r12), %zmm17
+	vmovapd			1*64(%r11, %r12, 2), %zmm17
 	vbroadcastsd	1*64(%r13), %zmm24
 	vfmadd231pd		%zmm24, %zmm1, %zmm0
 	vfmadd231pd		%zmm24, %zmm9, %zmm8
