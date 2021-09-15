@@ -1186,6 +1186,12 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 //d_print_mat(8, 8, pT, 8);
 //return;
 #if 1
+		for(; jj<m-23; jj+=24)
+			{
+			kernel_dlarfb8_rn_24_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);
+			}
+#endif
+#if 1
 		for(; jj<m-15; jj+=16)
 			{
 			kernel_dlarfb8_rn_16_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, sdd);

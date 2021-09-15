@@ -429,11 +429,19 @@ NAME:
 	FUN_START(inner_edge_dgelqf_pd_lib8)
 #endif
 
+#if 0
+
 	vmovsd			0(%r14), %xmm24 // alpha
 	vmovapd			%xmm25, %xmm26 // beta
 	vfmadd231sd		%xmm24, %xmm24, %xmm26 // beta
 	vsqrtsd			%xmm26, %xmm26, %xmm26 // beta
 	vmovsd			%xmm26, 0(%r14) // pD[0+ps*0]
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vbroadcastsd	.LC00(%rip), %zmm31 // mask
+#else
+	vbroadcastsd	LC00(%rip), %zmm31 // mask
+#endif
 
 	vxorpd			%xmm27, %xmm27, %xmm27
 	vucomisd		%xmm27, %xmm24
@@ -441,11 +449,47 @@ NAME:
 	// alpha>0
 	vaddsd			%xmm26, %xmm24, %xmm24 // tmp
 	vdivsd			%xmm24, %xmm25, %xmm24 // tmp
+	vxorpd			%xmm31, %xmm24, %xmm24
+	jmp		112f
+111: // alpha<=0
+	vsubsd			%xmm26, %xmm24, %xmm24 // tmp
+112:
+	vmulsd			%xmm24, %xmm24, %xmm27 // tmp*tmp
+	vaddsd			%xmm27, %xmm25, %xmm25 // sigma+tmp*tmp
+	vaddsd			%xmm27, %xmm27, %xmm27 // 2*tmp*tmp
+	vdivsd			%xmm25, %xmm27, %xmm26
+	vmovsd			%xmm26, 0(%r15) // dD[0]
+
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovsd			.LC00+16(%rip), %xmm27
+#else
+	vmovsd			LC00+16(%rip), %xmm27
+#endif
+	vdivsd			%xmm24, %xmm27, %xmm24 // tmp
+	vbroadcastsd	%xmm24, %zmm25
+
+	vmovapd			%xmm26, %xmm24
+
+#else
+
+	vmovsd			0(%r14), %xmm24 // alpha
+	vmovapd			%xmm25, %xmm26 // beta
+	vfmadd231sd		%xmm24, %xmm24, %xmm26 // beta
+	vsqrtsd			%xmm26, %xmm26, %xmm26 // beta
+	vmovsd			%xmm26, 0(%r14) // pD[0+ps*0]
+
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vbroadcastsd	.LC00(%rip), %zmm31 // mask
 #else
 	vbroadcastsd	LC00(%rip), %zmm31 // mask
 #endif
+
+	vxorpd			%xmm27, %xmm27, %xmm27
+	vucomisd		%xmm27, %xmm24
+	jbe		111f
+	// alpha>0
+	vaddsd			%xmm26, %xmm24, %xmm24 // tmp
+	vdivsd			%xmm24, %xmm25, %xmm24 // tmp
 	vxorpd			%xmm31, %xmm24, %xmm24
 	jmp		112f
 111: // alpha<=0
@@ -456,9 +500,9 @@ NAME:
 	vaddsd			%xmm27, %xmm27, %xmm27 // 2*tmp*tmp
 	vmovlhps		%xmm24, %xmm25, %xmm25
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovsd			.LC00+16(%rip), %xmm26
+	vmovsd			.LC00+16(%rip), %xmm26 // 1.0
 #else
-	vmovsd			LC00+16(%rip), %xmm26
+	vmovsd			LC00+16(%rip), %xmm26 // 1.0
 #endif
 	vmovlhps		%xmm26, %xmm27, %xmm27
 	vdivpd			%xmm25, %xmm27, %xmm26
@@ -466,6 +510,8 @@ NAME:
 	vmovsd			%xmm26, 0(%r15) // dD[0]
 	vbroadcastsd	%xmm24, %zmm25
 	vmovapd			%xmm26, %xmm24
+
+#endif
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -8452,7 +8498,7 @@ NAME:
 	.align 64
 .LC00: // { 100...0 -1.0 1.0 }
 #elif defined(OS_MAC)
-LC00: // { 100...0 100...0 100...0 100...0 }
+LC00: // { 100...0 -1.0 1.0 }
 	.align 6
 #endif
 	.long	0x00000000
