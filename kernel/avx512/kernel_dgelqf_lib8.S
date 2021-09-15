@@ -6656,11 +6656,24 @@ NAME:
 
 	// first column
 
+	movq	ARG1, %r10 // n0
 	movq	ARG5, %r11 // L
 
 	vxorpd			%xmm25, %xmm25, %xmm25
 	vmovsd			0(%r11), %xmm24
 	vfmadd231sd		%xmm24, %xmm24, %xmm25
+//	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jle		101f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+101:
 
 	movq	ARG2, %r10 // n
 	movq	ARG6, %r11 // A
