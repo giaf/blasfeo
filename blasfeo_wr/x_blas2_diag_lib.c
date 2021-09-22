@@ -35,7 +35,7 @@
 
 
 
-void HP_GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+static void HP_GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	if(m<=0)
 		return;
@@ -61,7 +61,7 @@ void HP_GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int 
 
 
 
-#if defined(LA_HIGH_PERFORMANCE)
+#if defined(LA_EXTERNAL_BLAS_WRAPPER)
 
 
 
@@ -71,5 +71,9 @@ void GEMV_D(int m, REAL alpha, struct XVEC *sA, int ai, struct XVEC *sx, int xi,
 	}
 
 
+
+#else
+
+#error : wrong LA choice
 
 #endif
