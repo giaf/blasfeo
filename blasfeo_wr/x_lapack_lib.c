@@ -70,6 +70,19 @@ void POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, in
 			}
 		}
 	POTRF(&cl, &m, pD, &ldd, &info);
+	if(info!=0)
+		{
+		if(info>0)
+			{
+			printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+			exit(1);
+			}
+		else
+			{
+			printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+			exit(1);
+			}
+		}
 	return;
 	}
 
@@ -107,6 +120,19 @@ void POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, 
 			}
 		}
 	POTRF(&cl, &n, pD, &ldd, &info);
+	if(info!=0)
+		{
+		if(info>0)
+			{
+			printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+			exit(1);
+			}
+		else
+			{
+			printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+			exit(1);
+			}
+		}
 	TRSM(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
 	return;
 	}
@@ -154,6 +180,19 @@ void SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMAT *s
 		GEMM(&cn, &ct, &m, &m, &k, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
 		POTRF(&cl, &m, pD, &ldd, &info);
 		}
+	if(info!=0)
+		{
+		if(info>0)
+			{
+			printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+			exit(1);
+			}
+		else
+			{
+			printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+			exit(1);
+			}
+		}
 	return;
 	}
 
@@ -196,12 +235,38 @@ void SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, stru
 		SYRK(&cl, &cn, &n, &k, &d1, pA, &lda, &d1, pD, &ldd);
 		GEMM(&cn, &ct, &mmn, &n, &k, &d1, pA+n, &lda, pB, &ldb, &d1, pD+n, &ldd);
 		POTRF(&cl, &n, pD, &ldd, &info);
+		if(info!=0)
+			{
+			if(info>0)
+				{
+				printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+				exit(1);
+				}
+			else
+				{
+				printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+				exit(1);
+				}
+			}
 		TRSM(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
 		}
 	else
 		{
 		GEMM(&cn, &ct, &m, &n, &k, &d1, pA, &lda, pB, &ldb, &d1, pD, &ldd);
 		POTRF(&cl, &n, pD, &ldd, &info);
+		if(info!=0)
+			{
+			if(info>0)
+				{
+				printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+				exit(1);
+				}
+			else
+				{
+				printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+				exit(1);
+				}
+			}
 		TRSM(&cr, &cl, &ct, &cn, &mmn, &n, &d1, pD, &ldd, pD+n, &ldd);
 		}
 	return;
