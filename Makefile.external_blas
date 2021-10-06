@@ -79,6 +79,11 @@ INCLUDE_EXTERNAL_BLAS += -I/opt/arm/armpl_20.3_gcc-7.1/include
 LIBS_EXTERNAL_BLAS += /opt/arm/armpl_20.3_gcc-7.1/lib/libarmpl.a #-pthread -lgfortran -lm
 endif
 
+ifeq ($(EXTERNAL_BLAS), ACCELERATE)
+INCLUDE_EXTERNAL_BLAS += #-I/opt/arm/armpl_20.3_gcc-7.1/include
+LIBS_EXTERNAL_BLAS += -framework accelerate
+endif
+
 #ifneq ($(NUM_THREAD), 1)
 #LIBS_EXTERNAL_BLAS += -pthread
 #endif
