@@ -35,9 +35,11 @@
 
 
 
+#if defined(OS_LINUX)
+
 #define STACKSIZE 11*16
 #define PROLOGUE \
-	add sp, sp, #-(11 * 16); \
+	sub sp, sp, #(11 * 16); \
 	stp d8, d9, [sp, #(0 * 16)]; \
 	stp d10, d11, [sp, #(1 * 16)]; \
 	stp d12, d13, [sp, #(2 * 16)]; \
@@ -62,15 +64,15 @@
 	ldp x28, x29, [sp, #(9 * 16)]; \
 	ldr x30, [sp, #(10 * 16)]; \
 	add sp, sp, #(11 * 16);
-#define GLOB_FUN_START(NAME) \
-	.global	NAME; \
-	.type NAME, %function; \
-NAME:
+#define GLOB(NAME) \
+	.global	NAME
 #define FUN_START(NAME) \
 	.type NAME, %function; \
 NAME:
 #define FUN_END(NAME) \
 	.size	NAME, .-NAME
+#define CALL(NAME) \
+	bl NAME
 #define ZERO_ACC_N \
 	fmov	d0, xzr; \
 	fmov    d1, d0
@@ -79,6 +81,58 @@ NAME:
 	fmov    d1, d0; \
 	fmov    d2, d0; \
 	fmov    d3, d0
+
+#else // defined(OS_MAC)
+
+#define STACKSIZE 11*16
+.macro PROLOGUE
+	sub sp, sp, #(11 * 16)
+	stp d8, d9, [sp, #(0 * 16)]
+	stp d10, d11, [sp, #(1 * 16)]
+	stp d12, d13, [sp, #(2 * 16)]
+	stp d14, d15, [sp, #(3 * 16)]
+	stp x18, x19, [sp, #(4 * 16)]
+	stp x20, x21, [sp, #(5 * 16)]
+	stp x22, x23, [sp, #(6 * 16)]
+	stp x24, x25, [sp, #(7 * 16)]
+	stp x26, x27, [sp, #(8 * 16)]
+	stp x28, x29, [sp, #(9 * 16)]
+	str x30, [sp, #(10 * 16)]
+.endm
+.macro EPILOGUE
+	ldp d8, d9, [sp, #(0 * 16)]
+	ldp d10, d11, [sp, #(1 * 16)]
+	ldp d12, d13, [sp, #(2 * 16)]
+	ldp d14, d15, [sp, #(3 * 16)]
+	ldp x18, x19, [sp, #(4 * 16)]
+	ldp x20, x21, [sp, #(5 * 16)]
+	ldp x22, x23, [sp, #(6 * 16)]
+	ldp x24, x25, [sp, #(7 * 16)]
+	ldp x26, x27, [sp, #(8 * 16)]
+	ldp x28, x29, [sp, #(9 * 16)]
+	ldr x30, [sp, #(10 * 16)]
+	add sp, sp, #(11 * 16)
+.endm
+#define GLOB(NAME) \
+	.globl _ ## NAME
+#define FUN_START(NAME) \
+_ ## NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	bl _ ## NAME
+.macro ZERO_ACC_N
+	fmov	d0, xzr
+	fmov    d1, d0
+.endm
+.macro ZERO_ACC_T
+	fmov	d0, xzr
+	fmov    d1, d0
+	fmov    d2, d0
+	fmov    d3, d0
+.endm
+
+#endif
+
 
 
 
@@ -749,7 +803,8 @@ NAME:
 // void kernel_dgemv_n_4_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemv_n_4_lib4)
+	GLOB(kernel_dgemv_n_4_lib4)
+	FUN_START(kernel_dgemv_n_4_lib4)
 	
 
 	PROLOGUE
@@ -766,7 +821,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_N_4_LIB4
 #else
-	bl	inner_kernel_gemv_n_4_lib4
+	CALL(inner_kernel_gemv_n_4_lib4)
 #endif
 
 
@@ -778,7 +833,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4_LIB4
 #else
-	bl inner_scale_ab_4_lib4
+	CALL(inner_scale_ab_4_lib4)
 #endif
 
 
@@ -788,7 +843,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-	bl inner_store_4_lib4
+	CALL(inner_store_4_lib4)
 #endif
 
 
@@ -808,7 +863,8 @@ NAME:
 // void kernel_dgemv_n_4_vs_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z, int m1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemv_n_4_vs_lib4)
+	GLOB(kernel_dgemv_n_4_vs_lib4)
+	FUN_START(kernel_dgemv_n_4_vs_lib4)
 	
 
 	PROLOGUE
@@ -825,7 +881,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_N_4_LIB4
 #else
-	bl	inner_kernel_gemv_n_4_lib4
+	CALL(inner_kernel_gemv_n_4_lib4)
 #endif
 
 
@@ -837,7 +893,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_4_LIB4
 #else
-	bl inner_scale_ab_4_lib4
+	CALL(inner_scale_ab_4_lib4)
 #endif
 
 
@@ -848,7 +904,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-	bl inner_store_4_vs_lib4
+	CALL(inner_store_4_vs_lib4)
 #endif
 
 
@@ -868,7 +924,8 @@ NAME:
 // void kernel_dgemv_t_4_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemv_t_4_lib4)
+	GLOB(kernel_dgemv_t_4_lib4)
+	FUN_START(kernel_dgemv_t_4_lib4)
 	
 
 	PROLOGUE
@@ -888,13 +945,13 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_GEMV_T_4_LIB4
 #else
-	bl	inner_edge_gemv_t_4_lib4
+	CALL(inner_edge_gemv_t_4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_T_4_LIB4
 #else
-	bl	inner_kernel_gemv_t_4_lib4
+	CALL(inner_kernel_gemv_t_4_lib4)
 #endif
 
 
@@ -907,8 +964,8 @@ NAME:
 	INNER_BLEND_T_4_LIB4
 	INNER_SCALE_AB_4_LIB4
 #else
-	bl inner_blend_t_4_lib4
-	bl inner_scale_ab_4_lib4
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_ab_4_lib4)
 #endif
 
 
@@ -918,7 +975,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-	bl inner_store_4_lib4
+	CALL(inner_store_4_lib4)
 #endif
 
 
@@ -938,7 +995,8 @@ NAME:
 // void kernel_dgemv_t_4_vs_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int m1)
 
 	.align	4
-	GLOB_FUN_START(kernel_dgemv_t_4_vs_lib4)
+	GLOB(kernel_dgemv_t_4_vs_lib4)
+	FUN_START(kernel_dgemv_t_4_vs_lib4)
 
 
 	PROLOGUE
@@ -958,13 +1016,13 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_GEMV_T_4_LIB4
 #else
-	bl	inner_edge_gemv_t_4_lib4
+	CALL(inner_edge_gemv_t_4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_T_4_LIB4
 #else
-	bl	inner_kernel_gemv_t_4_lib4
+	CALL(inner_kernel_gemv_t_4_lib4)
 #endif
 
 
@@ -977,8 +1035,8 @@ NAME:
 	INNER_BLEND_T_4_LIB4
 	INNER_SCALE_AB_4_LIB4
 #else
-	bl inner_blend_t_4_lib4
-	bl inner_scale_ab_4_lib4
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_ab_4_lib4)
 #endif
 
 
@@ -989,7 +1047,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-	bl inner_store_4_vs_lib4
+	CALL(inner_store_4_vs_lib4)
 #endif
 
 
@@ -1009,7 +1067,8 @@ NAME:
 // void kernel_dtrsv_ln_inv_4_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4
-	GLOB_FUN_START(kernel_dtrsv_ln_inv_4_lib4)
+	GLOB(kernel_dtrsv_ln_inv_4_lib4)
+	FUN_START(kernel_dtrsv_ln_inv_4_lib4)
 
 
 	PROLOGUE
@@ -1026,7 +1085,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_N_4_LIB4
 #else
-	bl	inner_kernel_gemv_n_4_lib4
+	CALL(inner_kernel_gemv_n_4_lib4)
 #endif
 
 
@@ -1036,7 +1095,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_4_LIB4
 #else
-	bl	inner_scale_m11_4_lib4
+	CALL(inner_scale_m11_4_lib4)
 #endif
 
 
@@ -1050,7 +1109,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSV_LN_INV_4_LIB4
 #else
-	bl	inner_edge_trsv_ln_inv_4_lib4
+	CALL(inner_edge_trsv_ln_inv_4_lib4)
 #endif
 
 
@@ -1060,7 +1119,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-	bl	inner_store_4_lib4
+	CALL(inner_store_4_lib4)
 #endif
 
 
@@ -1081,7 +1140,8 @@ NAME:
 // void kernel_dtrsv_ln_inv_4_vs_lib4(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int m1, int n1);
 
 	.p2align 4
-	GLOB_FUN_START(kernel_dtrsv_ln_inv_4_vs_lib4)
+	GLOB(kernel_dtrsv_ln_inv_4_vs_lib4)
+	FUN_START(kernel_dtrsv_ln_inv_4_vs_lib4)
 	
 
 	PROLOGUE
@@ -1098,7 +1158,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_N_4_LIB4
 #else
-	bl	inner_kernel_gemv_n_4_lib4
+	CALL(inner_kernel_gemv_n_4_lib4)
 #endif
 
 
@@ -1108,7 +1168,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_SCALE_M11_4_LIB4
 #else
-	bl	inner_scale_m11_4_lib4
+	CALL(inner_scale_m11_4_lib4)
 #endif
 
 
@@ -1123,7 +1183,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSV_LN_INV_4_VS_LIB4
 #else
-	bl	inner_edge_trsv_ln_inv_4_vs_lib4
+	CALL(inner_edge_trsv_ln_inv_4_vs_lib4)
 #endif
 
 
@@ -1134,7 +1194,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
 #else
-	bl	inner_store_4_vs_lib4
+	CALL(inner_store_4_vs_lib4)
 #endif
 
 
@@ -1154,7 +1214,8 @@ NAME:
 // void kernel_dtrsv_lt_inv_4_lib4(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
 
 	.p2align 4
-	GLOB_FUN_START(kernel_dtrsv_lt_inv_4_lib4)
+	GLOB(kernel_dtrsv_lt_inv_4_lib4)
+	FUN_START(kernel_dtrsv_lt_inv_4_lib4)
 	
 
 	PROLOGUE
@@ -1176,7 +1237,7 @@ NAME:
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMV_T_4_LIB4
 #else
-	bl	inner_kernel_gemv_t_4_lib4
+	CALL(inner_kernel_gemv_t_4_lib4)
 #endif
 
 
@@ -1187,8 +1248,8 @@ NAME:
 	INNER_BLEND_T_4_LIB4
 	INNER_SCALE_M11_4_LIB4
 #else
-	bl	inner_blend_t_4_lib4
-	bl	inner_scale_m11_4_lib4
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_m11_4_lib4)
 #endif
 
 
@@ -1199,7 +1260,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSV_LT_INV_4_LIB4
 #else
-	bl	inner_edge_trsv_lt_inv_4_lib4
+	CALL(inner_edge_trsv_lt_inv_4_lib4)
 #endif
 
 
@@ -1209,7 +1270,7 @@ NAME:
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_LIB4
 #else
-	bl	inner_store_4_lib4
+	CALL(inner_store_4_lib4)
 #endif
 
 

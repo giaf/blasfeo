@@ -35,9 +35,11 @@
 
 
 
+#if defined(OS_LINUX)
+
 #define STACKSIZE 11*16
 #define PROLOGUE \
-	add sp, sp, #-(11 * 16); \
+	sub sp, sp, #(11 * 16); \
 	stp d8, d9, [sp, #(0 * 16)]; \
 	stp d10, d11, [sp, #(1 * 16)]; \
 	stp d12, d13, [sp, #(2 * 16)]; \
@@ -62,15 +64,57 @@
 	ldp x28, x29, [sp, #(9 * 16)]; \
 	ldr x30, [sp, #(10 * 16)]; \
 	add sp, sp, #(11 * 16);
-#define GLOB_FUN_START(NAME) \
-	.global	NAME; \
-	.type NAME, %function; \
-NAME:
+#define GLOB(NAME) \
+	.global	NAME
 #define FUN_START(NAME) \
 	.type NAME, %function; \
 NAME:
 #define FUN_END(NAME) \
 	.size	NAME, .-NAME
+#define CALL(NAME) \
+	bl NAME
+
+#else // defined(OS_MAC)
+
+#define STACKSIZE 11*16
+.macro PROLOGUE
+	sub sp, sp, #(11 * 16)
+	stp d8, d9, [sp, #(0 * 16)]
+	stp d10, d11, [sp, #(1 * 16)]
+	stp d12, d13, [sp, #(2 * 16)]
+	stp d14, d15, [sp, #(3 * 16)]
+	stp x18, x19, [sp, #(4 * 16)]
+	stp x20, x21, [sp, #(5 * 16)]
+	stp x22, x23, [sp, #(6 * 16)]
+	stp x24, x25, [sp, #(7 * 16)]
+	stp x26, x27, [sp, #(8 * 16)]
+	stp x28, x29, [sp, #(9 * 16)]
+	str x30, [sp, #(10 * 16)]
+.endm
+.macro EPILOGUE
+	ldp d8, d9, [sp, #(0 * 16)]
+	ldp d10, d11, [sp, #(1 * 16)]
+	ldp d12, d13, [sp, #(2 * 16)]
+	ldp d14, d15, [sp, #(3 * 16)]
+	ldp x18, x19, [sp, #(4 * 16)]
+	ldp x20, x21, [sp, #(5 * 16)]
+	ldp x22, x23, [sp, #(6 * 16)]
+	ldp x24, x25, [sp, #(7 * 16)]
+	ldp x26, x27, [sp, #(8 * 16)]
+	ldp x28, x29, [sp, #(9 * 16)]
+	ldr x30, [sp, #(10 * 16)]
+	add sp, sp, #(11 * 16)
+.endm
+#define GLOB(NAME) \
+	.globl _ ## NAME
+#define FUN_START(NAME) \
+_ ## NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	bl _ ## NAME
+
+#endif
+
 
 
 
@@ -86,7 +130,8 @@ NAME:
 // void kernel_spack_nn_8_lib4(int kmax, double *A, int lda, double *C, int sdc)
 
 	.align	4
-	GLOB_FUN_START(kernel_spack_nn_8_lib4)
+	GLOB(kernel_spack_nn_8_lib4)
+	FUN_START(kernel_spack_nn_8_lib4)
 	
 
 
@@ -180,7 +225,8 @@ NAME:
 // void kernel_spack_nn_4_lib4(int kmax, double *A, int lda, double *C)
 
 	.align	4
-	GLOB_FUN_START(kernel_spack_nn_4_lib4)
+	GLOB(kernel_spack_nn_4_lib4)
+	FUN_START(kernel_spack_nn_4_lib4)
 	
 
 
@@ -269,7 +315,8 @@ NAME:
 // void kernel_spack_tn_4_lib4(int kmax, double *A, int lda, double *C)
 
 	.align	4
-	GLOB_FUN_START(kernel_spack_tn_4_lib4)
+	GLOB(kernel_spack_tn_4_lib4)
+	FUN_START(kernel_spack_tn_4_lib4)
 	
 
 
@@ -375,7 +422,8 @@ NAME:
 // void kernel_spack_tt_4_lib4(int kmax, double *A, int lda, double *C, ind sdc)
 
 	.align	4
-	GLOB_FUN_START(kernel_spack_tt_4_lib4)
+	GLOB(kernel_spack_tt_4_lib4)
+	FUN_START(kernel_spack_tt_4_lib4)
 	
 
 
