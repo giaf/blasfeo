@@ -103,7 +103,10 @@ openblas_set_num_threads(1);
 	printf("\n");
 
 	// maximum flops per cycle, float precision
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	const float flops_max = 64;
+	printf("Testing BLASFEO version for AVX512F instruction set, 64 bit (optimized for Intel Skylake-X): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X64_INTEL_HASWELL)
 	const float flops_max = 32;
 	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit (optimized for Intel Haswell): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -121,6 +124,9 @@ openblas_set_num_threads(1);
 #elif defined(TARGET_X86_AMD_BARCELONA)
 	const float flops_max = 8;
 	printf("Testing BLAS version for SSE3 instruction set, 32 bit (optimized for AMD Barcelona): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_APPLE_M1)
+	const float flops_max = 32;
+	printf("Testing BLASFEO version for NEONv2 instruction set, 64 bit (optimized for Apple M1): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
 	const float flops_max = 16;
 	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A76): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);

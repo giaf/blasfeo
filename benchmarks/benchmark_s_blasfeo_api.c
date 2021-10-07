@@ -105,7 +105,11 @@ int main()
 
 	// maximum flops per cycle, single precision
 	// maxumum memops (sustained load->store of floats) per cycle, single precision
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	const float flops_max = 64; // 4x256 bit fma
+	const float memops_max = 16; // 2x256 bit load + 1x256 bit store
+	printf("Testing BLASFEO version for AVX512F instruction set, 64 bit (optimized for Intel Skylake-X): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_X64_INTEL_HASWELL)
 	const float flops_max = 32; // 2x256 bit fma
 	const float memops_max = 8; // 2x256 bit load + 1x256 bit store
 	printf("Testing BLAS version for AVX2 and FMA instruction sets, 64 bit (optimized for Intel Haswell): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
@@ -129,6 +133,10 @@ int main()
 	const float flops_max = 8; // 1x128 bit mul + 1x128 bit add
 	const float memops_max = 4; // 1x128 bit load + 1x128 bit store
 	printf("Testing BLAS version for SSE3 instruction set, 32 bit (optimized for AMD Barcelona): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_APPLE_M1)
+	const float flops_max = 32; // 4x128 bit fma
+	const float memops_max = 8; // ???
+	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A76): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
 	const float flops_max = 16; // 2x128 bit fma
 	const float memops_max = 8; // ???

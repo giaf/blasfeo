@@ -129,6 +129,9 @@ openblas_set_num_threads(1);
 #elif defined(TARGET_X86_AMD_BARCELONA)
 	const float flops_max = 4; // 2 on jaguar
 	printf("Testing BLAS version for SSE3 instruction set, 32 bit (optimized for AMD Barcelona): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
+#elif defined(TARGET_ARMV8A_APPLE_M1)
+	const float flops_max = 16;
+	printf("Testing BLASFEO version for NEONv2 instruction set, 64 bit (optimized for Apple M1): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
 	const float flops_max = 8;
 	printf("Testing BLAS version for NEONv2 instruction set, 64 bit (optimized for ARM Cortex A76): theoretical peak %5.1f Gflops\n", flops_max*GHz_max);

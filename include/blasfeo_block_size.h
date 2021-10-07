@@ -185,6 +185,27 @@
 #define S_MC 3000 // TODO these are just dummy
 
 
+#elif defined(TARGET_ARMV8A_APPLE_M1)
+// common
+#define CACHE_LINE_SIZE 64
+#define L1_CACHE_SIZE (128*1024) // L1 data cache size (big cores): 64 kB, ?-way ; DTLB1 ?
+#define LLC_CACHE_SIZE (12*1024*1024) // LLC (L2) cache size (big cores): 12 MB
+// double
+#define D_PS 4 // panel size
+#define D_PLD 4 // 2 // GCD of panel length
+#define D_M_KERNEL 8 // max kernel size
+#define D_KC 512 //256
+#define D_NC 128 //256
+#define D_MC 6000
+// single
+#define S_PS 4
+#define S_PLD 4 //2
+#define S_M_KERNEL 8 // max kernel size
+#define S_KC 512
+#define S_NC 256
+#define S_MC 6000
+
+
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A76)
 // common
 #define CACHE_LINE_SIZE 64
