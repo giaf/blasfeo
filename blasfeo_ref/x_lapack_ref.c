@@ -3391,7 +3391,7 @@ void GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, int d
 #if ! ( defined(REF_BLAS) )
 int ORGLQ_WORK_SIZE(int m, int n, int k)
 	{
-	REF_ORGLQ_WORK_SIZE(m, n, k);
+	return REF_ORGLQ_WORK_SIZE(m, n, k);
 	}
 #endif
 
