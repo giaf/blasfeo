@@ -219,7 +219,7 @@ FALLBACK_TO_EXTERNAL_BLAS = 0
 
 # Maximum inner product length K for buffer allocation on stack (decrease this value if stack size is exceeded)
 #
-K_MAX_STACK = 1000
+K_MAX_STACK = 300
 
 # Macro level (code size vs performance in assembly kernels):
 # 0 : no macro (min code size)
