@@ -64,7 +64,7 @@ set(TARGET GENERIC CACHE STRING "Target architecture")
 # EXTERNAL_BLAS_WRAPPER : call to external BLAS and LAPACK libraries; column-major matrix format
 set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
 # set(LA REFERENCE CACHE STRING "Linear algebra backend")
-# set(LA BLAS CACHE STRING "Linear algebra backend")
+# set(LA EXTERNAL_BLAS_WRAPPER CACHE STRING "Linear algebra backend")
 
 # Export additional back-ends with different naming
 set(BLASFEO_REF_API OFF)
@@ -85,7 +85,7 @@ set(BLAS_API ON CACHE BOOL "Compile BLAS API")
 # ON  : routines namings are in the form dgemm_
 set(FORTRAN_BLAS_API OFF CACHE BOOL "Standard fortran BLAS API")
 
-# BLAS and LAPACK version (for LA=BLAS in BLASFEO or for BLASFEO_BENCHMARS=ON)
+# BLAS and LAPACK version (for LA=EXTERNAL_BLAS_WRAPPER in BLASFEO or for BLASFEO_BENCHMARS=ON)
 set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
 # set(EXTERNAL_BLAS OPENBLAS CACHE STRING "Reference blas to use")
 # set(EXTERNAL_BLAS NETLIB CACHE STRING "Reference blas to use")
@@ -168,7 +168,7 @@ endif()
 set(ALLOWED_BACKENDS
 	  HIGH_PERFORMANCE
 	  REFERENCE
-	  BLAS
+	  EXTERNAL_BLAS_WRAPPER
 	  )
 set_property(CACHE LA PROPERTY STRINGS ${ALLOWED_BACKENDS})
 
