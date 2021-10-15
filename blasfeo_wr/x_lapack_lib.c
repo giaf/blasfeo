@@ -139,6 +139,56 @@ void POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, 
 
 
 
+// dpotrf
+void POTRF_U(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	if(m<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL d1 = 1.0;
+	REAL *pC = sC->pA+ci+cj*sC->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int info;
+	int tmp;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			{
+			tmp = jj+1;
+			COPY(&tmp, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+			}
+		}
+	POTRF(&cu, &m, pD, &ldd, &info);
+	if(info!=0)
+		{
+		if(info>0)
+			{
+			printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+			exit(1);
+			}
+		else
+			{
+			printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+			exit(1);
+			}
+		}
+	return;
+	}
+
+
+
 // dsyrk dpotrf
 void SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{

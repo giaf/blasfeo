@@ -76,6 +76,7 @@
 #define GETRF_ROWPIVOT blasfeo_sgetrf_rp
 #define POTRF_L blasfeo_spotrf_l
 #define POTRF_L_MN blasfeo_spotrf_l_mn
+#define POTRF_U blasfeo_spotrf_u
 #define PSTRF_L spstrf_l_libstr
 #define SYRK_POTRF_LN blasfeo_ssyrk_spotrf_ln
 #define SYRK_POTRF_LN_MN blasfeo_ssyrk_spotrf_ln_mn

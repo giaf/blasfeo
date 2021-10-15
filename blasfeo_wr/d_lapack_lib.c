@@ -44,6 +44,9 @@
 //#include <mkl.h>
 #elif defined(EXTERNAL_BLAS_ARMPL)
 #include "armpl.h"
+#elif defined(EXTERNAL_BLAS_ACCELERATE)
+//#include <Accelerate/Accelerate.h>
+#include "../include/d_blas.h"
 #else
 #include "../include/d_blas.h"
 #endif
@@ -76,6 +79,7 @@
 #define GETRF_ROWPIVOT blasfeo_dgetrf_rp
 #define POTRF_L blasfeo_dpotrf_l
 #define POTRF_L_MN blasfeo_dpotrf_l_mn
+#define POTRF_U blasfeo_dpotrf_u
 #define PSTRF_L dpstrf_l_libstr
 #define SYRK_POTRF_LN blasfeo_dsyrk_dpotrf_ln
 #define SYRK_POTRF_LN_MN blasfeo_dsyrk_dpotrf_ln_mn
