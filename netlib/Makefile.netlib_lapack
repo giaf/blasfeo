@@ -162,7 +162,9 @@ SLASRC = \
    ssyevd_2stage.o ssyev_2stage.o ssyevx_2stage.o ssyevr_2stage.o \
    ssbev_2stage.o ssbevx_2stage.o ssbevd_2stage.o ssygv_2stage.o
 
-DSLASRC = spotrs.o sgetrs.o spotrf.o sgetrf.o
+DSLASRC = spotrs.o sgetrs.o
+#DSLASRC += spotrf.o
+DSLASRC += sgetrf.o
 
 ifdef USEXBLAS
 SXLASRC = sgesvxx.o sgerfsx.o sla_gerfsx_extended.o sla_geamv.o \
