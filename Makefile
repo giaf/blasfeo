@@ -1130,6 +1130,9 @@ install_static:
 	cp -f ./lib/libblasfeo.a $(PREFIX)/blasfeo/lib/
 	mkdir -p $(PREFIX)/blasfeo/include
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
+ifeq ($(CBLAS_API), 1)
+	cp -f ./netlib/cblas/include/*.h $(PREFIX)/blasfeo/include/
+endif
 
 
 # install share library & headers
