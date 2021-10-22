@@ -49,6 +49,7 @@ ERRHAND += netlib/cblas/src/cblas_xerbla.o
 # All object files for single real precision
 #
 SLEV1 =
+SLEV1_DONE =
 SLEV1 += netlib/cblas/src/cblas_srotg.o
 SLEV1 += netlib/cblas/src/cblas_srotmg.o
 SLEV1 += netlib/cblas/src/cblas_srot.o
@@ -56,7 +57,7 @@ SLEV1 += netlib/cblas/src/cblas_srotm.o
 SLEV1 += netlib/cblas/src/cblas_sswap.o
 SLEV1 += netlib/cblas/src/cblas_sscal.o
 SLEV1 += netlib/cblas/src/cblas_scopy.o
-SLEV1 += netlib/cblas/src/cblas_saxpy.o
+SLEV1_DONE += netlib/cblas/src/cblas_saxpy.o
 SLEV1 += netlib/cblas/src/cblas_sdot.o
 SLEV1 += netlib/cblas/src/cblas_sdsdot.o
 SLEV1 += netlib/cblas/src/cblas_snrm2.o
@@ -72,14 +73,15 @@ SLEV1 += netlib/cblas/src/isamaxsub.o
 # All object files for double real precision
 #
 DLEV1 =
+DLEV1_DONE =
 DLEV1 += netlib/cblas/src/cblas_drotg.o
 DLEV1 += netlib/cblas/src/cblas_drotmg.o
 DLEV1 += netlib/cblas/src/cblas_drot.o
 DLEV1 += netlib/cblas/src/cblas_drotm.o
-DLEV1 += netlib/cblas/src/cblas_dswap.o
+DLEV1_DONE += netlib/cblas/src/cblas_dswap.o
 DLEV1 += netlib/cblas/src/cblas_dscal.o
-DLEV1 += netlib/cblas/src/cblas_dcopy.o
-DLEV1 += netlib/cblas/src/cblas_daxpy.o
+DLEV1_DONE += netlib/cblas/src/cblas_dcopy.o
+DLEV1_DONE += netlib/cblas/src/cblas_daxpy.o
 DLEV1 += netlib/cblas/src/cblas_ddot.o
 DLEV1 += netlib/cblas/src/cblas_dsdot.o
 DLEV1 += netlib/cblas/src/cblas_dnrm2.o
@@ -140,6 +142,8 @@ SCLEV1 += netlib/cblas/src/scnrm2sub.o
 # All object files
 #
 ALEV1 = $(SLEV1) $(DLEV1) $(CLEV1) $(ZLEV1) $(SCLEV1)
+
+ALEV1_DONE = $(SLEV1_DONE) $(DLEV1_DONE)
 
 #
 # CBLAS routines : level 2
@@ -244,23 +248,25 @@ ALEV2 = $(SLEV2) $(DLEV2) $(CLEV2) $(ZLEV2)
 # All object files for single real precision
 #
 SLEV3 =
-SLEV3 += netlib/cblas/src/cblas_sgemm.o
+SLEV3_DONE =
+SLEV3_DONE += netlib/cblas/src/cblas_sgemm.o
 SLEV3 += netlib/cblas/src/cblas_ssymm.o
 SLEV3 += netlib/cblas/src/cblas_ssyrk.o
 SLEV3 += netlib/cblas/src/cblas_ssyr2k.o
 SLEV3 += netlib/cblas/src/cblas_strmm.o
-SLEV3 += netlib/cblas/src/cblas_strsm.o
+SLEV3_DONE += netlib/cblas/src/cblas_strsm.o
  
 #
 # All object files for double real precision
 #
 DLEV3 =
-DLEV3 += netlib/cblas/src/cblas_dgemm.o
+DLEV3_DONE =
+DLEV3_DONE += netlib/cblas/src/cblas_dgemm.o
 DLEV3 += netlib/cblas/src/cblas_dsymm.o
-DLEV3 += netlib/cblas/src/cblas_dsyrk.o
+DLEV3_DONE += netlib/cblas/src/cblas_dsyrk.o
 DLEV3 += netlib/cblas/src/cblas_dsyr2k.o
-DLEV3 += netlib/cblas/src/cblas_dtrmm.o
-DLEV3 += netlib/cblas/src/cblas_dtrsm.o  
+DLEV3_DONE += netlib/cblas/src/cblas_dtrmm.o
+DLEV3_DONE += netlib/cblas/src/cblas_dtrsm.o
 
 #
 # All object files for single complex precision
@@ -295,8 +301,13 @@ ZLEV3 += netlib/cblas/src/cblas_zsyr2k.o
 #
 ALEV3 = $(SLEV3) $(DLEV3) $(CLEV3) $(ZLEV3)
 
+ALEV3_DONE = $(SLEV3_DONE) $(DLEV3_DONE)
+
 #
 # Object files of all routines
 #
-NETLIB_CBLAS_OBJS = $(ALEV1) $(ALEV2) $(ALEV3) $(ERRHAND) 
+NETLIB_CBLAS_OBJS = $(ALEV1_DONE) $(ALEV3_DONE) $(ERRHAND)
+ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
+NETLIB_CBLAS_OBJS += $(ALEV1) $(ALEV2) $(ALEV3)
+endif
 
