@@ -372,11 +372,11 @@ ASFLAGS += -DFALLBACK_TO_EXTERNAL_BLAS
 endif # FALLBACK_TO_EXTERNAL_BLAS
 endif # BLAS_API
 
-ifeq ($(CBLAS_API), 1) 
-ifeq ($(FORTRAN_BLAS_API), 0)
-$(error Cannot expose non-FORTRAN style BLAS_API when building CBLAS_API)
-endif
-endif
+#ifeq ($(CBLAS_API), 1)
+#ifeq ($(FORTRAN_BLAS_API), 0)
+#$(error Cannot expose non-FORTRAN style BLAS_API when building CBLAS_API)
+#endif
+#endif
 
 ifeq ($(LAPACKE_API), 1) 
 ifeq ($(FORTRAN_BLAS_API), 0)

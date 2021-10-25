@@ -34,6 +34,7 @@
 ###################################################################################################
 
 include ../Makefile.rule
+include Makefile.netlib_cblas
 
 BLAS_NETLIB = blas-3.8.0
 BLAS_DIR = blas
@@ -76,6 +77,7 @@ obj_cblas: | $(CBLAS_DIR)
 	@echo "CFLAGS = $(CFLAGS) -DADD_" >> $(CBLAS_DIR)/Makefile.in
 	@echo "FFLAGS = $(CFLAGS)" >> $(CBLAS_DIR)/Makefile.in
 	@echo "BLLIB = $(BLAS_DIR)/blas_LINUX.a" >> $(CBLAS_DIR)/Makefile.in
+	@echo "CFLAGS += $(BLASFEO_CBLAS_DEF)" >> $(CBLAS_DIR)/Makefile.in
 	(cd $(CBLAS_DIR); $(MAKE) alllib)
 
 
