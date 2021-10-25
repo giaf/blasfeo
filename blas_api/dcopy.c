@@ -53,16 +53,16 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blas_dcopy dcopy_
+#define blasfeo_blas_dcopy dcopy_
 #endif
 
 
 
-void blas_dcopy(int *pn, double *x, int *pincx, double *y, int *pincy)
+void blasfeo_blas_dcopy(int *pn, double *x, int *pincx, double *y, int *pincy)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblas_dcopy %d %p %d %p %d\n", *pn, x, *pincx, y, *pincy);
+	printf("\nblasfeo_blas_dcopy %d %p %d %p %d\n", *pn, x, *pincx, y, *pincy);
 #endif
 
 	int n = *pn;

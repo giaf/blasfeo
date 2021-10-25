@@ -151,8 +151,11 @@ MF = PANELMAJ
 BLAS_API = 1
 
 # Export standard FORTRAN namings for BLAS API routines
-# 0 : routines namings are in the form blas_dgemm
+# 0 : routines namings are in the form blasfeo_blas_dgemm
 # 1 : routines namings are in the form dgemm_
+# and export standard C namings for CBLAS API routines
+# 0 : routines namings are in the form blasfeo_cblas_dgemm
+# 1 : routines namings are in the form cblas_dgemm
 #
 FORTRAN_BLAS_API = 0
 # FORTRAN_BLAS_API = 1

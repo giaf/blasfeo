@@ -318,18 +318,18 @@ endif
 BLASFEO_CBLAS_DEF =
 ifeq ($(FORTRAN_BLAS_API), 0)
 # level 1 single
-BLASFEO_CBLAS_DEF += -Dcblas_saxpy=blasfeo_cblas_saxpy -Dsaxpy_=blasfeo_saxpy
+BLASFEO_CBLAS_DEF += -Dcblas_saxpy=blasfeo_cblas_saxpy -Dsaxpy_=blasfeo_blas_saxpy
 # level 1 double
-BLASFEO_CBLAS_DEF += -Dcblas_daxpy=blasfeo_cblas_daxpy -Ddaxpy_=blasfeo_daxpy
-BLASFEO_CBLAS_DEF += -Dcblas_dswap=blasfeo_cblas_dswap -Ddswap_=blasfeo_dswap
-BLASFEO_CBLAS_DEF += -Dcblas_dcopy=blasfeo_cblas_dcopy -Ddcopy_=blasfeo_dcopy
+BLASFEO_CBLAS_DEF += -Dcblas_daxpy=blasfeo_cblas_daxpy -Ddaxpy_=blasfeo_blas_daxpy
+BLASFEO_CBLAS_DEF += -Dcblas_dswap=blasfeo_cblas_dswap -Ddswap_=blasfeo_blas_dswap
+BLASFEO_CBLAS_DEF += -Dcblas_dcopy=blasfeo_cblas_dcopy -Ddcopy_=blasfeo_blas_dcopy
 # level 3 single
-BLASFEO_CBLAS_DEF += -Dcblas_sgemm=blasfeo_cblas_sgemm -Dsgemm_=blasfeo_sgemm
-BLASFEO_CBLAS_DEF += -Dcblas_strsm=blasfeo_cblas_strsm -Dstrsm_=blasfeo_strsm
+BLASFEO_CBLAS_DEF += -Dcblas_sgemm=blasfeo_cblas_sgemm -Dsgemm_=blasfeo_blas_sgemm
+BLASFEO_CBLAS_DEF += -Dcblas_strsm=blasfeo_cblas_strsm -Dstrsm_=blasfeo_blas_strsm
 # level 3 double
-BLASFEO_CBLAS_DEF += -Dcblas_dgemm=blasfeo_cblas_dgemm -Ddgemm_=blasfeo_dgemm
-BLASFEO_CBLAS_DEF += -Dcblas_dsyrk=blasfeo_cblas_dsyrk -Ddsyrk_=blasfeo_dsyrk
-BLASFEO_CBLAS_DEF += -Dcblas_dtrsm=blasfeo_cblas_dtrsm -Ddtrsm_=blasfeo_dtrsm
-BLASFEO_CBLAS_DEF += -Dcblas_dtrmm=blasfeo_cblas_dtrmm -Ddtrmm_=blasfeo_dtrmm
+BLASFEO_CBLAS_DEF += -Dcblas_dgemm=blasfeo_cblas_dgemm -Ddgemm_=blasfeo_blas_dgemm
+BLASFEO_CBLAS_DEF += -Dcblas_dsyrk=blasfeo_cblas_dsyrk -Ddsyrk_=blasfeo_blas_dsyrk
+BLASFEO_CBLAS_DEF += -Dcblas_dtrsm=blasfeo_cblas_dtrsm -Ddtrsm_=blasfeo_blas_dtrsm
+BLASFEO_CBLAS_DEF += -Dcblas_dtrmm=blasfeo_cblas_dtrmm -Ddtrmm_=blasfeo_blas_dtrmm
 endif
 

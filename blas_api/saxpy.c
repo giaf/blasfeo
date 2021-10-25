@@ -43,11 +43,11 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blas_saxpy saxpy_
+#define blasfeo_blas_saxpy saxpy_
 #endif
 
 
-void blas_saxpy(int *ptr_n, float *alpha, float *x, int *ptr_ix, float *y, int *ptr_iy)
+void blasfeo_blas_saxpy(int *ptr_n, float *alpha, float *x, int *ptr_ix, float *y, int *ptr_iy)
 	{
 	int n = *ptr_n;
 	int ix = *ptr_ix;

@@ -46,18 +46,18 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blas_dgetrs dgetrs_
-#define blas_dlaswp dlaswp_
-#define blas_dtrsm dtrsm_
+#define blasfeo_blas_dgetrs dgetrs_
+#define blasfeo_blas_dlaswp dlaswp_
+#define blasfeo_blas_dtrsm dtrsm_
 #endif
 
 
 
-void blas_dgetrs(char *trans, int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
+void blasfeo_blas_dgetrs(char *trans, int *pm, int *pn, double *A, int *plda, int *ipiv, double *B, int *pldb, int *info)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblas_dgetrs %c %d %d %p %d %p %p %d %d\n", *trans, *pm, *pn, A, *plda, ipiv, B, *pldb, *info);
+	printf("\nblasfeo_blas_dgetrs %c %d %d %p %d %p %p %d %d\n", *trans, *pm, *pn, A, *plda, ipiv, B, *pldb, *info);
 #endif
 
 	int m = *pm;
@@ -83,15 +83,15 @@ void blas_dgetrs(char *trans, int *pm, int *pn, double *A, int *plda, int *ipiv,
 //	printf("\n%c\n", *trans);
 	if(*trans=='n' | *trans=='N')
 		{
-		blas_dlaswp(pm, B, pldb, &i_1, pm, ipiv, &i_1);
-		blas_dtrsm(&c_l, &c_l, &c_n, &c_u, pm, pn, &d_1, A, plda, B, pldb);
-		blas_dtrsm(&c_l, &c_u, &c_n, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		blasfeo_blas_dlaswp(pm, B, pldb, &i_1, pm, ipiv, &i_1);
+		blasfeo_blas_dtrsm(&c_l, &c_l, &c_n, &c_u, pm, pn, &d_1, A, plda, B, pldb);
+		blasfeo_blas_dtrsm(&c_l, &c_u, &c_n, &c_n, pm, pn, &d_1, A, plda, B, pldb);
 		}
 	else
 		{
-		blas_dtrsm(&c_l, &c_u, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
-		blas_dtrsm(&c_l, &c_l, &c_t, &c_u, pm, pn, &d_1, A, plda, B, pldb);
-		blas_dlaswp(pm, B, pldb, &i_1, pm, ipiv, &i_m1);
+		blasfeo_blas_dtrsm(&c_l, &c_u, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
+		blasfeo_blas_dtrsm(&c_l, &c_l, &c_t, &c_u, pm, pn, &d_1, A, plda, B, pldb);
+		blasfeo_blas_dlaswp(pm, B, pldb, &i_1, pm, ipiv, &i_m1);
 		}
 
 	return;

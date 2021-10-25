@@ -46,27 +46,27 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blas_dposv dposv_
-#define blas_dpotrf dpotrf_
-#define blas_dpotrs dpotrs_
+#define blasfeo_blas_dposv dposv_
+#define blasfeo_blas_dpotrf dpotrf_
+#define blasfeo_blas_dpotrs dpotrs_
 #endif
 
 
 
-void blas_dposv(char *uplo, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
+void blasfeo_blas_dposv(char *uplo, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblas_dposv %c %d %d %p %d %p %d %d\n", *uplo, *pm, *pn, A, *plda, B, *pldb, *info);
+	printf("\nblasfeo_blas_dposv %c %d %d %p %d %p %d %d\n", *uplo, *pm, *pn, A, *plda, B, *pldb, *info);
 #endif
 
 	*info = 0;
 
-	blas_dpotrf(uplo, pm, A, plda, info);
+	blasfeo_blas_dpotrf(uplo, pm, A, plda, info);
 
 	if(*info==0)
 		{
-		blas_dpotrs(uplo, pm, pn, A, plda, B, pldb, info);
+		blasfeo_blas_dpotrs(uplo, pm, pn, A, plda, B, pldb, info);
 		}
 
 	return;

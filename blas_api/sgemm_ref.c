@@ -72,7 +72,7 @@
 #if defined(FORTRAN_BLAS_API)
 #define GEMM sgemm_
 #else
-#define GEMM blas_sgemm
+#define GEMM blasfeo_blas_sgemm
 #endif
 
 

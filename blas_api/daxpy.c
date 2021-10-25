@@ -43,11 +43,11 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blas_daxpy daxpy_
+#define blasfeo_blas_daxpy daxpy_
 #endif
 
 
-void blas_daxpy(int *ptr_n, double *alpha, double *x, int *ptr_ix, double *y, int *ptr_iy)
+void blasfeo_blas_daxpy(int *ptr_n, double *alpha, double *x, int *ptr_ix, double *y, int *ptr_iy)
 	{
 	int n = *ptr_n;
 	int ix = *ptr_ix;

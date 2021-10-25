@@ -43,11 +43,11 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blas_ddot ddot_
+#define blasfeo_blas_ddot ddot_
 #endif
 
 
-double blas_ddot(int *ptr_n, double *x, int *ptr_ix, double *y, int *ptr_iy)
+double blasfeo_blas_ddot(int *ptr_n, double *x, int *ptr_ix, double *y, int *ptr_iy)
 	{
 	int n = *ptr_n;
 	int ix = *ptr_ix;

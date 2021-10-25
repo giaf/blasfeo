@@ -73,7 +73,7 @@
 #if defined(FORTRAN_BLAS_API)
 #define SYRK dsyrk_
 #else
-#define SYRK blas_dsyrk
+#define SYRK blasfeo_blas_dsyrk
 #endif
 
 

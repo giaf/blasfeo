@@ -90,7 +90,7 @@
 #if defined(FORTRAN_BLAS_API)
 #define TRSM dtrsm_
 #else
-#define TRSM blas_dtrsm
+#define TRSM blasfeo_blas_dtrsm
 #endif
 
 
