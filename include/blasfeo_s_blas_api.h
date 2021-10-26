@@ -44,6 +44,18 @@
 
 
 
+#ifdef BLAS_API
+#ifdef CBLAS_API
+enum CBLAS_ORDER {CblasRowMajor=101, CblasColMajor=102};
+enum CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112, CblasConjTrans=113};
+enum CBLAS_UPLO {CblasUpper=121, CblasLower=122};
+enum CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
+enum CBLAS_SIDE {CblasLeft=141, CblasRight=142};
+#endif
+#endif
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -78,6 +90,26 @@ void spotrf_(char *uplo, int *m, float *A, int *lda, int *info);
 
 
 
+#ifdef CBLAS_API
+
+
+
+// CBLAS 1
+//
+void cblas_saxpy(const int N, const float alpha, const float *X, const int incX, float *Y, const int incY);
+
+// CBLAS 3
+//
+void cblas_sgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB, const int M, const int N, const int K, const float alpha, const float *A, const int lda, const float *B, const int ldb, const float beta, float *C, const int ldc);
+//
+void cblas_strsm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag, const int M, const int N, const float alpha, const float *A, const int lda, float *B, const int ldb);
+
+
+
+#endif // CBLAS_API
+
+
+
 #else // BLASFEO_API
 
 
@@ -99,6 +131,26 @@ void blasfeo_blas_strsm(char *side, char *uplo, char *transa, char *diag, int *m
 // LAPACK
 //
 void blasfeo_lapack_spotrf(char *uplo, int *m, float *A, int *lda, int *info);
+
+
+
+#ifdef CBLAS_API
+
+
+
+// CBLAS 1
+//
+void blasfeo_cblas_saxpy(const int N, const float alpha, const float *X, const int incX, float *Y, const int incY);
+
+// CBLAS 3
+//
+void blasfeo_cblas_sgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB, const int M, const int N, const int K, const float alpha, const float *A, const int lda, const float *B, const int ldb, const float beta, float *C, const int ldc);
+//
+void blasfeo_cblas_strsm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag, const int M, const int N, const float alpha, const float *A, const int lda, float *B, const int ldb);
+
+
+
+#endif // CBLAS_API
 
 
 

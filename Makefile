@@ -1116,6 +1116,11 @@ ifeq ($(BLAS_API), 1)
 	echo "#define BLAS_API" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
+ifeq ($(CBLAS_API), 1)
+	echo "#ifndef CBLAS_API" >> ./include/blasfeo_target.h
+	echo "#define CBLAS_API" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
 ifeq ($(FORTRAN_BLAS_API), 1)
 	echo "#ifndef FORTRAN_BLAS_API" >> ./include/blasfeo_target.h
 	echo "#define FORTRAN_BLAS_API" >> ./include/blasfeo_target.h
