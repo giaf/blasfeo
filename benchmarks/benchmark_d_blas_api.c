@@ -339,46 +339,46 @@ openblas_set_num_threads(1);
 			for(rep=0; rep<nrep; rep++)
 				{
 
-//				#define blas_dgemm dgemm_
+//				#define blasfeo_blas_dgemm dgemm_
 
-				blas_dgemm(&c_n, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blas_dgemm(&c_n, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blas_dgemm(&c_t, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blas_dgemm(&c_t, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+				blasfeo_blas_dgemm(&c_n, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blasfeo_blas_dgemm(&c_n, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blasfeo_blas_dgemm(&c_t, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blasfeo_blas_dgemm(&c_t, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
 
-//				blas_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blas_dgemm(&c_n, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blas_dgemm(&c_t, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
-//				blas_dgemm(&c_t, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blasfeo_blas_dgemm(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blasfeo_blas_dgemm(&c_n, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blasfeo_blas_dgemm(&c_t, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
+//				blasfeo_blas_dgemm(&c_t, &c_t, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 
-//				blas_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
-//				blas_dsyrk(&c_l, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
-//				blas_dsyrk(&c_u, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
-//				blas_dsyrk(&c_u, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
+//				blasfeo_blas_dsyrk(&c_l, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
+//				blasfeo_blas_dsyrk(&c_l, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
+//				blasfeo_blas_dsyrk(&c_u, &c_n, &n, &n, &alpha, A, &n, &beta, C, &n);
+//				blasfeo_blas_dsyrk(&c_u, &c_t, &n, &n, &alpha, A, &n, &beta, C, &n);
 
-//				blas_dtrsm(&c_l, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_l, &c_l, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_l, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_l, &c_l, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_l, &c_u, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_l, &c_u, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_l, &c_u, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_l, &c_u, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_r, &c_l, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_r, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_r, &c_l, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_r, &c_u, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_r, &c_u, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_r, &c_u, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
-//				blas_dtrsm(&c_r, &c_u, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_l, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_l, &c_l, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_l, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_l, &c_l, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_l, &c_u, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_l, &c_u, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_l, &c_u, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_l, &c_u, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_r, &c_l, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_r, &c_l, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_r, &c_l, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_r, &c_u, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_r, &c_u, &c_n, &c_u, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_r, &c_u, &c_t, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrsm(&c_r, &c_u, &c_t, &c_u, &n, &n, &alpha, B, &n, C, &n);
 
-//				blas_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
+//				blasfeo_blas_dtrmm(&c_r, &c_l, &c_n, &c_n, &n, &n, &alpha, B, &n, C, &n);
 
-//				blas_dpotrf(&c_l, &n, B, &n, &info);
-//				blas_dpotrf(&c_u, &n, B, &n, &info);
+//				blasfeo_lapack_dpotrf(&c_l, &n, B, &n, &info);
+//				blasfeo_lapack_dpotrf(&c_u, &n, B, &n, &info);
 
-//				blas_dgetrf(&n, &n, B, &n, ipiv, &info);
+//				blasfeo_lapack_dgetrf(&n, &n, B, &n, ipiv, &info);
 
 
 
