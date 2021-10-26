@@ -98,7 +98,7 @@ void blasfeo_blas_strsm(char *side, char *uplo, char *transa, char *diag, int *m
 
 // LAPACK
 //
-void blasfeo_blas_spotrf(char *uplo, int *m, float *A, int *lda, int *info);
+void blasfeo_lapack_spotrf(char *uplo, int *m, float *A, int *lda, int *info);
 
 
 

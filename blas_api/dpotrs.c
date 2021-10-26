@@ -47,16 +47,16 @@
 
 #if defined(FORTRAN_BLAS_API)
 #define blasfeo_blas_dtrsm dtrsm_
-#define blasfeo_blas_dpotrs dpotrs_
+#define blasfeo_lapack_dpotrs dpotrs_
 #endif
 
 
 
-void blasfeo_blas_dpotrs(char *uplo, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
+void blasfeo_lapack_dpotrs(char *uplo, int *pm, int *pn, double *A, int *plda, double *B, int *pldb, int *info)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblasfeo_blas_dpotrs %c %d %d %p %d %p %d %d\n", *uplo, *pm, *pn, A, *plda, B, *pldb, *info);
+	printf("\nblasfeo_lapack_dpotrs %c %d %d %p %d %p %d %d\n", *uplo, *pm, *pn, A, *plda, B, *pldb, *info);
 #endif
 
 	int m = *pm;
