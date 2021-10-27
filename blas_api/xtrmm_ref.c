@@ -33,10 +33,22 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+//#define TIME_INT
+
+
+#ifdef TIME_INT
+#include <blasfeo_timing.h>
+#endif
+
 
 
 void TRMM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, REAL *alpha, REAL *A, int *plda, REAL *B, int *pldb)
 	{
+
+#ifdef TIME_INT
+    blasfeo_timer timer;
+	blasfeo_tic(&timer);
+#endif
 
 #if defined(DIM_CHECK)
 	if( !(*side=='l' | *side=='L' | *side=='r' | *side=='R') )
@@ -175,6 +187,22 @@ void TRMM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 				}
 			}
 		}
+
+#ifdef TIME_INT
+	double flops;
+	if( *side=='l' | *side=='L' )
+		{
+		flops = *pm * *pm * *pn;
+		}
+	else
+		{
+		flops = *pm * *pn * *pn;
+		}
+	double time = blasfeo_toc(&timer);
+	double Gflops = 1e-9 * flops / time;
+	double Gflops_max = 3.4 * 16;
+    printf("\nblasfeo trmm\t%c\t%c\t%c\t%c\t%d\t%d\t%f\t%f\n", *side, *uplo, *transa, *diag, *pm, *pn, Gflops, 100.0*Gflops/Gflops_max);
+#endif
 
 	return;
 

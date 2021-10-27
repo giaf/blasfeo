@@ -33,10 +33,22 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+//#define TIME_INT
+
+
+#ifdef TIME_INT
+#include <blasfeo_timing.h>
+#endif
+
 
 
 void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, int *plda, REAL *B, int *pldb, REAL *pbeta, REAL *C, int *pldc)
 	{
+
+#ifdef TIME_INT
+    blasfeo_timer timer;
+	blasfeo_tic(&timer);
+#endif
 
 #if defined(DIM_CHECK)
 	if( !(*ta=='c' | *ta=='C' | *ta=='n' | *ta=='N' | *ta=='t' | *ta=='T') )
@@ -118,6 +130,14 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 			}
 		}
 
+#endif
+
+#ifdef TIME_INT
+	double flops = 2 * *pm * *pn * *pk;
+	double time = blasfeo_toc(&timer);
+	double Gflops = 1e-9 * flops / time;
+	double Gflops_max = 3.4 * 16;
+    printf("\nblasfeo gemm\t%c\t%c\t\t%d\t%d\t%d\t%f\t%f\n", *ta, *tb, *pm, *pn, *pk, Gflops, 100.0*Gflops/Gflops_max);
 #endif
 
 	return;

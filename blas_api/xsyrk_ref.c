@@ -33,10 +33,22 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+//#define TIME_INT
+
+
+#ifdef TIME_INT
+#include <blasfeo_timing.h>
+#endif
+
 
 
 void SYRK(char *uplo, char *trans, int *pm, int *pk, REAL *palpha, REAL *A, int *plda, REAL *pbeta, REAL *C, int *pldc)
 	{
+
+#ifdef TIME_INT
+    blasfeo_timer timer;
+	blasfeo_tic(&timer);
+#endif
 
 #if defined(DIM_CHECK)
 	if( !(*uplo=='l' | *uplo=='L' | *uplo=='u' | *uplo=='U') )
@@ -105,6 +117,14 @@ void SYRK(char *uplo, char *trans, int *pm, int *pk, REAL *palpha, REAL *A, int 
 #endif
 			}
 		}
+
+#ifdef TIME_INT
+	double flops = *pm * *pm * *pk;
+	double time = blasfeo_toc(&timer);
+	double Gflops = 1e-9 * flops / time;
+	double Gflops_max = 3.4 * 16;
+    printf("\nblasfeo trsm\t%c\t%c\t%d\t%d\t%f\t%f\n", *uplo, *trans, *pm, *pk, Gflops, 100.0*Gflops/Gflops_max);
+#endif
 
 	return;
 

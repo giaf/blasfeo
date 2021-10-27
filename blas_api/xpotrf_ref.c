@@ -33,10 +33,22 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+//#define TIME_INT
+
+
+#ifdef TIME_INT
+#include <blasfeo_timing.h>
+#endif
+
 
 
 void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 	{
+
+#ifdef TIME_INT
+    blasfeo_timer timer;
+	blasfeo_tic(&timer);
+#endif
 
 #if defined(DIM_CHECK)
 	if( !(*uplo=='l' | *uplo=='l' | *uplo=='U' | *uplo=='U') )
@@ -86,9 +98,19 @@ void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 		if(C[ii*(ldc+1)]==0.0)
 			{
 			*info = ii+1;
-			return;
+			goto end_label;
 			}
 		}
+#ifdef TIME_INT
+	double flops;
+	flops = 1.0/3.0 * *pm * *pm * *pm;
+	double time = blasfeo_toc(&timer);
+	double Gflops = 1e-9 * flops / time;
+	double Gflops_max = 3.4 * 16;
+    printf("\nblasfeo potrf\t%c\t%d\t%f\t%f\n", *uplo, *pm, Gflops, 100.0*Gflops/Gflops_max);
+#endif
+
+end_label:
 
 	return;
 
