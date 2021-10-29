@@ -170,16 +170,16 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
-		goto alg1;
+		goto alg2;
 		}
 	else
 		{
-		goto alg0;
+		goto alg1;
 		}
 
 
 
-alg0:
+alg1:
 
 	pU = pU0;
 	sdu = sdu0;
@@ -191,15 +191,15 @@ alg0:
 		{
 		if(m<=4)
 			{
-			goto edge_m_4_0;
+			goto edge_m_4_1;
 			}
 		else if(m<=8)
 			{
-			goto edge_m_8_0;
+			goto edge_m_8_1;
 			}
 		else //if(m<=12)
 			{
-			goto edge_m_12_0;
+			goto edge_m_12_1;
 			}
 		}
 	for(; jj<n-11; jj+=12)
@@ -268,15 +268,15 @@ alg0:
 		{
 		if(n-jj<=4)
 			{
-			goto left_4_0;
+			goto left_4_1;
 			}
 		if(n-jj<=8)
 			{
-			goto left_8_0;
+			goto left_8_1;
 			}
 		else
 			{
-			goto left_12_0;
+			goto left_12_1;
 			}
 		}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -284,11 +284,11 @@ alg0:
 		{
 		if(m<=4)
 			{
-			goto edge_m_4_0;
+			goto edge_m_4_1;
 			}
 		else //if(m<=8)
 			{
-			goto edge_m_8_0;
+			goto edge_m_8_1;
 			}
 		}
 	for(; jj<n-7; jj+=8)
@@ -355,17 +355,17 @@ alg0:
 		{
 		if(n-jj<=4)
 			{
-			goto left_4_0;
+			goto left_4_1;
 			}
 		else
 			{
-			goto left_8_0;
+			goto left_8_1;
 			}
 		}
 #else
 	if(m<=4)
 		{
-		goto edge_m_4_0;
+		goto edge_m_4_1;
 		}
 	for(; jj<n-3; jj+=4)
 		{
@@ -427,15 +427,15 @@ alg0:
 		}
 	if(jj<n)
 		{
-		goto left_4_0;
+		goto left_4_1;
 		}
 #endif
-	goto end_0;
+	goto end_1;
 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-left_12_0:
+left_12_1:
 
 	m_max = m<jj ? m : jj;
 	n_max = p-jj<12 ? p-jj : 12;
@@ -480,13 +480,13 @@ left_12_0:
 			}
 		}
 
-	goto end_0;
+	goto end_1;
 #endif
 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-left_8_0:
+left_8_1:
 
 	m_max = m<jj ? m : jj;
 	n_max = p-jj<8 ? p-jj : 8;
@@ -530,12 +530,12 @@ left_8_0:
 		}
 
 
-	goto end_0;
+	goto end_1;
 #endif
 
 
 
-left_4_0:
+left_4_1:
 
 	m_max = m<jj ? m : jj;
 	n_max = p-jj<4 ? p-jj : 4;
@@ -576,13 +576,13 @@ left_4_0:
 			}
 		}
 
-	goto end_0;
+	goto end_1;
 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
 	// handle cases m={9,10,11,12}
-edge_m_12_0:
+edge_m_12_1:
 	kernel_dgetrf_pivot_12_vs_lib(m, C, ldc, pd, ipiv, n); // it must handle also n={1,2,3,4} !!!!!
 	for(ii=0; ii<p; ii++)
 		{
@@ -592,14 +592,14 @@ edge_m_12_0:
 		{
 		kernel_dtrsm_nn_ll_one_12x4_vs_lib4cccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
-	goto end_0;
+	goto end_1;
 #endif
 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	// handle cases m={5,6,7,8}
-edge_m_8_0:
+edge_m_8_1:
 	kernel_dgetrf_pivot_8_vs_lib(m, C, ldc, pd, ipiv, n); // it must handle also n={1,2,3,4} !!!!!
 	for(ii=0; ii<p; ii++)
 		{
@@ -609,13 +609,13 @@ edge_m_8_0:
 		{
 		kernel_dtrsm_nn_ll_one_8x4_vs_lib4cccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
-	goto end_0;
+	goto end_1;
 #endif
 
 
 
 	// handle cases m={1,2,3,4}
-edge_m_4_0:
+edge_m_4_1:
 	kernel_dgetrf_pivot_4_vs_lib(m, C, ldc, pd, ipiv, n);
 	for(ii=0; ii<p; ii++)
 		{
@@ -625,11 +625,11 @@ edge_m_4_0:
 		{
 		kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc(0, dummy, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
-	goto end_0;
+	goto end_1;
 
 
 
-end_0:
+end_1:
 	// from 0-index to 1-index
 	// TODO move to BLAS_API !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //	for(ii=0; ii<p; ii++)
@@ -640,7 +640,7 @@ end_0:
 
 
 
-alg1:
+alg2:
 
 	m1 = (m+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
@@ -665,15 +665,15 @@ alg1:
 		{
 		if(m<=4)
 			{
-			goto edge_m_4_1;
+			goto edge_m_4_2;
 			}
 		else if(m<=8)
 			{
-			goto edge_m_8_1;
+			goto edge_m_8_2;
 			}
 		else //if(m<=12)
 			{
-			goto edge_m_12_1;
+			goto edge_m_12_2;
 			}
 		}
 	for(; jj<n-11; jj+=12)
@@ -760,15 +760,15 @@ alg1:
 		{
 		if(n-jj<=4)
 			{
-			goto left_4_1;
+			goto left_4_2;
 			}
 		else if(n-jj<=8)
 			{
-			goto left_8_1;
+			goto left_8_2;
 			}
 		else
 			{
-			goto left_12_1;
+			goto left_12_2;
 			}
 		}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
@@ -776,11 +776,11 @@ alg1:
 		{
 		if(m<=4)
 			{
-			goto edge_m_4_1;
+			goto edge_m_4_2;
 			}
 		else //if(m<=8)
 			{
-			goto edge_m_8_1;
+			goto edge_m_8_2;
 			}
 		}
 	for(; jj<n-7; jj+=8)
@@ -861,17 +861,17 @@ alg1:
 		{
 		if(n-jj<=4)
 			{
-			goto left_4_1;
+			goto left_4_2;
 			}
 		else //if(n-jj<=8)
 			{
-			goto left_8_1;
+			goto left_8_2;
 			}
 		}
 #else
 	if(m<=4)
 		{
-		goto edge_m_4_1;
+		goto edge_m_4_2;
 		}
 	for(; jj<n-3; jj+=4)
 		{
@@ -940,15 +940,15 @@ alg1:
 		}
 	if(jj<n)
 		{
-		goto left_4_1;
+		goto left_4_2;
 		}
 #endif
-	goto end_1;
+	goto end_2;
 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-left_12_1:
+left_12_2:
 
 	m_max = m<jj ? m : jj;
 	n_max = p-jj<12 ? p-jj : 12;
@@ -1012,13 +1012,13 @@ left_12_1:
 			}
 		}
 
-	goto end_1;
+	goto end_2;
 #endif
 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-left_8_1:
+left_8_2:
 
 	m_max = m<jj ? m : jj;
 	n_max = p-jj<8 ? p-jj : 8;
@@ -1077,12 +1077,12 @@ left_8_1:
 			}
 		}
 
-	goto end_1;
+	goto end_2;
 #endif
 
 
 
-left_4_1:
+left_4_2:
 
 	m_max = m<jj ? m : jj;
 	n_max = p-jj<4 ? p-jj : 4;
@@ -1130,13 +1130,13 @@ left_4_1:
 			}
 		}
 
-	goto end_1;
+	goto end_2;
 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	// handle cases m={9,10,11,12}
-edge_m_12_1:
+edge_m_12_2:
 	kernel_dgetrf_pivot_12_vs_lib(m, C, ldc, pd, ipiv, n); // it must handle also n={1,2,3,4} !!!!!
 	for(ii=0; ii<p; ii++)
 		{
@@ -1146,14 +1146,14 @@ edge_m_12_1:
 		{
 		kernel_dtrsm_nn_ll_one_12x4_vs_lib4cccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
-	goto end_m_1;
+	goto end_m_2;
 #endif
 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	// handle cases m={5,6,7,8}
-edge_m_8_1:
+edge_m_8_2:
 	kernel_dgetrf_pivot_8_vs_lib(m, C, ldc, pd, ipiv, n); // it must handle also n={1,2,3,4} !!!!!
 	for(ii=0; ii<p; ii++)
 		{
@@ -1163,13 +1163,13 @@ edge_m_8_1:
 		{
 		kernel_dtrsm_nn_ll_one_8x4_vs_lib4cccc(0, dummy, 0, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
-	goto end_m_1;
+	goto end_m_2;
 #endif
 
 
 
 	// handle cases m={1,2,3,4}
-edge_m_4_1:
+edge_m_4_2:
 	kernel_dgetrf_pivot_4_vs_lib(m, C, ldc, pd, ipiv, n);
 	for(ii=0; ii<p; ii++)
 		{
@@ -1179,11 +1179,11 @@ edge_m_4_1:
 		{
 		kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc(0, dummy, dummy, 0, &d1, C+ii*ldc, ldc, C+ii*ldc, ldc, C, ldc, m, n-ii);
 		}
-	goto end_m_1;
+	goto end_m_2;
 
 
 
-end_1:
+end_2:
 	// unpack
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
@@ -1256,7 +1256,7 @@ end_1:
 #endif
 	// TODO clean loops
 
-end_m_1:
+end_m_2:
 	free(mem);
 	// from 0-index to 1-index
 	// TODO move to BLAS_API !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1355,17 +1355,17 @@ void blasfeo_hp_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 #else
 		printf("\nblas_dgetrf_np: not implemented yet for m>K_MAX_STACK\n");
 		exit(1);
-//		goto alg1;
+//		goto alg2;
 #endif
 		}
 	else
 		{
-		goto alg0;
+		goto alg1;
 		}
 
 
 
-alg0:
+alg1:
 
 	pU = pU0;
 	sdu = sdu0;
@@ -1438,15 +1438,15 @@ alg0:
 		{
 		if(m-ii<=4)
 			{
-			goto left_4_0;
+			goto left_4_1;
 			}
 		if(m-ii<=8)
 			{
-			goto left_8_0;
+			goto left_8_1;
 			}
 		else
 			{
-			goto left_12_0;
+			goto left_12_1;
 			}
 		}
 #elif 0
@@ -1505,11 +1505,11 @@ alg0:
 		{
 		if(m-ii<=4)
 			{
-			goto left_4_0;
+			goto left_4_1;
 			}
 		else
 			{
-			goto left_8_0;
+			goto left_8_1;
 			}
 		}
 #else
@@ -1556,15 +1556,15 @@ alg0:
 		}
 	if(m>ii)
 		{
-		goto left_4_0;
+		goto left_4_1;
 		}
 #endif
-	goto end_0;
+	goto end_1;
 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-left_12_0:
+left_12_1:
 		jj = 0;
 
 		// solve lower
@@ -1597,13 +1597,13 @@ left_12_0:
 			{
 			kernel_dtrsm_nn_ll_one_12x4_vs_lib4cccc(ii, pU, sdu, C+jj*ldc, ldc, &d1, C0+ii+jj*ldc0, ldc0, C+ii+jj*ldc, ldc, C+ii+ii*ldc, ldc, m-ii, n-jj);
 			}
-	goto end_0;
+	goto end_1;
 #endif
 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-left_8_0:
+left_8_1:
 		jj = 0;
 
 		// solve lower
@@ -1631,12 +1631,12 @@ left_8_0:
 			{
 			kernel_dtrsm_nn_ll_one_8x4_vs_lib4cccc(ii, pU, sdu, C+jj*ldc, ldc, &d1, C0+ii+jj*ldc0, ldc0, C+ii+jj*ldc, ldc, C+ii+ii*ldc, ldc, m-ii, n-jj);
 			}
-	goto end_0;
+	goto end_1;
 #endif
 
 
 
-left_4_0:
+left_4_1:
 	jj = 0;
 
 	// solve lower
@@ -1659,11 +1659,11 @@ left_4_0:
 		{
 		kernel_dtrsm_nn_ll_one_4x4_vs_lib4cccc(ii, pU, C+jj*ldc, ldc, &d1, C0+ii+jj*ldc0, ldc0, C+ii+jj*ldc, ldc, C+ii+ii*ldc, ldc, m-ii, n-jj);
 		}
-	goto end_0;
+	goto end_1;
 
 
 
-end_0:
+end_1:
 	return;
 
 	// never to get here
