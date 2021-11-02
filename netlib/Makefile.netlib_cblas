@@ -317,6 +317,23 @@ endif
 #
 BLASFEO_CBLAS_DEF =
 ifeq ($(FORTRAN_BLAS_API), 0)
+# macro
+BLASFEO_CBLAS_DEF += -DCBLAS_ORDER=BLASFEO_CBLAS_ORDER
+BLASFEO_CBLAS_DEF += -DCblasRowMajor=BlasfeoCblasRowMajor
+BLASFEO_CBLAS_DEF += -DCblasColMajor=BlasfeoCblasColMajor
+BLASFEO_CBLAS_DEF += -DCBLAS_TRANSPOSE=BLASFEO_CBLAS_TRANSPOSE
+BLASFEO_CBLAS_DEF += -DCblasNoTrans=BlasfeoCblasNoTrans
+BLASFEO_CBLAS_DEF += -DCblasTrans=BlasfeoCblasTrans
+BLASFEO_CBLAS_DEF += -DCblasConjTrans=BlasfeoCblasConjTrans
+BLASFEO_CBLAS_DEF += -DCBLAS_UPLO=BLASFEO_CBLAS_UPLO
+BLASFEO_CBLAS_DEF += -DCblasUpper=BlasfeoCblasUpper
+BLASFEO_CBLAS_DEF += -DCblasLower=BlasfeoCblasLower
+BLASFEO_CBLAS_DEF += -DCBLAS_DIAG=BLASFEO_CBLAS_DIAG
+BLASFEO_CBLAS_DEF += -DCblasNonUnit=BlasfeoCblasNonUnit
+BLASFEO_CBLAS_DEF += -DCblasUnit=BlasfeoCblasUnit
+BLASFEO_CBLAS_DEF += -DCBLAS_SIDE=BLASFEO_CBLAS_SIDE
+BLASFEO_CBLAS_DEF += -DCblasLeft=BlasfeoCblasLeft
+BLASFEO_CBLAS_DEF += -DCblasRight=BlasfeoCblasRight
 # level 1 single
 BLASFEO_CBLAS_DEF += -Dcblas_saxpy=blasfeo_cblas_saxpy -Dsaxpy_=blasfeo_blas_saxpy
 # level 1 double
