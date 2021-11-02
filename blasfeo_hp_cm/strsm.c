@@ -182,17 +182,17 @@ void blasfeo_hp_strsm_llnn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 llnn:
 	if(m>=12 | n>=12 | m>K_MAX_STACK)
 		{
-		goto llnn_1;
+		goto llnn_2;
 		}
 	else
 		{
-		goto llnn_0;
+		goto llnn_1;
 		}
 
 	// never to get here
 	return;
 
-llnn_0:
+llnn_1:
 	pU = pU0;
 	sdu = sdu0;
 	dA = pd0;
@@ -216,25 +216,25 @@ llnn_0:
 		}
 	if(ii<n)
 		{
-		goto llnn_0_left_4;
+		goto llnn_1_left_4;
 		}
-	goto llnn_0_return;
+	goto llnn_1_return;
 
-llnn_0_left_4:
+llnn_1_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib4c44c(jj, pU, A+jj, lda, &alpha, pU+jj*ps4, pU+jj*ps4, A+jj+jj*lda, lda, dA+jj, n-ii, m-jj);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-goto llnn_0_return;
+goto llnn_1_return;
 
-llnn_0_return:
+llnn_1_return:
 	return;
 
 
 
-llnn_1:
+llnn_2:
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
@@ -278,20 +278,20 @@ llnn_1:
 		}
 	if(ii<n)
 		{
-		goto llnn_1_left_4;
+		goto llnn_2_left_4;
 		}
-	goto llnn_1_return;
+	goto llnn_2_return;
 
-llnn_1_left_4:
+llnn_2_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib4(jj, pU, tB.pA+jj*sdb, &alpha, pU+jj*ps4, pU+jj*ps4, tB.pA+jj*ps4+jj*sdb, dB+jj, n-ii, m-jj);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-goto llnn_1_return;
+goto llnn_2_return;
 
-llnn_1_return:
+llnn_2_return:
 	free(mem);
 	return;
 
@@ -383,17 +383,17 @@ void blasfeo_hp_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 llnu:
 	if(m>=12 | n>=12 | m>K_MAX_STACK)
 		{
-		goto llnu_1;
+		goto llnu_2;
 		}
 	else
 		{
-		goto llnu_0;
+		goto llnu_1;
 		}
 
 	// never to get here
 	return;
 
-llnu_0:
+llnu_1:
 	pU = pU0;
 	sdu = sdu0;
 
@@ -413,25 +413,25 @@ llnu_0:
 		}
 	if(ii<n)
 		{
-		goto llnu_0_left_4;
+		goto llnu_1_left_4;
 		}
-	goto llnu_0_return;
+	goto llnu_1_return;
 
-llnu_0_left_4:
+llnu_1_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_strsm_nt_rl_one_4x4_vs_lib4c44c(jj, pU, A+jj, lda, &alpha, pU+jj*ps4, pU+jj*ps4, A+jj+jj*lda, lda, n-ii, m-jj);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-goto llnu_0_return;
+goto llnu_1_return;
 
-llnu_0_return:
+llnu_1_return:
 	return;
 
 
 
-llnu_1:
+llnu_2:
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
@@ -472,20 +472,20 @@ llnu_1:
 		}
 	if(ii<n)
 		{
-		goto llnu_1_left_4;
+		goto llnu_2_left_4;
 		}
-	goto llnu_1_return;
+	goto llnu_2_return;
 
-llnu_1_left_4:
+llnu_2_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_strsm_nt_rl_one_4x4_vs_lib4(jj, pU, tB.pA+jj*sdb, &alpha, pU+jj*ps4, pU+jj*ps4, tB.pA+jj*ps4+jj*sdb, n-ii, m-jj);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-goto llnu_1_return;
+goto llnu_2_return;
 
-llnu_1_return:
+llnu_2_return:
 	free(mem);
 	return;
 
@@ -577,17 +577,17 @@ void blasfeo_hp_strsm_lltn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 lltn:
 	if(m>=12 | n>=12 | m>K_MAX_STACK)
 		{
-		goto lunn_1;
+		goto lunn_2;
 		}
 	else
 		{
-		goto lltn_0;
+		goto lltn_1;
 		}
 
 	// never to get here
 	return;
 
-lltn_0:
+lltn_1:
 	// XXX limits of ii and jj swapped !!!
 	pU = pU0;
 	sdu = sdu0;
@@ -618,11 +618,11 @@ lltn_0:
 		}
 	if(ii<n)
 		{
-		goto lltn_0_left_4;
+		goto lltn_1_left_4;
 		}
-	goto lltn_0_return;
+	goto lltn_1_return;
 
-lltn_0_left_4:
+lltn_1_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	if(mn4!=0)
 		{
@@ -635,14 +635,14 @@ lltn_0_left_4:
 		kernel_strsm_nn_rl_inv_4x4_vs_lib4c44c(jj+mn4, pU+(idx+4)*ps4, A+idx+4+idx*lda, lda, &alpha, pU+idx*ps4, pU+idx*ps4, A+idx+idx*lda, lda, dA+idx, n-ii, 4);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-	goto lltn_0_return;
+	goto lltn_1_return;
 
-lltn_0_return:
+lltn_1_return:
 	return;
 
 
 
-lunn_1:
+lunn_2:
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
@@ -692,11 +692,11 @@ lunn_1:
 		}
 	if(ii<n)
 		{
-		goto lunn_1_left_4;
+		goto lunn_2_left_4;
 		}
-	goto lunn_1_return;
+	goto lunn_2_return;
 
-lunn_1_left_4:
+lunn_2_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	if(mn4!=0)
 		{
@@ -709,9 +709,9 @@ lunn_1_left_4:
 		kernel_strsm_nt_ru_inv_4x4_vs_lib4(jj+mn4, pU+(idx+4)*ps4, pB+(idx+4)*ps4+idx*sdb, &alpha, pU+idx*ps4, pU+idx*ps4, pB+idx*ps4+idx*sdb, dB+idx, n-ii, 4);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-	goto lunn_1_return;
+	goto lunn_2_return;
 
-lunn_1_return:
+lunn_2_return:
 	free(mem);
 	return;
 
@@ -803,17 +803,17 @@ void blasfeo_hp_strsm_lltu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 lltu:
 	if(m>=12 | n>=12 | m>K_MAX_STACK)
 		{
-		goto lunu_1;
+		goto lunu_2;
 		}
 	else
 		{
-		goto lltu_0;
+		goto lltu_1;
 		}
 
 	// never to get here
 	return;
 
-lltu_0:
+lltu_1:
 	// XXX limits of ii and jj swapped !!!
 	pU = pU0;
 	sdu = sdu0;
@@ -840,11 +840,11 @@ lltu_0:
 		}
 	if(ii<n)
 		{
-		goto lltu_0_left_4;
+		goto lltu_1_left_4;
 		}
-	goto lltu_0_return;
+	goto lltu_1_return;
 
-lltu_0_left_4:
+lltu_1_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	if(mn4!=0)
 		{
@@ -857,14 +857,14 @@ lltu_0_left_4:
 		kernel_strsm_nn_rl_one_4x4_vs_lib4c44c(jj+mn4, pU+(idx+4)*ps4, A+idx+4+idx*lda, lda, &alpha, pU+idx*ps4, pU+idx*ps4, A+idx+idx*lda, lda, n-ii, 4);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-	goto lltu_0_return;
+	goto lltu_1_return;
 
-lltu_0_return:
+lltu_1_return:
 	return;
 
 
 
-lunu_1:
+lunu_2:
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
@@ -911,11 +911,11 @@ lunu_1:
 		}
 	if(ii<n)
 		{
-		goto lunu_1_left_4;
+		goto lunu_2_left_4;
 		}
-	goto lunu_1_return;
+	goto lunu_2_return;
 
-lunu_1_left_4:
+lunu_2_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	if(mn4!=0)
 		{
@@ -928,9 +928,9 @@ lunu_1_left_4:
 		kernel_strsm_nt_ru_one_4x4_vs_lib4(jj+mn4, pU+(idx+4)*ps4, pB+(idx+4)*ps4+idx*sdb, &alpha, pU+idx*ps4, pU+idx*ps4, pB+idx*ps4+idx*sdb, n-ii, 4);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-	goto lunu_1_return;
+	goto lunu_2_return;
 
-lunu_1_return:
+lunu_2_return:
 	free(mem);
 	return;
 
@@ -1022,17 +1022,17 @@ void blasfeo_hp_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 lunn:
 	if(m>=12 | n>=12 | m>K_MAX_STACK)
 		{
-		goto lunn_1;
+		goto lunn_2;
 		}
 	else
 		{
-		goto lunn_0;
+		goto lunn_1;
 		}
 
 	// never to get here
 	return;
 
-lunn_0:
+lunn_1:
 	// XXX limits of ii and jj swapped !!!
 	pU = pU0;
 	sdu = sdu0;
@@ -1063,11 +1063,11 @@ lunn_0:
 		}
 	if(ii<n)
 		{
-		goto lunn_0_left_4;
+		goto lunn_1_left_4;
 		}
-	goto lunn_0_return;
+	goto lunn_1_return;
 
-lunn_0_left_4:
+lunn_1_left_4:
 	kernel_spack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
 	if(mn4!=0)
 		{
@@ -1080,14 +1080,14 @@ lunn_0_left_4:
 		kernel_strsm_nt_ru_inv_4x4_vs_lib4c44c(jj+mn4, pU+(idx+4)*ps4, A+idx+(idx+4)*lda, lda, &alpha, pU+idx*ps4, pU+idx*ps4, A+idx+idx*lda, lda, dA+idx, n-ii, 4);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-	goto lunn_0_return;
+	goto lunn_1_return;
 
-lunn_0_return:
+lunn_1_return:
 	return;
 
 
 
-lunn_1:
+lunn_2:
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
@@ -1137,11 +1137,11 @@ lunn_1:
 		}
 	if(ii<n)
 		{
-		goto lunn_1_left_4;
+		goto lunn_2_left_4;
 		}
-	goto lunn_1_return;
+	goto lunn_2_return;
 
-lunn_1_left_4:
+lunn_2_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	if(mn4!=0)
 		{
@@ -1154,9 +1154,9 @@ lunn_1_left_4:
 		kernel_strsm_nt_ru_inv_4x4_vs_lib4(jj+mn4, pU+(idx+4)*ps4, pB+(idx+4)*ps4+idx*sdb, &alpha, pU+idx*ps4, pU+idx*ps4, pB+idx*ps4+idx*sdb, dB+idx, n-ii, 4);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-	goto lunn_1_return;
+	goto lunn_2_return;
 
-lunn_1_return:
+lunn_2_return:
 	free(mem);
 	return;
 
@@ -1248,17 +1248,17 @@ void blasfeo_hp_strsm_lunu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 lunu:
 	if(m>=12 | n>=12 | m>K_MAX_STACK)
 		{
-		goto lunu_1;
+		goto lunu_2;
 		}
 	else
 		{
-		goto lunu_0;
+		goto lunu_1;
 		}
 
 	// never to get here
 	return;
 
-lunu_0:
+lunu_1:
 	// XXX limits of ii and jj swapped !!!
 	pU = pU0;
 	sdu = sdu0;
@@ -1285,11 +1285,11 @@ lunu_0:
 		}
 	if(ii<n)
 		{
-		goto lunu_0_left_4;
+		goto lunu_1_left_4;
 		}
-	goto lunu_0_return;
+	goto lunu_1_return;
 
-lunu_0_left_4:
+lunu_1_left_4:
 	kernel_spack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
 	if(mn4!=0)
 		{
@@ -1302,14 +1302,14 @@ lunu_0_left_4:
 		kernel_strsm_nt_ru_one_4x4_vs_lib4c44c(jj+mn4, pU+(idx+4)*ps4, A+idx+(idx+4)*lda, lda, &alpha, pU+idx*ps4, pU+idx*ps4, A+idx+idx*lda, lda, n-ii, 4);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-	goto lunu_0_return;
+	goto lunu_1_return;
 
-lunu_0_return:
+lunu_1_return:
 	return;
 
 
 
-lunu_1:
+lunu_2:
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
@@ -1356,11 +1356,11 @@ lunu_1:
 		}
 	if(ii<n)
 		{
-		goto lunu_1_left_4;
+		goto lunu_2_left_4;
 		}
-	goto lunu_1_return;
+	goto lunu_2_return;
 
-lunu_1_left_4:
+lunu_2_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	if(mn4!=0)
 		{
@@ -1373,9 +1373,9 @@ lunu_1_left_4:
 		kernel_strsm_nt_ru_one_4x4_vs_lib4(jj+mn4, pU+(idx+4)*ps4, pB+(idx+4)*ps4+idx*sdb, &alpha, pU+idx*ps4, pU+idx*ps4, pB+idx*ps4+idx*sdb, n-ii, 4);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-	goto lunu_1_return;
+	goto lunu_2_return;
 
-lunu_1_return:
+lunu_2_return:
 	free(mem);
 	return;
 
@@ -1467,17 +1467,17 @@ void blasfeo_hp_strsm_lutn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 lutn:
 	if(m>=12 | n>=12 | m>K_MAX_STACK)
 		{
-		goto llnn_1;
+		goto llnn_2;
 		}
 	else
 		{
-		goto lutn_0;
+		goto lutn_1;
 		}
 
 	// never to get here
 	return;
 
-lutn_0:
+lutn_1:
 	// XXX limits of ii and jj swapped !!!
 	pU = pU0;
 	sdu = sdu0;
@@ -1502,25 +1502,25 @@ lutn_0:
 		}
 	if(ii<n)
 		{
-		goto lutn_0_left_4;
+		goto lutn_1_left_4;
 		}
-	goto lutn_0_return;
+	goto lutn_1_return;
 
-lutn_0_left_4:
+lutn_1_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_strsm_nn_ru_inv_4x4_vs_lib4c44c(jj, pU, A+jj*lda, lda, &alpha, pU+jj*ps4, pU+jj*ps4, A+jj+jj*lda, lda, dA+jj, n-ii, m-jj);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-goto lutn_0_return;
+goto lutn_1_return;
 
-lutn_0_return:
+lutn_1_return:
 	return;
 
 
 
-llnn_1:
+llnn_2:
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
@@ -1564,20 +1564,20 @@ llnn_1:
 		}
 	if(ii<n)
 		{
-		goto llnn_1_left_4;
+		goto llnn_2_left_4;
 		}
-	goto llnn_1_return;
+	goto llnn_2_return;
 
-llnn_1_left_4:
+llnn_2_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib4(jj, pU, tB.pA+jj*sdb, &alpha, pU+jj*ps4, pU+jj*ps4, tB.pA+jj*ps4+jj*sdb, dB+jj, n-ii, m-jj);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-goto llnn_1_return;
+goto llnn_2_return;
 
-llnn_1_return:
+llnn_2_return:
 	free(mem);
 	return;
 
@@ -1669,17 +1669,17 @@ void blasfeo_hp_strsm_lutu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 lutu:
 	if(m>=12 | n>=12 | m>K_MAX_STACK)
 		{
-		goto llnu_1;
+		goto llnu_2;
 		}
 	else
 		{
-		goto lutu_0;
+		goto lutu_1;
 		}
 
 	// never to get here
 	return;
 
-lutu_0:
+lutu_1:
 	// XXX limits of ii and jj swapped !!!
 	pU = pU0;
 	sdu = sdu0;
@@ -1700,25 +1700,25 @@ lutu_0:
 		}
 	if(ii<n)
 		{
-		goto lutu_0_left_4;
+		goto lutu_1_left_4;
 		}
-	goto lutu_0_return;
+	goto lutu_1_return;
 
-lutu_0_left_4:
+lutu_1_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_strsm_nn_ru_one_4x4_vs_lib4c44c(jj, pU, A+jj*lda, lda, &alpha, pU+jj*ps4, pU+jj*ps4, A+jj+jj*lda, lda, n-ii, m-jj);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-goto lutu_0_return;
+goto lutu_1_return;
 
-lutu_0_return:
+lutu_1_return:
 	return;
 
 
 
-llnu_1:
+llnu_2:
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
@@ -1762,20 +1762,20 @@ llnu_1:
 		}
 	if(ii<n)
 		{
-		goto llnu_1_left_4;
+		goto llnu_2_left_4;
 		}
-	goto llnu_1_return;
+	goto llnu_2_return;
 
-llnu_1_left_4:
+llnu_2_left_4:
 	kernel_spack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_strsm_nt_rl_one_4x4_vs_lib4(jj, pU, tB.pA+jj*sdb, &alpha, pU+jj*ps4, pU+jj*ps4, tB.pA+jj*ps4+jj*sdb, n-ii, m-jj);
 		}
 	kernel_sunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-goto llnu_1_return;
+goto llnu_2_return;
 
-llnu_1_return:
+llnu_2_return:
 	free(mem);
 	return;
 
@@ -1869,17 +1869,17 @@ void blasfeo_hp_strsm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 rlnn:
 	if(m>=12 | n>=12 | n>K_MAX_STACK)
 		{
-		goto rutn_1;
+		goto rutn_2;
 		}
 	else
 		{
-		goto rlnn_0;
+		goto rlnn_1;
 		}
 
 	// never to get here
 	return;
 
-rlnn_0:
+rlnn_1:
 	pU = pU0;
 	sdu = sdu0;
 	dA = pd0;
@@ -1909,11 +1909,11 @@ rlnn_0:
 		}
 	if(ii<m)
 		{
-		goto rlnn_0_left_4;
+		goto rlnn_1_left_4;
 		}
-	goto rlnn_0_return;
+	goto rlnn_1_return;
 
-rlnn_0_left_4:
+rlnn_1_left_4:
 	if(nn4!=0)
 		{
 		idx = n4;
@@ -1926,14 +1926,14 @@ rlnn_0_left_4:
 		kernel_strsm_nn_rl_inv_4x4_vs_lib4cccc(jj+nn4, pU+(idx+4)*ps4, A+(idx+4)+idx*lda, lda, &alpha, B+ii+idx*ldb, ldb, D+ii+idx*ldd, ldd, A+idx+idx*lda, lda, dA+idx, m-ii, 4);
 		kernel_spack_nn_4_vs_lib4(4, D+ii+idx*ldd, ldd, pU+idx*ps4, m-ii);
 		}
-	goto rlnn_0_return;
+	goto rlnn_1_return;
 
-rlnn_0_return:
+rlnn_1_return:
 	return;
 
 
 
-rutn_1:
+rutn_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, n1, n1);
@@ -1983,11 +1983,11 @@ rutn_1:
 		}
 	if(ii<m)
 		{
-		goto rutn_1_left_4;
+		goto rutn_2_left_4;
 		}
-	goto rutn_1_return;
+	goto rutn_2_return;
 
-rutn_1_left_4:
+rutn_2_left_4:
 	if(nn4!=0)
 		{
 		idx = n4;
@@ -2000,9 +2000,9 @@ rutn_1_left_4:
 		kernel_strsm_nt_ru_inv_4x4_vs_lib44cc4(jj+nn4, pU+(idx+4)*ps4, pB+idx*sdb+(idx+4)*ps4, &alpha, B+ii+idx*ldb, ldb, D+ii+idx*ldd, ldd, pB+idx*sdb+idx*ps4, dB+idx, m-ii, 4);
 		kernel_spack_nn_4_vs_lib4(4, D+ii+idx*ldd, ldd, pU+idx*ps4, m-ii);
 		}
-	goto rutn_1_return;
+	goto rutn_2_return;
 
-rutn_1_return:
+rutn_2_return:
 	free(mem);
 	return;
 
@@ -2096,17 +2096,17 @@ void blasfeo_hp_strsm_rlnu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 rlnu:
 	if(m>=12 | n>=12 | n>K_MAX_STACK)
 		{
-		goto rutu_1;
+		goto rutu_2;
 		}
 	else
 		{
-		goto rlnu_0;
+		goto rlnu_1;
 		}
 
 	// never to get here
 	return;
 
-rlnu_0:
+rlnu_1:
 	pU = pU0;
 	sdu = sdu0;
 
@@ -2132,11 +2132,11 @@ rlnu_0:
 		}
 	if(ii<m)
 		{
-		goto rlnu_0_left_4;
+		goto rlnu_1_left_4;
 		}
-	goto rlnu_0_return;
+	goto rlnu_1_return;
 
-rlnu_0_left_4:
+rlnu_1_left_4:
 	if(nn4!=0)
 		{
 		idx = n4;
@@ -2149,14 +2149,14 @@ rlnu_0_left_4:
 		kernel_strsm_nn_rl_one_4x4_vs_lib4cccc(jj+nn4, pU+(idx+4)*ps4, A+(idx+4)+idx*lda, lda, &alpha, B+ii+idx*ldb, ldb, D+ii+idx*ldd, ldd, A+idx+idx*lda, lda, m-ii, 4);
 		kernel_spack_nn_4_vs_lib4(4, D+ii+idx*ldd, ldd, pU+idx*ps4, m-ii);
 		}
-	goto rlnu_0_return;
+	goto rlnu_1_return;
 
-rlnu_0_return:
+rlnu_1_return:
 	return;
 
 
 
-rutu_1:
+rutu_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, n1, n1);
@@ -2203,11 +2203,11 @@ rutu_1:
 		}
 	if(ii<m)
 		{
-		goto rutu_1_left_4;
+		goto rutu_2_left_4;
 		}
-	goto rutu_1_return;
+	goto rutu_2_return;
 
-rutu_1_left_4:
+rutu_2_left_4:
 	if(nn4!=0)
 		{
 		idx = n4;
@@ -2220,9 +2220,9 @@ rutu_1_left_4:
 		kernel_strsm_nt_ru_one_4x4_vs_lib44cc4(jj+nn4, pU+(idx+4)*ps4, pB+idx*sdb+(idx+4)*ps4, &alpha, B+ii+idx*ldb, ldb, D+ii+idx*ldd, ldd, pB+idx*sdb+idx*ps4, m-ii, 4);
 		kernel_spack_nn_4_vs_lib4(4, D+ii+idx*ldd, ldd, pU+idx*ps4, m-ii);
 		}
-	goto rutu_1_return;
+	goto rutu_2_return;
 
-rutu_1_return:
+rutu_2_return:
 	free(mem);
 	return;
 
@@ -2316,17 +2316,17 @@ void blasfeo_hp_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 rltn:
 	if(m>=12 | n>=12 | n>K_MAX_STACK)
 		{
-		goto rltn_1;
+		goto rltn_2;
 		}
 	else
 		{
-		goto rltn_0;
+		goto rltn_1;
 		}
 
 	// never to get here
 	return;
 
-rltn_0:
+rltn_1:
 	pU = pU0;
 	sdu = sdu0;
 	dA = pd0;
@@ -2350,24 +2350,24 @@ rltn_0:
 		}
 	if(ii<m)
 		{
-		goto rltn_0_left_4;
+		goto rltn_1_left_4;
 		}
-	goto rltn_0_return;
+	goto rltn_1_return;
 
-rltn_0_left_4:
+rltn_1_left_4:
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib4cccc(jj, pU, A+jj, lda, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, A+jj+jj*lda, lda, dA+jj, m-ii, n-jj);
 		kernel_spack_nn_4_vs_lib4(n-jj, D+ii+jj*ldd, ldd, pU+jj*ps4, m-ii);
 		}
-goto rltn_0_return;
+goto rltn_1_return;
 
-rltn_0_return:
+rltn_1_return:
 	return;
 
 
 
-rltn_1:
+rltn_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, n1, n1);
@@ -2411,19 +2411,19 @@ rltn_1:
 		}
 	if(ii<m)
 		{
-		goto rltn_1_left_4;
+		goto rltn_2_left_4;
 		}
-	goto rltn_1_return;
+	goto rltn_2_return;
 
-rltn_1_left_4:
+rltn_2_left_4:
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib44cc4(jj, pU, pB+jj*sdb, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, pB+jj*ps4+jj*sdb, dB+jj, m-ii, n-jj);
 		kernel_spack_nn_4_vs_lib4(n-jj, D+ii+jj*ldd, ldd, pU+jj*ps4, m-ii);
 		}
-goto rltn_1_return;
+goto rltn_2_return;
 
-rltn_1_return:
+rltn_2_return:
 	free(mem);
 	return;
 
@@ -2517,17 +2517,17 @@ void blasfeo_hp_strsm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 rltu:
 	if(m>=12 | n>=12 | n>K_MAX_STACK)
 		{
-		goto rltu_1;
+		goto rltu_2;
 		}
 	else
 		{
-		goto rltu_0;
+		goto rltu_1;
 		}
 
 	// never to get here
 	return;
 
-rltu_0:
+rltu_1:
 	pU = pU0;
 	sdu = sdu0;
 
@@ -2547,24 +2547,24 @@ rltu_0:
 		}
 	if(ii<m)
 		{
-		goto rltu_0_left_4;
+		goto rltu_1_left_4;
 		}
-	goto rltu_0_return;
+	goto rltu_1_return;
 
-rltu_0_left_4:
+rltu_1_left_4:
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_one_4x4_vs_lib4cccc(jj, pU, A+jj, lda, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, A+jj+jj*lda, lda, m-ii, n-jj);
 		kernel_spack_nn_4_vs_lib4(n-jj, D+ii+jj*ldd, ldd, pU+jj*ps4, m-ii);
 		}
-goto rltu_0_return;
+goto rltu_1_return;
 
-rltu_0_return:
+rltu_1_return:
 	return;
 
 
 
-rltu_1:
+rltu_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, n1, n1);
@@ -2605,19 +2605,19 @@ rltu_1:
 		}
 	if(ii<m)
 		{
-		goto rltu_1_left_4;
+		goto rltu_2_left_4;
 		}
-	goto rltu_1_return;
+	goto rltu_2_return;
 
-rltu_1_left_4:
+rltu_2_left_4:
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_one_4x4_vs_lib44cc4(jj, pU, pB+jj*sdb, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, pB+jj*ps4+jj*sdb, m-ii, n-jj);
 		kernel_spack_nn_4_vs_lib4(n-jj, D+ii+jj*ldd, ldd, pU+jj*ps4, m-ii);
 		}
-goto rltu_1_return;
+goto rltu_2_return;
 
-rltu_1_return:
+rltu_2_return:
 	free(mem);
 	return;
 
@@ -2711,17 +2711,17 @@ void blasfeo_hp_strsm_runn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 runn:
 	if(m>=12 | n>=12 | n>K_MAX_STACK)
 		{
-		goto rltn_1;
+		goto rltn_2;
 		}
 	else
 		{
-		goto runn_0;
+		goto runn_1;
 		}
 
 	// never to get here
 	return;
 
-runn_0:
+runn_1:
 	pU = pU0;
 	sdu = sdu0;
 	dA = pd0;
@@ -2745,24 +2745,24 @@ runn_0:
 		}
 	if(ii<m)
 		{
-		goto runn_0_left_4;
+		goto runn_1_left_4;
 		}
-	goto runn_0_return;
+	goto runn_1_return;
 
-runn_0_left_4:
+runn_1_left_4:
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_strsm_nn_ru_inv_4x4_vs_lib4cccc(jj, pU, A+jj*lda, lda, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, A+jj+jj*lda, lda, dA+jj, m-ii, n-jj);
 		kernel_spack_nn_4_vs_lib4(n-jj, D+ii+jj*ldd, ldd, pU+jj*ps4, m-ii);
 		}
-goto runn_0_return;
+goto runn_1_return;
 
-runn_0_return:
+runn_1_return:
 	return;
 
 
 
-rltn_1:
+rltn_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, n1, n1);
@@ -2806,19 +2806,19 @@ rltn_1:
 		}
 	if(ii<m)
 		{
-		goto rltn_1_left_4;
+		goto rltn_2_left_4;
 		}
-	goto rltn_1_return;
+	goto rltn_2_return;
 
-rltn_1_left_4:
+rltn_2_left_4:
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib44cc4(jj, pU, pB+jj*sdb, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, pB+jj*ps4+jj*sdb, dB+jj, m-ii, n-jj);
 		kernel_spack_nn_4_vs_lib4(n-jj, D+ii+jj*ldd, ldd, pU+jj*ps4, m-ii);
 		}
-goto rltn_1_return;
+goto rltn_2_return;
 
-rltn_1_return:
+rltn_2_return:
 	free(mem);
 	return;
 
@@ -2912,17 +2912,17 @@ void blasfeo_hp_strsm_runu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 runu:
 	if(m>=12 | n>=12 | n>K_MAX_STACK)
 		{
-		goto rltu_1;
+		goto rltu_2;
 		}
 	else
 		{
-		goto runu_0;
+		goto runu_1;
 		}
 
 	// never to get here
 	return;
 
-runu_0:
+runu_1:
 	pU = pU0;
 	sdu = sdu0;
 
@@ -2942,24 +2942,24 @@ runu_0:
 		}
 	if(ii<m)
 		{
-		goto runu_0_left_4;
+		goto runu_1_left_4;
 		}
-	goto runu_0_return;
+	goto runu_1_return;
 
-runu_0_left_4:
+runu_1_left_4:
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_strsm_nn_ru_one_4x4_vs_lib4cccc(jj, pU, A+jj*lda, lda, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, A+jj+jj*lda, lda, m-ii, n-jj);
 		kernel_spack_nn_4_vs_lib4(n-jj, D+ii+jj*ldd, ldd, pU+jj*ps4, m-ii);
 		}
-goto runu_0_return;
+goto runu_1_return;
 
-runu_0_return:
+runu_1_return:
 	return;
 
 
 
-rltu_1:
+rltu_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, n1, n1);
@@ -3000,19 +3000,19 @@ rltu_1:
 		}
 	if(ii<m)
 		{
-		goto rltu_1_left_4;
+		goto rltu_2_left_4;
 		}
-	goto rltu_1_return;
+	goto rltu_2_return;
 
-rltu_1_left_4:
+rltu_2_left_4:
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_one_4x4_vs_lib44cc4(jj, pU, pB+jj*sdb, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, pB+jj*ps4+jj*sdb, m-ii, n-jj);
 		kernel_spack_nn_4_vs_lib4(n-jj, D+ii+jj*ldd, ldd, pU+jj*ps4, m-ii);
 		}
-goto rltu_1_return;
+goto rltu_2_return;
 
-rltu_1_return:
+rltu_2_return:
 	free(mem);
 	return;
 
@@ -3106,17 +3106,17 @@ void blasfeo_hp_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 rutn:
 	if(m>=12 | n>=12 | n>K_MAX_STACK)
 		{
-		goto rutn_1;
+		goto rutn_2;
 		}
 	else
 		{
-		goto rutn_0;
+		goto rutn_1;
 		}
 
 	// never to get here
 	return;
 
-rutn_0:
+rutn_1:
 	pU = pU0;
 	sdu = sdu0;
 	dA = pd0;
@@ -3146,11 +3146,11 @@ rutn_0:
 		}
 	if(ii<m)
 		{
-		goto rutn_0_left_4;
+		goto rutn_1_left_4;
 		}
-	goto rutn_0_return;
+	goto rutn_1_return;
 
-rutn_0_left_4:
+rutn_1_left_4:
 	if(nn4!=0)
 		{
 		idx = n4;
@@ -3163,14 +3163,14 @@ rutn_0_left_4:
 		kernel_strsm_nt_ru_inv_4x4_vs_lib4cccc(jj+nn4, pU+(idx+4)*ps4, A+idx+(idx+4)*lda, lda, &alpha, B+ii+idx*ldb, ldb, D+ii+idx*ldd, ldd, A+idx+idx*lda, lda, dA+idx, m-ii, 4);
 		kernel_spack_nn_4_vs_lib4(4, D+ii+idx*ldd, ldd, pU+idx*ps4, m-ii);
 		}
-	goto rutn_0_return;
+	goto rutn_1_return;
 
-rutn_0_return:
+rutn_1_return:
 	return;
 
 
 
-rutn_1:
+rutn_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, n1, n1);
@@ -3220,11 +3220,11 @@ rutn_1:
 		}
 	if(ii<m)
 		{
-		goto rutn_1_left_4;
+		goto rutn_2_left_4;
 		}
-	goto rutn_1_return;
+	goto rutn_2_return;
 
-rutn_1_left_4:
+rutn_2_left_4:
 	if(nn4!=0)
 		{
 		idx = n4;
@@ -3237,9 +3237,9 @@ rutn_1_left_4:
 		kernel_strsm_nt_ru_inv_4x4_vs_lib44cc4(jj+nn4, pU+(idx+4)*ps4, pB+idx*sdb+(idx+4)*ps4, &alpha, B+ii+idx*ldb, ldb, D+ii+idx*ldd, ldd, pB+idx*sdb+idx*ps4, dB+idx, m-ii, 4);
 		kernel_spack_nn_4_vs_lib4(4, D+ii+idx*ldd, ldd, pU+idx*ps4, m-ii);
 		}
-	goto rutn_1_return;
+	goto rutn_2_return;
 
-rutn_1_return:
+rutn_2_return:
 	free(mem);
 	return;
 
@@ -3333,17 +3333,17 @@ void blasfeo_hp_strsm_rutu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 rutu:
 	if(m>=12 | n>=12 | n>K_MAX_STACK)
 		{
-		goto rutu_1;
+		goto rutu_2;
 		}
 	else
 		{
-		goto rutu_0;
+		goto rutu_1;
 		}
 
 	// never to get here
 	return;
 
-rutu_0:
+rutu_1:
 	pU = pU0;
 	sdu = sdu0;
 
@@ -3369,11 +3369,11 @@ rutu_0:
 		}
 	if(ii<m)
 		{
-		goto rutu_0_left_4;
+		goto rutu_1_left_4;
 		}
-	goto rutu_0_return;
+	goto rutu_1_return;
 
-rutu_0_left_4:
+rutu_1_left_4:
 	if(nn4!=0)
 		{
 		idx = n4;
@@ -3386,14 +3386,14 @@ rutu_0_left_4:
 		kernel_strsm_nt_ru_one_4x4_vs_lib4cccc(jj+nn4, pU+(idx+4)*ps4, A+idx+(idx+4)*lda, lda, &alpha, B+ii+idx*ldb, ldb, D+ii+idx*ldd, ldd, A+idx+idx*lda, lda, m-ii, 4);
 		kernel_spack_nn_4_vs_lib4(4, D+ii+idx*ldd, ldd, pU+idx*ps4, m-ii);
 		}
-	goto rutu_0_return;
+	goto rutu_1_return;
 
-rutu_0_return:
+rutu_1_return:
 	return;
 
 
 
-rutu_1:
+rutu_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_smat(ps0, n1, n1);
@@ -3440,11 +3440,11 @@ rutu_1:
 		}
 	if(ii<m)
 		{
-		goto rutu_1_left_4;
+		goto rutu_2_left_4;
 		}
-	goto rutu_1_return;
+	goto rutu_2_return;
 
-rutu_1_left_4:
+rutu_2_left_4:
 	if(nn4!=0)
 		{
 		idx = n4;
@@ -3457,9 +3457,9 @@ rutu_1_left_4:
 		kernel_strsm_nt_ru_one_4x4_vs_lib44cc4(jj+nn4, pU+(idx+4)*ps4, pB+idx*sdb+(idx+4)*ps4, &alpha, B+ii+idx*ldb, ldb, D+ii+idx*ldd, ldd, pB+idx*sdb+idx*ps4, m-ii, 4);
 		kernel_spack_nn_4_vs_lib4(4, D+ii+idx*ldd, ldd, pU+idx*ps4, m-ii);
 		}
-	goto rutu_1_return;
+	goto rutu_2_return;
 
-rutu_1_return:
+rutu_2_return:
 	free(mem);
 	return;
 
