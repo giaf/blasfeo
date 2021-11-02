@@ -57,11 +57,11 @@ enum CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
 enum CBLAS_SIDE {CblasLeft=141, CblasRight=142};
 #endif // CBLAS_H
 #else // FORTRAN_BLAS_API
-enum BLASFEO_CBLAS_ORDER {CblasRowMajor=101, CblasColMajor=102};
-enum BLASFEO_CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112, CblasConjTrans=113};
-enum BLASFEO_CBLAS_UPLO {CblasUpper=121, CblasLower=122};
-enum BLASFEO_CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
-enum BLASFEO_CBLAS_SIDE {CblasLeft=141, CblasRight=142};
+enum BLASFEO_CBLAS_ORDER {BlasfeoCblasRowMajor=101, BlasfeoCblasColMajor=102};
+enum BLASFEO_CBLAS_TRANSPOSE {BlasfeoCblasNoTrans=111, BlasfeoCblasTrans=112, BlasfeoCblasConjTrans=113};
+enum BLASFEO_CBLAS_UPLO {BlasfeoCblasUpper=121, BlasfeoCblasLower=122};
+enum BLASFEO_CBLAS_DIAG {BlasfeoCblasNonUnit=131, BlasfeoCblasUnit=132};
+enum BLASFEO_CBLAS_SIDE {BlasfeoCblasLeft=141, BlasfeoCblasRight=142};
 #endif // FORTRAN_BLAS_API
 #endif // BLASFEO_CBLAS_ENUM
 #endif // CBLAS_API
