@@ -144,8 +144,8 @@ void blasfeo_hp_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 	float d_1 = 1.0;
 
 
-//	goto l_0;
 //	goto l_1;
+//	goto l_2;
 #if 0//defined(TARGET_X64_INTEL_HASWELL)
 	if(m>=200 | m>K_MAX_STACK)
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -156,18 +156,18 @@ void blasfeo_hp_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 	if(m>=12 | m>K_MAX_STACK)
 #endif
 		{
-		goto l_1;
+		goto l_2;
 		}
 	else
 		{
-		goto l_0;
+		goto l_1;
 		}
 
 	// never to get here
 	return;
 
 
-l_0:
+l_1:
 
 	ii = 0;
 #if 0//defined(TARGET_X64_INTEL_HASWELL)
@@ -186,15 +186,15 @@ l_0:
 		{
 		if(m-ii<=4)
 			{
-			goto l_0_left_4;
+			goto l_1_left_4;
 			}
 		if(m-ii<=8)
 			{
-			goto l_0_left_8;
+			goto l_1_left_8;
 			}
 		else
 			{
-			goto l_0_left_12;
+			goto l_1_left_12;
 			}
 		}
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -213,11 +213,11 @@ l_0:
 		{
 		if(m-ii<=4)
 			{
-			goto l_0_left_4;
+			goto l_1_left_4;
 			}
 		else
 			{
-			goto l_0_left_8;
+			goto l_1_left_8;
 			}
 		}
 #else
@@ -232,13 +232,13 @@ l_0:
 		}
 	if(ii<m)
 		{
-		goto l_0_left_4;
+		goto l_1_left_4;
 		}
 #endif
-	goto l_0_return;
+	goto l_1_return;
 
 #if 0//defined(TARGET_X64_INTEL_HASWELL)
-l_0_left_12:
+l_1_left_12:
 	for(jj=0; jj<ii; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_12x4_vs_lib4cccc(jj, pU, sdu, D+jj, ldd, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dU+jj, m-ii, ii-jj);
@@ -247,12 +247,12 @@ l_0_left_12:
 	kernel_spotrf_nt_l_12x4_vs_lib44cc(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dU+jj, m-ii, m-jj);
 	kernel_spack_nn_8_vs_lib4(4, D+ii+4+jj*ldd, ldd, pU+4*sdu+jj*ps, sdu, m-ii-4);
 	kernel_spotrf_nt_l_8x8_vs_lib44cc(jj+4, pU+4*sdu, sdu, pU+4*sdu, sdu, C+ii+4+(jj+4)*ldc, ldc, D+ii+4+(jj+4)*ldd, ldd, dU+jj+4, m-ii-4, m-ii-4);
-	goto l_0_return;
+	goto l_1_return;
 #endif
 
 // TODO use haswell 8x8
 #if 0//defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-l_0_left_8:
+l_1_left_8:
 	for(jj=0; jj<ii; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_8x4_vs_lib4cccc(jj, pU, sdu, D+jj, ldd, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dU+jj, m-ii, ii-jj);
@@ -261,23 +261,23 @@ l_0_left_8:
 	kernel_spotrf_nt_l_8x4_vs_lib44cc(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dU+jj, m-ii, m-jj);
 	kernel_spack_nn_4_vs_lib4(4, D+ii+4+jj*ldd, ldd, pU+4*sdu+jj*ps, m-ii-4);
 	kernel_spotrf_nt_l_4x4_vs_lib44cc(jj+4, pU+4*sdu, pU+4*sdu, C+ii+4+(jj+4)*ldc, ldc, D+ii+4+(jj+4)*ldd, ldd, dU+jj+4, m-ii-4, m-jj-4);
-	goto l_0_return;
+	goto l_1_return;
 #endif
 
-l_0_left_4:
+l_1_left_4:
 	for(jj=0; jj<ii; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib4cccc(jj, pU, D+jj, ldd, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dU+jj, m-ii, ii-jj);
 		kernel_spack_nn_4_vs_lib4(4, D+ii+jj*ldd, ldd, pU+jj*ps, m-ii);
 		}
 	kernel_spotrf_nt_l_4x4_vs_lib44cc(jj, pU, pU, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dU+jj, m-ii, m-jj);
-	goto l_0_return;
+	goto l_1_return;
 
-l_0_return:
+l_1_return:
 	return;
 
 
-l_1:
+l_2:
 
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
@@ -313,15 +313,15 @@ l_1:
 		{
 		if(m-ii<=4)
 			{
-			goto l_1_left_4;
+			goto l_2_left_4;
 			}
 		if(m-ii<=8)
 			{
-			goto l_1_left_8;
+			goto l_2_left_8;
 			}
 		else
 			{
-			goto l_1_left_12;
+			goto l_2_left_12;
 			}
 		}
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
@@ -341,11 +341,11 @@ l_1:
 		{
 		if(m-ii<=4)
 			{
-			goto l_1_left_4;
+			goto l_2_left_4;
 			}
 		else
 			{
-			goto l_1_left_8;
+			goto l_2_left_8;
 			}
 		}
 #endif
@@ -364,7 +364,7 @@ l_1:
 		}
 	if(ii<m)
 		{
-		goto l_1_left_8;
+		goto l_2_left_8;
 		}
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
@@ -383,11 +383,11 @@ l_1:
 		{
 		if(m-ii<=4)
 			{
-			goto l_1_left_4;
+			goto l_2_left_4;
 			}
 		else
 			{
-			goto l_1_left_8;
+			goto l_2_left_8;
 			}
 		}
 #else
@@ -403,13 +403,13 @@ l_1:
 		}
 	if(ii<m)
 		{
-		goto l_1_left_4;
+		goto l_2_left_4;
 		}
 #endif
-	goto l_1_return;
+	goto l_2_return;
 
 #if 0//defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-l_1_left_12:
+l_2_left_12:
 	for(jj=0; jj<ii; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_12x4_vs_lib44ccc(jj, tA.pA+ii*sda, sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dA+jj, m-ii, ii-jj);
@@ -427,12 +427,12 @@ l_1_left_12:
 	kernel_spack_nn_4_vs_lib4(4, D+ii+8+(jj+4)*ldd, ldd, tA.pA+(ii+8)*sda+(jj+4)*ps, m-ii-8);
 	kernel_spotrf_nt_l_4x4_vs_lib44cc(jj+8, tA.pA+(ii+8)*sda, tA.pA+(jj+8)*sda, C+ii+8+(jj+8)*ldc, ldc, D+ii+8+(jj+8)*ldd, ldd, dA+jj+8, m-ii-8, m-jj-8);
 #endif
-	goto l_1_return;
+	goto l_2_return;
 #endif
 
 
 #if 0//defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-l_1_left_8:
+l_2_left_8:
 	for(jj=0; jj<ii; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_8x4_vs_lib44ccc(jj, tA.pA+ii*sda, sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dA+jj, m-ii, ii-jj);
@@ -445,11 +445,11 @@ l_1_left_8:
 	kernel_spack_nn_4_vs_lib4(4, D+ii+4+jj*ldd, ldd, tA.pA+(ii+4)*sda+jj*ps, m-ii-4);
 	kernel_spotrf_nt_l_4x4_vs_lib44cc(jj+4, tA.pA+(ii+4)*sda, tA.pA+(jj+4)*sda, C+ii+4+(jj+4)*ldc, ldc, D+ii+4+(jj+4)*ldd, ldd, dA+jj+4, m-ii-4, m-jj-4);
 #endif
-	goto l_1_return;
+	goto l_2_return;
 #endif
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-l_1_left_8:
+l_2_left_8:
 	for(jj=0; jj<ii; jj+=8)
 		{
 		kernel_strsm_nt_rl_inv_8x8_vs_lib88ccc(jj+0, tA.pA+ii*sda, tA.pA+0+jj*sda, C+ii+(jj+0)*ldc, ldc, D+ii+(jj+0)*ldd, ldd, D+jj+0+(jj+0)*ldd, ldd, dA+jj+0, m-ii, ii-jj-0);
@@ -458,10 +458,10 @@ l_1_left_8:
 		kernel_spack_nn_8_vs_lib8(8, D+ii+jj*ldd, ldd, tA.pA+ii*sda+jj*ps0, m-ii);
 		}
 	kernel_spotrf_nt_l_8x8_vs_lib88cc(jj, tA.pA+ii*sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dA+jj, m-ii, m-jj);
-	goto l_1_return;
+	goto l_2_return;
 #endif
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-l_1_left_8:
+l_2_left_8:
 	for(jj=0; jj<ii; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_8x4_vs_lib44ccc(jj, tA.pA+ii*sda, sda, tA.pA+jj*sda, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dA+jj, m-ii, ii-jj);
@@ -474,21 +474,21 @@ l_1_left_8:
 	kernel_strsm_nt_rl_inv_4x4_vs_lib44ccc(jj, tA.pA+(ii+4)*sda, tA.pA+jj*sda, &d_1, C+(ii+4)+jj*ldc, ldc, D+(ii+4)+jj*ldd, ldd, D+jj+jj*ldd, ldd, dA+jj, m-(ii+4), m-jj);
 	kernel_spack_nn_4_vs_lib4(4, D+ii+4+jj*ldd, ldd, tA.pA+(ii+4)*sda+jj*ps4, m-ii-4);
 	kernel_spotrf_nt_l_4x4_vs_lib44cc(jj+4, tA.pA+(ii+4)*sda, tA.pA+(jj+4)*sda, C+ii+4+(jj+4)*ldc, ldc, D+ii+4+(jj+4)*ldd, ldd, dA+jj+4, m-ii-4, m-jj-4);
-	goto l_1_return;
+	goto l_2_return;
 #endif
 
 #if ! ( defined(TARGET_X64_INTEL_HASWELL) )
-l_1_left_4:
+l_2_left_4:
 	for(jj=0; jj<ii; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib44ccc(jj, tA.pA+ii*sda, tA.pA+jj*sda, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dA+jj, m-ii, ii-jj);
 		kernel_spack_nn_4_vs_lib4(4, D+ii+jj*ldd, ldd, tA.pA+ii*sda+jj*ps4, m-ii);
 		}
 	kernel_spotrf_nt_l_4x4_vs_lib44cc(jj, tA.pA+ii*sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dA+jj, m-ii, m-jj);
-	goto l_1_return;
+	goto l_2_return;
 #endif
 
-l_1_return:
+l_2_return:
 	free(mem);
 	return;
 
@@ -1047,8 +1047,8 @@ void blasfeo_hp_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int c
 	int kend;
 
 
-//	goto l_0;
 //	goto l_1;
+//	goto l_2;
 #if 0//defined(TARGET_X64_INTEL_HASWELL)
 	if(m>=200 | m>K_MAX_STACK)
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -1057,18 +1057,18 @@ void blasfeo_hp_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int c
 	if(m>=12 | m>K_MAX_STACK)
 #endif
 		{
-		goto l_1;
+		goto l_2;
 		}
 	else
 		{
-		goto l_0;
+		goto l_1;
 		}
 
 	// never to get here
 	return;
 
 
-l_0:
+l_1:
 
 	ii = 0;
 #if 0//defined(TARGET_X64_INTEL_HASWELL)
@@ -1138,15 +1138,15 @@ l_0:
 		{
 		if(m-ii<=4)
 			{
-			goto l_0_left_4;
+			goto l_1_left_4;
 			}
 		if(m-ii<=8)
 			{
-			goto l_0_left_8;
+			goto l_1_left_8;
 			}
 		else
 			{
-			goto l_0_left_12;
+			goto l_1_left_12;
 			}
 		}
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -1190,11 +1190,11 @@ l_0:
 		{
 		if(m-ii<=4)
 			{
-			goto l_0_left_4;
+			goto l_1_left_4;
 			}
 		else
 			{
-			goto l_0_left_8;
+			goto l_1_left_8;
 			}
 		}
 #else
@@ -1228,13 +1228,13 @@ l_0:
 		}
 	if(ii<m)
 		{
-		goto l_0_left_4;
+		goto l_1_left_4;
 		}
 #endif
-	goto l_0_return;
+	goto l_1_return;
 
 #if 0//defined(TARGET_X64_INTEL_HASWELL)
-l_0_left_12:
+l_1_left_12:
 	for(jj=0; jj<ii & jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_12x4_vs_lib4cccc(jj, pU, sdu, D+jj, ldd, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dU+jj, m-ii, n-jj);
@@ -1252,7 +1252,7 @@ l_0_left_12:
 			// XXX not needed before return
 //			kend = n-jj-4<4 ? n-jj-4 : 4;
 //			kernel_spack_nn_4_vs_lib4(kend, D+ii+8+(jj+4)*ldd, ldd, pU+8*sdu+(jj+4)*ps, m-ii-8);
-			goto l_0_return;
+			goto l_1_return;
 			}
 #endif
 		if(jj<n-4)
@@ -1266,11 +1266,11 @@ l_0_left_12:
 				}
 			}
 		}
-	goto l_0_return;
+	goto l_1_return;
 #endif
 
 #if 0//defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-l_0_left_8:
+l_1_left_8:
 	for(jj=0; jj<ii & jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_8x4_vs_lib4cccc(jj, pU, sdu, D+jj, ldd, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dU+jj, m-ii, n-jj);
@@ -1286,7 +1286,7 @@ l_0_left_8:
 			// XXX not needed before return
 //			kend = n-jj<4 ? n-jj : 4;
 //			kernel_spack_nn_4_vs_lib4(kend, D+ii+4+jj*ldd, ldd, pU+4*sdu+jj*ps, m-ii-4);
-			goto l_0_return;
+			goto l_1_return;
 			}
 #endif
 		kernel_spotrf_nt_l_8x4_vs_lib44cc(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dU+jj, m-ii, n-jj);
@@ -1297,10 +1297,10 @@ l_0_left_8:
 			kernel_spotrf_nt_l_4x4_vs_lib44cc(jj+4, pU+4*sdu, pU+4*sdu, C+ii+4+(jj+4)*ldc, ldc, D+ii+4+(jj+4)*ldd, ldd, dU+jj+4, m-ii-4, n-jj-4);
 			}
 		}
-	goto l_0_return;
+	goto l_1_return;
 #endif
 
-l_0_left_4:
+l_1_left_4:
 	for(jj=0; jj<ii & jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib4cccc(jj, pU, D+jj, ldd, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dU+jj, m-ii, n-jj);
@@ -1311,13 +1311,13 @@ l_0_left_4:
 		{
 		kernel_spotrf_nt_l_4x4_vs_lib44cc(jj, pU, pU, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dU+jj, m-ii, n-jj);
 		}
-	goto l_0_return;
+	goto l_1_return;
 
-l_0_return:
+l_1_return:
 	return;
 
 
-l_1:
+l_2:
 	
 	m1 = (m+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
@@ -1398,15 +1398,15 @@ l_1:
 		{
 		if(m-ii<=4)
 			{
-			goto l_1_left_4;
+			goto l_2_left_4;
 			}
 		if(m-ii<=8)
 			{
-			goto l_1_left_8;
+			goto l_2_left_8;
 			}
 		else
 			{
-			goto l_1_left_12;
+			goto l_2_left_12;
 			}
 		}
 #elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
@@ -1451,11 +1451,11 @@ l_1:
 		{
 		if(m-ii<=4)
 			{
-			goto l_1_left_4;
+			goto l_2_left_4;
 			}
 		else
 			{
-			goto l_1_left_8;
+			goto l_2_left_8;
 			}
 		}
 #else
@@ -1491,13 +1491,13 @@ l_1:
 		}
 	if(ii<m)
 		{
-		goto l_1_left_4;
+		goto l_2_left_4;
 		}
 #endif
-	goto l_1_return;
+	goto l_2_return;
 
 #if 0//defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-l_1_left_12:
+l_2_left_12:
 	jj = 0;
 	for(; jj<ii & jj<n; jj+=4)
 		{
@@ -1517,7 +1517,7 @@ l_1_left_12:
 			// XXX not needed before return
 //			kend = n-jj-4<4 ? n-jj-4 : 4;
 //			kernel_spack_nn_4_vs_lib4(kend, D+ii+8+(jj+4)*ldd, ldd, tA.pA+(ii+8)*sda+(jj+4)*ps, m-ii-8);
-			goto l_1_return;
+			goto l_2_return;
 			}
 #endif
 		if(jj<n-4)
@@ -1531,12 +1531,12 @@ l_1_left_12:
 				}
 			}
 		}
-	goto l_1_return;
+	goto l_2_return;
 #endif
 
 
 #if 0//defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-l_1_left_8:
+l_2_left_8:
 	for(jj=0; jj<ii & jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_8x4_vs_lib44ccc(jj, tA.pA+ii*sda, sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dA+jj, m-ii, n-jj);
@@ -1552,7 +1552,7 @@ l_1_left_8:
 			// XXX not needed before return
 //			kend = n-jj<4 ? n-jj : 4;
 //			kernel_spack_nn_4_vs_lib4(kend, D+ii+4+jj*ldd, ldd, tA.pA+(ii+4)*sda+jj*ps, m-ii-4);
-			goto l_1_return;
+			goto l_2_return;
 			}
 #endif
 		kernel_spotrf_nt_l_8x4_vs_lib44cc(jj, tA.pA+ii*sda, sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dA+jj, m-ii, n-jj);
@@ -1563,10 +1563,10 @@ l_1_left_8:
 			kernel_spotrf_nt_l_4x4_vs_lib44cc(jj+4, tA.pA+(ii+4)*sda, tA.pA+(jj+4)*sda, C+ii+4+(jj+4)*ldc, ldc, D+ii+4+(jj+4)*ldd, ldd, dA+jj+4, m-ii-4, n-jj-4);
 			}
 		}
-	goto l_1_return;
+	goto l_2_return;
 #endif
 
-l_1_left_4:
+l_2_left_4:
 	for(jj=0; jj<ii & jj<n; jj+=4)
 		{
 		kernel_strsm_nt_rl_inv_4x4_vs_lib44ccc(jj, tA.pA+ii*sda, tA.pA+jj*sda, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dA+jj, m-ii, n-jj);
@@ -1577,9 +1577,9 @@ l_1_left_4:
 		{
 		kernel_spotrf_nt_l_4x4_vs_lib44cc(jj, tA.pA+ii*sda, tA.pA+jj*sda, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dA+jj, m-ii, n-jj);
 		}
-	goto l_1_return;
+	goto l_2_return;
 
-l_1_return:
+l_2_return:
 	free(mem);
 	return;
 
