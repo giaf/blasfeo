@@ -46,16 +46,24 @@
 
 #ifdef BLAS_API
 #ifdef CBLAS_API
-#ifndef CBLAS_H
 #ifndef BLASFEO_CBLAS_ENUM
 #define BLASFEO_CBLAS_ENUM
+#ifdef FORTRAN_BLAS_API
+#ifndef CBLAS_H
 enum CBLAS_ORDER {CblasRowMajor=101, CblasColMajor=102};
 enum CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112, CblasConjTrans=113};
 enum CBLAS_UPLO {CblasUpper=121, CblasLower=122};
 enum CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
 enum CBLAS_SIDE {CblasLeft=141, CblasRight=142};
-#endif // BLASFEO_CBLAS_ENUM
 #endif // CBLAS_H
+#else // FORTRAN_BLAS_API
+enum BLASFEO_CBLAS_ORDER {CblasRowMajor=101, CblasColMajor=102};
+enum BLASFEO_CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112, CblasConjTrans=113};
+enum BLASFEO_CBLAS_UPLO {CblasUpper=121, CblasLower=122};
+enum BLASFEO_CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
+enum BLASFEO_CBLAS_SIDE {CblasLeft=141, CblasRight=142};
+#endif // FORTRAN_BLAS_API
+#endif // BLASFEO_CBLAS_ENUM
 #endif // CBLAS_API
 #endif // BLAS_API
 
@@ -149,9 +157,9 @@ void blasfeo_cblas_saxpy(const int N, const float alpha, const float *X, const i
 
 // CBLAS 3
 //
-void blasfeo_cblas_sgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB, const int M, const int N, const int K, const float alpha, const float *A, const int lda, const float *B, const int ldb, const float beta, float *C, const int ldc);
+void blasfeo_cblas_sgemm(const enum BLASFEO_CBLAS_ORDER Order, const enum BLASFEO_CBLAS_TRANSPOSE TransA, const enum BLASFEO_CBLAS_TRANSPOSE TransB, const int M, const int N, const int K, const float alpha, const float *A, const int lda, const float *B, const int ldb, const float beta, float *C, const int ldc);
 //
-void blasfeo_cblas_strsm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag, const int M, const int N, const float alpha, const float *A, const int lda, float *B, const int ldb);
+void blasfeo_cblas_strsm(const enum BLASFEO_CBLAS_ORDER Order, const enum BLASFEO_CBLAS_SIDE Side, const enum BLASFEO_CBLAS_UPLO Uplo, const enum BLASFEO_CBLAS_TRANSPOSE TransA, const enum BLASFEO_CBLAS_DIAG Diag, const int M, const int N, const float alpha, const float *A, const int lda, float *B, const int ldb);
 
 
 

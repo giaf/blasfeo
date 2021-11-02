@@ -46,16 +46,24 @@
 
 #ifdef BLAS_API
 #ifdef CBLAS_API
-#ifndef CBLAS_H
 #ifndef BLASFEO_CBLAS_ENUM
 #define BLASFEO_CBLAS_ENUM
+#ifdef FORTRAN_BLAS_API
+#ifndef CBLAS_H
 enum CBLAS_ORDER {CblasRowMajor=101, CblasColMajor=102};
 enum CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112, CblasConjTrans=113};
 enum CBLAS_UPLO {CblasUpper=121, CblasLower=122};
 enum CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
 enum CBLAS_SIDE {CblasLeft=141, CblasRight=142};
-#endif // BLASFEO_CBLAS_ENUM
 #endif // CBLAS_H
+#else // FORTRAN_BLAS_API
+enum BLASFEO_CBLAS_ORDER {CblasRowMajor=101, CblasColMajor=102};
+enum BLASFEO_CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112, CblasConjTrans=113};
+enum BLASFEO_CBLAS_UPLO {CblasUpper=121, CblasLower=122};
+enum BLASFEO_CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
+enum BLASFEO_CBLAS_SIDE {CblasLeft=141, CblasRight=142};
+#endif // FORTRAN_BLAS_API
+#endif // BLASFEO_CBLAS_ENUM
 #endif // CBLAS_API
 #endif // BLAS_API
 
@@ -204,13 +212,13 @@ void blasfeo_cblas_dcopy(const int N, const double *X, const int incX, double *Y
 
 // CBLAS 3
 //
-void blasfeo_cblas_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB, const int M, const int N, const int K, const double alpha, const double *A, const int lda, const double *B, const int ldb, const double beta, double *C, const int ldc);
+void blasfeo_cblas_dgemm(const enum BLASFEO_CBLAS_ORDER Order, const enum BLASFEO_CBLAS_TRANSPOSE TransA, const enum BLASFEO_CBLAS_TRANSPOSE TransB, const int M, const int N, const int K, const double alpha, const double *A, const int lda, const double *B, const int ldb, const double beta, double *C, const int ldc);
 //
-void blasfeo_cblas_dsyrk(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE Trans, const int N, const int K, const double alpha, const double *A, const int lda, const double beta, double *C, const int ldc);
+void blasfeo_cblas_dsyrk(const enum BLASFEO_CBLAS_ORDER Order, const enum BLASFEO_CBLAS_UPLO Uplo, const enum BLASFEO_CBLAS_TRANSPOSE Trans, const int N, const int K, const double alpha, const double *A, const int lda, const double beta, double *C, const int ldc);
 //
-void blasfeo_cblas_dtrmm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag, const int M, const int N, const double alpha, const double *A, const int lda, double *B, const int ldb);
+void blasfeo_cblas_dtrmm(const enum BLASFEO_CBLAS_ORDER Order, const enum BLASFEO_CBLAS_SIDE Side, const enum BLASFEO_CBLAS_UPLO Uplo, const enum BLASFEO_CBLAS_TRANSPOSE TransA, const enum BLASFEO_CBLAS_DIAG Diag, const int M, const int N, const double alpha, const double *A, const int lda, double *B, const int ldb);
 //
-void blasfeo_cblas_dtrsm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag, const int M, const int N, const double alpha, const double *A, const int lda, double *B, const int ldb);
+void blasfeo_cblas_dtrsm(const enum BLASFEO_CBLAS_ORDER Order, const enum BLASFEO_CBLAS_SIDE Side, const enum BLASFEO_CBLAS_UPLO Uplo, const enum BLASFEO_CBLAS_TRANSPOSE TransA, const enum BLASFEO_CBLAS_DIAG Diag, const int M, const int N, const double alpha, const double *A, const int lda, double *B, const int ldb);
 
 
 
