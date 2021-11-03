@@ -260,16 +260,16 @@ PRINT_NAME = 0
 
 # Select the packing algorithm (limited to colmaj dgemm and sgemm ATM)
 # AUTO   : automatic switching between packing algorithms
-# ALG_2  : no packing
-# ALG_M0 : pack A
-# ALG_N0 : pack B
-# ALG_1  : pack A and B
+# ALG_0  : no packing
+# ALG_M1 : pack A
+# ALG_N1 : pack B
+# ALG_2  : pack A and B
 #
 PACKING_ALG = AUTO
+# PACKING_ALG = ALG_0
+# PACKING_ALG = ALG_M1
+# PACKING_ALG = ALG_N1
 # PACKING_ALG = ALG_2
-# PACKING_ALG = ALG_M0
-# PACKING_ALG = ALG_N0
-# PACKING_ALG = ALG_1
 
 # C Compiler
 #

@@ -27,10 +27,10 @@
     1000
   ],
   "PACKING_ALG":[
-    "ALG_2",
-    "ALG_M0",
-    "ALG_N0",
-    "ALG_1"
+    "ALG_0",
+    "ALG_M1",
+    "ALG_N1",
+    "ALG_2"
   ],
   "MF": [
     "COLMAJ"
