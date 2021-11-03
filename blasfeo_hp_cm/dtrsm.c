@@ -2640,7 +2640,7 @@ void blasfeo_hp_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int m1, n1, k1;
 	int pack_B;
 
-	double *pU, *dA, *pB, *dB;
+	double *pU, *pA, *dA, *pB, *dB;
 	int sdu;
 
 	const int m_kernel = M_KERNEL;
@@ -2656,6 +2656,7 @@ void blasfeo_hp_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 
 lutn:
+//	goto lutn_n1a; // XXX !!!!!!!!!!!!!!!!!!!!!!!!!
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>=300 | n>=300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -2668,13 +2669,70 @@ lutn:
 		}
 	else
 		{
-		goto lutn_1;
+		goto lutn_n1b;
 		}
 
 	// never to get here
 	return;
 
-lutn_1:
+lutn_n1a:
+	m1 = (m+128-1)/128*128;
+	tA_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
+	mem = malloc(tA_size+64);
+	blasfeo_align_64_byte(mem, (void **) &mem_align);
+	blasfeo_pm_create_dmat(ps, m, m, &tA, (void *) mem_align);
+
+	pA = tA.pA;
+	sda = tA.cn;
+	dA = tA.dA;
+
+	// upper to lower
+	for(ii=0; ii<m-3; ii+=4)
+		{
+		kernel_dpack_tn_4_lib4(ii+4, A+ii*lda, lda, pA+ii*sda);
+		}
+	if(ii<m)
+		{
+		kernel_dpack_tn_4_vs_lib4(m, A+ii*lda, lda, pA+ii*sda, m-ii);
+		}
+
+	for(ii=0; ii<m; ii++)
+		dA[ii] = 1.0/A[ii+ii*lda];
+	
+	// TODO
+	ii = 0;
+#if 1
+	for(; ii<n-3; ii+=4)
+		{
+		for(jj=0; jj<m-3; jj+=4)
+			{
+			kernel_dtrsm_nn_ll_inv_4x4_lib4ccc4(jj, pA+jj*sda, D+ii*ldd, ldd, &alpha, B+ii*ldb+jj, ldb, D+ii*ldd+jj, ldd, pA+jj*sda+jj*ps, dA+jj);
+			}
+		if(jj<m)
+			{
+			kernel_dtrsm_nn_ll_inv_4x4_vs_lib4ccc4(jj, pA+jj*sda, D+ii*ldd, ldd, &alpha, B+ii*ldb+jj, ldb, D+ii*ldd+jj, ldd, pA+jj*sda+jj*ps, dA+jj, m-jj, n-ii);
+			}
+		}
+	if(ii<n)
+		{
+		goto lutn_n1a_left_4;
+		}
+#endif
+	goto lutn_n1a_return;
+
+lutn_n1a_left_4:
+	for(jj=0; jj<m; jj+=4)
+		{
+		kernel_dtrsm_nn_ll_inv_4x4_vs_lib4ccc4(jj, pA+jj*sda, D+ii*ldd, ldd, &alpha, B+ii*ldb+jj, ldb, D+ii*ldd+jj, ldd, pA+jj*sda+jj*ps, dA+jj, m-jj, n-ii);
+		}
+goto lutn_n1a_return;
+
+lutn_n1a_return:
+	free(mem);
+	return;
+
+
+lutn_n1b:
 	// XXX limits of ii and jj swapped !!!
 	pU = pU0;
 	sdu = sdu0;
@@ -2706,15 +2764,15 @@ lutn_1:
 		{
 		if(n-ii<=4)
 			{
-			goto lutn_1_left_4;
+			goto lutn_n1b_left_4;
 			}
 		if(n-ii<=8)
 			{
-			goto lutn_1_left_8;
+			goto lutn_n1b_left_8;
 			}
 		else
 			{
-			goto lutn_1_left_12;
+			goto lutn_n1b_left_12;
 			}
 		}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -2737,11 +2795,11 @@ lutn_1:
 		{
 		if(n-ii<=4)
 			{
-			goto lutn_1_left_4;
+			goto lutn_n1b_left_4;
 			}
 		else
 			{
-			goto lutn_1_left_8;
+			goto lutn_n1b_left_8;
 			}
 		}
 #else
@@ -2760,13 +2818,13 @@ lutn_1:
 		}
 	if(ii<n)
 		{
-		goto lutn_1_left_4;
+		goto lutn_n1b_left_4;
 		}
 #endif
-	goto lutn_1_return;
+	goto lutn_n1b_return;
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-lutn_1_left_12:
+lutn_n1b_left_12:
 	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
 	kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pU+4*sdu);
 	kernel_dpack_tn_4_vs_lib4(m, B+(ii+8)*ldb, ldb, pU+8*sdu, n-(ii+8));
@@ -2777,11 +2835,11 @@ lutn_1_left_12:
 	kernel_dunpack_nt_4_lib4(m, pU, D+ii*ldd, ldd);
 	kernel_dunpack_nt_4_lib4(m, pU+4*sdu, D+(ii+4)*ldd, ldd);
 	kernel_dunpack_nt_4_vs_lib4(m, pU+8*sdu, D+(ii+8)*ldd, ldd, n-(ii+8));
-goto lutn_1_return;
+goto lutn_n1b_return;
 #endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-lutn_1_left_8:
+lutn_n1b_left_8:
 	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
 	kernel_dpack_tn_4_vs_lib4(m, B+(ii+4)*ldb, ldb, pU+ps*sdu, n-(ii+4));
 	for(jj=0; jj<m; jj+=4)
@@ -2790,19 +2848,19 @@ lutn_1_left_8:
 		}
 	kernel_dunpack_nt_4_lib4(m, pU, D+ii*ldd, ldd);
 	kernel_dunpack_nt_4_vs_lib4(m, pU+ps*sdu, D+(ii+4)*ldd, ldd, n-(ii+4));
-goto lutn_1_return;
+goto lutn_n1b_return;
 #endif
 
-lutn_1_left_4:
+lutn_n1b_left_4:
 	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	for(jj=0; jj<m; jj+=4)
 		{
 		kernel_dtrsm_nn_ru_inv_4x4_vs_lib4c44c(jj, pU, A+jj*lda, lda, &alpha, pU+jj*ps, pU+jj*ps, A+jj+jj*lda, lda, dA+jj, n-ii, m-jj);
 		}
 	kernel_dunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-goto lutn_1_return;
+goto lutn_n1b_return;
 
-lutn_1_return:
+lutn_n1b_return:
 	return;
 
 
