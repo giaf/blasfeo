@@ -2671,7 +2671,14 @@ lutn:
 		}
 	else
 		{
-		goto lutn_n1;
+		if(n<=m)
+			{
+			goto lutn_n1;
+			}
+		else
+			{
+			goto lutn_m1;
+			}
 		}
 
 	// never to get here
@@ -2766,7 +2773,7 @@ lutn_m1:
 lutn_m1_left_12:
 	kernel_dpack_tn_4_lib4(ii+4, A+(ii+0)*lda, lda, pU+0*sdu);
 	kernel_dpack_tn_4_lib4(ii+8, A+(ii+4)*lda, lda, pU+4*sdu);
-	kernel_dpack_tn_4_vs_lib4(ii+12, A+(ii+8)*lda, lda, pU+8*sdu, m-ii-8);
+	kernel_dpack_tn_4_vs_lib4(m, A+(ii+8)*lda, lda, pU+8*sdu, m-ii-8);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dtrsm_nn_ll_inv_12x4_vs_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii, m-ii, n-jj);
@@ -2777,7 +2784,7 @@ goto lutn_m1_return;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 lutn_m1_left_8:
 	kernel_dpack_tn_4_lib4(ii+4, A+(ii+0)*lda, lda, pU+0*sdu);
-	kernel_dpack_tn_4_vs_lib4(ii+8, A+(ii+4)*lda, lda, pU+4*sdu, m-ii-4);
+	kernel_dpack_tn_4_vs_lib4(m, A+(ii+4)*lda, lda, pU+4*sdu, m-ii-4);
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dtrsm_nn_ll_inv_8x4_vs_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii, m-ii, n-jj);
