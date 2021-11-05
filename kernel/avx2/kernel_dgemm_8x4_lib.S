@@ -24087,6 +24087,216 @@
 
 
 
+//                                          1      2          3        4          5        6             7          8        9          10       11         12       13
+// void kernel_dtrsm_nn_ll_inv_8x4_lib4ccc4(int k, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int sde, double *inv_diag_E);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nn_ll_inv_8x4_lib4ccc4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
+	sall	$ 5, %r12d
+	movq	ARG4, %r13
+	movq	ARG5, %r14 // ldb
+	sall	$ 3, %r14d
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_8x4_lib4c)
+#endif
+
+
+	// call inner blender_loader nn
+
+	movq	ARG6, %r10 // beta
+	movq	ARG7, %r11 // C
+	movq	ARG8, %r12 // ldc
+	sall	$ 3, %r12d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_8X4_LIB
+#else
+	CALL(inner_scale_m1b_8x4_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG11, %r10  // E 
+	movq	ARG12, %r11 // sde
+	sall	$ 5, %r11d // 4*sde*sizeof(double)
+	movq	ARG13, %r12  // inv_diag_E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_LLN_INV_8X4_LIB4
+#else
+	CALL(inner_edge_dtrsm_lln_inv_8x4_lib4)
+#endif
+
+
+	// store
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$ 3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_LIB
+#else
+	CALL(inner_store_8x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_ll_inv_8x4_lib4ccc4)
+
+
+
+
+
+//                                            1      2          3        4          5        6             7          8        9          10       11         12       13                   14      15
+// void kernel_dtrsm_nn_ll_inv_8x4_vs_lib4ccc4(int k, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrsm_nn_ll_inv_8x4_vs_lib4ccc4)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt 
+
+	movq	ARG1, %r10
+	movq	ARG2, %r11
+	movq	ARG3, %r12
+	sall	$ 5, %r12d
+	movq	ARG4, %r13
+	movq	ARG5, %r14 // ldb
+	sall	$ 3, %r14d
+
+	movq	ARG15, %r15  // n1
+	cmpl	$ 1, %r15d
+	jg		100f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X1_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_8x1_lib4c)
+#endif
+	
+	jmp		103f
+
+100:
+
+	movq	ARG15, %r15  // n1
+	cmpl	$ 2, %r15d
+	jg		101f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X2_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_8x2_lib4c)
+#endif
+
+	jmp		103f
+
+101:
+
+	movq	ARG15, %r15  // n1
+	cmpl	$ 3, %r15d
+	jg		102f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X3_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_8x3_lib4c)
+#endif
+
+	jmp		103f
+
+102:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NN_8X4_LIB4C
+#else
+	CALL(inner_kernel_dgemm_nn_8x4_lib4c)
+#endif
+
+103:
+
+
+	// call inner blender_loader nn
+
+	movq	ARG6, %r10 // beta
+	movq	ARG7, %r11 // C
+	movq	ARG8, %r12 // ldc
+	sall	$ 3, %r12d
+	movq	ARG14, %r13 // m1
+	movq	ARG15, %r14 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_M1B_8X4_VS_LIB
+#else
+	CALL(inner_scale_m1b_8x4_vs_lib)
+#endif
+
+
+	// solve
+
+	movq	ARG11, %r10  // E 
+	movq	ARG12, %r11 // sde
+	sall	$ 5, %r11d // 4*sde*sizeof(double)
+	movq	ARG13, %r12  // inv_diag_E 
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRSM_LLN_INV_8X4_LIB4
+#else
+	CALL(inner_edge_dtrsm_lln_inv_8x4_lib4)
+#endif
+
+
+	// store
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$ 3, %r11d
+	movq	ARG14, %r12 // m1
+	movq	ARG15, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_VS_LIB
+#else
+	CALL(inner_store_8x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrsm_nn_ll_inv_8x4_vs_lib4ccc4)
+
+
+
+
+
 //                                         1      2          3        4          5        6             7          8        9          10       11         12
 // void kernel_dtrsm_nn_ll_one_8x4_lib4cccc(int k, double *A, int sda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde);
 
@@ -24190,7 +24400,7 @@
 	movq	ARG5, %r14 // ldb
 	sall	$ 3, %r14d
 
-	movq	ARG15, %r15  // n1
+	movq	ARG14, %r15  // n1
 	cmpl	$ 1, %r15d
 	jg		100f
 
@@ -24204,7 +24414,7 @@
 
 100:
 
-	movq	ARG15, %r15  // n1
+	movq	ARG14, %r15  // n1
 	cmpl	$ 2, %r15d
 	jg		101f
 
@@ -24218,7 +24428,7 @@
 
 101:
 
-	movq	ARG15, %r15  // n1
+	movq	ARG14, %r15  // n1
 	cmpl	$ 3, %r15d
 	jg		102f
 
