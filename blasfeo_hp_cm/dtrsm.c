@@ -2782,7 +2782,7 @@ lutn:
 //	goto lutn_m1;
 //	goto lutn_n1;
 //	goto llnn_2;
-#if 0
+#if 1
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>=300 | n>=300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -2795,17 +2795,16 @@ lutn:
 		}
 	else
 		{
-		if(n<=m)
-			{
+//		if(n<=m)
+//			{
 			goto lutn_n1;
-			}
-		else
-			{
-			goto lutn_m1;
-			}
+//			}
+//		else
+//			{
+//			goto lutn_m1;
+//			}
 		}
-#endif
-	
+#else
 	if(m<=K_MAX_STACK)
 		{
 		if(m>=n)
@@ -2827,6 +2826,7 @@ lutn:
 		}
 //	printf("\n2\n");
 	goto llnn_2;
+#endif
 
 	// never to get here
 	return;
