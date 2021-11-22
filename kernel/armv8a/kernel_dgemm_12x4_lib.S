@@ -4201,8 +4201,8 @@
 
 
 
-//                                           w0        x1         w2       x3         x4         w5       x6         w7       sp+0       sp+8
-// void kernel_dtrsm_nt_rl_inv_12x4_lib44cc4(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E)
+//                                          w0        x1         w2       x3         x4            x5         w6       x7         sp+0     sp+8       sp+16
+// void kernel_dtrsm_nt_rl_inv_12x4_lib44cc4(int kmax, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E)
 
 	.align	4
 	GLOB(kernel_dtrsm_nt_rl_inv_12x4_lib44cc4)
@@ -4233,22 +4233,23 @@
 
 
 
-	// call inner blend for alpha=1.0 and beta=1.0
-	mov		x8, x4 // C
-	mov		w9, w5 // ldc
-	lsl		w9, w9, #3 // 8*ldc
+	// call inner blend for alpha=1.0 and beta
+	mov		x8, x4 // beta
+	mov		x9, x5 // C
+	mov		w10, w6 // ldc
+	lsl		w10, w10, #3 // 8*ldc
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_12X4_LIB
+	INNER_SCALE_M1B_12X4_LIB
 #else
-	CALL(inner_scale_m11_12x4_lib)
+	CALL(inner_scale_m1b_12x4_lib)
 #endif
 
 
 
 	// solution
-	ldr		x8, [sp, #(STACKSIZE + 0)] // E
-	ldr		x10, [sp, #(STACKSIZE + 8)] // inv_diag_E
+	ldr		x8, [sp, #(STACKSIZE + 8)] // E
+	ldr		x9, [sp, #(STACKSIZE + 16)] // inv_diag_E
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_12X4_LIB4
@@ -4259,8 +4260,8 @@
 
 
 	// store l
-	mov		x8, x6 // D
-	mov		w9, w7 // ldd
+	mov		x8, x7 // D
+	ldr		w9, [sp, #(STACKSIZE + 0)] // ldd
 	lsl		w9, w9, #3 // 8*ldd
 
 #if MACRO_LEVEL>=1
@@ -4283,8 +4284,8 @@
 
 
 
-//                                              w0        x1         w2       x3         x4         w5       x6         w7       sp+0       sp+8                sp+16   sp+24
-// void kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc4(int kmax, double *A, int sda, double *B, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E, int m1, int n1)
+//                                             w0        x1         w2       x3         x4            x5         w6       x7         sp+0     sp+8       sp+16               sp+24   sp+32
+// void kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc4(int kmax, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, double *inv_diag_E, int m1, int n1)
 
 	.align	4
 	GLOB(kernel_dtrsm_nt_rl_inv_12x4_vs_lib44cc4)
@@ -4316,24 +4317,25 @@
 
 
 	// call inner blend for alpha=1.0 and beta=1.0
-	mov		x8, x4 // C
-	mov		w9, w5 // ldc
-	lsl		w9, w9, #3 // 8*ldc
-	ldr		w10, [sp, #(STACKSIZE + 16)] // m1
-	ldr		w11, [sp, #(STACKSIZE + 24)] // n1
+	mov		x8, x4 // beta
+	mov		x9, x5 // C
+	mov		w10, w6 // ldc
+	lsl		w10, w10, #3 // 8*ldc
+	ldr		w11, [sp, #(STACKSIZE + 24)] // m1
+	ldr		w12, [sp, #(STACKSIZE + 32)] // n1
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_M11_12X4_VS_LIB
+	INNER_SCALE_M1B_12X4_VS_LIB
 #else
-	CALL(inner_scale_m11_12x4_vs_lib)
+	CALL(inner_scale_m1b_12x4_vs_lib)
 #endif
 
 
 
 	// solution
-	ldr		x8, [sp, #(STACKSIZE + 0)] // E
-	ldr		x10, [sp, #(STACKSIZE + 8)] // inv_diag_E
-	ldr		w11, [sp, #(STACKSIZE + 24)] // n1
+	ldr		x8, [sp, #(STACKSIZE + 8)] // E
+	ldr		x9, [sp, #(STACKSIZE + 16)] // inv_diag_E
+	ldr		w10, [sp, #(STACKSIZE + 32)] // n1
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_12X4_VS_LIB4
@@ -4344,11 +4346,11 @@
 
 
 	// store l
-	mov		x8, x6 // D
-	mov		w9, w7 // ldd
+	mov		x8, x7 // D
+	ldr		w9, [sp, #(STACKSIZE + 0)] // ldd
 	lsl		w9, w9, #3 // 8*ldd
-	ldr		w10, [sp, #(STACKSIZE + 16)] // m1
-	ldr		w11, [sp, #(STACKSIZE + 24)] // n1
+	ldr		w10, [sp, #(STACKSIZE + 24)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 32)] // n1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_12X4_VS_LIB
