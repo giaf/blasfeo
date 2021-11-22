@@ -4407,8 +4407,11 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 //	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
 
 
-#if defined(TARGET_X64_INTEL_HASWELL)
+//goto rltn_2;
+//goto rltn_1;
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	if(m>=200 | n>=200 | n>K_MAX_STACK)
+//	if(m>=256 | n>=256 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)
 #else
@@ -4465,7 +4468,7 @@ rltn_1:
 			goto rltn_1_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(ii=0; ii<m-7; ii+=8)
 		{
 		for(jj=0; jj<n-3; jj+=4)
@@ -4521,7 +4524,7 @@ rltn_1_left_12:
 	goto rltn_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 rltn_1_left_8:
 		for(jj=0; jj<n; jj+=4)
 			{

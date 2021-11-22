@@ -10199,8 +10199,8 @@
 
 
 
-//                                          w0        x1        x2        x3           w4       x5        w6       x7        sp+0     sp+8      sp+16    sp+24
-// void kernel_strsm_nt_rl_inv_4x4_lib4cccc(int kmax, float *A, float *B, float *beta, int ldb, float *C, int ldc, float *D, int ldd, float *E, int lde, float *inv_diag_E)
+//                                          w0        x1         x2         w3       x4            x5         w6       x7         sp+0      sp+8      sp+16     sp+24
+// void kernel_dtrsm_nt_rl_inv_4x4_lib4cccc(int kmax, double *A, double *B, int ldb, dobule *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
 
 	.align	4
 	GLOB(kernel_dtrsm_nt_rl_inv_4x4_lib4cccc)
@@ -10284,8 +10284,8 @@
 
 
 
-//                                             w0        x1        x2        x3           w4       x5        w6       x7        sp+0     sp+8      sp+16    sp+24              sp+32   sp+40
-// void kernel_strsm_nt_rl_inv_4x4_vs_lib4cccc(int kmax, float *A, float *B, float *beta, int ldb, float *C, int ldc, float *D, int ldd, float *E, int lde, float *inv_diag_E, int m1, int n1)
+//                                             w0        x1         x2         w3       x4            x5         w6       x7         sp+0      sp+8      sp+16     sp+24              sp+32   sp+40
+// void kernel_dtrsm_nt_rl_inv_4x4_vs_lib4cccc(int kmax, double *A, double *B, int ldb, dobule *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E, int m1, int n1)
 
 	.align	4
 	GLOB(kernel_dtrsm_nt_rl_inv_4x4_vs_lib4cccc)
