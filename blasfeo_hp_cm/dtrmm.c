@@ -876,7 +876,7 @@ void blasfeo_hp_dtrmm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 //goto lltn_1;
 //goto lunn_2;
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	if(m>=300 | n>=300 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m>=64 | n>=64 | n>K_MAX_STACK)

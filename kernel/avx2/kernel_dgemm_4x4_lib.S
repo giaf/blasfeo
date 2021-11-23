@@ -9455,7 +9455,7 @@
 
 
 
-//                                    1      2              3          4          5        6             7          8        9          10
+//                                          1      2              3          4          5        6             7          8          9
 // void kernel_dtrmm_nn_rl_4x4_tran_lib4c4c(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, double *D, int ldd);
 
 	.p2align 4,,15
