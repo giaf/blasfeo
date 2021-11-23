@@ -874,6 +874,8 @@ void blasfeo_hp_dtrmm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	double d_0 = 0.0;
 
 
+//goto lltn_1;
+//goto lunn_2;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>=300 | n>=300 | n>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -1063,7 +1065,8 @@ lunn_2:
 			goto lunn_2_left_12;
 			}
 		}
-#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif 0 //defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	// TODO there is a bug in the approach (likley also for 12x4 kernels) !!!!!
 	for(; ii<n-7; ii+=8)
 		{
 		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
@@ -1120,7 +1123,7 @@ lunn_2_left_12:
 goto lunn_2_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 lunn_2_left_8:
 	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	kernel_dpack_tn_4_vs_lib4(m, B+(ii+4)*ldb, ldb, pU+ps*sdu, n-(ii+4));
