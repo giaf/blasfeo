@@ -9861,6 +9861,168 @@
 
 
 
+//                                          w0        x1             x2         x3         x4            x5         x6         w7
+// void kernel_dtrmm_nt_ru_4x4_tran_lib444c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd)
+
+	.align	4
+	GLOB(kernel_dtrmm_nt_ru_4x4_tran_lib444c)
+	FUN_START(kernel_dtrmm_nt_ru_4x4_tran_lib444c)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x3 // B
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRMM_NT_RU_4X4_LIB4
+#else
+	CALL(inner_edge_trmm_nt_ru_4x4_lib4)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_gemm_add_nt_4x4_lib4)
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x4 // beta
+	mov		x10, x5 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	CALL(inner_scale_ab_4x4_lib4)
+#endif
+
+
+
+	// store n
+	mov		x8, x6 // D
+	mov		w9, w7 // ldd
+	lsl		w9, w9, #3 // 8*ldd
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_4X4_LIB
+#else
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrmm_nt_ru_4x4_tran_lib444c)
+
+
+
+
+
+//                                             w0        x1             x2         x3         x4            x5         x6         w7       sp+0    sp+8
+// void kernel_dtrmm_nt_ru_4x4_tran_vs_lib444c(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int ldd, int m1, int n1)
+
+	.align	4
+	GLOB(kernel_dtrmm_nt_ru_4x4_tran_vs_lib444c)
+	FUN_START(kernel_dtrmm_nt_ru_4x4_tran_vs_lib444c)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		x10, x3 // B
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_TRMM_NT_RU_4X4_VS_LIB4
+#else
+	CALL(inner_edge_trmm_nt_ru_4x4_vs_lib4)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_gemm_add_nt_4x4_lib4)
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x4 // beta
+	mov		x10, x5 // C
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB4
+#else
+	CALL(inner_scale_ab_4x4_lib4)
+#endif
+
+
+
+	// store n
+	mov		x8, x6 // D
+	mov		w9, w7 // ldd
+	lsl		w9, w9, #3 // 8*ldd
+	ldr		w10, [sp, #(STACKSIZE + 0)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 8)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_TRAN_4X4_LIB
+#else
+	CALL(inner_tran_4x4_lib)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dtrmm_nt_ru_4x4_tran_vs_lib444c)
+
+
+
+
+
 //                                          w0        x1         x2         x3            x4         w5       x6         w7       sp+0       sp+8     sp+16
 // void kernel_dtrsm_nt_rl_inv_4x4_lib44ccc(int kmax, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, double *E, int lde, double *inv_diag_E)
 
