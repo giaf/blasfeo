@@ -22620,7 +22620,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrmm_nt_ru_4x4_tran_lib444c)
+	FUN_END(kernel_dtrmm_nt_ru_4x8_tran_lib444c)
 
 
 
@@ -23137,7 +23137,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrsm_nt_rl_inv_4x4_lib4cccc)
+	FUN_END(kernel_dtrsm_nt_rl_inv_8x4_lib4cccc)
 
 
 
