@@ -3059,24 +3059,15 @@
 	FUN_START(inner_store_l_12x4_lib)
 #endif
 
-    // TODO fix !!!!!!!!!!!!!!!!!!!
-
-	mov		x12, x8
-
-	add		x12, x12, x9
-	ldr		q24, [x12, #0]
-	add		x12, x12, x9
-	add		x12, x12, x9
-	ldr		q25, [x12, #16]
-
-	ins		v2.d[0], v24.d[0]
-	ins		v7.d[0], v25.d[0]
+	ins		v24.d[0], v2.d[1]
+	ins		v25.d[0], v7.d[1]
 
 	stp		q0, q1, [x8, #0]
 	stp		q8, q9, [x8, #32]
 	stp		q16, q17, [x8, #64]
 	add		x8, x8, x9
-	stp		q2, q3, [x8, #0]
+	str		d24, [x8, #8]
+	str		q3, [x8, #16]
 	stp		q10, q11, [x8, #32]
 	stp		q18, q19, [x8, #64]
 	add		x8, x8, x9
@@ -3084,7 +3075,7 @@
 	stp		q12, q13, [x8, #32]
 	stp		q20, q21, [x8, #64]
 	add		x8, x8, x9
-	str		q7, [x8, #16]
+	str		d25, [x8, #24]
 	stp		q14, q15, [x8, #32]
 	stp		q22, q23, [x8, #64]
 
@@ -3117,59 +3108,8 @@
 	FUN_START(inner_store_l_12x4_vs_lib)
 #endif
 
-    // TODO fix !!!!!!!!!!!!!!!!!!!
-
 	cmp		w10, #12
-	bge		1f
-
-	mov		x12, x8
-
-	ldp		q24, q25, [x12, #64]
-	add		x12, x12, x9
-	ldp		q26, q27, [x12, #64]
-	add		x12, x12, x9
-	ldp		q28, q29, [x12, #64]
-	add		x12, x12, x9
-	ldp		q30, q31, [x12, #64]
-
-	// 4th row
-	ins		v17.d[1], v25.d[1]
-	ins		v19.d[1], v27.d[1]
-	ins		v21.d[1], v29.d[1]
-	ins		v23.d[1], v31.d[1]
-	cmp		w10, #11
-	bge		1f
-	// 3th row
-	ins		v17.d[0], v25.d[0]
-	ins		v19.d[0], v27.d[0]
-	ins		v21.d[0], v29.d[0]
-	ins		v23.d[0], v31.d[0]
-	cmp		w10, #10
-	bge		1f
-	// 2nd row
-	ins		v16.d[1], v24.d[1]
-	ins		v18.d[1], v26.d[1]
-	ins		v20.d[1], v28.d[1]
-	ins		v22.d[1], v30.d[1]
-	cmp		w10, #9
-	bge		1f
-	// 1st row
-	ins		v16.d[0], v24.d[0]
-	ins		v18.d[0], v26.d[0]
-	ins		v20.d[0], v28.d[0]
-	ins		v22.d[0], v30.d[0]
-
-1:
-	mov		x12, x8
-
-	add		x12, x12, x9
-	ldr		q24, [x12, #0]
-	add		x12, x12, x9
-	add		x12, x12, x9
-	ldr		q25, [x12, #16]
-
-	ins		v2.d[0], v24.d[0]
-	ins		v7.d[0], v25.d[0]
+	blt		1f
 
 	// 1st col
 	stp		q0, q1, [x8, #0]
@@ -3179,7 +3119,9 @@
 	cmp		w11, #2
 	blt		0f
 	// 2nd col
-	stp		q2, q3, [x8, #0]
+	ins		v24.d[0], v2.d[1]
+	str		d24, [x8, #8]
+	str		q3, [x8, #16]
 	stp		q10, q11, [x8, #32]
 	stp		q18, q19, [x8, #64]
 	add		x8, x8, x9
@@ -3193,9 +3135,117 @@
 	cmp		w11, #3
 	beq		0f
 	// 4th col
-	str		q7, [x8, #16]
+	ins		v25.d[0], v7.d[1]
+	str		d25, [x8, #24]
 	stp		q14, q15, [x8, #32]
 	stp		q22, q23, [x8, #64]
+	b		0f
+
+1:
+	cmp		w10, #11
+	blt		1f
+
+	// 1st col
+	stp		q0, q1, [x8, #0]
+	stp		q8, q9, [x8, #32]
+	str		q16, [x8, #64]
+	str		d17, [x8, #80]
+	add		x8, x8, x9
+	cmp		w11, #2
+	blt		0f
+	// 2nd col
+	ins		v24.d[0], v2.d[1]
+	str		d24, [x8, #8]
+	str		q3, [x8, #16]
+	stp		q10, q11, [x8, #32]
+	str		q18, [x8, #64]
+	str		d19, [x8, #80]
+	add		x8, x8, x9
+	cmp		w11, #3
+	blt		0f
+	// 3rd col
+	str		q5, [x8, #16]
+	stp		q12, q13, [x8, #32]
+	str		q20, [x8, #64]
+	str		d21, [x8, #80]
+	add		x8, x8, x9
+	cmp		w11, #3
+	beq		0f
+	// 4th col
+	ins		v25.d[0], v7.d[1]
+	str		d25, [x8, #24]
+	stp		q14, q15, [x8, #32]
+	str		q22, [x8, #64]
+	str		d23, [x8, #80]
+	b		0f
+
+1:
+	cmp		w10, #10
+	blt		1f
+
+	// 1st col
+	stp		q0, q1, [x8, #0]
+	stp		q8, q9, [x8, #32]
+	str		q16, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #2
+	blt		0f
+	// 2nd col
+	ins		v24.d[0], v2.d[1]
+	str		d24, [x8, #8]
+	str		q3, [x8, #16]
+	stp		q10, q11, [x8, #32]
+	str		q18, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #3
+	blt		0f
+	// 3rd col
+	str		q5, [x8, #16]
+	stp		q12, q13, [x8, #32]
+	str		q20, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #3
+	beq		0f
+	// 4th col
+	ins		v25.d[0], v7.d[1]
+	str		d25, [x8, #24]
+	stp		q14, q15, [x8, #32]
+	str		q22, [x8, #64]
+	b		0f
+
+1:
+//	cmp		w10, #9
+//	blt		0f
+
+	// 1st col
+	stp		q0, q1, [x8, #0]
+	stp		q8, q9, [x8, #32]
+	str		d16, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #2
+	blt		0f
+	// 2nd col
+	ins		v24.d[0], v2.d[1]
+	str		d24, [x8, #8]
+	str		q3, [x8, #16]
+	stp		q10, q11, [x8, #32]
+	str		d18, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #3
+	blt		0f
+	// 3rd col
+	str		q5, [x8, #16]
+	stp		q12, q13, [x8, #32]
+	str		d20, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #3
+	beq		0f
+	// 4th col
+	ins		v25.d[0], v7.d[1]
+	str		d25, [x8, #24]
+	stp		q14, q15, [x8, #32]
+	str		d22, [x8, #64]
+//	b		0f
 
 0:
 
@@ -3272,49 +3322,9 @@
 	FUN_START(inner_store_u_12x4_vs_lib)
 #endif
 
-    // TODO fix !!!!!!!!!!!!!!!!!!!
-
 	cmp		w10, #12
-	bge		1f
+	blt		1f
 
-	mov		x12, x8
-
-	ldp		q24, q25, [x12, #64]
-	add		x12, x12, x9
-	ldp		q26, q27, [x12, #64]
-	add		x12, x12, x9
-	ldp		q28, q29, [x12, #64]
-	add		x12, x12, x9
-	ldp		q30, q31, [x12, #64]
-
-	// 4th row
-	ins		v17.d[1], v25.d[1]
-	ins		v19.d[1], v27.d[1]
-	ins		v21.d[1], v29.d[1]
-	ins		v23.d[1], v31.d[1]
-	cmp		w10, #11
-	bge		1f
-	// 3th row
-	ins		v17.d[0], v25.d[0]
-	ins		v19.d[0], v27.d[0]
-	ins		v21.d[0], v29.d[0]
-	ins		v23.d[0], v31.d[0]
-	cmp		w10, #10
-	bge		1f
-	// 2nd row
-	ins		v16.d[1], v24.d[1]
-	ins		v18.d[1], v26.d[1]
-	ins		v20.d[1], v28.d[1]
-	ins		v22.d[1], v30.d[1]
-	cmp		w10, #9
-	bge		1f
-	// 1st row
-	ins		v16.d[0], v24.d[0]
-	ins		v18.d[0], v26.d[0]
-	ins		v20.d[0], v28.d[0]
-	ins		v22.d[0], v30.d[0]
-
-1:
 	// 1st col
 	stp		q0, q1, [x8, #0]
 	stp		q8, q9, [x8, #32]
@@ -3341,6 +3351,102 @@
 	stp		q6, q7, [x8, #0]
 	stp		q14, q15, [x8, #32]
 	stp		q22, q23, [x8, #64]
+	b		0f
+
+1:
+	cmp		w10, #11
+	blt		1f
+
+	// 1st col
+	stp		q0, q1, [x8, #0]
+	stp		q8, q9, [x8, #32]
+	str		d16, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #2
+	blt		0f
+	// 2nd col
+	stp		q2, q3, [x8, #0]
+	stp		q10, q11, [x8, #32]
+	str		q18, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #3
+	blt		0f
+	// 3rd col
+	stp		q4, q5, [x8, #0]
+	stp		q12, q13, [x8, #32]
+	str		q20, [x8, #64]
+	str		d21, [x8, #80]
+	add		x8, x8, x9
+	cmp		w11, #3
+	beq		0f
+	// 4th col
+	stp		q6, q7, [x8, #0]
+	stp		q14, q15, [x8, #32]
+	str		q22, [x8, #64]
+	str		d23, [x8, #80]
+	b		0f
+
+1:
+	cmp		w10, #10
+	blt		1f
+
+	// 1st col
+	stp		q0, q1, [x8, #0]
+	stp		q8, q9, [x8, #32]
+	str		d16, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #2
+	blt		0f
+	// 2nd col
+	stp		q2, q3, [x8, #0]
+	stp		q10, q11, [x8, #32]
+	str		q18, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #3
+	blt		0f
+	// 3rd col
+	stp		q4, q5, [x8, #0]
+	stp		q12, q13, [x8, #32]
+	str		q20, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #3
+	beq		0f
+	// 4th col
+	stp		q6, q7, [x8, #0]
+	stp		q14, q15, [x8, #32]
+	str		q22, [x8, #64]
+	b		0f
+
+1:
+//	cmp		w10, #9
+//	blt		0f
+
+	// 1st col
+	stp		q0, q1, [x8, #0]
+	stp		q8, q9, [x8, #32]
+	str		d16, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #2
+	blt		0f
+	// 2nd col
+	stp		q2, q3, [x8, #0]
+	stp		q10, q11, [x8, #32]
+	str		d18, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #3
+	blt		0f
+	// 3rd col
+	stp		q4, q5, [x8, #0]
+	stp		q12, q13, [x8, #32]
+	str		d20, [x8, #64]
+	add		x8, x8, x9
+	cmp		w11, #3
+	beq		0f
+	// 4th col
+	stp		q6, q7, [x8, #0]
+	stp		q14, q15, [x8, #32]
+	str		d22, [x8, #64]
+//	b		0f
 
 0:
 
