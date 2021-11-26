@@ -12,6 +12,7 @@ octave-workspace
 figures/
 libblasfeo.a
 cpu_freq.h
+.vscode
 
 # test
 tests/build
