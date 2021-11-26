@@ -3073,7 +3073,7 @@ _ ## NAME:
 
 	sub		w8, w8, #4
 	add		x9, x9, #128
-	add		x10, x10, #128
+	add		x11, x11, #128
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -3121,7 +3121,7 @@ _ ## NAME:
 	fmla	v9.2d, v29.2d, v26.d[0]
 	sub		w8, w8, #1
 	add		x9, x9, #32
-	add		x10, x10, #32
+	add		x11, x11, #32
 	add		x12, x12, #32
 
 	cmp		w8, #0
@@ -3140,7 +3140,7 @@ _ ## NAME:
 	fmla	v11.2d, v29.2d, v26.d[1]
 	sub		w8, w8, #1
 	add		x9, x9, #32
-	add		x10, x10, #32
+	add		x11, x11, #32
 	add		x12, x12, #32
 
 	cmp		w8, #0
@@ -3164,7 +3164,7 @@ _ ## NAME:
 	fmla	v13.2d, v29.2d, v27.d[0]
 	sub		w8, w8, #1
 	add		x9, x9, #32
-	add		x10, x10, #32
+	add		x11, x11, #32
 	add		x12, x12, #32
 
 	cmp		w8, #0
@@ -3189,6 +3189,10 @@ _ ## NAME:
 	fmla	v13.2d, v29.2d, v27.d[0]
 	fmla	v14.2d, v28.2d, v27.d[1]
 	fmla	v15.2d, v29.2d, v27.d[1]
+	sub		w8, w8, #1
+	add		x9, x9, #32
+	add		x11, x11, #32
+	add		x12, x12, #32
 
 #if MACRO_LEVEL>=1
 	.endm
