@@ -930,7 +930,7 @@ lltn_1:
 			goto lltn_1_left_12;
 			}
 		}
-#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<n-7; ii+=8)
 		{
 		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
@@ -987,7 +987,7 @@ lltn_1_left_12:
 goto lltn_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 lltn_1_left_8:
 	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	kernel_dpack_tn_4_vs_lib4(m, B+(ii+4)*ldb, ldb, pU+ps*sdu, n-(ii+4));

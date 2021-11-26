@@ -6866,9 +6866,9 @@
 	sub		w8, w8, #1
 	add		x9, x9, #32
 	add		x10, x10, #8
-	add		x12, x12, #8
-	add		x13, x13, #8
-	add		x14, x14, #8
+//	add		x12, x12, #8
+//	add		x13, x13, #8
+//	add		x14, x14, #8
 
 	cmp		w8, #0
 	ble		0f
@@ -6877,15 +6877,15 @@
 	ldr		d26, [x10, #(0*8)] // B
 	fmla	v0.2d, v24.2d, v26.d[0]
 	fmla	v1.2d, v25.2d, v26.d[0]
-	ldr		d26, [x12, #(0*8)] // B
+	ldr		d26, [x12, #(1*8)] // B XXX
 	fmla	v2.2d, v24.2d, v26.d[0]
 	fmla	v3.2d, v25.2d, v26.d[0]
 	sub		w8, w8, #1
 	add		x9, x9, #32
 	add		x10, x10, #8
-	add		x12, x12, #8
-	add		x13, x13, #8
-	add		x14, x14, #8
+//	add		x12, x12, #8
+//	add		x13, x13, #8
+//	add		x14, x14, #8
 
 	cmp		w8, #0
 	ble		0f
@@ -6894,18 +6894,18 @@
 	ldr		d26, [x10, #(0*8)] // B
 	fmla	v0.2d, v24.2d, v26.d[0]
 	fmla	v1.2d, v25.2d, v26.d[0]
-	ldr		d26, [x12, #(0*8)] // B
+	ldr		d26, [x12, #(2*8)] // B XXX
 	fmla	v2.2d, v24.2d, v26.d[0]
 	fmla	v3.2d, v25.2d, v26.d[0]
-	ldr		d26, [x13, #(0*8)] // B
+	ldr		d26, [x13, #(2*8)] // B XXX
 	fmla	v4.2d, v24.2d, v26.d[0]
 	fmla	v5.2d, v25.2d, v26.d[0]
 	sub		w8, w8, #1
 	add		x9, x9, #32
 	add		x10, x10, #8
-	add		x12, x12, #8
-	add		x13, x13, #8
-	add		x14, x14, #8
+//	add		x12, x12, #8
+//	add		x13, x13, #8
+//	add		x14, x14, #8
 
 	cmp		w8, #0
 	ble		0f
@@ -6914,21 +6914,21 @@
 	ldr		d26, [x10, #(0*8)] // B
 	fmla	v0.2d, v24.2d, v26.d[0]
 	fmla	v1.2d, v25.2d, v26.d[0]
-	ldr		d26, [x12, #(0*8)] // B
+	ldr		d26, [x12, #(3*8)] // B XXX
 	fmla	v2.2d, v24.2d, v26.d[0]
 	fmla	v3.2d, v25.2d, v26.d[0]
-	ldr		d26, [x13, #(0*8)] // B
+	ldr		d26, [x13, #(3*8)] // B XXX
 	fmla	v4.2d, v24.2d, v26.d[0]
 	fmla	v5.2d, v25.2d, v26.d[0]
-	ldr		d26, [x14, #(0*8)] // B
+	ldr		d26, [x14, #(3*8)] // B XXX
 	fmla	v6.2d, v24.2d, v26.d[0]
 	fmla	v7.2d, v25.2d, v26.d[0]
 	sub		w8, w8, #1
 	add		x9, x9, #32
 	add		x10, x10, #8
-	add		x12, x12, #8
-	add		x13, x13, #8
-	add		x14, x14, #8
+//	add		x12, x12, #8
+//	add		x13, x13, #8
+//	add		x14, x14, #8
 
 	cmp		w8, #0
 	ble		0f
@@ -10362,7 +10362,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrmm_nt_ru_4x4_tran_lib444c)
+	FUN_END(kernel_dtrmm_nn_rl_4x4_tran_lib4c4c)
 
 
 
@@ -10490,7 +10490,7 @@
 
 	ret
 
-	FUN_END(kernel_dtrmm_nt_ru_4x4_tran_vs_lib444c)
+	FUN_END(kernel_dtrmm_nn_rl_4x4_tran_vs_lib4c4c)
 
 
 
