@@ -1306,7 +1306,7 @@ void blasfeo_dvecex_sp(int m, double alpha, int *idx, struct blasfeo_dvec *sx, i
 
 
 // z += alpha * x[idx]
-void blasfeo_dvec_add_sp_in(int m, double alpha, int *idx, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+void blasfeo_dvecexad_sp(int m, double alpha, int *idx, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
 	double *x = sx->pa + xi;
 	double *z = sz->pa + zi;

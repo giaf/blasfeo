@@ -3837,6 +3837,19 @@ void blasfeo_svecex_sp(int m, float alpha, int *idx, struct blasfeo_svec *sx, in
 
 
 
+// z += alpha * x[idx]
+void blasfeo_svecadd_sp_in(int m, float alpha, int *idx, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[ii] += alpha * x[idx[ii]];
+	return;
+	}
+
+
+
 // compute inf norm of vector
 void blasfeo_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm)
 	{

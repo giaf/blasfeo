@@ -835,7 +835,7 @@ void REF_VECEX_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VE
 
 
 // z += alpha * x[idx]
-void REF_VECADD_SP_IN(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *sz, int zi)
+void REF_VECEXAD_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *sz, int zi)
 	{
 	REAL *x = sx->pa + xi;
 	REAL *z = sz->pa + zi;
@@ -1751,9 +1751,9 @@ void VECEX_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *s
 	}
 
 
-void VECADD_SP_IN(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *sz, int zi)
+void VECEXAD_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *sz, int zi)
 	{
-	REF_VECADD_SP_IN(m, alpha, idx, sx, xi, sz, zi);
+	REF_VECEXAD_SP(m, alpha, idx, sx, xi, sz, zi);
 	}
 
 

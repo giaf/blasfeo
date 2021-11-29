@@ -109,7 +109,7 @@
 #define REF_VECAD_SP blasfeo_ref_dvecad_sp
 #define REF_VECIN_SP blasfeo_ref_dvecin_sp
 #define REF_VECEX_SP blasfeo_ref_dvecex_sp
-#define REF_VECADD_SP_IN blasfeo_ref_dvec_add_sp_in
+#define REF_VECEXAD_SP blasfeo_ref_dvecexad_sp
 #define REF_VECIN1 blasfeo_ref_dvecin1
 #define REF_VECEX1 blasfeo_ref_dvecex1
 #define REF_VECPE blasfeo_ref_dvecpe
@@ -174,7 +174,7 @@
 #define VECAD_SP blasfeo_dvecad_sp
 #define VECIN_SP blasfeo_dvecin_sp
 #define VECEX_SP blasfeo_dvecex_sp
-#define VECADD_SP_IN blasfeo_dvec_add_sp_in
+#define VECEXAD_SP blasfeo_dvecexad_sp
 #define VECIN1 blasfeo_dvecin1
 #define VECEX1 blasfeo_dvecex1
 #define VECPE blasfeo_dvecpe
