@@ -7319,7 +7319,7 @@
 
 100:
 
-	movq	ARG13, %rax  // n1
+//	movq	ARG13, %rax  // n1
 	cmpl	$ 2, %eax
 	jg		101f
 
@@ -7333,7 +7333,7 @@
 
 101:
 
-	movq	ARG13, %rax  // n1
+//	movq	ARG13, %rax  // n1
 	cmpl	$ 3, %eax
 	jg		102f
 
