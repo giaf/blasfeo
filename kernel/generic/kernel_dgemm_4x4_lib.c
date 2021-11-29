@@ -3374,6 +3374,1560 @@ static void kernel_dgemm_nn_4x1_libcccc(int kmax, double *alpha, double *A, int 
 
 
 
+static void kernel_dgemm_nn_3x4_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1, a_2,
+		b_0, b_1, b_2, b_3;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+		a_2 = A[2+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+		b_3 = B[0+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+		CC[2+bs*2] += a_2 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+		CC[1+bs*3] += a_1 * b_3;
+		CC[2+bs*3] += a_2 * b_3;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+		a_1 = A[1+lda*1];
+		a_2 = A[2+lda*1];
+
+		b_0 = B[1+ldb*0];
+		b_1 = B[1+ldb*1];
+		b_2 = B[1+ldb*2];
+		b_3 = B[1+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+		CC[2+bs*2] += a_2 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+		CC[1+bs*3] += a_1 * b_3;
+		CC[2+bs*3] += a_2 * b_3;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+		a_1 = A[1+lda*2];
+		a_2 = A[2+lda*2];
+
+		b_0 = B[2+ldb*0];
+		b_1 = B[2+ldb*1];
+		b_2 = B[2+ldb*2];
+		b_3 = B[2+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+		CC[2+bs*2] += a_2 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+		CC[1+bs*3] += a_1 * b_3;
+		CC[2+bs*3] += a_2 * b_3;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+		a_1 = A[1+lda*3];
+		a_2 = A[2+lda*3];
+
+		b_0 = B[3+ldb*0];
+		b_1 = B[3+ldb*1];
+		b_2 = B[3+ldb*2];
+		b_3 = B[3+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+		CC[2+bs*2] += a_2 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+		CC[1+bs*3] += a_1 * b_3;
+		CC[2+bs*3] += a_2 * b_3;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+		a_2 = A[2+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+		b_3 = B[0+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+		CC[2+bs*2] += a_2 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+		CC[1+bs*3] += a_1 * b_3;
+		CC[2+bs*3] += a_2 * b_3;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+	D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+	D[2+ldd*0] = beta[0]*C[2+ldc*0] + alpha[0]*CC[2+bs*0];
+
+	D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+	D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
+	D[2+ldd*1] = beta[0]*C[2+ldc*1] + alpha[0]*CC[2+bs*1];
+
+	D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+	D[1+ldd*2] = beta[0]*C[1+ldc*2] + alpha[0]*CC[1+bs*2];
+	D[2+ldd*2] = beta[0]*C[2+ldc*2] + alpha[0]*CC[2+bs*2];
+
+	D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
+	D[1+ldd*3] = beta[0]*C[1+ldc*3] + alpha[0]*CC[1+bs*3];
+	D[2+ldd*3] = beta[0]*C[2+ldc*3] + alpha[0]*CC[2+bs*3];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_3x3_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1, a_2,
+		b_0, b_1, b_2;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+		a_2 = A[2+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+		CC[2+bs*2] += a_2 * b_2;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+		a_1 = A[1+lda*1];
+		a_2 = A[2+lda*1];
+
+		b_0 = B[1+ldb*0];
+		b_1 = B[1+ldb*1];
+		b_2 = B[1+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+		CC[2+bs*2] += a_2 * b_2;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+		a_1 = A[1+lda*2];
+		a_2 = A[2+lda*2];
+
+		b_0 = B[2+ldb*0];
+		b_1 = B[2+ldb*1];
+		b_2 = B[2+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+		CC[2+bs*2] += a_2 * b_2;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+		a_1 = A[1+lda*3];
+		a_2 = A[2+lda*3];
+
+		b_0 = B[3+ldb*0];
+		b_1 = B[3+ldb*1];
+		b_2 = B[3+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+		CC[2+bs*2] += a_2 * b_2;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+		a_2 = A[2+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+		CC[2+bs*2] += a_2 * b_2;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+	D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+	D[2+ldd*0] = beta[0]*C[2+ldc*0] + alpha[0]*CC[2+bs*0];
+
+	D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+	D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
+	D[2+ldd*1] = beta[0]*C[2+ldc*1] + alpha[0]*CC[2+bs*1];
+
+	D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+	D[1+ldd*2] = beta[0]*C[1+ldc*2] + alpha[0]*CC[1+bs*2];
+	D[2+ldd*2] = beta[0]*C[2+ldc*2] + alpha[0]*CC[2+bs*2];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_3x2_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1, a_2,
+		b_0, b_1;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+		a_2 = A[2+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+		a_1 = A[1+lda*1];
+		a_2 = A[2+lda*1];
+
+		b_0 = B[1+ldb*0];
+		b_1 = B[1+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+		a_1 = A[1+lda*2];
+		a_2 = A[2+lda*2];
+
+		b_0 = B[2+ldb*0];
+		b_1 = B[2+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+		a_1 = A[1+lda*3];
+		a_2 = A[2+lda*3];
+
+		b_0 = B[3+ldb*0];
+		b_1 = B[3+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+		a_2 = A[2+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+		CC[2+bs*1] += a_2 * b_1;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+	D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+	D[2+ldd*0] = beta[0]*C[2+ldc*0] + alpha[0]*CC[2+bs*0];
+
+	D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+	D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
+	D[2+ldd*1] = beta[0]*C[2+ldc*1] + alpha[0]*CC[2+bs*1];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_3x1_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1, a_2,
+		b_0;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+		a_2 = A[2+lda*0];
+
+		b_0 = B[0+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+		a_1 = A[1+lda*1];
+		a_2 = A[2+lda*1];
+
+		b_0 = B[1+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+		a_1 = A[1+lda*2];
+		a_2 = A[2+lda*2];
+
+		b_0 = B[2+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+		a_1 = A[1+lda*3];
+		a_2 = A[2+lda*3];
+
+		b_0 = B[3+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+		a_2 = A[2+lda*0];
+
+		b_0 = B[0+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+		CC[2+bs*0] += a_2 * b_0;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+	D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+	D[2+ldd*0] = beta[0]*C[2+ldc*0] + alpha[0]*CC[2+bs*0];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_2x4_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1,
+		b_0, b_1, b_2, b_3;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+		b_3 = B[0+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+		CC[1+bs*3] += a_1 * b_3;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+		a_1 = A[1+lda*1];
+
+		b_0 = B[1+ldb*0];
+		b_1 = B[1+ldb*1];
+		b_2 = B[1+ldb*2];
+		b_3 = B[1+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+		CC[1+bs*3] += a_1 * b_3;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+		a_1 = A[1+lda*2];
+
+		b_0 = B[2+ldb*0];
+		b_1 = B[2+ldb*1];
+		b_2 = B[2+ldb*2];
+		b_3 = B[2+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+		CC[1+bs*3] += a_1 * b_3;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+		a_1 = A[1+lda*3];
+
+		b_0 = B[3+ldb*0];
+		b_1 = B[3+ldb*1];
+		b_2 = B[3+ldb*2];
+		b_3 = B[3+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+		CC[1+bs*3] += a_1 * b_3;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+		b_3 = B[0+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+		CC[1+bs*3] += a_1 * b_3;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+	D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+
+	D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+	D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
+
+	D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+	D[1+ldd*2] = beta[0]*C[1+ldc*2] + alpha[0]*CC[1+bs*2];
+
+	D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
+	D[1+ldd*3] = beta[0]*C[1+ldc*3] + alpha[0]*CC[1+bs*3];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_2x3_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1,
+		b_0, b_1, b_2;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+		a_1 = A[1+lda*1];
+
+		b_0 = B[1+ldb*0];
+		b_1 = B[1+ldb*1];
+		b_2 = B[1+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+		a_1 = A[1+lda*2];
+
+		b_0 = B[2+ldb*0];
+		b_1 = B[2+ldb*1];
+		b_2 = B[2+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+		a_1 = A[1+lda*3];
+
+		b_0 = B[3+ldb*0];
+		b_1 = B[3+ldb*1];
+		b_2 = B[3+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+		CC[1+bs*2] += a_1 * b_2;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+	D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+
+	D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+	D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
+
+	D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+	D[1+ldd*2] = beta[0]*C[1+ldc*2] + alpha[0]*CC[1+bs*2];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_2x2_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1,
+		b_0, b_1;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+		a_1 = A[1+lda*1];
+
+		b_0 = B[1+ldb*0];
+		b_1 = B[1+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+		a_1 = A[1+lda*2];
+
+		b_0 = B[2+ldb*0];
+		b_1 = B[2+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+		a_1 = A[1+lda*3];
+
+		b_0 = B[3+ldb*0];
+		b_1 = B[3+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+		CC[1+bs*1] += a_1 * b_1;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+	D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+
+	D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+	D[1+ldd*1] = beta[0]*C[1+ldc*1] + alpha[0]*CC[1+bs*1];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_2x1_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0, a_1,
+		b_0;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+
+		b_0 = B[0+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+		a_1 = A[1+lda*1];
+
+		b_0 = B[1+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+		a_1 = A[1+lda*2];
+
+		b_0 = B[2+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+		a_1 = A[1+lda*3];
+
+		b_0 = B[3+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+		a_1 = A[1+lda*0];
+
+		b_0 = B[0+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+		CC[1+bs*0] += a_1 * b_0;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+	D[1+ldd*0] = beta[0]*C[1+ldc*0] + alpha[0]*CC[1+bs*0];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_1x4_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0,
+		b_0, b_1, b_2, b_3;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+		b_3 = B[0+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+
+		b_0 = B[1+ldb*0];
+		b_1 = B[1+ldb*1];
+		b_2 = B[1+ldb*2];
+		b_3 = B[1+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+
+		b_0 = B[2+ldb*0];
+		b_1 = B[2+ldb*1];
+		b_2 = B[2+ldb*2];
+		b_3 = B[2+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+
+		b_0 = B[3+ldb*0];
+		b_1 = B[3+ldb*1];
+		b_2 = B[3+ldb*2];
+		b_3 = B[3+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+		b_3 = B[0+ldb*3];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+
+		CC[0+bs*3] += a_0 * b_3;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+
+	D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+
+	D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+
+	D[0+ldd*3] = beta[0]*C[0+ldc*3] + alpha[0]*CC[0+bs*3];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_1x3_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0,
+		b_0, b_1, b_2;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+
+		b_0 = B[1+ldb*0];
+		b_1 = B[1+ldb*1];
+		b_2 = B[1+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+
+		b_0 = B[2+ldb*0];
+		b_1 = B[2+ldb*1];
+		b_2 = B[2+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+
+		b_0 = B[3+ldb*0];
+		b_1 = B[3+ldb*1];
+		b_2 = B[3+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+		b_2 = B[0+ldb*2];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		CC[0+bs*2] += a_0 * b_2;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+
+	D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+
+	D[0+ldd*2] = beta[0]*C[0+ldc*2] + alpha[0]*CC[0+bs*2];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_1x2_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0,
+		b_0, b_1;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+
+		b_0 = B[1+ldb*0];
+		b_1 = B[1+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+
+		b_0 = B[2+ldb*0];
+		b_1 = B[2+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+
+		b_0 = B[3+ldb*0];
+		b_1 = B[3+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+
+		b_0 = B[0+ldb*0];
+		b_1 = B[0+ldb*1];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		CC[0+bs*1] += a_0 * b_1;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+
+	D[0+ldd*1] = beta[0]*C[0+ldc*1] + alpha[0]*CC[0+bs*1];
+
+	return;
+
+	}
+
+
+
+static void kernel_dgemm_nn_1x1_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd)
+	{
+
+	const int bs = 4;
+
+	double
+		a_0,
+		b_0;
+
+#if defined(TARGET_GENERIC)
+	double CC[16] = {0};
+#else
+	ALIGNED( double CC[16], 64 ) = {0};
+#endif
+
+	int k;
+
+	for(k=0; k<kmax-3; k+=4)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+
+		b_0 = B[0+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+
+		// k = 1
+
+		a_0 = A[0+lda*1];
+
+		b_0 = B[1+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+
+		// k = 2
+
+		a_0 = A[0+lda*2];
+
+		b_0 = B[2+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+
+		// k = 3
+
+		a_0 = A[0+lda*3];
+
+		b_0 = B[3+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		A += 4*lda;
+		B += 4;
+
+		}
+	
+	for(; k<kmax; k++)
+		{
+
+		// k = 0
+
+		a_0 = A[0+lda*0];
+
+		b_0 = B[0+ldb*0];
+
+		CC[0+bs*0] += a_0 * b_0;
+
+		A += 1*lda;
+		B += 1;
+
+		}
+	
+	D[0+ldd*0] = beta[0]*C[0+ldc*0] + alpha[0]*CC[0+bs*0];
+
+	return;
+
+	}
+
+
+
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) //|| defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 void kernel_dgemm_nn_4x4_vs_libcccc(int kmax, double *alpha, double *A, int lda, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1)
 	{
@@ -3389,22 +4943,81 @@ void kernel_dgemm_nn_4x4_vs_libcccc(int kmax, double *alpha, double *A, int lda,
 	double alpha1 = 1.0;
 	double beta1 = 0.0;
 
-	// TODO vs also on the m direction !!!!!!!!!!!!!!!!!!!!!!!
-	if(n1<=1)
+	if(m1<=1)
 		{
-		kernel_dgemm_nn_4x1_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+		if(n1<=1)
+			{
+			kernel_dgemm_nn_1x1_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else if(n1==2)
+			{
+			kernel_dgemm_nn_1x2_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else if(n1==3)
+			{
+			kernel_dgemm_nn_1x3_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else
+			{
+			kernel_dgemm_nn_1x4_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
 		}
-	else if(n1==2)
+	else if(m1==2)
 		{
-		kernel_dgemm_nn_4x2_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+		if(n1<=1)
+			{
+			kernel_dgemm_nn_2x1_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else if(n1==2)
+			{
+			kernel_dgemm_nn_2x2_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else if(n1==3)
+			{
+			kernel_dgemm_nn_2x3_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else
+			{
+			kernel_dgemm_nn_2x4_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
 		}
-	else if(n1==3)
+	else if(m1==3)
 		{
-		kernel_dgemm_nn_4x3_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+		if(n1<=1)
+			{
+			kernel_dgemm_nn_3x1_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else if(n1==2)
+			{
+			kernel_dgemm_nn_3x2_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else if(n1==3)
+			{
+			kernel_dgemm_nn_3x3_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else
+			{
+			kernel_dgemm_nn_3x4_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
 		}
-	else //if(n1==4)
+	else
 		{
-		kernel_dgemm_nn_4x4_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+		if(n1<=1)
+			{
+			kernel_dgemm_nn_4x1_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else if(n1==2)
+			{
+			kernel_dgemm_nn_4x2_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else if(n1==3)
+			{
+			kernel_dgemm_nn_4x3_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
+		else
+			{
+			kernel_dgemm_nn_4x4_libcccc(kmax, &alpha1, A, lda, B, ldb, &beta1, CC, bs, CC, bs);
+			}
 		}
 
 	if(m1>=4)
