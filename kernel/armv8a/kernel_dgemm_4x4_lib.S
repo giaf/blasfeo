@@ -18675,7 +18675,7 @@
 	mov		w8, w0 // kmax
 	mov		x9, x4 // B
 	mov		w10, w5 // ldb
-	lsl		w10, w12, #3 // 8*ldb
+	lsl		w10, w10, #3 // 8*ldb
 	mov		x11, x2 // A
 	mov		w12, w3 // lda
 	lsl		w12, w12, #3 // 8*lda
