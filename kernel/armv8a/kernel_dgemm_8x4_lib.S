@@ -25964,8 +25964,6 @@
 	prfm	PLDL1KEEP, [x17, #0]
 	prfm	PLDL1KEEP, [x18, #0]
 	prfm	PLDL1KEEP, [x19, #0]
-//	prfm	PLDL1KEEP, [x9, #0]
-//	prfm	PLDL1KEEP, [x9, #64]
 	prfm	PLDL1KEEP, [x9]
 	prfm	PLDL1KEEP, [x9, x10]
 	prfm	PLDL1KEEP, [x9, x20]
@@ -25986,19 +25984,9 @@
 	ble		0f // consider clean up loop
 
 	// prefetch
-//	prfm	PLDL1KEEP, [x11, #0]
-//	prfm	PLDL1KEEP, [x13, #0]
-//	prfm	PLDL1KEEP, [x14, #0]
-//	prfm	PLDL1KEEP, [x15, #0]
-//	prfm	PLDL1KEEP, [x9, #128]
-//	prfm	PLDL1KEEP, [x9, #192]
 	prfm	PLDL1KEEP, [x9, x20]
 
 	// zero tmp acc
-
-//	add		x13, x12, #64
-//	add		x13, x12, x12
-//	add		x14, x13, #64
 
 	// main loop
 1:
@@ -26037,17 +26025,13 @@
 	fmla	v0.2d, v18.2d, v20.d[1]
 	add		x9, x9, x10
 	fmla	v1.2d, v19.2d, v20.d[1]
-//	ldr		q24, [x11], #16
 	fmla	v2.2d, v18.2d, v21.d[1]
 	prfm	PLDL1KEEP, [x9, x20]
 	fmla	v3.2d, v19.2d, v21.d[1]
-//	ldr		q25, [x13], #16
 	fmla	v4.2d, v18.2d, v22.d[1]
 	fmla	v5.2d, v19.2d, v22.d[1]
-//	ldr		q26, [x14], #16
 	fmla	v6.2d, v18.2d, v23.d[1]
 	fmla	v7.2d, v19.2d, v23.d[1]
-//	ldr		q27, [x15], #16
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
 	ldr		q28, [x16], #16
@@ -26118,8 +26102,6 @@
 
 	// reduce
 
-//	sub		x9, x9, #32
-//	sub		x11, x11, #32
 
 0:
 
@@ -26160,17 +26142,13 @@
 	fmla	v0.2d, v18.2d, v20.d[1]
 	add		x9, x9, x10
 	fmla	v1.2d, v19.2d, v20.d[1]
-//	ldr		q24, [x11], #16
 	fmla	v2.2d, v18.2d, v21.d[1]
 //	prfm	PLDL1KEEP, [x9, x20]
 	fmla	v3.2d, v19.2d, v21.d[1]
-//	ldr		q25, [x13], #16
 	fmla	v4.2d, v18.2d, v22.d[1]
 	fmla	v5.2d, v19.2d, v22.d[1]
-//	ldr		q26, [x14], #16
 	fmla	v6.2d, v18.2d, v23.d[1]
 	fmla	v7.2d, v19.2d, v23.d[1]
-//	ldr		q27, [x15], #16
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
 	ldr		q28, [x16], #16
@@ -26322,10 +26300,10 @@
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NN_4X7_LIBCC
+	.macro INNER_KERNEL_GEMM_ADD_NN_3X8_LIBCC
 #else
 	.align	4
-	FUN_START(inner_kernel_gemm_add_nn_4x7_libcc)
+	FUN_START(inner_kernel_gemm_add_nn_3x8_libcc)
 #endif
 
 
@@ -26346,7 +26324,7 @@
 	add		x16, x14, x20 // 4
 	add		x17, x15, x20 // 5
 	add		x18, x16, x20 // 6
-//	add		x19, x17, x20 // 7
+	add		x19, x17, x20 // 7
 
 	// prefetch
 
@@ -26370,10 +26348,12 @@
 	ldr		q28, [x16], #16
 	ldr		q29, [x17], #16
 	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
-	ldp		q16, q17, [x9]
+	ldr		q31, [x19], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
 	add		x9, x9, x10
-	ldp		q18, q19, [x9]
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
 	add		x9, x9, x10
 
 	// unroll 0
@@ -26391,8 +26371,8 @@
 	fmla	v11.2d, v17.2d, v29.d[0]
 	fmla	v12.2d, v16.2d, v30.d[0]
 	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	fmla	v0.2d, v18.2d, v24.d[1]
@@ -26409,8 +26389,8 @@
 	fmla	v11.2d, v19.2d, v29.d[1]
 	fmla	v12.2d, v18.2d, v30.d[1]
 	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+	fmla	v15.2d, v19.2d, v31.d[1]
 	sub		w8, w8, #4
 
 	// load 2 & 3
@@ -26421,10 +26401,12 @@
 	ldr		q28, [x16], #16
 	ldr		q29, [x17], #16
 	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
-	ldp		q16, q17, [x9]
+	ldr		q31, [x19], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
 	add		x9, x9, x10
-	ldp		q18, q19, [x9]
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
 	add		x9, x9, x10
 
 	// unroll 2
@@ -26442,8 +26424,8 @@
 	fmla	v11.2d, v17.2d, v29.d[0]
 	fmla	v12.2d, v16.2d, v30.d[0]
 	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	fmla	v15.2d, v17.2d, v31.d[0]
 	cmp		w8, #4
 
 	// unroll 3
@@ -26461,8 +26443,8 @@
 	fmla	v11.2d, v19.2d, v29.d[1]
 	fmla	v12.2d, v18.2d, v30.d[1]
 	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+	fmla	v15.2d, v19.2d, v31.d[1]
 
 	bgt		1b
 
@@ -26482,10 +26464,12 @@
 	ldr		q28, [x16], #16
 	ldr		q29, [x17], #16
 	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
-	ldp		q16, q17, [x9]
+	ldr		q31, [x19], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
 	add		x9, x9, x10
-	ldp		q18, q19, [x9]
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
 	add		x9, x9, x10
 
 	// unroll 0
@@ -26503,8 +26487,8 @@
 	fmla	v11.2d, v17.2d, v29.d[0]
 	fmla	v12.2d, v16.2d, v30.d[0]
 	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	fmla	v0.2d, v18.2d, v24.d[1]
@@ -26521,8 +26505,8 @@
 	fmla	v11.2d, v19.2d, v29.d[1]
 	fmla	v12.2d, v18.2d, v30.d[1]
 	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+	fmla	v15.2d, v19.2d, v31.d[1]
 	sub		w8, w8, #4
 
 	// load 2 & 3
@@ -26533,10 +26517,12 @@
 	ldr		q28, [x16], #16
 	ldr		q29, [x17], #16
 	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
-	ldp		q16, q17, [x9]
+	ldr		q31, [x19], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
 	add		x9, x9, x10
-	ldp		q18, q19, [x9]
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
 	add		x9, x9, x10
 
 	// unroll 2
@@ -26554,8 +26540,8 @@
 	fmla	v11.2d, v17.2d, v29.d[0]
 	fmla	v12.2d, v16.2d, v30.d[0]
 	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	fmla	v15.2d, v17.2d, v31.d[0]
 //	cmp		w8, #4
 
 	// unroll 3
@@ -26573,8 +26559,8 @@
 	fmla	v11.2d, v19.2d, v29.d[1]
 	fmla	v12.2d, v18.2d, v30.d[1]
 	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+	fmla	v15.2d, v19.2d, v31.d[1]
 
 	b		2f // return
 
@@ -26593,8 +26579,9 @@
 	ldr		d28, [x16], #8
 	ldr		d29, [x17], #8
 	ldr		d30, [x18], #8
-//	ldr		d31, [x19], #8
-	ldp		q16, q17, [x9]
+	ldr		d31, [x19], #8
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
 	add		x9, x9, x10
 
 	// unroll 0
@@ -26612,8 +26599,8 @@
 	fmla	v11.2d, v17.2d, v29.d[0]
 	fmla	v12.2d, v16.2d, v30.d[0]
 	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	fmla	v15.2d, v17.2d, v31.d[0]
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -26640,7 +26627,7 @@
 	add		x16, x14, x20 // 4
 	add		x17, x15, x20 // 5
 	add		x18, x16, x20 // 6
-//	add		x19, x17, x20 // 7
+	add		x19, x17, x20 // 7
 
 //	lsl		x20, x10, #2 // 4*lda*...
 	lsl		x20, x10, #1 // 2*lda*...
@@ -26653,9 +26640,7 @@
 	prfm	PLDL1KEEP, [x16, #0]
 	prfm	PLDL1KEEP, [x17, #0]
 	prfm	PLDL1KEEP, [x18, #0]
-//	prfm	PLDL1KEEP, [x19, #0]
-//	prfm	PLDL1KEEP, [x9, #0]
-//	prfm	PLDL1KEEP, [x9, #64]
+	prfm	PLDL1KEEP, [x19, #0]
 	prfm	PLDL1KEEP, [x9]
 	prfm	PLDL1KEEP, [x9, x10]
 	prfm	PLDL1KEEP, [x9, x20]
@@ -26668,7 +26653,1706 @@
 	ldr		q28, [x16], #16
 	ldr		q29, [x17], #16
 	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v20.d[0]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	fmla	v3.2d, v17.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	fmla	v5.2d, v17.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	fmla	v7.2d, v17.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	prfm	PLDL1KEEP, [x17, #16]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	prfm	PLDL1KEEP, [x18, #16]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+	prfm	PLDL1KEEP, [x19, #16]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	fmla	v15.2d, v17.2d, v31.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v20.d[1]
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v21.d[1]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v5.2d, v19.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v7.2d, v19.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+	fmla	v15.2d, v19.2d, v31.d[1]
+	ldr		q31, [x19], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v24.d[0]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	fmla	v15.2d, v17.2d, v31.d[0]
+
+	// unroll 3
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v24.d[1]
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+	fmla	v15.2d, v19.2d, v31.d[1]
+	ldr		q31, [x19], #16
+
+	bgt		1b
+
+
+	// reduce
+
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v20.d[0]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	fmla	v3.2d, v17.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+	fmla	v5.2d, v17.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+	fmla	v7.2d, v17.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+//	prfm	PLDL1KEEP, [x17, #32]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+//	prfm	PLDL1KEEP, [x18, #32]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+//	prfm	PLDL1KEEP, [x19, #32]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	fmla	v15.2d, v17.2d, v31.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v20.d[1]
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v21.d[1]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v5.2d, v19.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v7.2d, v19.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+	fmla	v15.2d, v19.2d, v31.d[1]
+	ldr		q31, [x19], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v24.d[0]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	fmla	v15.2d, v17.2d, v31.d[0]
+
+	// unroll 3
+//	ldr		q16, [x9]
+//	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v24.d[1]
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v25.d[1]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+//	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+//	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+	fmla	v15.2d, v19.2d, v31.d[1]
 //	ldr		q31, [x19], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x17, x17, #16
+	sub		x18, x18, #16
+	sub		x19, x19, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		d31, [x19], #8
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	fmla	v15.2d, v17.2d, v31.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_3x8_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_2X8_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_2x8_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+	add		x19, x17, x20 // 7
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		d31, [x19], #8
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+	add		x19, x17, x20 // 7
+
+//	lsl		x20, x10, #2 // 4*lda*...
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x17, #0]
+	prfm	PLDL1KEEP, [x18, #0]
+	prfm	PLDL1KEEP, [x19, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	prfm	PLDL1KEEP, [x17, #16]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	prfm	PLDL1KEEP, [x18, #16]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	prfm	PLDL1KEEP, [x19, #16]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+	ldr		q31, [x19], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 3
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+	ldr		q31, [x19], #16
+
+	bgt		1b
+
+
+	// reduce
+
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+//	prfm	PLDL1KEEP, [x17, #32]
+	fmla	v10.2d, v16.2d, v29.d[0]
+//	prfm	PLDL1KEEP, [x18, #32]
+	fmla	v12.2d, v16.2d, v30.d[0]
+//	prfm	PLDL1KEEP, [x19, #32]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+	ldr		q31, [x19], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 3
+//	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+//	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+//	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+//	ldr		q31, [x19], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x17, x17, #16
+	sub		x18, x18, #16
+	sub		x19, x19, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		d31, [x19], #8
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_2x8_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_1X8_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_1x8_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+	add		x19, x17, x20 // 7
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v14.2d, v18.2d, v31.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		d31, [x19], #8
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+	add		x19, x17, x20 // 7
+
+//	lsl		x20, x10, #2 // 4*lda*...
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x17, #0]
+	prfm	PLDL1KEEP, [x18, #0]
+	prfm	PLDL1KEEP, [x19, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q31, [x19], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	prfm	PLDL1KEEP, [x17, #16]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	prfm	PLDL1KEEP, [x18, #16]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	prfm	PLDL1KEEP, [x19, #16]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 1
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+	ldr		q31, [x19], #16
+
+	// unroll 2
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 3
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+	ldr		q31, [x19], #16
+
+	bgt		1b
+
+
+	// reduce
+
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+//	prfm	PLDL1KEEP, [x17, #32]
+	fmla	v10.2d, v16.2d, v29.d[0]
+//	prfm	PLDL1KEEP, [x18, #32]
+	fmla	v12.2d, v16.2d, v30.d[0]
+//	prfm	PLDL1KEEP, [x19, #32]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 1
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+	ldr		q31, [x19], #16
+
+	// unroll 2
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	// unroll 3
+//	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+//	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+//	ldr		q30, [x18], #16
+	fmla	v14.2d, v18.2d, v31.d[1]
+//	ldr		q31, [x19], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x17, x17, #16
+	sub		x18, x18, #16
+	sub		x19, x19, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		d31, [x19], #8
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v14.2d, v16.2d, v31.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_1x8_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_4X7_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_4x7_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldp		q16, q17, [x9]
+	add		x9, x9, x10
+	ldp		q18, q19, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldp		q16, q17, [x9]
+	add		x9, x9, x10
+	ldp		q18, q19, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldp		q16, q17, [x9]
+	add		x9, x9, x10
+	ldp		q18, q19, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldp		q16, q17, [x9]
+	add		x9, x9, x10
+	ldp		q18, q19, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldp		q16, q17, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+
+//	lsl		x20, x10, #2 // 4*lda*...
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x17, #0]
+	prfm	PLDL1KEEP, [x18, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 
@@ -26676,19 +28360,9 @@
 	ble		0f // consider clean up loop
 
 	// prefetch
-//	prfm	PLDL1KEEP, [x11, #0]
-//	prfm	PLDL1KEEP, [x13, #0]
-//	prfm	PLDL1KEEP, [x14, #0]
-//	prfm	PLDL1KEEP, [x15, #0]
-//	prfm	PLDL1KEEP, [x9, #128]
-//	prfm	PLDL1KEEP, [x9, #192]
 	prfm	PLDL1KEEP, [x9, x20]
 
 	// zero tmp acc
-
-//	add		x13, x12, #64
-//	add		x13, x12, x12
-//	add		x14, x13, #64
 
 	// main loop
 1:
@@ -26718,26 +28392,19 @@
 	prfm	PLDL1KEEP, [x18, #16]
 	fmla	v12.2d, v16.2d, v30.d[0]
 	fmla	v13.2d, v17.2d, v30.d[0]
-//	prfm	PLDL1KEEP, [x19, #16]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	ldp		q16, q17, [x9]
 	fmla	v0.2d, v18.2d, v20.d[1]
 	add		x9, x9, x10
 	fmla	v1.2d, v19.2d, v20.d[1]
-//	ldr		q24, [x11], #16
 	fmla	v2.2d, v18.2d, v21.d[1]
 	prfm	PLDL1KEEP, [x9, x20]
 	fmla	v3.2d, v19.2d, v21.d[1]
-//	ldr		q25, [x13], #16
 	fmla	v4.2d, v18.2d, v22.d[1]
 	fmla	v5.2d, v19.2d, v22.d[1]
-//	ldr		q26, [x14], #16
 	fmla	v6.2d, v18.2d, v23.d[1]
 	fmla	v7.2d, v19.2d, v23.d[1]
-//	ldr		q27, [x15], #16
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
 	ldr		q28, [x16], #16
@@ -26747,9 +28414,6 @@
 	fmla	v12.2d, v18.2d, v30.d[1]
 	fmla	v13.2d, v19.2d, v30.d[1]
 	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	// unroll 2
 	ldp		q18, q19, [x9]
@@ -26771,8 +28435,6 @@
 	fmla	v11.2d, v17.2d, v29.d[0]
 	fmla	v12.2d, v16.2d, v30.d[0]
 	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 3
 	ldp		q16, q17, [x9]
@@ -26799,17 +28461,12 @@
 	fmla	v12.2d, v18.2d, v30.d[1]
 	fmla	v13.2d, v19.2d, v30.d[1]
 	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	bgt		1b
 
 
 	// reduce
 
-//	sub		x9, x9, #32
-//	sub		x11, x11, #32
 
 0:
 
@@ -26841,26 +28498,19 @@
 //	prfm	PLDL1KEEP, [x18, #32]
 	fmla	v12.2d, v16.2d, v30.d[0]
 	fmla	v13.2d, v17.2d, v30.d[0]
-//	prfm	PLDL1KEEP, [x19, #32]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	ldp		q16, q17, [x9]
 	fmla	v0.2d, v18.2d, v20.d[1]
 	add		x9, x9, x10
 	fmla	v1.2d, v19.2d, v20.d[1]
-//	ldr		q24, [x11], #16
 	fmla	v2.2d, v18.2d, v21.d[1]
 //	prfm	PLDL1KEEP, [x9, x20]
 	fmla	v3.2d, v19.2d, v21.d[1]
-//	ldr		q25, [x13], #16
 	fmla	v4.2d, v18.2d, v22.d[1]
 	fmla	v5.2d, v19.2d, v22.d[1]
-//	ldr		q26, [x14], #16
 	fmla	v6.2d, v18.2d, v23.d[1]
 	fmla	v7.2d, v19.2d, v23.d[1]
-//	ldr		q27, [x15], #16
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
 	ldr		q28, [x16], #16
@@ -26870,9 +28520,6 @@
 	fmla	v12.2d, v18.2d, v30.d[1]
 	fmla	v13.2d, v19.2d, v30.d[1]
 	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	// unroll 2
 	ldp		q18, q19, [x9]
@@ -26894,8 +28541,6 @@
 	fmla	v11.2d, v17.2d, v29.d[0]
 	fmla	v12.2d, v16.2d, v30.d[0]
 	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 3
 //	ldp		q16, q17, [x9]
@@ -26922,9 +28567,6 @@
 	fmla	v12.2d, v18.2d, v30.d[1]
 	fmla	v13.2d, v19.2d, v30.d[1]
 //	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	b		2f // return
 
@@ -26940,7 +28582,6 @@
 	sub		x16, x16, #16
 	sub		x17, x17, #16
 	sub		x18, x18, #16
-//	sub		x19, x19, #16
 	sub		x9, x9, x10
 
 3: // clean1-up loop
@@ -26953,7 +28594,6 @@
 	ldr		d28, [x16], #8
 	ldr		d29, [x17], #8
 	ldr		d30, [x18], #8
-//	ldr		d31, [x19], #8
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 
@@ -26972,8 +28612,6 @@
 	fmla	v11.2d, v17.2d, v29.d[0]
 	fmla	v12.2d, v16.2d, v30.d[0]
 	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -26994,6 +28632,1618 @@
 	ret
 
 	FUN_END(inner_kernel_gemm_add_nn_4x7_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_3X7_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_3x7_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+
+//	lsl		x20, x10, #2 // 4*lda*...
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x17, #0]
+	prfm	PLDL1KEEP, [x18, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v20.d[0]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	fmla	v3.2d, v17.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	fmla	v5.2d, v17.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	fmla	v7.2d, v17.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	prfm	PLDL1KEEP, [x17, #16]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	prfm	PLDL1KEEP, [x18, #16]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v20.d[1]
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v21.d[1]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v5.2d, v19.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v7.2d, v19.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+	ldr		q30, [x18], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v24.d[0]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	// unroll 3
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v24.d[1]
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+	ldr		q30, [x18], #16
+
+	bgt		1b
+
+
+	// reduce
+
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v20.d[0]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	fmla	v3.2d, v17.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+	fmla	v5.2d, v17.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+	fmla	v7.2d, v17.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+//	prfm	PLDL1KEEP, [x17, #32]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+//	prfm	PLDL1KEEP, [x18, #32]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v20.d[1]
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v21.d[1]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v5.2d, v19.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v7.2d, v19.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+	ldr		q30, [x18], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v24.d[0]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	// unroll 3
+//	ldr		q16, [x9]
+//	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v24.d[1]
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v25.d[1]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+//	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	fmla	v13.2d, v19.2d, v30.d[1]
+//	ldr		q30, [x18], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x17, x17, #16
+	sub		x18, x18, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	fmla	v13.2d, v17.2d, v30.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_3x7_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_2X7_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_2x7_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+
+//	lsl		x20, x10, #2 // 4*lda*...
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x17, #0]
+	prfm	PLDL1KEEP, [x18, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	prfm	PLDL1KEEP, [x17, #16]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	prfm	PLDL1KEEP, [x18, #16]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 3
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+
+	bgt		1b
+
+
+	// reduce
+
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+//	prfm	PLDL1KEEP, [x17, #32]
+	fmla	v10.2d, v16.2d, v29.d[0]
+//	prfm	PLDL1KEEP, [x18, #32]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 3
+//	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+//	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+//	ldr		q30, [x18], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x17, x17, #16
+	sub		x18, x18, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_2x7_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_1X7_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_1x7_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v12.2d, v18.2d, v30.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+	add		x18, x16, x20 // 6
+
+//	lsl		x20, x10, #2 // 4*lda*...
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x17, #0]
+	prfm	PLDL1KEEP, [x18, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q30, [x18], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	prfm	PLDL1KEEP, [x17, #16]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	prfm	PLDL1KEEP, [x18, #16]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 1
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+
+	// unroll 2
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 3
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+
+	bgt		1b
+
+
+	// reduce
+
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+//	prfm	PLDL1KEEP, [x17, #32]
+	fmla	v10.2d, v16.2d, v29.d[0]
+//	prfm	PLDL1KEEP, [x18, #32]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 1
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+	ldr		q30, [x18], #16
+
+	// unroll 2
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	// unroll 3
+//	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+//	ldr		q29, [x17], #16
+	fmla	v12.2d, v18.2d, v30.d[1]
+//	ldr		q30, [x18], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x17, x17, #16
+	sub		x18, x18, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d30, [x18], #8
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v12.2d, v16.2d, v30.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_1x7_libcc)
 #endif
 
 
@@ -27035,8 +30285,6 @@
 	add		x15, x13, x20 // 3
 	add		x16, x14, x20 // 4
 	add		x17, x15, x20 // 5
-//	add		x18, x16, x20 // 6
-//	add		x19, x17, x20 // 7
 
 	// prefetch
 
@@ -27059,8 +30307,6 @@
 	ldr		q27, [x15], #16
 	ldr		q28, [x16], #16
 	ldr		q29, [x17], #16
-//	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 	ldp		q18, q19, [x9]
@@ -27079,10 +30325,6 @@
 	fmla	v9.2d, v17.2d, v28.d[0]
 	fmla	v10.2d, v16.2d, v29.d[0]
 	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	fmla	v0.2d, v18.2d, v24.d[1]
@@ -27097,10 +30339,6 @@
 	fmla	v9.2d, v19.2d, v28.d[1]
 	fmla	v10.2d, v18.2d, v29.d[1]
 	fmla	v11.2d, v19.2d, v29.d[1]
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
 	sub		w8, w8, #4
 
 	// load 2 & 3
@@ -27110,8 +30348,6 @@
 	ldr		q27, [x15], #16
 	ldr		q28, [x16], #16
 	ldr		q29, [x17], #16
-//	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 	ldp		q18, q19, [x9]
@@ -27130,10 +30366,6 @@
 	fmla	v9.2d, v17.2d, v28.d[0]
 	fmla	v10.2d, v16.2d, v29.d[0]
 	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 	cmp		w8, #4
 
 	// unroll 3
@@ -27149,10 +30381,6 @@
 	fmla	v9.2d, v19.2d, v28.d[1]
 	fmla	v10.2d, v18.2d, v29.d[1]
 	fmla	v11.2d, v19.2d, v29.d[1]
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
 
 	bgt		1b
 
@@ -27171,8 +30399,6 @@
 	ldr		q27, [x15], #16
 	ldr		q28, [x16], #16
 	ldr		q29, [x17], #16
-//	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 	ldp		q18, q19, [x9]
@@ -27191,10 +30417,6 @@
 	fmla	v9.2d, v17.2d, v28.d[0]
 	fmla	v10.2d, v16.2d, v29.d[0]
 	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	fmla	v0.2d, v18.2d, v24.d[1]
@@ -27209,10 +30431,6 @@
 	fmla	v9.2d, v19.2d, v28.d[1]
 	fmla	v10.2d, v18.2d, v29.d[1]
 	fmla	v11.2d, v19.2d, v29.d[1]
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
 	sub		w8, w8, #4
 
 	// load 2 & 3
@@ -27222,8 +30440,6 @@
 	ldr		q27, [x15], #16
 	ldr		q28, [x16], #16
 	ldr		q29, [x17], #16
-//	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 	ldp		q18, q19, [x9]
@@ -27242,10 +30458,6 @@
 	fmla	v9.2d, v17.2d, v28.d[0]
 	fmla	v10.2d, v16.2d, v29.d[0]
 	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 //	cmp		w8, #4
 
 	// unroll 3
@@ -27261,10 +30473,6 @@
 	fmla	v9.2d, v19.2d, v28.d[1]
 	fmla	v10.2d, v18.2d, v29.d[1]
 	fmla	v11.2d, v19.2d, v29.d[1]
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
 
 	b		2f // return
 
@@ -27282,8 +30490,6 @@
 	ldr		d27, [x15], #8
 	ldr		d28, [x16], #8
 	ldr		d29, [x17], #8
-//	ldr		d30, [x18], #8
-//	ldr		d31, [x19], #8
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 
@@ -27300,10 +30506,6 @@
 	fmla	v9.2d, v17.2d, v28.d[0]
 	fmla	v10.2d, v16.2d, v29.d[0]
 	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -27329,10 +30531,7 @@
 	add		x15, x13, x20 // 3
 	add		x16, x14, x20 // 4
 	add		x17, x15, x20 // 5
-//	add		x18, x16, x20 // 6
-//	add		x19, x17, x20 // 7
 
-//	lsl		x20, x10, #2 // 4*lda*...
 	lsl		x20, x10, #1 // 2*lda*...
 
 	// prefetch
@@ -27342,10 +30541,6 @@
 	prfm	PLDL1KEEP, [x15, #0]
 	prfm	PLDL1KEEP, [x16, #0]
 	prfm	PLDL1KEEP, [x17, #0]
-//	prfm	PLDL1KEEP, [x18, #0]
-//	prfm	PLDL1KEEP, [x19, #0]
-//	prfm	PLDL1KEEP, [x9, #0]
-//	prfm	PLDL1KEEP, [x9, #64]
 	prfm	PLDL1KEEP, [x9]
 	prfm	PLDL1KEEP, [x9, x10]
 	prfm	PLDL1KEEP, [x9, x20]
@@ -27357,8 +30552,6 @@
 	ldp		q23, q27, [x15], #32
 	ldr		q28, [x16], #16
 	ldr		q29, [x17], #16
-//	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 
@@ -27366,19 +30559,9 @@
 	ble		0f // consider clean up loop
 
 	// prefetch
-//	prfm	PLDL1KEEP, [x11, #0]
-//	prfm	PLDL1KEEP, [x13, #0]
-//	prfm	PLDL1KEEP, [x14, #0]
-//	prfm	PLDL1KEEP, [x15, #0]
-//	prfm	PLDL1KEEP, [x9, #128]
-//	prfm	PLDL1KEEP, [x9, #192]
 	prfm	PLDL1KEEP, [x9, x20]
 
 	// zero tmp acc
-
-//	add		x13, x12, #64
-//	add		x13, x12, x12
-//	add		x14, x13, #64
 
 	// main loop
 1:
@@ -27405,41 +30588,25 @@
 	prfm	PLDL1KEEP, [x17, #16]
 	fmla	v10.2d, v16.2d, v29.d[0]
 	fmla	v11.2d, v17.2d, v29.d[0]
-//	prfm	PLDL1KEEP, [x18, #16]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	prfm	PLDL1KEEP, [x19, #16]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	ldp		q16, q17, [x9]
 	fmla	v0.2d, v18.2d, v20.d[1]
 	add		x9, x9, x10
 	fmla	v1.2d, v19.2d, v20.d[1]
-//	ldr		q24, [x11], #16
 	fmla	v2.2d, v18.2d, v21.d[1]
 	prfm	PLDL1KEEP, [x9, x20]
 	fmla	v3.2d, v19.2d, v21.d[1]
-//	ldr		q25, [x13], #16
 	fmla	v4.2d, v18.2d, v22.d[1]
 	fmla	v5.2d, v19.2d, v22.d[1]
-//	ldr		q26, [x14], #16
 	fmla	v6.2d, v18.2d, v23.d[1]
 	fmla	v7.2d, v19.2d, v23.d[1]
-//	ldr		q27, [x15], #16
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
 	ldr		q28, [x16], #16
 	fmla	v10.2d, v18.2d, v29.d[1]
 	fmla	v11.2d, v19.2d, v29.d[1]
 	ldr		q29, [x17], #16
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	// unroll 2
 	ldp		q18, q19, [x9]
@@ -27459,10 +30626,6 @@
 	fmla	v9.2d, v17.2d, v28.d[0]
 	fmla	v10.2d, v16.2d, v29.d[0]
 	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 3
 	ldp		q16, q17, [x9]
@@ -27486,20 +30649,12 @@
 	fmla	v10.2d, v18.2d, v29.d[1]
 	fmla	v11.2d, v19.2d, v29.d[1]
 	ldr		q29, [x17], #16
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	bgt		1b
 
 
 	// reduce
 
-//	sub		x9, x9, #32
-//	sub		x11, x11, #32
 
 0:
 
@@ -27528,41 +30683,25 @@
 //	prfm	PLDL1KEEP, [x17, #32]
 	fmla	v10.2d, v16.2d, v29.d[0]
 	fmla	v11.2d, v17.2d, v29.d[0]
-//	prfm	PLDL1KEEP, [x18, #32]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	prfm	PLDL1KEEP, [x19, #32]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	ldp		q16, q17, [x9]
 	fmla	v0.2d, v18.2d, v20.d[1]
 	add		x9, x9, x10
 	fmla	v1.2d, v19.2d, v20.d[1]
-//	ldr		q24, [x11], #16
 	fmla	v2.2d, v18.2d, v21.d[1]
 //	prfm	PLDL1KEEP, [x9, x20]
 	fmla	v3.2d, v19.2d, v21.d[1]
-//	ldr		q25, [x13], #16
 	fmla	v4.2d, v18.2d, v22.d[1]
 	fmla	v5.2d, v19.2d, v22.d[1]
-//	ldr		q26, [x14], #16
 	fmla	v6.2d, v18.2d, v23.d[1]
 	fmla	v7.2d, v19.2d, v23.d[1]
-//	ldr		q27, [x15], #16
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
 	ldr		q28, [x16], #16
 	fmla	v10.2d, v18.2d, v29.d[1]
 	fmla	v11.2d, v19.2d, v29.d[1]
 	ldr		q29, [x17], #16
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	// unroll 2
 	ldp		q18, q19, [x9]
@@ -27582,10 +30721,6 @@
 	fmla	v9.2d, v17.2d, v28.d[0]
 	fmla	v10.2d, v16.2d, v29.d[0]
 	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 3
 //	ldp		q16, q17, [x9]
@@ -27609,12 +30744,6 @@
 	fmla	v10.2d, v18.2d, v29.d[1]
 	fmla	v11.2d, v19.2d, v29.d[1]
 //	ldr		q29, [x17], #16
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	b		2f // return
 
@@ -27629,8 +30758,6 @@
 	sub		x15, x15, #32
 	sub		x16, x16, #16
 	sub		x17, x17, #16
-//	sub		x18, x18, #16
-//	sub		x19, x19, #16
 	sub		x9, x9, x10
 
 3: // clean1-up loop
@@ -27642,8 +30769,6 @@
 	ldr		d27, [x15], #8
 	ldr		d28, [x16], #8
 	ldr		d29, [x17], #8
-//	ldr		d30, [x18], #8
-//	ldr		d31, [x19], #8
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 
@@ -27660,10 +30785,6 @@
 	fmla	v9.2d, v17.2d, v28.d[0]
 	fmla	v10.2d, v16.2d, v29.d[0]
 	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -27684,6 +30805,1492 @@
 	ret
 
 	FUN_END(inner_kernel_gemm_add_nn_4x6_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_3X6_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_3x6_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x17, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v20.d[0]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	fmla	v3.2d, v17.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	fmla	v5.2d, v17.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	fmla	v7.2d, v17.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	prfm	PLDL1KEEP, [x17, #16]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v20.d[1]
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v21.d[1]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v5.2d, v19.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v7.2d, v19.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	ldr		q29, [x17], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v24.d[0]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+
+	// unroll 3
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v24.d[1]
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	ldr		q29, [x17], #16
+
+	bgt		1b
+
+
+	// reduce
+
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v20.d[0]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	fmla	v3.2d, v17.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+	fmla	v5.2d, v17.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+	fmla	v7.2d, v17.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+//	prfm	PLDL1KEEP, [x17, #32]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v20.d[1]
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v21.d[1]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v5.2d, v19.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v7.2d, v19.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+	ldr		q29, [x17], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v24.d[0]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+
+	// unroll 3
+//	ldr		q16, [x9]
+//	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v24.d[1]
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v25.d[1]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	fmla	v11.2d, v19.2d, v29.d[1]
+//	ldr		q29, [x17], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x17, x17, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	fmla	v11.2d, v17.2d, v29.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_3x6_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_2X6_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_2x6_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x17, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	prfm	PLDL1KEEP, [x17, #16]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 3
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+
+	bgt		1b
+
+
+	// reduce
+
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+//	prfm	PLDL1KEEP, [x17, #32]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 3
+//	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+//	ldr		q29, [x17], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x17, x17, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_2x6_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_1X6_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_1x6_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v10.2d, v18.2d, v29.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+	add		x17, x15, x20 // 5
+
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x17, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q29, [x17], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	prfm	PLDL1KEEP, [x17, #16]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 1
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+
+	// unroll 2
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 3
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+
+	bgt		1b
+
+
+	// reduce
+
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+//	prfm	PLDL1KEEP, [x17, #32]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 1
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+	ldr		q29, [x17], #16
+
+	// unroll 2
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	// unroll 3
+//	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+	fmla	v10.2d, v18.2d, v29.d[1]
+//	ldr		q29, [x17], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x17, x17, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d29, [x17], #8
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v10.2d, v16.2d, v29.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_1x6_libcc)
 #endif
 
 
@@ -27724,9 +32331,6 @@
 	add		x14, x11, x20 // 2
 	add		x15, x13, x20 // 3
 	add		x16, x14, x20 // 4
-//	add		x17, x15, x20 // 5
-//	add		x18, x16, x20 // 6
-//	add		x19, x17, x20 // 7
 
 	// prefetch
 
@@ -27748,9 +32352,6 @@
 	ldr		q26, [x14], #16
 	ldr		q27, [x15], #16
 	ldr		q28, [x16], #16
-//	ldr		q29, [x17], #16
-//	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 	ldp		q18, q19, [x9]
@@ -27767,12 +32368,6 @@
 	fmla	v7.2d, v17.2d, v27.d[0]
 	fmla	v8.2d, v16.2d, v28.d[0]
 	fmla	v9.2d, v17.2d, v28.d[0]
-//	fmla	v10.2d, v16.2d, v29.d[0]
-//	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	fmla	v0.2d, v18.2d, v24.d[1]
@@ -27785,12 +32380,6 @@
 	fmla	v7.2d, v19.2d, v27.d[1]
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
-//	fmla	v10.2d, v18.2d, v29.d[1]
-//	fmla	v11.2d, v19.2d, v29.d[1]
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
 	sub		w8, w8, #4
 
 	// load 2 & 3
@@ -27799,9 +32388,6 @@
 	ldr		q26, [x14], #16
 	ldr		q27, [x15], #16
 	ldr		q28, [x16], #16
-//	ldr		q29, [x17], #16
-//	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 	ldp		q18, q19, [x9]
@@ -27818,12 +32404,6 @@
 	fmla	v7.2d, v17.2d, v27.d[0]
 	fmla	v8.2d, v16.2d, v28.d[0]
 	fmla	v9.2d, v17.2d, v28.d[0]
-//	fmla	v10.2d, v16.2d, v29.d[0]
-//	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 	cmp		w8, #4
 
 	// unroll 3
@@ -27837,12 +32417,6 @@
 	fmla	v7.2d, v19.2d, v27.d[1]
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
-//	fmla	v10.2d, v18.2d, v29.d[1]
-//	fmla	v11.2d, v19.2d, v29.d[1]
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
 
 	bgt		1b
 
@@ -27860,9 +32434,6 @@
 	ldr		q26, [x14], #16
 	ldr		q27, [x15], #16
 	ldr		q28, [x16], #16
-//	ldr		q29, [x17], #16
-//	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 	ldp		q18, q19, [x9]
@@ -27879,12 +32450,6 @@
 	fmla	v7.2d, v17.2d, v27.d[0]
 	fmla	v8.2d, v16.2d, v28.d[0]
 	fmla	v9.2d, v17.2d, v28.d[0]
-//	fmla	v10.2d, v16.2d, v29.d[0]
-//	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	fmla	v0.2d, v18.2d, v24.d[1]
@@ -27897,12 +32462,6 @@
 	fmla	v7.2d, v19.2d, v27.d[1]
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
-//	fmla	v10.2d, v18.2d, v29.d[1]
-//	fmla	v11.2d, v19.2d, v29.d[1]
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
 	sub		w8, w8, #4
 
 	// load 2 & 3
@@ -27911,9 +32470,6 @@
 	ldr		q26, [x14], #16
 	ldr		q27, [x15], #16
 	ldr		q28, [x16], #16
-//	ldr		q29, [x17], #16
-//	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 	ldp		q18, q19, [x9]
@@ -27930,12 +32486,6 @@
 	fmla	v7.2d, v17.2d, v27.d[0]
 	fmla	v8.2d, v16.2d, v28.d[0]
 	fmla	v9.2d, v17.2d, v28.d[0]
-//	fmla	v10.2d, v16.2d, v29.d[0]
-//	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 //	cmp		w8, #4
 
 	// unroll 3
@@ -27949,12 +32499,6 @@
 	fmla	v7.2d, v19.2d, v27.d[1]
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
-//	fmla	v10.2d, v18.2d, v29.d[1]
-//	fmla	v11.2d, v19.2d, v29.d[1]
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
 
 	b		2f // return
 
@@ -27971,9 +32515,6 @@
 	ldr		d26, [x14], #8
 	ldr		d27, [x15], #8
 	ldr		d28, [x16], #8
-//	ldr		d29, [x17], #8
-//	ldr		d30, [x18], #8
-//	ldr		d31, [x19], #8
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 
@@ -27988,12 +32529,6 @@
 	fmla	v7.2d, v17.2d, v27.d[0]
 	fmla	v8.2d, v16.2d, v28.d[0]
 	fmla	v9.2d, v17.2d, v28.d[0]
-//	fmla	v10.2d, v16.2d, v29.d[0]
-//	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -28018,9 +32553,6 @@
 	add		x14, x11, x20 // 2
 	add		x15, x13, x20 // 3
 	add		x16, x14, x20 // 4
-//	add		x17, x15, x20 // 5
-//	add		x18, x16, x20 // 6
-//	add		x19, x17, x20 // 7
 
 //	lsl		x20, x10, #2 // 4*lda*...
 	lsl		x20, x10, #1 // 2*lda*...
@@ -28031,11 +32563,6 @@
 	prfm	PLDL1KEEP, [x14, #0]
 	prfm	PLDL1KEEP, [x15, #0]
 	prfm	PLDL1KEEP, [x16, #0]
-//	prfm	PLDL1KEEP, [x17, #0]
-//	prfm	PLDL1KEEP, [x18, #0]
-//	prfm	PLDL1KEEP, [x19, #0]
-//	prfm	PLDL1KEEP, [x9, #0]
-//	prfm	PLDL1KEEP, [x9, #64]
 	prfm	PLDL1KEEP, [x9]
 	prfm	PLDL1KEEP, [x9, x10]
 	prfm	PLDL1KEEP, [x9, x20]
@@ -28046,9 +32573,6 @@
 	ldp		q22, q26, [x14], #32
 	ldp		q23, q27, [x15], #32
 	ldr		q28, [x16], #16
-//	ldr		q29, [x17], #16
-//	ldr		q30, [x18], #16
-//	ldr		q31, [x19], #16
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 
@@ -28056,19 +32580,10 @@
 	ble		0f // consider clean up loop
 
 	// prefetch
-//	prfm	PLDL1KEEP, [x11, #0]
-//	prfm	PLDL1KEEP, [x13, #0]
-//	prfm	PLDL1KEEP, [x14, #0]
-//	prfm	PLDL1KEEP, [x15, #0]
-//	prfm	PLDL1KEEP, [x9, #128]
-//	prfm	PLDL1KEEP, [x9, #192]
 	prfm	PLDL1KEEP, [x9, x20]
 
 	// zero tmp acc
 
-//	add		x13, x12, #64
-//	add		x13, x12, x12
-//	add		x14, x13, #64
 
 	// main loop
 1:
@@ -28092,44 +32607,22 @@
 	prfm	PLDL1KEEP, [x16, #16]
 	fmla	v8.2d, v16.2d, v28.d[0]
 	fmla	v9.2d, v17.2d, v28.d[0]
-//	prfm	PLDL1KEEP, [x17, #16]
-//	fmla	v10.2d, v16.2d, v29.d[0]
-//	fmla	v11.2d, v17.2d, v29.d[0]
-//	prfm	PLDL1KEEP, [x18, #16]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	prfm	PLDL1KEEP, [x19, #16]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	ldp		q16, q17, [x9]
 	fmla	v0.2d, v18.2d, v20.d[1]
 	add		x9, x9, x10
 	fmla	v1.2d, v19.2d, v20.d[1]
-//	ldr		q24, [x11], #16
 	fmla	v2.2d, v18.2d, v21.d[1]
 	prfm	PLDL1KEEP, [x9, x20]
 	fmla	v3.2d, v19.2d, v21.d[1]
-//	ldr		q25, [x13], #16
 	fmla	v4.2d, v18.2d, v22.d[1]
 	fmla	v5.2d, v19.2d, v22.d[1]
-//	ldr		q26, [x14], #16
 	fmla	v6.2d, v18.2d, v23.d[1]
 	fmla	v7.2d, v19.2d, v23.d[1]
-//	ldr		q27, [x15], #16
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
 	ldr		q28, [x16], #16
-//	fmla	v10.2d, v18.2d, v29.d[1]
-//	fmla	v11.2d, v19.2d, v29.d[1]
-//	ldr		q29, [x17], #16
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	// unroll 2
 	ldp		q18, q19, [x9]
@@ -28147,12 +32640,6 @@
 	fmla	v7.2d, v17.2d, v27.d[0]
 	fmla	v8.2d, v16.2d, v28.d[0]
 	fmla	v9.2d, v17.2d, v28.d[0]
-//	fmla	v10.2d, v16.2d, v29.d[0]
-//	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 3
 	ldp		q16, q17, [x9]
@@ -28173,15 +32660,6 @@
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
 	ldr		q28, [x16], #16
-//	fmla	v10.2d, v18.2d, v29.d[1]
-//	fmla	v11.2d, v19.2d, v29.d[1]
-//	ldr		q29, [x17], #16
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	bgt		1b
 
@@ -28215,44 +32693,22 @@
 //	prfm	PLDL1KEEP, [x16, #32]
 	fmla	v8.2d, v16.2d, v28.d[0]
 	fmla	v9.2d, v17.2d, v28.d[0]
-//	prfm	PLDL1KEEP, [x17, #32]
-//	fmla	v10.2d, v16.2d, v29.d[0]
-//	fmla	v11.2d, v17.2d, v29.d[0]
-//	prfm	PLDL1KEEP, [x18, #32]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	prfm	PLDL1KEEP, [x19, #32]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 1
 	ldp		q16, q17, [x9]
 	fmla	v0.2d, v18.2d, v20.d[1]
 	add		x9, x9, x10
 	fmla	v1.2d, v19.2d, v20.d[1]
-//	ldr		q24, [x11], #16
 	fmla	v2.2d, v18.2d, v21.d[1]
 //	prfm	PLDL1KEEP, [x9, x20]
 	fmla	v3.2d, v19.2d, v21.d[1]
-//	ldr		q25, [x13], #16
 	fmla	v4.2d, v18.2d, v22.d[1]
 	fmla	v5.2d, v19.2d, v22.d[1]
-//	ldr		q26, [x14], #16
 	fmla	v6.2d, v18.2d, v23.d[1]
 	fmla	v7.2d, v19.2d, v23.d[1]
-//	ldr		q27, [x15], #16
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
 	ldr		q28, [x16], #16
-//	fmla	v10.2d, v18.2d, v29.d[1]
-//	fmla	v11.2d, v19.2d, v29.d[1]
-//	ldr		q29, [x17], #16
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	// unroll 2
 	ldp		q18, q19, [x9]
@@ -28270,12 +32726,6 @@
 	fmla	v7.2d, v17.2d, v27.d[0]
 	fmla	v8.2d, v16.2d, v28.d[0]
 	fmla	v9.2d, v17.2d, v28.d[0]
-//	fmla	v10.2d, v16.2d, v29.d[0]
-//	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	// unroll 3
 //	ldp		q16, q17, [x9]
@@ -28296,15 +32746,6 @@
 	fmla	v8.2d, v18.2d, v28.d[1]
 	fmla	v9.2d, v19.2d, v28.d[1]
 //	ldr		q28, [x16], #16
-//	fmla	v10.2d, v18.2d, v29.d[1]
-//	fmla	v11.2d, v19.2d, v29.d[1]
-//	ldr		q29, [x17], #16
-//	fmla	v12.2d, v18.2d, v30.d[1]
-//	fmla	v13.2d, v19.2d, v30.d[1]
-//	ldr		q30, [x18], #16
-//	fmla	v14.2d, v18.2d, v31.d[1]
-//	fmla	v15.2d, v19.2d, v31.d[1]
-//	ldr		q31, [x19], #16
 
 	b		2f // return
 
@@ -28318,9 +32759,6 @@
 	sub		x14, x14, #32
 	sub		x15, x15, #32
 	sub		x16, x16, #16
-//	sub		x17, x17, #16
-//	sub		x18, x18, #16
-//	sub		x19, x19, #16
 	sub		x9, x9, x10
 
 3: // clean1-up loop
@@ -28331,9 +32769,6 @@
 	ldr		d26, [x14], #8
 	ldr		d27, [x15], #8
 	ldr		d28, [x16], #8
-//	ldr		d29, [x17], #8
-//	ldr		d30, [x18], #8
-//	ldr		d31, [x19], #8
 	ldp		q16, q17, [x9]
 	add		x9, x9, x10
 
@@ -28348,12 +32783,6 @@
 	fmla	v7.2d, v17.2d, v27.d[0]
 	fmla	v8.2d, v16.2d, v28.d[0]
 	fmla	v9.2d, v17.2d, v28.d[0]
-//	fmla	v10.2d, v16.2d, v29.d[0]
-//	fmla	v11.2d, v17.2d, v29.d[0]
-//	fmla	v12.2d, v16.2d, v30.d[0]
-//	fmla	v13.2d, v17.2d, v30.d[0]
-//	fmla	v14.2d, v16.2d, v31.d[0]
-//	fmla	v15.2d, v17.2d, v31.d[0]
 
 	sub		w8, w8, #1
 	cmp		w8, #0
@@ -28374,6 +32803,1729 @@
 	ret
 
 	FUN_END(inner_kernel_gemm_add_nn_4x5_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_3X5_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_3x5_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v1.2d, v19.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+
+//	lsl		x20, x10, #2 // 4*lda*...
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v20.d[0]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	fmla	v3.2d, v17.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	fmla	v5.2d, v17.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	fmla	v7.2d, v17.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v20.d[1]
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v21.d[1]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v5.2d, v19.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v7.2d, v19.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v24.d[0]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+
+	// unroll 3
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v24.d[1]
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v25.d[1]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+
+	bgt		1b
+
+
+	// reduce
+
+//	sub		x9, x9, #32
+//	sub		x11, x11, #32
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v20.d[0]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	fmla	v3.2d, v17.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+	fmla	v5.2d, v17.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+	fmla	v7.2d, v17.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v20.d[1]
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v21.d[1]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v5.2d, v19.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v7.2d, v19.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+	ldr		q28, [x16], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	ldr		d19, [x9, #16]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	fmla	v1.2d, v17.2d, v24.d[0]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+
+	// unroll 3
+//	ldr		q16, [x9]
+//	ldr		d17, [x9, #16]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+	fmla	v1.2d, v19.2d, v24.d[1]
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v3.2d, v19.2d, v25.d[1]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v5.2d, v19.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v7.2d, v19.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+	fmla	v9.2d, v19.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		q16, [x9]
+	ldr		d17, [x9, #16]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v1.2d, v17.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v3.2d, v17.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v5.2d, v17.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v7.2d, v17.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	fmla	v9.2d, v17.2d, v28.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_3x5_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_2X5_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_2x5_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+	ldr		q18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+
+//	lsl		x20, x10, #2 // 4*lda*...
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 3
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+
+	bgt		1b
+
+
+	// reduce
+
+//	sub		x9, x9, #32
+//	sub		x11, x11, #32
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 1
+	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+
+	// unroll 2
+	ldr		q18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 3
+//	ldr		q16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		q16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_2x5_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_1X5_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_1x5_libcc)
+#endif
+
+
+
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+
+	// prefetch
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+
+	// zero tmp acc
+
+	// main loop
+1:
+	
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+
+	bgt		1b
+
+
+	// reduce
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// load 0 & 1
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 1
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	sub		w8, w8, #4
+
+	// load 2 & 3
+	ldr		q24, [x11], #16
+	ldr		q25, [x13], #16
+	ldr		q26, [x14], #16
+	ldr		q27, [x15], #16
+	ldr		q28, [x16], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+	ldr		d18, [x9]
+	add		x9, x9, x10
+
+	// unroll 2
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+//	cmp		w8, #4
+
+	// unroll 3
+	fmla	v0.2d, v18.2d, v24.d[1]
+	fmla	v2.2d, v18.2d, v25.d[1]
+	fmla	v4.2d, v18.2d, v26.d[1]
+	fmla	v6.2d, v18.2d, v27.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#else //if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+
+
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x20, x12, x12
+
+	add		x13, x11, x12 // 1
+	add		x14, x11, x20 // 2
+	add		x15, x13, x20 // 3
+	add		x16, x14, x20 // 4
+
+//	lsl		x20, x10, #2 // 4*lda*...
+	lsl		x20, x10, #1 // 2*lda*...
+
+	// prefetch
+	prfm	PLDL1KEEP, [x11, #0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #0]
+	prfm	PLDL1KEEP, [x9]
+	prfm	PLDL1KEEP, [x9, x10]
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// preload
+	ldp		q20, q24, [x11], #32
+	ldp		q21, q25, [x13], #32
+	ldp		q22, q26, [x14], #32
+	ldp		q23, q27, [x15], #32
+	ldr		q28, [x16], #16
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+	prfm	PLDL1KEEP, [x9, x20]
+
+	// zero tmp acc
+
+
+	// main loop
+1:
+	
+	// unroll 0
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+	prfm	PLDL1KEEP, [x11, #0]
+	fmla	v4.2d, v16.2d, v22.d[0]
+	prfm	PLDL1KEEP, [x13, #0]
+	prfm	PLDL1KEEP, [x14, #0]
+	fmla	v6.2d, v16.2d, v23.d[0]
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x16, #16]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 1
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+
+	// unroll 2
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 3
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+	add		x9, x9, x10
+	ldp		q20, q24, [x11], #32
+	fmla	v2.2d, v18.2d, v25.d[1]
+	prfm	PLDL1KEEP, [x9, x20]
+	ldp		q21, q25, [x13], #32
+	fmla	v4.2d, v18.2d, v26.d[1]
+	ldp		q22, q26, [x14], #32
+	fmla	v6.2d, v18.2d, v27.d[1]
+	ldp		q23, q27, [x15], #32
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+
+	bgt		1b
+
+
+	// reduce
+
+//	sub		x9, x9, #32
+//	sub		x11, x11, #32
+
+0:
+
+	cmp		w8, #3
+	ble		4f
+
+	// unroll 0
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v20.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v21.d[0]
+//	prfm	PLDL1KEEP, [x11, #32]
+	fmla	v4.2d, v16.2d, v22.d[0]
+//	prfm	PLDL1KEEP, [x13, #32]
+//	prfm	PLDL1KEEP, [x14, #32]
+	fmla	v6.2d, v16.2d, v23.d[0]
+//	prfm	PLDL1KEEP, [x15, #32]
+//	prfm	PLDL1KEEP, [x16, #32]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 1
+	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v20.d[1]
+	add		x9, x9, x10
+	fmla	v2.2d, v18.2d, v21.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v4.2d, v18.2d, v22.d[1]
+	fmla	v6.2d, v18.2d, v23.d[1]
+	fmla	v8.2d, v18.2d, v28.d[1]
+	ldr		q28, [x16], #16
+
+	// unroll 2
+	ldr		d18, [x9]
+	fmla	v0.2d, v16.2d, v24.d[0]
+	add		x9, x9, x10
+//	prfm	PLDL1KEEP, [x9, x20]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	sub		w8, w8, #4
+	fmla	v4.2d, v16.2d, v26.d[0]
+//	cmp		w8, #4
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	// unroll 3
+//	ldr		d16, [x9]
+	fmla	v0.2d, v18.2d, v24.d[1]
+//	add		x9, x9, x10
+//	ldr		q24, [x11], #16
+	fmla	v2.2d, v18.2d, v25.d[1]
+//	prfm	PLDL1KEEP, [x9, x20]
+//	ldr		q25, [x13], #16
+	fmla	v4.2d, v18.2d, v26.d[1]
+//	ldr		q26, [x14], #16
+	fmla	v6.2d, v18.2d, v27.d[1]
+//	ldr		q27, [x15], #16
+	fmla	v8.2d, v18.2d, v28.d[1]
+//	ldr		q28, [x16], #16
+
+	b		2f // return
+
+4: // consider clean1-up loop
+
+	cmp		w8, #0
+	ble		2f // return
+
+	sub		x11, x11, #32
+	sub		x13, x13, #32
+	sub		x14, x14, #32
+	sub		x15, x15, #32
+	sub		x16, x16, #16
+	sub		x9, x9, x10
+
+3: // clean1-up loop
+
+	// load 0
+	ldr		d24, [x11], #8
+	ldr		d25, [x13], #8
+	ldr		d26, [x14], #8
+	ldr		d27, [x15], #8
+	ldr		d28, [x16], #8
+	ldr		d16, [x9]
+	add		x9, x9, x10
+
+	// unroll 0
+	fmla	v0.2d, v16.2d, v24.d[0]
+	fmla	v2.2d, v16.2d, v25.d[0]
+	fmla	v4.2d, v16.2d, v26.d[0]
+	fmla	v6.2d, v16.2d, v27.d[0]
+	fmla	v8.2d, v16.2d, v28.d[0]
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+
+
+#endif
+	
+
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_1x5_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+// x13  <- m1
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_4X8_VS_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_4x8_vs_libcc)
+
+	// save old return address
+	sub sp, sp, #16
+	str x30, [sp, #0]
+#endif
+
+	cmp		w13, #1
+	bgt		90f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_1X8_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_1x8_libcc)
+#endif
+
+	b		93f
+
+90:
+
+	cmp		w13, #2
+	bgt		91f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_2X8_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_2x8_libcc)
+#endif
+	
+	b		93f
+
+91:
+
+	cmp		w13, #3
+	bgt		92f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_3X8_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_3x8_libcc)
+#endif
+	
+	b		93f
+
+92:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X8_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_4x8_libcc)
+#endif
+
+93:
+// XXX x13 possibly used as working register on exit !!!
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	// load old return address
+	ldr x30, [sp, #0]
+	add sp, sp, #16
+
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_4x8_vs_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+// x13  <- m1
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_4X7_VS_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_4x7_vs_libcc)
+
+	// save old return address
+	sub sp, sp, #16
+	str x30, [sp, #0]
+#endif
+
+	cmp		w13, #1
+	bgt		90f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_1X7_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_1x7_libcc)
+#endif
+
+	b		93f
+
+90:
+
+	cmp		w13, #2
+	bgt		91f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_2X7_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_2x7_libcc)
+#endif
+	
+	b		93f
+
+91:
+
+	cmp		w13, #3
+	bgt		92f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_3X7_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_3x7_libcc)
+#endif
+	
+	b		93f
+
+92:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X7_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_4x7_libcc)
+#endif
+
+93:
+// XXX x13 possibly used as working register on exit !!!
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	// load old return address
+	ldr x30, [sp, #0]
+	add sp, sp, #16
+
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_4x7_vs_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+// x13  <- m1
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_4X6_VS_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_4x6_vs_libcc)
+
+	// save old return address
+	sub sp, sp, #16
+	str x30, [sp, #0]
+#endif
+
+	cmp		w13, #1
+	bgt		90f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_1X6_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_1x6_libcc)
+#endif
+
+	b		93f
+
+90:
+
+	cmp		w13, #2
+	bgt		91f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_2X6_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_2x6_libcc)
+#endif
+	
+	b		93f
+
+91:
+
+	cmp		w13, #3
+	bgt		92f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_3X6_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_3x6_libcc)
+#endif
+	
+	b		93f
+
+92:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X6_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_4x6_libcc)
+#endif
+
+93:
+// XXX x13 possibly used as working register on exit !!!
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	// load old return address
+	ldr x30, [sp, #0]
+	add sp, sp, #16
+
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_4x6_vs_libcc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- lda
+// x11  <- B
+// x12  <- ldb
+// x13  <- m1
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_ADD_NN_4X5_VS_LIBCC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemm_add_nn_4x5_vs_libcc)
+
+	// save old return address
+	sub sp, sp, #16
+	str x30, [sp, #0]
+#endif
+
+	cmp		w13, #1
+	bgt		90f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_1X5_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_1x5_libcc)
+#endif
+
+	b		93f
+
+90:
+
+	cmp		w13, #2
+	bgt		91f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_2X5_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_2x5_libcc)
+#endif
+	
+	b		93f
+
+91:
+
+	cmp		w13, #3
+	bgt		92f
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_3X5_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_3x5_libcc)
+#endif
+	
+	b		93f
+
+92:
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NN_4X5_LIBCC
+#else
+	CALL(inner_kernel_gemm_add_nn_4x5_libcc)
+#endif
+
+93:
+// XXX x13 possibly used as working register on exit !!!
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	// load old return address
+	ldr x30, [sp, #0]
+	add sp, sp, #16
+
+	ret
+
+	FUN_END(inner_kernel_gemm_add_nn_4x5_vs_libcc)
 #endif
 
 
@@ -33421,43 +39573,43 @@
 	mov		x11, x2 // A
 	mov		w12, w3 // lda
 	lsl		w12, w12, #3 // 8*lda
+	ldr		w13, [sp, #(STACKSIZE + 32)] // n1
 
-	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
-	cmp		w13, #5
+	ldr		w14, [sp, #(STACKSIZE + 24)] // m1
+
+	cmp		w14, #5
 	bgt		100f
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X5_LIBCC
+	INNER_KERNEL_GEMM_ADD_NN_4X5_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nn_4x5_libcc)
+	CALL(inner_kernel_gemm_add_nn_4x5_vs_libcc)
 #endif
 
 	b		103f
 
 100:
 
-	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
-	cmp		w13, #6
+	cmp		w14, #6
 	bgt		101f
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X6_LIBCC
+	INNER_KERNEL_GEMM_ADD_NN_4X6_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nn_4x6_libcc)
+	CALL(inner_kernel_gemm_add_nn_4x6_vs_libcc)
 #endif
 	
 	b		103f
 
 101:
 
-	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
-	cmp		w13, #7
+	cmp		w14, #7
 	bgt		102f
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X7_LIBCC
+	INNER_KERNEL_GEMM_ADD_NN_4X7_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nn_4x7_libcc)
+	CALL(inner_kernel_gemm_add_nn_4x7_vs_libcc)
 #endif
 	
 	b		103f
@@ -33465,9 +39617,9 @@
 102:
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X8_LIBCC
+	INNER_KERNEL_GEMM_ADD_NN_4X8_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nn_4x8_libcc)
+	CALL(inner_kernel_gemm_add_nn_4x8_vs_libcc)
 #endif
 
 103:
@@ -37035,43 +43187,43 @@
 	mov		x11, x4 // B
 	mov		w12, w5 // sdb
 	lsl		w12, w12, #3 // 8*sdb
+	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
 
-	ldr		w13, [sp, #(STACKSIZE + 32)] // n1
-	cmp		w13, #5
+	ldr		w14, [sp, #(STACKSIZE + 32)] // n1
+
+	cmp		w14, #5
 	bgt		100f
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X5_LIBCC
+	INNER_KERNEL_GEMM_ADD_NN_4X5_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nn_4x5_libcc)
+	CALL(inner_kernel_gemm_add_nn_4x5_vs_libcc)
 #endif
 
 	b		103f
 
 100:
 
-	ldr		w13, [sp, #(STACKSIZE + 32)] // n1
-	cmp		w13, #6
+	cmp		w14, #6
 	bgt		101f
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X6_LIBCC
+	INNER_KERNEL_GEMM_ADD_NN_4X6_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nn_4x6_libcc)
+	CALL(inner_kernel_gemm_add_nn_4x6_vs_libcc)
 #endif
 	
 	b		103f
 
 101:
 
-	ldr		w13, [sp, #(STACKSIZE + 32)] // n1
-	cmp		w13, #7
+	cmp		w14, #7
 	bgt		102f
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X7_LIBCC
+	INNER_KERNEL_GEMM_ADD_NN_4X7_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nn_4x7_libcc)
+	CALL(inner_kernel_gemm_add_nn_4x7_vs_libcc)
 #endif
 	
 	b		103f
@@ -37079,9 +43231,9 @@
 102:
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X8_LIBCC
+	INNER_KERNEL_GEMM_ADD_NN_4X8_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nn_4x8_libcc)
+	CALL(inner_kernel_gemm_add_nn_4x8_vs_libcc)
 #endif
 
 103:
