@@ -16000,10 +16000,10 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_TRSM_LLN_ONE_4X4_LIB
+	.macro INNER_EDGE_TRSM_LLN_ONE_4X4_LIBC
 #else
 	.align 4
-	FUN_START(inner_edge_trsm_lln_one_4x4_lib)
+	FUN_START(inner_edge_trsm_lln_one_4x4_libc)
 #endif
 
 	ldp		q24, q25, [x8, #0] // E[0+4*0]
@@ -16038,7 +16038,104 @@
 #else
 	ret
 
-	FUN_END(inner_edge_trsm_lln_one_4x4_lib)
+	FUN_END(inner_edge_trsm_lln_one_4x4_libc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular substitution:
+// side = left
+// uplo = lower
+// tran = not-transposed
+// unit diagonal
+//
+// input arguments:
+// x8   <- E
+// x9   <- lde
+// w10  <- n1
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_LLN_ONE_4X4_VS_LIBC
+#else
+	.align 4
+	FUN_START(inner_edge_trsm_lln_one_4x4_vs_libc)
+#endif
+
+	cmp		w10, #1
+	bgt		1f
+
+	// 1x1
+	b		0f
+
+1:
+
+	// 2x2
+	ldr		q24, [x8, #0] // E[0+4*0]
+//	add		x8, x8, x9
+	ins		v24.d[0], xzr
+	fmls	v0.2d, v24.2d, v0.d[0]
+	fmls	v2.2d, v24.2d, v2.d[0]
+	fmls	v4.2d, v24.2d, v4.d[0]
+	fmls	v6.2d, v24.2d, v6.d[0]
+
+	cmp		w10, #3
+	blt		0f
+
+	bgt		1f
+
+	// 3x3
+	ldr		d25, [x8, #16] // E[2+4*0]
+	fmls	v1.2d, v25.2d, v0.d[0]
+	fmls	v3.2d, v25.2d, v2.d[0]
+	fmls	v5.2d, v25.2d, v4.d[0]
+	fmls	v7.2d, v25.2d, v6.d[0]
+	add		x8, x8, x9
+	ldr		d25, [x8, #16] // E[2+4*1]
+	fmls	v1.2d, v25.2d, v0.d[1]
+	fmls	v3.2d, v25.2d, v2.d[1]
+	fmls	v5.2d, v25.2d, v4.d[1]
+	fmls	v7.2d, v25.2d, v6.d[1]
+//	sub		x8, x8, x9
+	b		0f
+
+1:
+
+	// 4x4
+	ldr		q25, [x8, #16] // E[2+4*0]
+	fmls	v1.2d, v25.2d, v0.d[0]
+	fmls	v3.2d, v25.2d, v2.d[0]
+	fmls	v5.2d, v25.2d, v4.d[0]
+	fmls	v7.2d, v25.2d, v6.d[0]
+	add		x8, x8, x9
+	ldr		q25, [x8, #16] // E[2+4*1]
+	fmls	v1.2d, v25.2d, v0.d[1]
+	fmls	v3.2d, v25.2d, v2.d[1]
+	fmls	v5.2d, v25.2d, v4.d[1]
+	fmls	v7.2d, v25.2d, v6.d[1]
+	add		x8, x8, x9
+	ldr		q25, [x8, #16] // E[2+4*2]
+	ins		v25.d[0], xzr
+	fmls	v1.2d, v25.2d, v1.d[0]
+	fmls	v3.2d, v25.2d, v3.d[0]
+	fmls	v5.2d, v25.2d, v5.d[0]
+	fmls	v7.2d, v25.2d, v7.d[0]
+//	sub		x8, x8, x9
+//	sub		x8, x8, x9
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trsm_lln_one_4x4_vs_libc)
 #endif
 
 
@@ -20708,9 +20805,9 @@
 	lsl		w9, w9, #3 // 8*ldc
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_TRSM_LLN_ONE_4X4_LIB
+	INNER_EDGE_TRSM_LLN_ONE_4X4_LIBC
 #else
-	CALL(inner_edge_trsm_lln_one_4x4_lib)
+	CALL(inner_edge_trsm_lln_one_4x4_libc)
 #endif
 
 
@@ -20837,11 +20934,12 @@
 	ldr		x8, [sp, #(STACKSIZE + 8)] // E
 	ldr		w9, [sp, #(STACKSIZE + 16)] // sde
 	lsl		w9, w9, #3 // 8*ldc
+	ldr		w10, [sp, #(STACKSIZE + 24)] // m1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_TRSM_LLN_ONE_4X4_LIB
+	INNER_EDGE_TRSM_LLN_ONE_4X4_VS_LIBC
 #else
-	CALL(inner_edge_trsm_lln_one_4x4_lib)
+	CALL(inner_edge_trsm_lln_one_4x4_vs_libc)
 #endif
 
 

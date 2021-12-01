@@ -34795,10 +34795,10 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_TRSM_LLN_ONE_8X4_LIB
+	.macro INNER_EDGE_TRSM_LLN_ONE_8X4_LIBC
 #else
 	.align 4
-	FUN_START(inner_edge_trsm_lln_one_8x4_lib)
+	FUN_START(inner_edge_trsm_lln_one_8x4_libc)
 #endif
 
 	ldp		q24, q25, [x8, #0] // E0[0+4*0]
@@ -34899,7 +34899,263 @@
 #else
 	ret
 
-	FUN_END(inner_edge_trsm_lln_one_8x4_lib)
+	FUN_END(inner_edge_trsm_lln_one_8x4_libc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular substitution:
+// side = left
+// uplo = lower
+// tran = not-transposed
+// unit diagonal
+//
+// input arguments:
+// x8   <- E
+// x9   <- lde
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_LLN_ONE_8X4_VS_LIBC
+#else
+	.align 4
+	FUN_START(inner_edge_trsm_lln_one_8x4_vs_libc)
+#endif
+
+	cmp		w10, #1
+	bgt		1f
+
+	// 1x1
+	b		0f
+
+1:
+
+	// 2x2
+	ldr		q24, [x8, #0] // E[0+4*0]
+//	add		x8, x8, x9
+	ins		v24.d[0], xzr
+	fmls	v0.2d, v24.2d, v0.d[0]
+	fmls	v2.2d, v24.2d, v2.d[0]
+	fmls	v4.2d, v24.2d, v4.d[0]
+	fmls	v6.2d, v24.2d, v6.d[0]
+
+	cmp		w10, #3
+	blt		0f
+
+	bgt		1f
+
+	// 3x3
+	ldr		d25, [x8, #16] // E[2+4*0]
+	fmls	v1.2d, v25.2d, v0.d[0]
+	fmls	v3.2d, v25.2d, v2.d[0]
+	fmls	v5.2d, v25.2d, v4.d[0]
+	fmls	v7.2d, v25.2d, v6.d[0]
+	add		x8, x8, x9
+	ldr		d25, [x8, #16] // E[2+4*1]
+	fmls	v1.2d, v25.2d, v0.d[1]
+	fmls	v3.2d, v25.2d, v2.d[1]
+	fmls	v5.2d, v25.2d, v4.d[1]
+	fmls	v7.2d, v25.2d, v6.d[1]
+//	sub		x8, x8, x9
+	b		0f
+
+1:
+
+	// 4x4
+	ldr		q25, [x8, #16] // E[2+4*0]
+	fmls	v1.2d, v25.2d, v0.d[0]
+	fmls	v3.2d, v25.2d, v2.d[0]
+	fmls	v5.2d, v25.2d, v4.d[0]
+	fmls	v7.2d, v25.2d, v6.d[0]
+	add		x8, x8, x9
+	ldr		q25, [x8, #16] // E[2+4*1]
+	fmls	v1.2d, v25.2d, v0.d[1]
+	fmls	v3.2d, v25.2d, v2.d[1]
+	fmls	v5.2d, v25.2d, v4.d[1]
+	fmls	v7.2d, v25.2d, v6.d[1]
+	add		x8, x8, x9
+	ldr		q25, [x8, #16] // E[2+4*2]
+	ins		v25.d[0], xzr
+	fmls	v1.2d, v25.2d, v1.d[0]
+	fmls	v3.2d, v25.2d, v3.d[0]
+	fmls	v5.2d, v25.2d, v5.d[0]
+	fmls	v7.2d, v25.2d, v7.d[0]
+	sub		x8, x8, x9, lsl #1
+
+	cmp		w10, #5
+	blt		0f
+
+	bgt		1f
+
+	// 5x5
+	ldr		d26, [x8, #32] // E[4+4*0]
+	fmls	v8.2d, v26.2d, v0.d[0]
+	fmls	v10.2d, v26.2d, v2.d[0]
+	fmls	v12.2d, v26.2d, v4.d[0]
+	fmls	v14.2d, v26.2d, v6.d[0]
+	add		x8, x8, x9
+	ldr		d26, [x8, #32] // E[4+4*1]
+	fmls	v8.2d, v26.2d, v0.d[1]
+	fmls	v10.2d, v26.2d, v2.d[1]
+	fmls	v12.2d, v26.2d, v4.d[1]
+	fmls	v14.2d, v26.2d, v6.d[1]
+	add		x8, x8, x9
+	ldr		d26, [x8, #32] // E[4+4*2]
+	fmls	v8.2d, v26.2d, v1.d[0]
+	fmls	v10.2d, v26.2d, v3.d[0]
+	fmls	v12.2d, v26.2d, v5.d[0]
+	fmls	v14.2d, v26.2d, v7.d[0]
+	add		x8, x8, x9
+	ldr		d26, [x8, #32] // E[4+4*3]
+	fmls	v8.2d, v26.2d, v1.d[1]
+	fmls	v10.2d, v26.2d, v3.d[1]
+	fmls	v12.2d, v26.2d, v5.d[1]
+	fmls	v14.2d, v26.2d, v7.d[1]
+//	sub		x8, x8, x9, lsl #1
+//	sub		x8, x8, x9
+	b		0f
+
+1:
+
+	// 6x6
+	ldr		q26, [x8, #32] // E[4+4*0]
+	fmls	v8.2d, v26.2d, v0.d[0]
+	fmls	v10.2d, v26.2d, v2.d[0]
+	fmls	v12.2d, v26.2d, v4.d[0]
+	fmls	v14.2d, v26.2d, v6.d[0]
+	add		x8, x8, x9
+	ldr		q26, [x8, #32] // E[4+4*1]
+	fmls	v8.2d, v26.2d, v0.d[1]
+	fmls	v10.2d, v26.2d, v2.d[1]
+	fmls	v12.2d, v26.2d, v4.d[1]
+	fmls	v14.2d, v26.2d, v6.d[1]
+	add		x8, x8, x9
+	ldr		q26, [x8, #32] // E[4+4*2]
+	fmls	v8.2d, v26.2d, v1.d[0]
+	fmls	v10.2d, v26.2d, v3.d[0]
+	fmls	v12.2d, v26.2d, v5.d[0]
+	fmls	v14.2d, v26.2d, v7.d[0]
+	add		x8, x8, x9
+	ldr		q26, [x8, #32] // E[4+4*3]
+	fmls	v8.2d, v26.2d, v1.d[1]
+	fmls	v10.2d, v26.2d, v3.d[1]
+	fmls	v12.2d, v26.2d, v5.d[1]
+	fmls	v14.2d, v26.2d, v7.d[1]
+	add		x8, x8, x9
+	ldr		q26, [x8, #32] // E[4+4*4]
+	ins		v26.d[0], xzr
+	fmls	v8.2d, v26.2d, v8.d[0]
+	fmls	v10.2d, v26.2d, v10.d[0]
+	fmls	v12.2d, v26.2d, v12.d[0]
+	fmls	v14.2d, v26.2d, v14.d[0]
+	sub		x8, x8, x9, lsl #2
+
+	cmp		w10, #7
+	blt		0f
+
+	bgt		1f
+
+	// 7x7
+	ldr		d27, [x8, #48] // E[6+4*0]
+	fmls	v9.2d, v27.2d, v0.d[0]
+	fmls	v11.2d, v27.2d, v2.d[0]
+	fmls	v13.2d, v27.2d, v4.d[0]
+	fmls	v15.2d, v27.2d, v6.d[0]
+	add		x8, x8, x9
+	ldr		d27, [x8, #48] // E[6+4*1]
+	fmls	v9.2d, v27.2d, v0.d[1]
+	fmls	v11.2d, v27.2d, v2.d[1]
+	fmls	v13.2d, v27.2d, v4.d[1]
+	fmls	v15.2d, v27.2d, v6.d[1]
+	add		x8, x8, x9
+	ldr		d27, [x8, #48] // E[6+4*2]
+	fmls	v9.2d, v27.2d, v1.d[0]
+	fmls	v11.2d, v27.2d, v3.d[0]
+	fmls	v13.2d, v27.2d, v5.d[0]
+	fmls	v15.2d, v27.2d, v7.d[0]
+	add		x8, x8, x9
+	ldr		d27, [x8, #48] // E[6+4*3]
+	fmls	v9.2d, v27.2d, v1.d[1]
+	fmls	v11.2d, v27.2d, v3.d[1]
+	fmls	v13.2d, v27.2d, v5.d[1]
+	fmls	v15.2d, v27.2d, v7.d[1]
+	add		x8, x8, x9
+	ldr		d27, [x8, #48] // E[6+4*4]
+	fmls	v9.2d, v27.2d, v8.d[0]
+	fmls	v11.2d, v27.2d, v10.d[0]
+	fmls	v13.2d, v27.2d, v12.d[0]
+	fmls	v15.2d, v27.2d, v14.d[0]
+	add		x8, x8, x9
+	ldr		d27, [x8, #48] // E[6+4*5]
+	fmls	v9.2d, v27.2d, v8.d[1]
+	fmls	v11.2d, v27.2d, v10.d[1]
+	fmls	v13.2d, v27.2d, v12.d[1]
+	fmls	v15.2d, v27.2d, v14.d[1]
+//	sub		x8, x8, x9, lsl #2
+//	sub		x8, x8, x9
+	b		0f
+
+1:
+
+	// 8x8
+	ldr		q27, [x8, #48] // E[6+4*0]
+	fmls	v9.2d, v27.2d, v0.d[0]
+	fmls	v11.2d, v27.2d, v2.d[0]
+	fmls	v13.2d, v27.2d, v4.d[0]
+	fmls	v15.2d, v27.2d, v6.d[0]
+	add		x8, x8, x9
+	ldr		q27, [x8, #48] // E[6+4*1]
+	fmls	v9.2d, v27.2d, v0.d[1]
+	fmls	v11.2d, v27.2d, v2.d[1]
+	fmls	v13.2d, v27.2d, v4.d[1]
+	fmls	v15.2d, v27.2d, v6.d[1]
+	add		x8, x8, x9
+	ldr		q27, [x8, #48] // E[6+4*2]
+	fmls	v9.2d, v27.2d, v1.d[0]
+	fmls	v11.2d, v27.2d, v3.d[0]
+	fmls	v13.2d, v27.2d, v5.d[0]
+	fmls	v15.2d, v27.2d, v7.d[0]
+	add		x8, x8, x9
+	ldr		q27, [x8, #48] // E[6+4*3]
+	fmls	v9.2d, v27.2d, v1.d[1]
+	fmls	v11.2d, v27.2d, v3.d[1]
+	fmls	v13.2d, v27.2d, v5.d[1]
+	fmls	v15.2d, v27.2d, v7.d[1]
+	add		x8, x8, x9
+	ldr		q27, [x8, #48] // E[6+4*4]
+	fmls	v9.2d, v27.2d, v8.d[0]
+	fmls	v11.2d, v27.2d, v10.d[0]
+	fmls	v13.2d, v27.2d, v12.d[0]
+	fmls	v15.2d, v27.2d, v14.d[0]
+	add		x8, x8, x9
+	ldr		q27, [x8, #48] // E[6+4*5]
+	fmls	v9.2d, v27.2d, v8.d[1]
+	fmls	v11.2d, v27.2d, v10.d[1]
+	fmls	v13.2d, v27.2d, v12.d[1]
+	fmls	v15.2d, v27.2d, v14.d[1]
+	add		x8, x8, x9
+	ldr		q27, [x8, #48] // E[6+4*6]
+	ins		v27.d[0], xzr
+	fmls	v9.2d, v27.2d, v9.d[0]
+	fmls	v11.2d, v27.2d, v11.d[0]
+	fmls	v13.2d, v27.2d, v13.d[0]
+	fmls	v15.2d, v27.2d, v15.d[0]
+//	sub		x8, x8, x9, lsl #2
+//	sub		x8, x8, x9, lsl #1
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trsm_lln_one_8x4_vs_libc)
 #endif
 
 
@@ -41554,9 +41810,9 @@
 	lsl		w9, w9, #3 // 8*ldc
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_TRSM_LLN_ONE_8X4_LIB
+	INNER_EDGE_TRSM_LLN_ONE_8X4_LIBC
 #else
-	CALL(inner_edge_trsm_lln_one_8x4_lib)
+	CALL(inner_edge_trsm_lln_one_8x4_libc)
 #endif
 
 
@@ -41686,11 +41942,12 @@
 	ldr		x8, [sp, #(STACKSIZE + 16)] // E
 	ldr		w9, [sp, #(STACKSIZE + 24)] // sde
 	lsl		w9, w9, #3 // 8*ldc
+	ldr		w10, [sp, #(STACKSIZE + 32)] // m1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_TRSM_LLN_ONE_8X4_LIB
+	INNER_EDGE_TRSM_LLN_ONE_8X4_VS_LIBC
 #else
-	CALL(inner_edge_trsm_lln_one_8x4_lib)
+	CALL(inner_edge_trsm_lln_one_8x4_vs_libc)
 #endif
 
 
