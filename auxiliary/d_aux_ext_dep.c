@@ -67,7 +67,7 @@
 #define PRINT_TO_FILE_MAT blasfeo_print_to_file_dmat
 #define PRINT_TO_FILE_EXP_MAT blasfeo_print_to_file_exp_dmat
 #define PRINT_TO_FILE_VEC blasfeo_print_to_file_dvec
-#define PRINT_TO_FILE_TRAN_VEC d_print_to_file_tran_dvec
+#define PRINT_TO_FILE_TRAN_VEC blasfeo_print_to_file_tran_dvec
 #define PRINT_TO_STRING_MAT blasfeo_print_to_string_dmat
 #define PRINT_TO_STRING_VEC blasfeo_print_to_string_dvec
 #define PRINT_TO_STRING_TRAN_VEC blasfeo_print_to_string_tran_dvec
