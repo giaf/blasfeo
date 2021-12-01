@@ -1158,6 +1158,19 @@ void blasfeo_svecex_sp(int m, float alpha, int *idx, struct blasfeo_svec *sx, in
 
 
 
+// z += alpha * x[idx]
+void blasfeo_svecadd_sp_in(int m, float alpha, int *idx, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[ii] += alpha * x[idx[ii]];
+	return;
+	}
+
+
+
 // clip strvec between two strvec
 void blasfeo_sveccl(int m, struct blasfeo_svec *sxm, int xim, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sxp, int xip, struct blasfeo_svec *sz, int zi)
 	{

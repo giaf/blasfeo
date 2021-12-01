@@ -4661,6 +4661,17 @@ void blasfeo_dvecex_sp(int m, double alpha, int *idx, struct blasfeo_dvec *sx, i
 	}
 
 
+// z += alpha * x[idx]
+void blasfeo_dvecexad_sp(int m, double alpha, int *idx, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+	{
+	double *x = sx->pa + xi;
+	double *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[ii] += alpha * x[idx[ii]];
+	return;
+	}
+
 
 // clip strvec between two strvec
 void blasfeo_dveccl(int m, struct blasfeo_dvec *sxm, int xim, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sxp, int xip, struct blasfeo_dvec *sz, int zi)

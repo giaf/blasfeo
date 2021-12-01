@@ -834,6 +834,17 @@ void REF_VECEX_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VE
 	}
 
 
+// z += alpha * x[idx]
+void REF_VECEXAD_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *sz, int zi)
+	{
+	REAL *x = sx->pa + xi;
+	REAL *z = sz->pa + zi;
+	int ii;
+	for(ii=0; ii<m; ii++)
+		z[ii] += alpha * x[idx[ii]];
+	return;
+	}
+
 // insert element into strvec
 void REF_VECIN1(REAL alpha, struct VEC *sx, int xi)
 	{
@@ -1737,6 +1748,12 @@ void VECIN_SP(int m, REAL alpha, struct VEC *sx, int xi, int *idx, struct VEC *s
 void VECEX_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *sz, int zi)
 	{
 	REF_VECEX_SP(m, alpha, idx, sx, xi, sz, zi);
+	}
+
+
+void VECEXAD_SP(int m, REAL alpha, int *idx, struct VEC *sx, int xi, struct VEC *sz, int zi)
+	{
+	REF_VECEXAD_SP(m, alpha, idx, sx, xi, sz, zi);
 	}
 
 
