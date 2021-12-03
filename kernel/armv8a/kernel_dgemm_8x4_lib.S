@@ -19459,7 +19459,7 @@
 	// unroll 0
 	ldp		q24, q25, [x9, #0]
 	ldr		q26, [x9, #32]
-	ldr		d27, [x9, #32]
+	ldr		d27, [x9, #48]
 	add		x9, x9, x10
 	ldr		d28, [x11], #8
 
