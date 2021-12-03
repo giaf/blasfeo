@@ -34917,6 +34917,7 @@
 // input arguments:
 // x8   <- E
 // x9   <- lde
+// w10  <- m1
 //
 // output arguments:
 
@@ -34926,6 +34927,8 @@
 	.align 4
 	FUN_START(inner_edge_trsm_lln_one_8x4_vs_libc)
 #endif
+
+	// TODO no need to check for sizes equal or smaller than 4 !!!!!!!
 
 	cmp		w10, #1
 	bgt		1f

@@ -16056,7 +16056,7 @@
 // input arguments:
 // x8   <- E
 // x9   <- lde
-// w10  <- n1
+// w10  <- m1
 //
 // output arguments:
 

@@ -5089,10 +5089,10 @@
 // output arguments:
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_DTRSM_LLN_ONE_4X4_LIB
+	.macro INNER_EDGE_DTRSM_LLN_ONE_4X4_LIBC
 #else
 	.p2align 4,,15
-	FUN_START(inner_edge_dtrsm_lln_one_4x4_lib)
+	FUN_START(inner_edge_dtrsm_lln_one_4x4_libc)
 #endif
 
 	vxorpd			%ymm14, %ymm14, %ymm14
@@ -5137,7 +5137,103 @@
 #else
 	ret
 
-	FUN_END(inner_edge_dtrsm_lln_one_4x4_lib)
+	FUN_END(inner_edge_dtrsm_lln_one_4x4_libc)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// triangular substitution:
+// side = left
+// uplo = lower
+// tran = not-transposed
+// unit diagonal
+//
+// input arguments:
+// r10  <- E
+// r11  <- lde
+// r12  <- m1
+// ymm0 <- [d00 d10 d20 d30]
+// ymm1 <- [d01 d11 d21 d31]
+// ymm2 <- [d02 d12 d22 d32]
+// ymm3 <- [d03 d13 d23 d33]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_DTRSM_LLN_ONE_4X4_VS_LIBC
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_dtrsm_lln_one_4x4_vs_libc)
+#endif
+
+	cmpl			$ 1, %r12d
+	jle				0f
+
+	vcvtsi2sd	%r12d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	vxorpd			%ymm14, %ymm14, %ymm14
+
+	vmaskmovpd		0(%r10), %ymm15, %ymm12
+	vblendpd		$ 0x1, %ymm14, %ymm12, %ymm12
+	vpermpd			$ 0x00, %ymm0, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
+	vpermpd			$ 0x00, %ymm1, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
+	vpermpd			$ 0x00, %ymm2, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
+	vpermpd			$ 0x00, %ymm3, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
+	add				%r11, %r10
+
+	cmpl			$ 2, %r12d
+	jle				0f
+
+	vmaskmovpd		0(%r10), %ymm15, %ymm12
+	vblendpd		$ 0x3, %ymm14, %ymm12, %ymm12
+	vpermpd			$ 0x55, %ymm0, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
+	vpermpd			$ 0x55, %ymm1, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
+	vpermpd			$ 0x55, %ymm2, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
+	vpermpd			$ 0x55, %ymm3, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
+	add				%r11, %r10
+
+	cmpl			$ 3, %r12d
+	jle				0f
+
+	vmaskmovpd		0(%r10), %ymm15, %ymm12
+	vblendpd		$ 0x7, %ymm14, %ymm12, %ymm12
+	vpermpd			$ 0xaa, %ymm0, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm0
+	vpermpd			$ 0xaa, %ymm1, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm1
+	vpermpd			$ 0xaa, %ymm2, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm2
+	vpermpd			$ 0xaa, %ymm3, %ymm13
+	vfnmadd231pd	%ymm12, %ymm13, %ymm3
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_dtrsm_lln_one_4x4_vs_libc)
 #endif
 
 
@@ -18046,9 +18142,9 @@
 	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRSM_LLN_ONE_4X4_LIB
+	INNER_EDGE_DTRSM_LLN_ONE_4X4_LIBC
 #else
-	CALL(inner_edge_dtrsm_lln_one_4x4_lib)
+	CALL(inner_edge_dtrsm_lln_one_4x4_libc)
 #endif
 
 
@@ -18169,11 +18265,12 @@
 	movq	ARG10, %r10  // E 
 	movq	ARG11, %r11 // lde
 	sall	$ 3, %r11d
+	movq	ARG12, %r12 // m1
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRSM_LLN_ONE_4X4_LIB
+	INNER_EDGE_DTRSM_LLN_ONE_4X4_VS_LIBC
 #else
-	CALL(inner_edge_dtrsm_lln_one_4x4_lib)
+	CALL(inner_edge_dtrsm_lln_one_4x4_vs_libc)
 #endif
 
 
