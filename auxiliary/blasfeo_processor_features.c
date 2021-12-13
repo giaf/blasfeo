@@ -33,8 +33,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include "../include/blasfeo_processor_features.h"
-#include "../include/blasfeo_target.h"
+#include <blasfeo_processor_features.h>
+#include <blasfeo_target.h>
 
 #if defined(TARGET_X64_INTEL_HASWELL) \
     || defined(TARGET_X64_INTEL_SANDY_BRIDGE) \
@@ -50,6 +50,19 @@
 #endif
 #endif
 #endif
+
+// x86-64 CPU features
+#define BLASFEO_PROCESSOR_FEATURE_AVX  0x0001    /// AVX instruction set
+#define BLASFEO_PROCESSOR_FEATURE_AVX2 0x0002    /// AVX2 instruction set
+#define BLASFEO_PROCESSOR_FEATURE_FMA  0x0004    /// FMA instruction set
+#define BLASFEO_PROCESSOR_FEATURE_SSE3 0x0008    /// SSE3 instruction set
+
+// ARM CPU features
+#define BLASFEO_PROCESSOR_FEATURE_VFPv3  0x0100  /// VFPv3 instruction set
+#define BLASFEO_PROCESSOR_FEATURE_NEON   0x0100  /// NEON instruction set
+#define BLASFEO_PROCESSOR_FEATURE_VFPv4  0x0100  /// VFPv4 instruction set
+#define BLASFEO_PROCESSOR_FEATURE_NEONv2 0x0100  /// NEONv2 instruction set
+
 
 
 void blasfeo_processor_feature_string( int features, char* featureString )
