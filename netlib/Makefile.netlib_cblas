@@ -78,7 +78,7 @@ DLEV1 += netlib/cblas/src/cblas_drotg.o
 DLEV1 += netlib/cblas/src/cblas_drotmg.o
 DLEV1 += netlib/cblas/src/cblas_drot.o
 DLEV1 += netlib/cblas/src/cblas_drotm.o
-DLEV1_DONE += netlib/cblas/src/cblas_dswap.o
+DLEV1 += netlib/cblas/src/cblas_dswap.o
 DLEV1 += netlib/cblas/src/cblas_dscal.o
 DLEV1_DONE += netlib/cblas/src/cblas_dcopy.o
 DLEV1_DONE += netlib/cblas/src/cblas_daxpy.o
@@ -338,7 +338,6 @@ BLASFEO_CBLAS_DEF += -DCblasRight=BlasfeoCblasRight
 BLASFEO_CBLAS_DEF += -Dcblas_saxpy=blasfeo_cblas_saxpy -Dsaxpy_=blasfeo_blas_saxpy
 # level 1 double
 BLASFEO_CBLAS_DEF += -Dcblas_daxpy=blasfeo_cblas_daxpy -Ddaxpy_=blasfeo_blas_daxpy
-BLASFEO_CBLAS_DEF += -Dcblas_dswap=blasfeo_cblas_dswap -Ddswap_=blasfeo_blas_dswap
 BLASFEO_CBLAS_DEF += -Dcblas_dcopy=blasfeo_cblas_dcopy -Ddcopy_=blasfeo_blas_dcopy
 # level 3 single
 BLASFEO_CBLAS_DEF += -Dcblas_sgemm=blasfeo_cblas_sgemm -Dsgemm_=blasfeo_blas_sgemm
