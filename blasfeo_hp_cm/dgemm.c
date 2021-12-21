@@ -2560,8 +2560,8 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #if defined(TARGET_GENERIC)
 	double pU[M_KERNEL*K_MAX_STACK];
 #else
-//	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
-	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 4096 );
+	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
+//	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 4096 );
 #endif
 	int sdu = (k+3)/4*4;
 	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
