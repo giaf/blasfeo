@@ -1013,7 +1013,7 @@ NAME:
 
 	subl	%eax, %r10d
 
-	salq	$ 3, %rax // *sizeof(double)
+	sall	$ 3, %eax // *sizeof(double)
 	addq	%rax, %r11
 	subq	$ 32, %r11
 	addq	%r12, %r11

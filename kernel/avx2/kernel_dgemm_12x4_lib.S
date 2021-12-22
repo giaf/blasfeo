@@ -31418,7 +31418,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	salq	$ 5, %r12 // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 
 	movq	ARG4, %r14  // A_p
@@ -31426,7 +31426,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	cmoveq	ARG13, %r14  // A_p
 
 	movq	ARG7, %r15 // sdb
-	salq	$ 5, %r15 // 4*sdb*sizeof(double)
+	sall	$ 5, %r15d // 4*sdb*sizeof(double)
 	addq	ARG6, %r15 // B_p
 	cmpq	$ 4, ARG1
 	cmoveq	ARG14, %r15  // B_p
@@ -31514,15 +31514,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG11
 
 
@@ -31627,15 +31627,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG11
 #endif
 
@@ -31709,7 +31709,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	salq	$ 5, %r12 // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 
 	movq	ARG4, %r14  // A_p
@@ -31717,7 +31717,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	cmoveq	ARG13, %r14  // A_p
 
 	movq	ARG7, %r15 // sdb
-	salq	$ 5, %r15 // 4*sdb*sizeof(double)
+	sall	$ 5, %r15d // 4*sdb*sizeof(double)
 	addq	ARG6, %r15 // B_p
 	cmpq	$ 4, ARG1
 	cmoveq	ARG14, %r15  // B_p
@@ -31805,15 +31805,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG11
 
 
@@ -31859,7 +31859,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	salq	$ 5, %r12 // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 
 //	movq	ARG4, %r14  // A_p
@@ -31868,7 +31868,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	mov		ARG13, %r14  // A_p
 
 //	movq	ARG7, %r15 // sdb
-//	salq	$ 5, %r15 // 4*sdb*sizeof(double)
+//	sall	$ 5, %r15d // 4*sdb*sizeof(double)
 //	addq	ARG6, %r15 // B_p
 //	cmpq	$ 4, ARG1
 //	cmoveq	ARG14, %r15  // B_p
@@ -31958,15 +31958,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG11
 #endif
 
@@ -32072,15 +32072,15 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG11
 #endif
 

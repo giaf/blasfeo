@@ -16196,7 +16196,7 @@
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	salq	$ 5, %r12 // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
 	movq	ARG6, %r13  // B
 
 	movq	ARG4, %r14  // A_p
@@ -16204,7 +16204,7 @@
 	cmoveq	ARG13, %r14  // A_p
 
 	movq	ARG7, %r15 // sdb
-	salq	$ 5, %r15 // 4*sdb*sizeof(double)
+	sall	$ 5, %r15d // 4*sdb*sizeof(double)
 	addq	ARG6, %r15 // B_p
 	cmpq	$ 4, ARG1
 	cmoveq	ARG14, %r15  // B_p
@@ -16292,15 +16292,15 @@
 	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG11
 
 
@@ -16405,15 +16405,15 @@
 	subq	$ 4, ARG1
 	// B
 	movq	ARG7, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG6
 	// C
 	movq	ARG10, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG9
 	// D
 	movq	ARG12, %r10
-	salq	$ 5, %r10
+	sall	$ 5, %r10d
 	addq	%r10, ARG11
 #endif
 
