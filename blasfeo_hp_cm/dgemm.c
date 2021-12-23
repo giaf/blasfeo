@@ -2558,13 +2558,17 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	const int ps = PS;
 
 #if defined(TARGET_GENERIC)
-	double pU[M_KERNEL*K_MAX_STACK];
+	double pU_stack[M_KERNEL*K_MAX_STACK];
 #else
-	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
-//	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 4096 );
+	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 64 );
+//	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 4096 );
 #endif
-	int sdu = (k+3)/4*4;
-	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
+	int sdu_stack = (k+3)/4*4;
+	sdu_stack = sdu_stack<K_MAX_STACK ? sdu_stack : K_MAX_STACK;
+
+	double *pU;
+	int sdu;
+	int pU_size;
 
 	struct blasfeo_pm_dmat tA, tB;
 	int sda, sdb;
@@ -2706,13 +2710,28 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 nn_m1:
 	
-	if(K_MAX_STACK<=0)
-		goto nn_2;
+//	if(K_MAX_STACK<=0)
+//		goto nn_2;
 
 	// k-blocking alg
 
-	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		pU_size = M_KERNEL*KC*sizeof(double);
+		blasfeo_malloc(&mem, pU_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		pU = (double *) mem_align;
+		sdu = KC;
+		}
+	else
+		{
+		pU = pU_stack;
+		sdu = sdu_stack;
+		}
+
+//	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
+	kc = KC;
 
 	if(k<kc)
 		{
@@ -2754,19 +2773,39 @@ nn_m1:
 
 		}
 
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		blasfeo_free(mem);
+		}
+
 	return;
 
 
 
 nn_n1:
 
-	if(K_MAX_STACK<=0)
-		goto nn_2;
+//	if(K_MAX_STACK<=0)
+//		goto nn_2;
 
 	// k-blocking alg
 
-	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		pU_size = M_KERNEL*KC*sizeof(double);
+		blasfeo_malloc(&mem, pU_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		pU = (double *) mem_align;
+		sdu = KC;
+		}
+	else
+		{
+		pU = pU_stack;
+		sdu = sdu_stack;
+		}
+
+//	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
+	kc = KC;
 
 	if(k<kc)
 		{
@@ -2786,6 +2825,11 @@ nn_n1:
 
 			blasfeo_hp_dgemm_nn_n1(m, n, kleft, alpha, A+ll*lda, lda, B+ll, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
 			}
+		}
+
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		blasfeo_free(mem);
 		}
 
 	return;
@@ -3623,12 +3667,16 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double *pA, *pB, *C1;
 
 #if defined(TARGET_GENERIC)
-	double pU[M_KERNEL*K_MAX_STACK];
+	double pU_stack[M_KERNEL*K_MAX_STACK];
 #else
-	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
+	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 64 );
 #endif
-	int sdu = (k+3)/4*4;
-	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
+	int sdu_stack = (k+3)/4*4;
+	sdu_stack = sdu_stack<K_MAX_STACK ? sdu_stack : K_MAX_STACK;
+
+	double *pU;
+	int sdu;
+	int pU_size;
 
 	struct blasfeo_pm_dmat tA, tB;
 	int sda, sdb;
@@ -3761,13 +3809,28 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 nt_m1:
 
-	if(K_MAX_STACK<=0)
-		goto nt_2;
+//	if(K_MAX_STACK<=0)
+//		goto nt_2;
 
 	// k-blocking alg
 
-	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		pU_size = M_KERNEL*KC*sizeof(double);
+		blasfeo_malloc(&mem, pU_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		pU = (double *) mem_align;
+		sdu = KC;
+		}
+	else
+		{
+		pU = pU_stack;
+		sdu = sdu_stack;
+		}
+
+//	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
+	kc = KC;
 
 	if(k<kc)
 		{
@@ -3789,19 +3852,39 @@ nt_m1:
 			}
 		}
 
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		blasfeo_free(mem);
+		}
+
 	return;
 
 
 
 nt_n1:
 
-	if(K_MAX_STACK<=0)
-		goto nt_2;
+//	if(K_MAX_STACK<=0)
+//		goto nt_2;
 
 	// k-blocking alg
 
-	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		pU_size = M_KERNEL*KC*sizeof(double);
+		blasfeo_malloc(&mem, pU_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		pU = (double *) mem_align;
+		sdu = KC;
+		}
+	else
+		{
+		pU = pU_stack;
+		sdu = sdu_stack;
+		}
+
+//	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
+	kc = KC;
 
 	if(k<kc)
 		{
@@ -3821,6 +3904,11 @@ nt_n1:
 
 			blasfeo_hp_dgemm_nt_n1(m, n, kleft, alpha, A+ll*lda, lda, B+ll*ldb, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
 			}
+		}
+
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		blasfeo_free(mem);
 		}
 
 	return;
@@ -4294,12 +4382,16 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double *pA, *pB, *C1;
 
 #if defined(TARGET_GENERIC)
-	double pU[M_KERNEL*K_MAX_STACK];
+	double pU_stack[M_KERNEL*K_MAX_STACK];
 #else
-	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
+	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 64 );
 #endif
-	int sdu = (k+3)/4*4;
-	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
+	int sdu_stack = (k+3)/4*4;
+	sdu_stack = sdu_stack<K_MAX_STACK ? sdu_stack : K_MAX_STACK;
+
+	double *pU;
+	int sdu;
+	int pU_size;
 
 	struct blasfeo_pm_dmat tA, tB;
 	int sda, sdb;
@@ -4398,13 +4490,28 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 tn_m1:
 
-	if(K_MAX_STACK<=0)
-		goto tn_2;
+//	if(K_MAX_STACK<=0)
+//		goto tn_2;
 
 	// k-blocking alg
 
-	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		pU_size = M_KERNEL*KC*sizeof(double);
+		blasfeo_malloc(&mem, pU_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		pU = (double *) mem_align;
+		sdu = KC;
+		}
+	else
+		{
+		pU = pU_stack;
+		sdu = sdu_stack;
+		}
+
+//	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
+	kc = KC;
 
 	if(k<kc)
 		{
@@ -4427,19 +4534,40 @@ tn_m1:
 
 		}
 
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		blasfeo_free(mem);
+		}
+
 	return;
 
 
 
 tn_n1:
 
-	if(K_MAX_STACK<=0)
-		goto tn_2;
+//	if(K_MAX_STACK<=0)
+//		goto tn_2;
 
 	// k-blocking alg
 
-	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+//	if(k>KC)
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		pU_size = M_KERNEL*KC*sizeof(double);
+		blasfeo_malloc(&mem, pU_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		pU = (double *) mem_align;
+		sdu = KC;
+		}
+	else
+		{
+		pU = pU_stack;
+		sdu = sdu_stack;
+		}
+
+//	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
+	kc = KC;
 
 	if(k<kc)
 		{
@@ -4459,6 +4587,12 @@ tn_n1:
 
 			blasfeo_hp_dgemm_tn_n1(m, n, kleft, alpha, A+ll, lda, B+ll, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
 			}
+		}
+
+//	if(k>KC)
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		blasfeo_free(mem);
 		}
 
 	return;
@@ -4835,12 +4969,16 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double *pA, *pB, *C1;
 
 #if defined(TARGET_GENERIC)
-	double pU[M_KERNEL*K_MAX_STACK];
+	double pU_stack[M_KERNEL*K_MAX_STACK];
 #else
-	ALIGNED( double pU[M_KERNEL*K_MAX_STACK], 64 );
+	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 64 );
 #endif
-	int sdu = (k+3)/4*4;
-	sdu = sdu<K_MAX_STACK ? sdu : K_MAX_STACK;
+	int sdu_stack = (k+3)/4*4;
+	sdu_stack = sdu_stack<K_MAX_STACK ? sdu_stack : K_MAX_STACK;
+
+	double *pU;
+	int sdu;
+	int pU_size;
 
 	struct blasfeo_pm_dmat tA, tB;
 	int sda, sdb;
@@ -4973,13 +5111,28 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 tt_m1:
 
-	if(K_MAX_STACK<=0)
-		goto tt_2;
+//	if(K_MAX_STACK<=0)
+//		goto tt_2;
 
 	// k-blocking alg
 
-	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		pU_size = M_KERNEL*KC*sizeof(double);
+		blasfeo_malloc(&mem, pU_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		pU = (double *) mem_align;
+		sdu = KC;
+		}
+	else
+		{
+		pU = pU_stack;
+		sdu = sdu_stack;
+		}
+
+//	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
+	kc = KC;
 
 	if(k<kc)
 		{
@@ -5001,19 +5154,39 @@ tt_m1:
 			}
 		}
 
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		blasfeo_free(mem);
+		}
+
 	return;
 
 
 
 tt_n1:
 
-	if(K_MAX_STACK<=0)
-		goto tt_2;
+//	if(K_MAX_STACK<=0)
+//		goto tt_2;
 
 	// k-blocking alg
 
-	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		pU_size = M_KERNEL*KC*sizeof(double);
+		blasfeo_malloc(&mem, pU_size+64);
+		blasfeo_align_64_byte(mem, (void **) &mem_align);
+		pU = (double *) mem_align;
+		sdu = KC;
+		}
+	else
+		{
+		pU = pU_stack;
+		sdu = sdu_stack;
+		}
+
+//	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
+	kc = KC;
 
 	if(k<kc)
 		{
@@ -5033,6 +5206,11 @@ tt_n1:
 
 			blasfeo_hp_dgemm_tt_n1(m, n, kleft, alpha, A+ll, lda, B+ll*ldb, ldb, beta1, C1, ldc1, D, ldd, pU, sdu);
 			}
+		}
+
+	if(k>K_MAX_STACK && KC>K_MAX_STACK)
+		{
+		blasfeo_free(mem);
 		}
 
 	return;
