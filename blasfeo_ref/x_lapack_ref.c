@@ -2079,7 +2079,9 @@ void REF_GELQF(int m, int n, struct XMAT *sA, int ai, int aj, struct XMAT *sD, i
 // generate Q matrix
 int REF_ORGLQ_WORK_SIZE(int m, int n, int k)
 	{
+#if defined(EXT_DEP)
 	printf("\nblasfeo_orglq_worksize: feature not implemented yet\n");
+#endif
 	exit(1);
 	return 0;
 	}
@@ -2093,7 +2095,9 @@ void REF_ORGLQ(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct XMAT
 	{
 	if(m<=0 | n<=0)
 		return;
+#if defined(EXT_DEP)
 	printf("\nblasfeo_orglq: feature not implemented yet\n");
+#endif
 	exit(1);
 	}
 #endif

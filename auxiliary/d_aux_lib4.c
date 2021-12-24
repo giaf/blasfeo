@@ -1464,7 +1464,9 @@ void dcolsw_lib(int kmax, int offsetA, double *pA, int sda, int offsetC, double 
 		}
 	else
 		{
+#if defined(EXT_DEP)
 		printf("\ndcolsw: feature not implemented yet: offsetA!=offsetC\n\n");
+#endif
 		exit(1);
 		}
 

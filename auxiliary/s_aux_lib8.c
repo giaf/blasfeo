@@ -820,7 +820,9 @@ void scolsw_lib(int kmax, int offsetA, float *pA, int sda, int offsetC, float *p
 		}
 	else
 		{
+#if defined(EXT_DEP)
 		printf("\nscolsw: feature not implemented yet: offsetA!=offsetC\n\n");
+#endif
 		exit(1);
 		}
 
