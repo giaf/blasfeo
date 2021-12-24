@@ -79,7 +79,7 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int offsetD;
 	if(ci0>=0)
 		{
-		pC += ci0/ps*ps*sdd;
+		pC += ci0/ps*ps*sdc;
 		offsetC = ci0%ps;
 		}
 	else
@@ -302,7 +302,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int offsetD;
 	if(ci0>=0)
 		{
-		pC += ci0/ps*ps*sdd;
+		pC += ci0/ps*ps*sdc;
 		offsetC = ci0%ps;
 		}
 	else
@@ -983,7 +983,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	int offsetD;
 	if(ci0>=0)
 		{
-		pC += ci0/ps*ps*sdd;
+		pC += ci0/ps*ps*sdc;
 		offsetC = ci0%ps;
 		}
 	else
@@ -1793,7 +1793,7 @@ void blasfeo_hp_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 	int offsetD;
 	if(ci0>=0)
 		{
-		pC += ci0/ps*ps*sdd;
+		pC += ci0/ps*ps*sdc;
 		offsetC = ci0%ps;
 		}
 	else

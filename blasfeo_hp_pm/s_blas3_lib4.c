@@ -74,7 +74,7 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 	int offsetD;
 	if(ci0>=0)
 		{
-		pC += ci0/ps*ps*sdd;
+		pC += ci0/ps*ps*sdc;
 		offsetC = ci0%ps;
 		}
 	else
@@ -485,7 +485,7 @@ void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *
 	int offsetD;
 	if(ci0>=0)
 		{
-		pC += ci0/ps*ps*sdd;
+		pC += ci0/ps*ps*sdc;
 		offsetC = ci0%ps;
 		}
 	else
@@ -1592,7 +1592,7 @@ void blasfeo_hp_ssyrk_ln(int m, int k, float alpha, struct blasfeo_smat *sA, int
 	int offsetD;
 	if(ci0>=0)
 		{
-		pC += ci0/ps*ps*sdd;
+		pC += ci0/ps*ps*sdc;
 		offsetC = ci0%ps;
 		}
 	else
