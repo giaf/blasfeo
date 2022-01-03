@@ -91,7 +91,7 @@
 
 
 
-static void blasfeo_hp_dgemm_nt_m2(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
+void blasfeo_hp_dgemm_nt_m2(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	int ii, jj;
