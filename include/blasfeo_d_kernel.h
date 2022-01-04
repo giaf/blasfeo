@@ -1245,6 +1245,11 @@ void kernel_dveccp_inc1(int kmax, double *x, double *y);
 
 
 
+// building blocks for blocked algorithms
+//
+void blasfeo_hp_dgemm_nt_m2(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd);
+
+
 
 #ifdef __cplusplus
 }
