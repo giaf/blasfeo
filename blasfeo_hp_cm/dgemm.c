@@ -78,6 +78,10 @@
 #endif
 
 
+#ifdef HP_BLAS // i.e. when compiled from blas_api/dgemm_ref.c
+#define blasfeo_hp_dgemm_nt_m2 blasfeo_hp_cm_dgemm_nt_m2
+#endif
+
 
 #define CACHE_LINE_EL D_CACHE_LINE_EL
 #define L1_CACHE_EL D_L1_CACHE_EL
