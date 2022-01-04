@@ -4679,7 +4679,7 @@ tn_2:
 
 			mleft = m-ii<mc ? m-ii : mc;
 
-			// pack A
+			// pack and tran A
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 			for(iii=0; iii<mleft-7; iii+=8)
 				{
