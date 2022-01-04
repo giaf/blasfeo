@@ -236,7 +236,11 @@ void blasfeo_hp_dsyrk3_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	double beta1;
 	double *pA, *pB, *C1;
 
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	const int ps = 4; // XXX TODO fix once implemented missing kernels !!!
+#else
 	const int ps = PS;
+#endif
 
 #if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
@@ -412,7 +416,7 @@ ln_1_return:
 
 
 ln_2:
-#if 1
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
 	// cache blocking alg
 
