@@ -907,7 +907,7 @@ void blasfeo_hp_dsyrk3_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if(m<32 & k<32)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if(m<6 & k<6)
+	if(m<16 & k<16)
 #else
 	if(m<12 & k<12)
 #endif
@@ -1274,7 +1274,7 @@ void blasfeo_hp_dsyrk3_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if(m<32 & k<32)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if(m<6 & k<6)
+	if(m<16 & k<16)
 #else
 	if(m<12 & k<12)
 #endif
@@ -1348,7 +1348,7 @@ lt_1:
 			C1 = ll==0 ? C : D;
 			ldc1 = ll==0 ? ldc : ldd;
 
-			blasfeo_hp_dsyrk3_lt_m1(m, kleft, alpha, A+ll*lda, lda, beta1, C1, ldc1, D, ldd, pU, sdu);
+			blasfeo_hp_dsyrk3_lt_m1(m, kleft, alpha, A+ll, lda, beta1, C1, ldc1, D, ldd, pU, sdu);
 			}
 
 		}
@@ -1659,7 +1659,7 @@ void blasfeo_hp_dsyrk3_un(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if(m<32 & k<32)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if(m<6 & k<6)
+	if(m<16 & k<16)
 #else
 	if(m<12 & k<12)
 #endif
@@ -2024,7 +2024,7 @@ void blasfeo_hp_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	if(m<32 & k<32)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if(m<6 & k<6)
+	if(m<16 & k<16)
 #else
 	if(m<12 & k<12)
 #endif
@@ -2093,7 +2093,7 @@ ut_1:
 			C1 = ll==0 ? C : D;
 			ldc1 = ll==0 ? ldc : ldd;
 
-			blasfeo_hp_dsyrk3_ut_m1(m, kleft, alpha, A+ll*lda, lda, beta1, C1, ldc1, D, ldd, pU, sdu);
+			blasfeo_hp_dsyrk3_ut_m1(m, kleft, alpha, A+ll, lda, beta1, C1, ldc1, D, ldd, pU, sdu);
 			}
 
 		}
