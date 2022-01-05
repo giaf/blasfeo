@@ -892,7 +892,7 @@ void blasfeo_hp_dsyrk3_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 	int m_a = m==lda ? m : m_cache;
 //	int n_b = n==ldb ? n : n_cache;
-    int n_b = m_a; // syrk: B=A
+	int n_b = m_a; // syrk: B=A
 	int k_block = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 	k_block = k<=k_block ? k : k_block; // m1 and n1 alg are blocked !!!
 
@@ -901,7 +901,7 @@ void blasfeo_hp_dsyrk3_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 //	goto ln_2;
 #if defined(TARGET_X64_INTEL_HASWELL)
 //	if(m<200 & k<200)
-    if( m<=2*m_kernel | n_b*k_block <= l2_cache_el )
+	if( m<=2*m_kernel | n_b*k_block <= l2_cache_el )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m<64 & k<64)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
@@ -912,10 +912,12 @@ void blasfeo_hp_dsyrk3_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	if(m<12 & k<12)
 #endif
 		{
+//		printf("\nalg 1 %d\n", m);
 		goto ln_1;
 		}
 	else
 		{
+//		printf("\nalg 2 %d\n", m);
 		goto ln_2;
 		}
 
@@ -1245,6 +1247,9 @@ void blasfeo_hp_dsyrk3_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	const int llc_cache_el = LLC_CACHE_EL;
+#endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
 
 	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
@@ -1254,27 +1259,31 @@ void blasfeo_hp_dsyrk3_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	int m_min = m_cache<m_kernel_cache ? m_cache : m_kernel_cache;
 //	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
 
+	int k_a = k==lda ? k : k_cache;
+	int m_c = m==ldc ? m : m_cache;
+	int m_d = m==ldd ? m : m_cache;
 
 
 //	goto lt_1;
 //	goto lt_2;
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>300 | k>300)
+//	if(m<=300 & k<=300)
+	if( m<=2*m_kernel | (2*k_a*m + m_c*m + m_d*m <= llc_cache_el) )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | k>=64)
-#elif  defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	if(m>=32 | k>=32)
-#elif  defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if(m>16 | k>16)
+	if(m<64 & k<64)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	if(m<32 & k<32)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	if(m<6 & k<6)
 #else
-	if(m>=12 | k>=12)
+	if(m<12 & k<12)
 #endif
 		{
-		goto lt_2;
+		goto lt_1;
 		}
 	else
 		{
-		goto lt_1;
+		goto lt_2;
 		}
 
 	// never to get here
@@ -1621,6 +1630,9 @@ void blasfeo_hp_dsyrk3_un(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	const int l2_cache_el = L2_CACHE_EL;
+#endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
 
 	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
@@ -1630,27 +1642,33 @@ void blasfeo_hp_dsyrk3_un(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	int m_min = m_cache<m_kernel_cache ? m_cache : m_kernel_cache;
 //	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
 
+	int m_a = m==lda ? m : m_cache;
+//	int n_b = n==ldb ? n : n_cache;
+	int n_b = m_a; // syrk: B=A
+	int k_block = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	k_block = k<=k_block ? k : k_block; // m1 and n1 alg are blocked !!!
 
 
 //	goto un_1;
 //	goto un_2;
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=200 | k>=200)
+//	if(m<200 & k<200)
+	if( m<=2*m_kernel | n_b*k_block <= l2_cache_el )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | k>=64)
+	if(m<64 & k<64)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	if(m>=32 | k>=32)
+	if(m<32 & k<32)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if(m>16 | k>16)
+	if(m<6 & k<6)
 #else
-	if(m>=12 | k>=12)
+	if(m<12 & k<12)
 #endif
 		{
-		goto un_2;
+		goto un_1;
 		}
 	else
 		{
-		goto un_1;
+		goto un_2;
 		}
 
 	// never to get here
@@ -1975,6 +1993,9 @@ void blasfeo_hp_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	void *mem;
 	char *mem_align;
 	int m1, n1, k1;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	const int llc_cache_el = LLC_CACHE_EL;
+#endif
 	int pack_B;
 
 	const int m_kernel = M_KERNEL;
@@ -1988,27 +2009,31 @@ void blasfeo_hp_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	int m_min = m_cache<m_kernel_cache ? m_cache : m_kernel_cache;
 //	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
 
+	int k_a = k==lda ? k : k_cache;
+	int m_c = m==ldc ? m : m_cache;
+	int m_d = m==ldd ? m : m_cache;
 
 
 //	goto ut_1;
 //	goto ut_2;
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>300 | k>300)
+//	if(m<=300 & k<=300)
+	if( m<=2*m_kernel | (2*k_a*m + m_c*m + m_d*m <= llc_cache_el) )
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | k>=64)
+	if(m<64 & k<64)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	if(m>=32 | k>=32)
+	if(m<32 & k<32)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if(m>16 | k>16)
+	if(m<6 & k<6)
 #else
-	if(m>=12 | k>=12)
+	if(m<12 & k<12)
 #endif
 		{
-		goto ut_2;
+		goto ut_1;
 		}
 	else
 		{
-		goto ut_1;
+		goto ut_2;
 		}
 
 ut_1:
