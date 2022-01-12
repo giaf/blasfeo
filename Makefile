@@ -774,7 +774,27 @@ ifeq ($(MF), PANELMAJ)
 OBJS += $(REF_BLAS_OBJS)
 endif
 
-endif
+ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
+include $(CURRENT_DIR)/netlib/Makefile.netlib_blas
+OBJS += $(NETLIB_BLAS_OBJS)
+endif # COMPLEMENT_WITH_NETLIB_BLAS
+
+ifeq ($(COMPLEMENT_WITH_NETLIB_LAPACK), 1)
+include $(CURRENT_DIR)/netlib/Makefile.netlib_lapack
+OBJS += $(NETLIB_LAPACK_OBJS)
+endif # COMPLEMENT_WITH_NETLIB_LAPACK
+
+ifeq ($(CBLAS_API), 1)
+include $(CURRENT_DIR)/netlib/Makefile.netlib_cblas
+OBJS += $(NETLIB_CBLAS_OBJS)
+endif # CBLAS_API
+
+ifeq ($(LAPACKE_API), 1)
+include $(CURRENT_DIR)/netlib/Makefile.netlib_lapacke
+OBJS += $(NETLIB_LAPACKE_OBJS)
+endif # LAPACKE_API
+
+endif # BLAS_API
 
 endif # LA REFERENCE
 
