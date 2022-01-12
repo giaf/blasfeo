@@ -41,6 +41,7 @@
 #include <blasfeo_common.h>
 #include <blasfeo_d_aux.h>
 #include <blasfeo_d_kernel.h>
+#include <blasfeo_memory.h>
 
 
 
@@ -82,24 +83,15 @@
 
 
 
-// TODO move to a header file to reuse across routines
-#define EL_SIZE 8 // double precision
-
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-#define M_KERNEL 12 // max kernel: 12x4
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-#define M_KERNEL 8 // max kernel: 8x4
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes
-
-#else // assume generic target
-#define M_KERNEL 4 // max kernel: 4x4
-#define L1_CACHE_EL (32*1024/EL_SIZE) // L1 data cache size: 32 kB
-#define CACHE_LINE_EL (64/EL_SIZE) // data cache size: 64 bytes // TODO 32-bytes for cortex A9
-#endif
+#define CACHE_LINE_EL D_CACHE_LINE_EL
+#define L1_CACHE_EL D_L1_CACHE_EL
+#define L2_CACHE_EL D_L2_CACHE_EL
+#define LLC_CACHE_EL D_LLC_CACHE_EL
+#define PS D_PS
+#define M_KERNEL D_M_KERNEL
+#define KC D_KC
+#define NC D_NC
+#define MC D_MC
 
 
 
@@ -126,12 +118,6 @@ void blasfeo_hp_dtrmm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ii, jj;
 
 	const int ps = 4; //D_PS;
-
-#if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
 
 #if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
@@ -478,12 +464,6 @@ void blasfeo_hp_dtrmm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	const int ps = 4; //D_PS;
 
 #if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
-
-#if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU0[M_KERNEL*K_MAX_STACK], 64 );
@@ -826,12 +806,6 @@ void blasfeo_hp_dtrmm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ii, jj;
 
 	const int ps = 4; //D_PS;
-
-#if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
 
 #if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
@@ -1178,12 +1152,6 @@ void blasfeo_hp_dtrmm_lltu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	const int ps = 4; //D_PS;
 
 #if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
-
-#if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU0[M_KERNEL*K_MAX_STACK], 64 );
@@ -1524,12 +1492,6 @@ void blasfeo_hp_dtrmm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ii, jj;
 
 	const int ps = 4; //D_PS;
-
-#if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
 
 #if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
@@ -1875,12 +1837,6 @@ void blasfeo_hp_dtrmm_lunu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	const int ps = 4; //D_PS;
 
 #if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
-
-#if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU0[M_KERNEL*K_MAX_STACK], 64 );
@@ -2222,12 +2178,6 @@ void blasfeo_hp_dtrmm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ii, jj;
 
 	const int ps = 4; //D_PS;
-
-#if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
 
 #if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
@@ -2572,12 +2522,6 @@ void blasfeo_hp_dtrmm_lutu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	const int ps = 4; //D_PS;
 
 #if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
-
-#if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU0[M_KERNEL*K_MAX_STACK], 64 );
@@ -2920,12 +2864,6 @@ void blasfeo_hp_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	const int ps = 4; //D_PS;
 
 #if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
-
-#if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU0[M_KERNEL*K_MAX_STACK], 64 );
@@ -3257,12 +3195,6 @@ void blasfeo_hp_dtrmm_rlnu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	const int ps = 4; //D_PS;
 
 #if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
-
-#if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU0[M_KERNEL*K_MAX_STACK], 64 );
@@ -3592,12 +3524,6 @@ void blasfeo_hp_dtrmm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ii, jj;
 
 	const int ps = 4; //D_PS;
-
-#if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
 
 #if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
@@ -3937,12 +3863,6 @@ void blasfeo_hp_dtrmm_rltu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ii, jj;
 
 	const int ps = 4; //D_PS;
-
-#if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
 
 #if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
@@ -4285,12 +4205,6 @@ void blasfeo_hp_dtrmm_runn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	const int ps = 4; //D_PS;
 
 #if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
-
-#if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU0[M_KERNEL*K_MAX_STACK], 64 );
@@ -4622,12 +4536,6 @@ void blasfeo_hp_dtrmm_runu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	const int ps = 4; //D_PS;
 
 #if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
-
-#if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
 #else
 	ALIGNED( double pU0[M_KERNEL*K_MAX_STACK], 64 );
@@ -4957,12 +4865,6 @@ void blasfeo_hp_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ii, jj;
 
 	const int ps = 4; //D_PS;
-
-#if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
 
 #if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
@@ -5306,12 +5208,6 @@ void blasfeo_hp_dtrmm_rutu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ii, jj;
 
 	const int ps = 4; //D_PS;
-
-#if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
-#else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
 
 #if defined(TARGET_GENERIC)
 	double pU0[M_KERNEL*K_MAX_STACK];
