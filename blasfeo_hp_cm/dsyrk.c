@@ -42,10 +42,9 @@
 #include <blasfeo_stdlib.h>
 #include <blasfeo_d_aux.h>
 #include <blasfeo_d_kernel.h>
+#include <blasfeo_memory.h>
 
 #include <blasfeo_timing.h>
-
-#include <blasfeo_memory.h>
 
 
 
@@ -1161,10 +1160,7 @@ ln_2:
 	pU = tA.pA;
 	sdu = tA.cn;
 
-//	if(ta=='n' | ta=='N')
-//		blasfeo_pack_dmat(m, k, A, lda, &tA, 0, 0);
-//	else
-//		blasfeo_pack_tran_dmat(k, m, A, lda, &tA, 0, 0);
+	// pack A
 	for(ii=0; ii<k-3; ii+=4)
 		{
 		kernel_dpack_tt_4_lib4(m, A+ii*lda, lda, pU+ii*ps, sdu);
