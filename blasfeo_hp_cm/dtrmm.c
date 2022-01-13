@@ -295,7 +295,7 @@ void blasfeo_hp_dtrmm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	double d_1 = 1.0;
 
 
-	goto llnn_2;
+//	goto llnn_2;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m<200 & n<200 & k0<=K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -441,9 +441,10 @@ llnn_2:
 	nc0 = NC;
 	kc0 = KC;
 
-//	mc0 = 12;
-//	nc0 = 8;
-//	kc0 = 8;
+	// these must all be multiple of ps !!!
+//	mc0 = 4;
+//	nc0 = 4;
+//	kc0 = 4;
 
 //	mc = m<mc0 ? m : mc0;
 	mc = n<mc0 ? n : mc0;
@@ -533,7 +534,7 @@ llnn_2:
 					}
 #endif
 
-//				blasfeo_hp_dgemm_nt_m2(kleft, nleft, kleft, alpha, pA, sda, pB, sdb, d_0, NULL, 0, D+ii0+ll0+jj*ldd, ldd);
+//				blasfeo_hp_dgemm_nt_m2(mleft-ll0, nleft, kleft, alpha, pA, sda, pB, sdb, d_0, NULL, 0, D+ii0+ll0+jj*ldd, ldd);
 				blasfeo_hp_dtrmm_llnn_m2(kleft, nleft, alpha, pA, sda, pB, sdb, D+ii0+ll0+jj*ldd, ldd);
 				blasfeo_hp_dgemm_nt_m2(mleft-ll0-kleft, nleft, kleft, alpha, pA+kleft*sda, sda, pB, sdb, d_1, D+ii0+ll0+kleft+jj*ldd, ldd, D+ii0+ll0+kleft+jj*ldd, ldd);
 //				printf("\nresult\n");
@@ -593,96 +594,6 @@ llnn_2:
 
 				}
 
-			}
-
-#if 0
-		sda = (mleft+4-1)/4*4; // XXX
-
-		printf("\n%d %d\n", mleft, ii0);
-
-		// triangle
-		// pack A
-#if defined(TARGET_X64_INTEL_SKYLAKE_X)
-		// TODO
-#else
-		for(iii=0; iii<mleft-3; iii+=4)
-			{
-			d_print_mat(mleft-iii, 4, A+ii0+iii+(ii0+iii)*lda, lda);
-			kernel_dpack_tt_4_lib4(mleft-iii, A+ii0+iii+(ii0+iii)*lda, lda, pA+iii*sda+iii*ps, sda);
-			d_print_mat(4, 4, pA+iii*sda+iii*ps, sda);
-			break;
-			}
-		if(iii<kleft)
-			{
-//			kernel_dpack_tt_4_vs_lib4(mleft-iii, A+ii0+iii+(ii0+iii)*lda, lda, pA+iii*sda+iii*ps, sda, kleft-iii);
-			}
-#endif
-		blasfeo_pm_print_dmat(mleft, mleft, &tA, 0, 0);
-#endif
-
-//		for(ll=0; ll<k; ll+=kleft)
-		for(ll=0; ll<m; ll+=kleft)
-			{
-
-//			kleft = k-ll<kc ? k-ll : kc;
-			kleft = m-ll<kc ? m-ll : kc;
-
-#if 0
-			sda = (kleft+4-1)/4*4;
-			sdb = (kleft+4-1)/4*4;
-
-//			ll0 = m-ll-kc;
-//			ll0 = ll0>=0 ? ll0 : 0;
-			ll0 = m-ll-kleft;
-
-//			printf("\n%d %d %d %d %d %d\n", ii, ll, ll0, mleft, kleft, sda);
-
-			// pack A
-#if defined(TARGET_X64_INTEL_SKYLAKE_X)
-			// TODO
-#else
-			for(iii=0; iii<kleft-3; iii+=4)
-				{
-				kernel_dpack_tt_4_lib4(mleft, A+ii0+(ll0+iii)*lda, lda, pA+iii*ps, sda);
-				}
-			if(iii<kleft)
-				{
-				kernel_dpack_tt_4_vs_lib4(mleft, A+ii0+(ll0+iii)*lda, lda, pA+iii*ps, sda, kleft-iii);
-				}
-#endif
-			blasfeo_pm_print_dmat(mleft, kleft, &tA, 0, 0);
-#endif
-
-#if 0
-//			for(jj=0; jj<n; jj+=nleft)
-			for(jj=ll; jj<m; jj+=nleft)
-				{
-
-//				nleft = n-jj<nc ? n-jj : nc;
-				nleft = m-jj<nc ? m-jj : nc;
-
-				// pack A into pB
-				// lower to lower
-				for(iii=0; iii<kleft-3; iii+=4)
-					{
-//					kernel_dpack_tt_4_lib4(nleft-iii, A+iii+iii*lda, lda, pB+iii*ps+iii*sdb, sdb);
-					kernel_dpack_tt_4_lib4(nleft, A+jj+(ll+iii)*lda, lda, pB+iii*ps, sdb);
-					}
-				if(iii<kleft)
-					{
-//					kernel_dpack_tt_4_vs_lib4(nleft-iii, A+iii+iii*lda, lda, pB+iii*ps+iii*sdb, sdb, kleft-iii);
-					kernel_dpack_tt_4_vs_lib4(nleft, A+jj+(ll+iii)*lda, lda, pB+iii*ps, sdb, kleft-iii);
-					}
-
-				printf("\ndgemm nt\n");
-				blasfeo_pm_print_dmat(mleft, kleft, &tA, 0, 0);
-				blasfeo_pm_print_dmat(nleft, kleft, &tB, 0, 0);
-
-				blasfeo_hp_dgemm_nt_m2(mleft, nleft, kleft, alpha, pA, sda, pB, sdb, d_1, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd);
-
-				}
-
-#endif
 			}
 
 		}
