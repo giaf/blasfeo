@@ -96,7 +96,7 @@
 
 
 
-// TODO rename to the proper 'right' version rltn ???
+// XXX the B matrix is passed transposed !!!
 static void blasfeo_hp_dtrmm_llnn_m2(int m, int n, double alpha, double *pA0, int sda0, double *pB0_t, int sdb0_t, double *D, int ldd)
 	{
 
@@ -233,7 +233,7 @@ void blasfeo_hp_dtrmm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -668,7 +668,7 @@ void blasfeo_hp_dtrmm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -719,11 +719,11 @@ void blasfeo_hp_dtrmm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=200 | n>=200 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | n>K_MAX_STACK)
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | n>K_MAX_STACK)
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		goto llnu_2;
@@ -1012,7 +1012,7 @@ void blasfeo_hp_dtrmm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -1064,11 +1064,11 @@ void blasfeo_hp_dtrmm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 //goto lltn_1;
 //goto lunn_2;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if(m>=300 | n>=300 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | n>K_MAX_STACK)
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | n>K_MAX_STACK)
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		goto lunn_2;
@@ -1356,7 +1356,7 @@ void blasfeo_hp_dtrmm_lltu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -1406,11 +1406,11 @@ void blasfeo_hp_dtrmm_lltu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=300 | n>=300 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | n>K_MAX_STACK)
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | n>K_MAX_STACK)
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		goto lunu_2;
@@ -1698,7 +1698,7 @@ void blasfeo_hp_dtrmm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -1748,11 +1748,11 @@ void blasfeo_hp_dtrmm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=200 | n>=200 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | n>K_MAX_STACK)
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | n>K_MAX_STACK)
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		goto lunn_2;
@@ -2041,7 +2041,7 @@ void blasfeo_hp_dtrmm_lunu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -2091,11 +2091,11 @@ void blasfeo_hp_dtrmm_lunu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=200 | n>=200 | n>K_MAX_STACK)
+	if(m>=200 | n>=200 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | n>K_MAX_STACK)
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | n>K_MAX_STACK)
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		goto lunu_2;
@@ -2384,7 +2384,7 @@ void blasfeo_hp_dtrmm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -2434,11 +2434,11 @@ void blasfeo_hp_dtrmm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=300 | n>=300 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | n>K_MAX_STACK)
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | n>K_MAX_STACK)
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		goto llnn_2;
@@ -2726,7 +2726,7 @@ void blasfeo_hp_dtrmm_lutu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -2776,11 +2776,11 @@ void blasfeo_hp_dtrmm_lutu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-	if(m>=300 | n>=300 | n>K_MAX_STACK)
+	if(m>=300 | n>=300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | n>K_MAX_STACK)
+	if(m>=64 | n>=64 | m>K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | n>K_MAX_STACK)
+	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
 		goto llnu_2;
@@ -3068,7 +3068,7 @@ void blasfeo_hp_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -3399,7 +3399,7 @@ void blasfeo_hp_dtrmm_rlnu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -3730,7 +3730,7 @@ void blasfeo_hp_dtrmm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -4069,7 +4069,7 @@ void blasfeo_hp_dtrmm_rltu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -4409,7 +4409,7 @@ void blasfeo_hp_dtrmm_runn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -4740,7 +4740,7 @@ void blasfeo_hp_dtrmm_runu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -5071,7 +5071,7 @@ void blasfeo_hp_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
@@ -5414,7 +5414,7 @@ void blasfeo_hp_dtrmm_rutu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int ldd = sD->m;
 	double *A = sA->pA + ai + aj*lda;
 	double *B = sB->pA + bi + bj*ldb;
-	double *D = sD->pA + di + dj*ldb;
+	double *D = sD->pA + di + dj*ldd;
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
