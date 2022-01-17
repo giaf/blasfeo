@@ -567,9 +567,9 @@ llnn_2:
 	kc0 = KC;
 
 	// these must all be multiple of ps !!!
-	mc0 = 12;
-	nc0 = 8;
-	kc0 = 4;
+//	mc0 = 12;
+//	nc0 = 8;
+//	kc0 = 4;
 
 //	mc = m<mc0 ? m : mc0;
 	mc = n<mc0 ? n : mc0;
