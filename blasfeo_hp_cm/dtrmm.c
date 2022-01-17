@@ -45,6 +45,8 @@
 #include <blasfeo_memory.h>
 
 
+//#define PRINT_NAME
+
 
 #if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
 #define blasfeo_dmat blasfeo_cm_dmat
@@ -1336,7 +1338,7 @@ lltn_1_return:
 
 lunn_2:
 
-#if 1 //! defined(TARGET_X64_INTEL_SKYLAKE_X)
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
 	// cache blocking alg
 
@@ -1423,13 +1425,13 @@ lunn_2:
 				{
 //				printf("\niii %d %d\n", iii, kleft);
 //				d_print_mat(mleft-ll0-iii, 4, A+ii0+ll0+iii+(ii0+ll0+iii)*lda, lda);
-				kernel_dpack_tn_4_lib4(kleft, A+ii+ll+(ii+iii)*lda, lda, pA+iii*ps);
+				kernel_dpack_tn_4_lib4(kleft, A+ii+ll+(ii+iii)*lda, lda, pA+iii*sda);
 //				d_print_mat(4, 4, pA+iii*sda+iii*ps, sda);
 //				break;
 				}
 			if(iii<ll)
 				{
-				kernel_dpack_tn_4_vs_lib4(kleft, A+ii+ll+(ii+iii)*lda, lda, pA+iii*ps, ll-iii);
+				kernel_dpack_tn_4_vs_lib4(kleft, A+ii+ll+(ii+iii)*lda, lda, pA+iii*sda, ll-iii);
 				}
 			for(iii=0; iii<kleft-3; iii+=4)
 				{
