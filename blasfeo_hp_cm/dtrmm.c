@@ -607,7 +607,6 @@ llnn_2:
 
 		mleft = m-ii<mc ? m-ii : mc;
 		ii0 = m-ii-mleft;
-//		printf("\nmleft ii0 %d %d\n", mleft, ii0);
 
 		// right triangle
 		for(ll=0; ll<mleft; ll+=kleft)
@@ -616,7 +615,6 @@ llnn_2:
 //			kleft = k-ll<kc ? k-ll : kc;
 			kleft = mleft-ll<kc ? mleft-ll : kc;
 			ll0 = mleft-ll-kleft;
-//			printf("\nkleft ll0 %d %d\n", kleft, ll0);
 
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
@@ -625,21 +623,16 @@ llnn_2:
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 			// TODO
 #else
+//			kernel_dpack_buffer_fn(mleft-ll0, kleft, A+ii0+ll0+(ii0+ll0)*lda, lda, pA, sda);
 			for(iii=0; iii<kleft-3; iii+=4)
 				{
-//				printf("\niii %d %d\n", iii, kleft);
-//				d_print_mat(mleft-ll0-iii, 4, A+ii0+ll0+iii+(ii0+ll0+iii)*lda, lda);
 				kernel_dpack_tt_4_lib4(mleft-ll0-iii, A+ii0+ll0+iii+(ii0+ll0+iii)*lda, lda, pA+iii*sda+iii*ps, sda);
-//				d_print_mat(4, 4, pA+iii*sda+iii*ps, sda);
-//				break;
 				}
 			if(iii<kleft)
 				{
 				kernel_dpack_tt_4_vs_lib4(mleft-ll0-iii, A+ii0+ll0+iii+(ii0+ll0+iii)*lda, lda, pA+iii*sda+iii*ps, sda, kleft-iii);
 				}
 #endif
-//			tA.cn = sda;
-//			blasfeo_pm_print_dmat(mleft-ll0, kleft, &tA, 0, 0);
 
 			for(jj=0; jj<n; jj+=nleft)
 				{
@@ -649,21 +642,11 @@ llnn_2:
 				// pack and tran B
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 #else
-				for(iii=0; iii<nleft-3; iii+=4)
-					{
-					kernel_dpack_tn_4_lib4(kleft, B+ii0+ll0+(jj+iii)*ldb, ldb, pB+iii*sdb);
-					}
-				if(iii<nleft)
-					{
-					kernel_dpack_tn_4_vs_lib4(kleft, B+ii0+ll0+(jj+iii)*ldb, ldb, pB+iii*sdb, nleft-iii);
-					}
+				kernel_dpack_buffer_ft(kleft, nleft, B+ii0+ll0+jj*ldb, ldb, pB, sdb);
 #endif
 
-//				blasfeo_hp_dgemm_nt_m2(mleft-ll0, nleft, kleft, alpha, pA, sda, pB, sdb, d_0, NULL, 0, D+ii0+ll0+jj*ldd, ldd);
 				blasfeo_hp_dtrmm_llnn_m2(kleft, nleft, alpha, pA, sda, pB, sdb, D+ii0+ll0+jj*ldd, ldd);
 				blasfeo_hp_dgemm_nt_m2(mleft-ll0-kleft, nleft, kleft, alpha, pA+kleft*sda, sda, pB, sdb, d_1, D+ii0+ll0+kleft+jj*ldd, ldd, D+ii0+ll0+kleft+jj*ldd, ldd);
-//				printf("\nresult\n");
-//				d_print_mat(mleft-ll0, nleft, D+ii0+ll0+jj*ldd, ldd);
 
 				}
 
@@ -683,19 +666,8 @@ llnn_2:
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 			// TODO
 #else
-			for(iii=0; iii<kleft-3; iii+=4)
-				{
-				kernel_dpack_tt_4_lib4(mleft, A+ii0+(ll+iii)*lda, lda, pA+iii*ps, sda);
-//				d_print_mat(4, 4, pA+iii*sda+iii*ps, sda);
-//				break;
-				}
-			if(iii<kleft)
-				{
-				kernel_dpack_tt_4_vs_lib4(mleft, A+ii0+(ll+iii)*lda, lda, pA+iii*ps, sda, kleft-iii);
-				}
+			kernel_dpack_buffer_fn(mleft, kleft, A+ii0+ll*lda, lda, pA, sda);
 #endif
-//			tA.cn = sda;
-//			blasfeo_pm_print_dmat(mleft-ll0, kleft, &tA, 0, 0);
 
 			for(jj=0; jj<n; jj+=nleft)
 				{
@@ -705,14 +677,7 @@ llnn_2:
 				// pack and tran B
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 #else
-				for(iii=0; iii<nleft-3; iii+=4)
-					{
-					kernel_dpack_tn_4_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb);
-					}
-				if(iii<nleft)
-					{
-					kernel_dpack_tn_4_vs_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb, nleft-iii);
-					}
+				kernel_dpack_buffer_ft(kleft, nleft, B+ll+jj*ldb, ldb, pB, sdb);
 #endif
 
 				blasfeo_hp_dgemm_nt_m2(mleft, nleft, kleft, alpha, pA, sda, pB, sdb, d_1, D+ii0+jj*ldd, ldd, D+ii0+jj*ldd, ldd);
@@ -753,14 +718,7 @@ llnn_2:
 		kernel_dpack_tt_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda, sda, m-ii);
 		}
 	// pack and transpose B
-	for(ii=0; ii<n-3; ii+=4)
-		{
-		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pB+ii*sdb);
-		}
-	if(ii<n)
-		{
-		kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pB+ii*sdb, n-ii);
-		}
+	kernel_dpack_buffer_ft(m, n, B, ldb, pB, sdb);
 
 	blasfeo_hp_dtrmm_llnn_m2(m, n, alpha, pA, sda, pB, sdb, D, ldd);
 
@@ -1386,8 +1344,6 @@ lunn_2:
 		{
 
 		mleft = m-ii<mc ? m-ii : mc;
-//		ii0 = m-ii-mleft;
-//		printf("\nmleft ii0 %d %d\n", mleft, ii0);
 
 		// left triangle
 		for(ll=0; ll<mleft; ll+=kleft)
@@ -1395,8 +1351,6 @@ lunn_2:
 
 //			kleft = k-ll<kc ? k-ll : kc;
 			kleft = mleft-ll<kc ? mleft-ll : kc;
-//			ll0 = mleft-ll-kleft;
-//			printf("\nkleft ll0 %d %d\n", kleft, ll0);
 
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
@@ -1405,34 +1359,7 @@ lunn_2:
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 			// TODO
 #else
-#if 0
-			for(iii=0; iii<kleft-3; iii+=4)
-				{
-//				printf("\niii %d %d\n", iii, kleft);
-//				d_print_mat(mleft-ll0-iii, 4, A+ii0+ll0+iii+(ii0+ll0+iii)*lda, lda);
-				mmax = mleft<ll+iii+4 ? mleft : ll+iii+4;
-				kernel_dpack_tt_4_lib4(mmax, A+ii+(ii+ll+iii)*lda, lda, pA+iii*ps, sda);
-//				d_print_mat(4, 4, pA+iii*sda+iii*ps, sda);
-//				break;
-				}
-			if(iii<kleft)
-				{
-				mmax = mleft<ll+iii+4 ? mleft : ll+iii+4;
-				kernel_dpack_tt_4_vs_lib4(mmax, A+ii+(ii+ll+iii)*lda, lda, pA+iii*ps, sda, kleft-iii);
-				}
-#else
-			for(iii=0; iii<ll-3; iii+=4)
-				{
-//				printf("\niii %d %d\n", iii, kleft);
-//				d_print_mat(mleft-ll0-iii, 4, A+ii0+ll0+iii+(ii0+ll0+iii)*lda, lda);
-				kernel_dpack_tn_4_lib4(kleft, A+ii+ll+(ii+iii)*lda, lda, pA+iii*sda);
-//				d_print_mat(4, 4, pA+iii*sda+iii*ps, sda);
-//				break;
-				}
-			if(iii<ll)
-				{
-				kernel_dpack_tn_4_vs_lib4(kleft, A+ii+ll+(ii+iii)*lda, lda, pA+iii*sda, ll-iii);
-				}
+			kernel_dpack_buffer_ft(kleft, ll, A+ii+ll+ii*lda, lda, pA, sda);
 			for(iii=0; iii<kleft-3; iii+=4)
 				{
 				kernel_dpack_tn_4_lib4(kleft-iii, A+ii+ll+iii+(ii+ll+iii)*lda, lda, pA+(ll+iii)*sda+iii*ps);
@@ -1442,10 +1369,6 @@ lunn_2:
 				kernel_dpack_tn_4_vs_lib4(kleft-iii, A+ii+ll+iii+(ii+ll+iii)*lda, lda, pA+(ll+iii)*sda+iii*ps, kleft-iii);
 				}
 #endif
-#endif
-//			printf("\ntA\n");
-//			tA.cn = sda;
-//			blasfeo_pm_print_dmat(mleft-ll0, kleft, &tA, 0, 0);
 
 			for(jj=0; jj<n; jj+=nleft)
 				{
@@ -1455,21 +1378,12 @@ lunn_2:
 				// pack and tran B
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 #else
-				for(iii=0; iii<nleft-3; iii+=4)
-					{
-					kernel_dpack_tn_4_lib4(kleft, B+ii+ll+(jj+iii)*ldb, ldb, pB+iii*sdb);
-					}
-				if(iii<nleft)
-					{
-					kernel_dpack_tn_4_vs_lib4(kleft, B+ii+ll+(jj+iii)*ldb, ldb, pB+iii*sdb, nleft-iii);
-					}
+				kernel_dpack_buffer_ft(kleft, nleft, B+ii+ll+jj*ldb, ldb, pB, sdb);
 #endif
 
 //				blasfeo_hp_dgemm_nt_m2(mleft-ll0, nleft, kleft, alpha, pA, sda, pB, sdb, d_0, NULL, 0, D+ii0+ll0+jj*ldd, ldd);
 				blasfeo_hp_dgemm_nt_m2(ll, nleft, kleft, alpha, pA, sda, pB, sdb, d_1, D+ii+jj*ldd, ldd, D+ii+jj*ldd, ldd);
 				blasfeo_hp_dtrmm_lunn_m2(kleft, nleft, alpha, pA+ll*sda, sda, pB, sdb, D+ii+ll+jj*ldd, ldd);
-//				printf("\nresult\n");
-//				d_print_mat(mleft-ll0, nleft, D+ii0+ll0+jj*ldd, ldd);
 
 				}
 
@@ -1490,20 +1404,8 @@ lunn_2:
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 			// TODO
 #else
-			for(iii=0; iii<mleft-3; iii+=4)
-				{
-				kernel_dpack_tn_4_lib4(kleft, A+ll+(ii+iii)*lda, lda, pA+iii*sda);
-//				d_print_mat(4, 4, pA+iii*sda+iii*ps, sda);
-//				break;
-				}
-			if(iii<mleft)
-				{
-				kernel_dpack_tn_4_vs_lib4(kleft, A+ll+(ii+iii)*lda, lda, pA+iii*sda, mleft-iii);
-				}
+			kernel_dpack_buffer_ft(kleft, mleft, A+ll+ii*lda, lda, pA, sda);
 #endif
-//			printf("\ntA\n");
-//			tA.cn = sda;
-//			blasfeo_pm_print_dmat(mleft, kleft, &tA, 0, 0);
 
 			for(jj=0; jj<n; jj+=nleft)
 				{
@@ -1513,14 +1415,7 @@ lunn_2:
 				// pack and tran B
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 #else
-				for(iii=0; iii<nleft-3; iii+=4)
-					{
-					kernel_dpack_tn_4_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb);
-					}
-				if(iii<nleft)
-					{
-					kernel_dpack_tn_4_vs_lib4(kleft, B+ll+(jj+iii)*ldb, ldb, pB+iii*sdb, nleft-iii);
-					}
+				kernel_dpack_buffer_ft(kleft, nleft, B+ll+jj*ldb, ldb, pB, sdb);
 #endif
 
 				blasfeo_hp_dgemm_nt_m2(mleft, nleft, kleft, alpha, pA, sda, pB, sdb, d_1, D+ii+jj*ldd, ldd, D+ii+jj*ldd, ldd);
@@ -1560,14 +1455,7 @@ lunn_2:
 		kernel_dpack_tn_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda, m-ii);
 		}
 	// pack and transpose B
-	for(ii=0; ii<n-3; ii+=4)
-		{
-		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pB+ii*sdb);
-		}
-	if(ii<n)
-		{
-		kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pB+ii*sdb, n-ii);
-		}
+	kernel_dpack_buffer_ft(m, n, B, ldb, pB, sdb);
 
 	blasfeo_hp_dtrmm_lunn_m2(m, n, alpha, pA, sda, pB, sdb, D, ldd);
 
