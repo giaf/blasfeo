@@ -1251,6 +1251,8 @@ void blasfeo_hp_dgemm_nt_m2(int m, int n, int k, double alpha, double *pA, int s
 //
 void kernel_dpack_buffer_fn(int m, int n, double *A, int lda, double *pA, int sda);
 void kernel_dpack_buffer_ft(int m, int n, double *A, int lda, double *pA, int sda);
+void kernel_dpack_buffer_ln(int m, double *A, int lda, double *pA, int sda);
+void kernel_dpack_buffer_lt(int m, double *A, int lda, double *pA, int sda);
 
 
 

@@ -87,3 +87,53 @@ void kernel_dpack_buffer_ft(int m, int n, double *A, int lda, double *pA, int sd
 
 	}
 
+
+
+// lower non-transposed
+void kernel_dpack_buffer_ln(int m, double *A, int lda, double *pA, int sda)
+	{
+
+	const int ps = 4;
+
+	int ii;
+
+	for(ii=0; ii<m-3; ii+=4)
+		{
+		kernel_dpack_tt_4_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda, sda);
+		}
+	if(ii<m)
+		{
+		kernel_dpack_tt_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda, sda, m-ii);
+		}
+
+	return;
+
+	}
+
+
+
+// lower transposed
+void kernel_dpack_buffer_lt(int m, double *A, int lda, double *pA, int sda)
+	{
+
+	const int ps = 4;
+
+	int ii;
+
+	for(ii=0; ii<m-3; ii+=4)
+		{
+//#if defined(TARGET_X64_INTEL_HASWELL)
+//		kernel_dpack_tn_4_p0_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda);
+//#else
+		kernel_dpack_tn_4_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda);
+//#endif
+		}
+	if(ii<m)
+		{
+		kernel_dpack_tn_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda, m-ii);
+		}
+
+	return;
+
+	}
+

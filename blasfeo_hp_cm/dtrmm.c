@@ -567,9 +567,9 @@ llnn_2:
 	kc0 = KC;
 
 	// these must all be multiple of ps !!!
-//	mc0 = 4;
-//	nc0 = 4;
-//	kc0 = 4;
+	mc0 = 12;
+	nc0 = 8;
+	kc0 = 4;
 
 //	mc = m<mc0 ? m : mc0;
 	mc = n<mc0 ? n : mc0;
@@ -623,15 +623,8 @@ llnn_2:
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 			// TODO
 #else
-//			kernel_dpack_buffer_fn(mleft-ll0, kleft, A+ii0+ll0+(ii0+ll0)*lda, lda, pA, sda);
-			for(iii=0; iii<kleft-3; iii+=4)
-				{
-				kernel_dpack_tt_4_lib4(mleft-ll0-iii, A+ii0+ll0+iii+(ii0+ll0+iii)*lda, lda, pA+iii*sda+iii*ps, sda);
-				}
-			if(iii<kleft)
-				{
-				kernel_dpack_tt_4_vs_lib4(mleft-ll0-iii, A+ii0+ll0+iii+(ii0+ll0+iii)*lda, lda, pA+iii*sda+iii*ps, sda, kleft-iii);
-				}
+			kernel_dpack_buffer_ln(kleft, A+ii0+ll0+(ii0+ll0)*lda, lda, pA, sda);
+			kernel_dpack_buffer_fn(ll, kleft, A+ii0+ll0+kleft+(ii0+ll0)*lda, lda, pA+kleft*sda, sda);
 #endif
 
 			for(jj=0; jj<n; jj+=nleft)
@@ -646,7 +639,7 @@ llnn_2:
 #endif
 
 				blasfeo_hp_dtrmm_llnn_m2(kleft, nleft, alpha, pA, sda, pB, sdb, D+ii0+ll0+jj*ldd, ldd);
-				blasfeo_hp_dgemm_nt_m2(mleft-ll0-kleft, nleft, kleft, alpha, pA+kleft*sda, sda, pB, sdb, d_1, D+ii0+ll0+kleft+jj*ldd, ldd, D+ii0+ll0+kleft+jj*ldd, ldd);
+				blasfeo_hp_dgemm_nt_m2(ll, nleft, kleft, alpha, pA+kleft*sda, sda, pB, sdb, d_1, D+ii0+ll0+kleft+jj*ldd, ldd, D+ii0+ll0+kleft+jj*ldd, ldd);
 
 				}
 
@@ -709,14 +702,7 @@ llnn_2:
 
 	// pack A
 	// lower to lower
-	for(ii=0; ii<m-3; ii+=4)
-		{
-		kernel_dpack_tt_4_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda, sda);
-		}
-	if(ii<m)
-		{
-		kernel_dpack_tt_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda, sda, m-ii);
-		}
+	kernel_dpack_buffer_ln(m, A, lda, pA, sda);
 	// pack and transpose B
 	kernel_dpack_buffer_ft(m, n, B, ldb, pB, sdb);
 
@@ -1360,14 +1346,7 @@ lunn_2:
 			// TODO
 #else
 			kernel_dpack_buffer_ft(kleft, ll, A+ii+ll+ii*lda, lda, pA, sda);
-			for(iii=0; iii<kleft-3; iii+=4)
-				{
-				kernel_dpack_tn_4_lib4(kleft-iii, A+ii+ll+iii+(ii+ll+iii)*lda, lda, pA+(ll+iii)*sda+iii*ps);
-				}
-			if(iii<kleft)
-				{
-				kernel_dpack_tn_4_vs_lib4(kleft-iii, A+ii+ll+iii+(ii+ll+iii)*lda, lda, pA+(ll+iii)*sda+iii*ps, kleft-iii);
-				}
+			kernel_dpack_buffer_lt(kleft, A+ii+ll+(ii+ll)*lda, lda, pA+ll*sda, sda);
 #endif
 
 			for(jj=0; jj<n; jj+=nleft)
@@ -1381,7 +1360,6 @@ lunn_2:
 				kernel_dpack_buffer_ft(kleft, nleft, B+ii+ll+jj*ldb, ldb, pB, sdb);
 #endif
 
-//				blasfeo_hp_dgemm_nt_m2(mleft-ll0, nleft, kleft, alpha, pA, sda, pB, sdb, d_0, NULL, 0, D+ii0+ll0+jj*ldd, ldd);
 				blasfeo_hp_dgemm_nt_m2(ll, nleft, kleft, alpha, pA, sda, pB, sdb, d_1, D+ii+jj*ldd, ldd, D+ii+jj*ldd, ldd);
 				blasfeo_hp_dtrmm_lunn_m2(kleft, nleft, alpha, pA+ll*sda, sda, pB, sdb, D+ii+ll+jj*ldd, ldd);
 
@@ -1446,14 +1424,7 @@ lunn_2:
 
 	// pack and transpose A
 	// lower to upper
-	for(ii=0; ii<m-3; ii+=4)
-		{
-		kernel_dpack_tn_4_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda);
-		}
-	if(ii<m)
-		{
-		kernel_dpack_tn_4_vs_lib4(m-ii, A+ii+ii*lda, lda, pA+ii*ps+ii*sda, m-ii);
-		}
+	kernel_dpack_buffer_lt(m, A, lda, pA, sda);
 	// pack and transpose B
 	kernel_dpack_buffer_ft(m, n, B, ldb, pB, sdb);
 
