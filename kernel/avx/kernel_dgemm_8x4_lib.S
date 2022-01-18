@@ -10217,7 +10217,207 @@
 
 
 
-//                                 1      2              3          4        5          6             7          8        9          10
+//                                     1      2              3          4        5          6             7          8        9          10
+// void kernel_dtrmm_nt_ru_8x4_lib444c(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int ldd);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrmm_nt_ru_8x4_lib444c)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	subl	$ 4, %r10d //k-4
+	movq	ARG3, %r11  // A
+	addq	$ 128, %r11 // A+4*bs
+	movq	ARG4, %r12 // sda
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13  // B
+	addq	$ 128, %r13 // B+4*bs
+
+#if MACRO_LEVEL>=1
+//	INNER_EDGE_DTRMM_NT_RU_8X4_LIB4
+#else
+//	CALL(inner_edge_dtrmm_nt_ru_8x4_lib4)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_8x4_lib4)
+#endif
+
+
+	// call inner blender nn
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_8X4_LIB4
+#else
+	CALL(inner_blend_8x4_lib4)
+#endif
+
+
+	// initial triangle
+
+	movq	ARG1, %r10
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13 // B
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_NT_RU_8X4_LIB4
+#else
+	CALL(inner_edge_dtrmm_nt_ru_8x4_lib4)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12   // C
+	movq	ARG8, %r13   // sdc
+	sall	$ 5, %r13d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB4
+#else
+	CALL(inner_scale_ab_8x4_lib4)
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$ 3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_LIB
+#else
+	CALL(inner_store_8x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrmm_nt_ru_8x4_lib444c)
+
+
+
+
+
+//                                        1      2              3          4        5          6             7          8        9          10       11      12
+// void kernel_dtrmm_nt_ru_8x4_vs_lib444c(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int ldd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dtrmm_nt_ru_8x4_vs_lib444c)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	subl	$ 4, %r10d //k-4
+	movq	ARG3, %r11  // A
+	addq	$ 128, %r11 // A+4*bs
+	movq	ARG4, %r12 // sda
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13  // B
+	addq	$ 128, %r13 // B+4*bs
+
+#if MACRO_LEVEL>=1
+//	INNER_EDGE_DTRMM_NT_RU_8X4_VS_LIB4
+#else
+//	CALL(inner_edge_dtrmm_nt_ru_8x4_vs_lib4)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_8x4_lib4)
+#endif
+
+
+	// call inner blender nn
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_8X4_LIB4
+#else
+	CALL(inner_blend_8x4_lib4)
+#endif
+
+
+	// initial triangle
+
+	movq	ARG1, %r10
+	movq	ARG3, %r11 // A
+	movq	ARG4, %r12 // sda
+	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	movq	ARG5, %r13 // B
+
+#if MACRO_LEVEL>=1
+	INNER_EDGE_DTRMM_NT_RU_8X4_VS_LIB4
+#else
+	CALL(inner_edge_dtrmm_nt_ru_8x4_vs_lib4)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11 // beta
+	movq	ARG7, %r12   // C
+	movq	ARG8, %r13   // sdc
+	sall	$ 5, %r13d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB4
+#else
+	CALL(inner_scale_ab_8x4_lib4)
+#endif
+
+
+	// store n
+
+	movq	ARG9, %r10 // D
+	movq	ARG10, %r11 // ldd
+	sall	$ 3, %r11d
+	movq	ARG11, %r12 // m1
+	movq	ARG12, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_VS_LIB
+#else
+	CALL(inner_store_8x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dtrmm_nt_ru_8x4_vs_lib444c)
+
+
+
+
+
+//                                     1      2              3          4        5          6             7          8        9          10
 // void kernel_dtrmm_nt_ru_8x4_lib44cc(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 
 	.p2align 4,,15
@@ -10316,7 +10516,7 @@
 
 
 
-//                                    1      2              3          4        5          6             7          8        9          10       11      12
+//                                        1      2              3          4        5          6             7          8        9          10       11      12
 // void kernel_dtrmm_nt_ru_8x4_vs_lib44cc(int k, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 	.p2align 4,,15
