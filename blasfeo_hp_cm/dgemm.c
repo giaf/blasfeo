@@ -404,18 +404,59 @@ static void blasfeo_hp_dgemm_nt_n2(int m, int n, int k, double alpha, double *pA
 
 	int ii, jj;
 
+	double *pA_p, *pB_p;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+	_mm_prefetch(pB+0, _MM_HINT_T0);
+	_mm_prefetch(pB+4*sdb+0, _MM_HINT_T0);
+	_mm_prefetch(pB+8*sdb+0, _MM_HINT_T0);
+	_mm_prefetch(pA+0, _MM_HINT_T0);
+
+	_mm_prefetch(pB+8, _MM_HINT_T0);
+	_mm_prefetch(pB+4*sdb+8, _MM_HINT_T0);
+	_mm_prefetch(pB+8*sdb+8, _MM_HINT_T0);
+	_mm_prefetch(pA+8, _MM_HINT_T0);
+
+	_mm_prefetch(pB+16, _MM_HINT_T0);
+	_mm_prefetch(pB+4*sdb+16, _MM_HINT_T0);
+	_mm_prefetch(pB+8*sdb+16, _MM_HINT_T0);
+	_mm_prefetch(pA+16, _MM_HINT_T0);
+
+	_mm_prefetch(pB+24, _MM_HINT_T0);
+	_mm_prefetch(pB+4*sdb+24, _MM_HINT_T0);
+	_mm_prefetch(pB+8*sdb+24, _MM_HINT_T0);
+	_mm_prefetch(pA+24, _MM_HINT_T0);
+#endif
+
 	jj = 0;
 #if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; jj<n-11; jj+=12)
 		{
+#if defined(TARGET_X64_INTEL_HASWELL)
+		ii = 0;
+		if(m>0)
+			{
+			pA_p = pA;
+			pB_p = n-jj<=12 ? pB : pB+(jj+12)*sdb;
+			kernel_dgemm_nt_mx12_p0_lib44cc(m, k, &alpha, pA+ii*sda, sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
+			ii += m;
+			}
+#else
 		for(ii=0; ii<m-3; ii+=4)
 			{
+#if defined(TARGET_X64_INTEL_HASWELL)
+			pA_p = pA+(ii+4)*sda;
+			pB_p = pB;
+			kernel_dgemm_nt_4x12_p0_lib44cc(k, &alpha, pA+ii*sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, pA_p, pB_p);
+#else
 			kernel_dgemm_nt_4x12_lib44cc(k, &alpha, pA+ii*sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd);
+#endif
 			}
 		if(ii<m)
 			{
 			kernel_dgemm_nt_4x12_vs_lib44cc(k, &alpha, pA+ii*sda, pB+jj*sdb, sdb, &beta, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, m-ii, n-jj);
 			}
+#endif
 		}
 	if(jj<n)
 		{
@@ -3048,7 +3089,7 @@ if (thp_count.pages_available) {
 
 
 
-#elif 0 //defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif 1 //defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 
 
 
@@ -3068,20 +3109,21 @@ if (thp_count.pages_available) {
 	nc = n<nc0 ? n : nc0;
 	kc = k<kc0 ? k : kc0;
 
-	tA_size = blasfeo_pm_memsize_dmat(ps, mc, kc);
-	tB_size = blasfeo_pm_memsize_dmat(ps, nc, kc);
+	tA_size = blasfeo_pm_memsize_dmat(ps, mc0, kc0);
+	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
 //	mem = malloc(tA_size+tB_size+64);
 //	blasfeo_align_64_byte(mem, (void **) &mem_align);
-	mem = malloc(tA_size+tB_size+4096);
+	mem = malloc(tA_size+tB_size+2*4096);
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 
-	blasfeo_pm_create_dmat(ps, mc, kc, &tA, (void *) mem_align);
-	mem_align += tA_size;
-
-	blasfeo_pm_create_dmat(ps, nc, kc, &tB, (void *) mem_align);
+	blasfeo_pm_create_dmat(ps, nc0, kc0, &tB, (void *) mem_align);
 	mem_align += tB_size;
+
+	mem_align += 4096-4*128;
+	blasfeo_pm_create_dmat(ps, mc0, kc0, &tA, (void *) mem_align);
+	mem_align += tA_size;
 
 //	double time_pack_A = 0.0;
 //	double time_pack_B = 0.0;
@@ -3092,41 +3134,41 @@ if (thp_count.pages_available) {
 	pA = tA.pA;
 	pB = tB.pA;
 
-	for(jj=0; jj<n; jj+=nleft)
+	for(ll=0; ll<k; ll+=kleft)
 		{
 
-		nleft = n-jj<nc ? n-jj : nc;
-
-		for(ll=0; ll<k; ll+=kleft)
-			{
-
 #if 1
-			if(k-ll<2*kc0)
+		if(k-ll<2*kc0)
+			{
+			if(k-ll<=kc0) // last
 				{
-				if(k-ll<=kc0) // last
-					{
-					kleft = k-ll;
-					}
-				else // second last
-					{
-					kleft = (k-ll+1)/2;
-					kleft = (kleft+4-1)/4*4;
-					}
+				kleft = k-ll;
 				}
-			else
+			else // second last
 				{
-				kleft = kc;
+				kleft = (k-ll+1)/2;
+				kleft = (kleft+4-1)/4*4;
 				}
+			}
+		else
+			{
+			kleft = kc;
+			}
 #else
-			kleft = k-ll<kc ? k-ll : kc;
+		kleft = k-ll<kc ? k-ll : kc;
 #endif
 
-			sda = (kleft+4-1)/4*4;
-			sdb = (kleft+4-1)/4*4;
+		sda = (kleft+4-1)/4*4;
+		sdb = (kleft+4-1)/4*4;
 
-			beta1 = ll==0 ? beta : 1.0;
-			C1 = ll==0 ? C : D;
-			ldc1 = ll==0 ? ldc : ldd;
+		beta1 = ll==0 ? beta : 1.0;
+		C1 = ll==0 ? C : D;
+		ldc1 = ll==0 ? ldc : ldd;
+
+		for(jj=0; jj<n; jj+=nleft)
+			{
+
+			nleft = n-jj<nc ? n-jj : nc;
 
 			// pack and tran B
 //			blasfeo_tic(&timer);

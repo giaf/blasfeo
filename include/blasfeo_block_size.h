@@ -75,8 +75,8 @@
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 12 // max kernel size
 #define D_KC 256 // 192
-#define D_NC 72 //96 //72 // 120 // 512
-#define D_MC 1500 // 6000
+#define D_NC 64 //96 //72 // 120 // 512
+#define D_MC 1500
 // single
 #define S_PS 8 // panel size
 #define S_PLD 4 // 2 // GCD of panel length
@@ -257,9 +257,9 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 8 // max kernel size
-#define D_KC 224 //256 //192
-#define D_NC 40 //36 //48
-#define D_MC 512 //488 //600
+#define D_KC 128 //224 //256 //192
+#define D_NC 72 //40 //36 //48
+#define D_MC (4*192) //512 //488 //600
 // single
 #define S_PS 4
 #define S_PLD 4 //2
