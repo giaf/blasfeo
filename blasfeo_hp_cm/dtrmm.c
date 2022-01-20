@@ -98,6 +98,10 @@
 
 
 
+// TODO use dgemm_nt_n2 to block right variants !!!!!
+
+
+
 // XXX the B matrix is passed transposed !!!
 // TODO cortex A57 !!!
 static void blasfeo_hp_dtrmm_llnn_m2(int m, int n, double alpha, double *pA0, int sda0, double *pB0_t, int sdb0_t, double *D, int ldd)
@@ -3576,10 +3580,8 @@ rutn_2:
 
 				blasfeo_hp_dtrmm_rutn_m2(mleft, nleft, alpha, pB, sdb, pA+jj*ps, sda, D+ii+(ll+jj)*ldd, ldd);
 				blasfeo_hp_dgemm_nt_m2(mleft, nleft, kleft-jj-nleft, alpha, pA+(jj+nleft)*ps, sda, pB+nleft*ps, sdb, d_1, D+ii+(ll+jj)*ldd, ldd, D+ii+(ll+jj)*ldd, ldd);
-//				return;
 
 				}
-//				return;
 
 			}
 
@@ -3590,6 +3592,7 @@ rutn_2:
 
 #else
 
+	m1 = (m+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, n1, n1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, n1);
