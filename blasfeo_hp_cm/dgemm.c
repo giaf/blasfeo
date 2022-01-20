@@ -80,6 +80,7 @@
 
 #ifdef HP_BLAS // i.e. when compiled from blas_api/dgemm_ref.c
 #define blasfeo_hp_dgemm_nt_m2 blasfeo_hp_cm_dgemm_nt_m2
+#define blasfeo_hp_dgemm_nt_n2 blasfeo_hp_cm_dgemm_nt_n2
 #endif
 
 
@@ -399,7 +400,7 @@ nt_m2_return:
 
 
 
-static void blasfeo_hp_dgemm_nt_n2(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
+void blasfeo_hp_dgemm_nt_n2(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	int ii, jj;
@@ -3113,9 +3114,14 @@ if (thp_count.pages_available) {
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
-//	mem = malloc(tA_size+tB_size+64);
-//	blasfeo_align_64_byte(mem, (void **) &mem_align);
-	mem = malloc(tA_size+tB_size+2*4096);
+	if(blasfeo_is_init()==0)
+		{
+		mem = malloc(tA_size+tB_size+2*4096);
+		}
+	else
+		{
+		mem = blasfeo_get_buffer();
+		}
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 
 	blasfeo_pm_create_dmat(ps, nc0, kc0, &tB, (void *) mem_align);

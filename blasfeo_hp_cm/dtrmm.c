@@ -3489,6 +3489,132 @@ rlnn_1_return:
 rutn_2:
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
+#if 1
+
+	// cache blocking alg
+
+	mc0 = NC; // XXX
+	nc0 = MC; // XXX
+	kc0 = KC;
+
+	// these must all be multiple of ps !!!
+//	mc0 = 4;
+//	nc0 = 8;
+//	kc0 = 8;
+
+	mc = m<mc0 ? m : mc0;
+	nc = n<nc0 ? n : nc0;
+//	kc = k<kc0 ? k : kc0;
+	kc = n<kc0 ? n : kc0;
+
+	tA_size = blasfeo_pm_memsize_dmat(ps, mc0, kc0);
+	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
+	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
+	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
+		}
+	else
+		{
+		mem = blasfeo_get_buffer();
+		}
+	blasfeo_align_4096_byte(mem, (void **) &mem_align);
+
+	blasfeo_pm_create_dmat(ps, nc0, kc0, &tB, (void *) mem_align);
+	mem_align += tB_size;
+
+	mem_align += 4096-4*128;
+	blasfeo_pm_create_dmat(ps, mc0, kc0, &tA, (void *) mem_align);
+	mem_align += tA_size;
+
+	pA = tA.pA;
+	pB = tB.pA;
+
+	for(jj=0; jj<n; jj+=nleft)
+		{
+
+		nleft = n-jj<nc ? n-jj : nc;
+
+		// top triangle
+		for(ll=0; ll<nleft; ll+=kleft)
+			{
+
+			kleft = nleft-ll<kc ? nleft-ll : kc;
+
+			sda = (kleft+4-1)/4*4; // XXX
+			sdb = (kleft+4-1)/4*4; // XXX
+
+			// pack and tran A
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+			// TODO
+#else
+			kernel_dpack_buffer_ft(kleft, ll, A+jj+ll+jj*lda, lda, pB, sdb);
+			kernel_dpack_buffer_lt(kleft, A+jj+ll+(jj+ll)*lda, lda, pB+ll*sdb, sdb);
+#endif
+
+			for(ii=0; ii<m; ii+=mleft)
+				{
+
+				mleft = m-ii<mc ? m-ii : mc;
+
+				// pack B
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+				// TODO
+#else
+				kernel_dpack_buffer_fn(mleft, kleft, B+ii+(jj+ll)*ldb, ldb, pA, sda);
+#endif
+
+				blasfeo_hp_dgemm_nt_n2(mleft, ll, kleft, alpha, pA, sda, pB, sdb, d_1, D+ii+jj*ldd, ldd, D+ii+jj*ldd, ldd);
+				blasfeo_hp_dtrmm_rutn_m2(mleft, kleft, alpha, pB+ll*sdb, sdb, pA, sda, D+ii+(jj+ll)*ldd, ldd);
+//				return;
+
+				}
+
+			}
+
+		// bottom rectangle
+		for(ll=jj+nleft; ll<n; ll+=kleft)
+			{
+
+			kleft = n-ll<kc ? n-ll : kc;
+
+			sda = (kleft+4-1)/4*4; // XXX
+			sdb = (kleft+4-1)/4*4; // XXX
+
+			// pack and tran A
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+			// TODO
+#else
+			kernel_dpack_buffer_ft(kleft, nleft, A+ll+jj*lda, lda, pB, sdb);
+#endif
+
+			for(ii=0; ii<m; ii+=mleft)
+				{
+
+				mleft = m-ii<mc ? m-ii : mc;
+
+				// pack B
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+				// TODO
+#else
+				kernel_dpack_buffer_fn(mleft, kleft, B+ii+ll*ldb, ldb, pA, sda);
+#endif
+
+				blasfeo_hp_dgemm_nt_n2(mleft, nleft, kleft, alpha, pA, sda, pB, sdb, d_1, D+ii+jj*ldd, ldd, D+ii+jj*ldd, ldd);
+//				return;
+
+				}
+
+			}
+
+		}
+
+	free(mem);
+	return;
+
+#else
+
 	// cache blocking alg
 
 	mc0 = MC;
@@ -3557,6 +3683,7 @@ rutn_2:
 
 				// pack and tran A
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
+				// TODO
 #else
 				kernel_dpack_buffer_ft(kleft, nleft, A+ll+jj*lda, lda, pB, sdb);
 #endif
@@ -3573,6 +3700,7 @@ rutn_2:
 
 				// pack and tran A
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
+				// TODO
 #else
 				kernel_dpack_buffer_lt(nleft, A+ll+jj+(ll+jj)*lda, lda, pB, sdb);
 				kernel_dpack_buffer_ft(kleft-jj-nleft, nleft, A+ll+jj+nleft+(ll+jj)*lda, lda, pB+nleft*ps, sdb);
@@ -3589,6 +3717,8 @@ rutn_2:
 
 	free(mem);
 	return;
+
+#endif
 
 #else
 
