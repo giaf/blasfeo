@@ -3489,7 +3489,7 @@ rlnn_1_return:
 rutn_2:
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
-#if 1
+#if 0
 
 	// cache blocking alg
 
