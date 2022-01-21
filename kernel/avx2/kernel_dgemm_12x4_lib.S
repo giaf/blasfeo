@@ -17305,6 +17305,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	leaq		0(%r11, %r11, 2), %r12
 	leaq		0(%r10, %r11, 4), %r13
 	leaq		0(%r10, %r11, 8), %r14
+#if 0
 	prefetcht0	0(%r10)				// 0
 	prefetcht0	0(%r10, %r11)	// 1
 	prefetcht0	0(%r10, %r11, 2)	// 2
@@ -17317,6 +17318,20 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	prefetcht0	0(%r14, %r11)	// 9
 	prefetcht0	0(%r14, %r11, 2)	// 10
 	prefetcht0	0(%r14, %r12)	// 11
+#else
+	prefetcht0	31(%r10)				// 0
+	prefetcht0	31(%r10, %r11)	// 1
+	prefetcht0	31(%r10, %r11, 2)	// 2
+	prefetcht0	31(%r10, %r12)	// 3
+	prefetcht0	31(%r13)				// 4
+	prefetcht0	31(%r13, %r11)	// 5
+	prefetcht0	31(%r13, %r11, 2)	// 6
+	prefetcht0	31(%r13, %r12)	// 7
+	prefetcht0	31(%r14)				// 8
+	prefetcht0	31(%r14, %r11)	// 9
+	prefetcht0	31(%r14, %r11, 2)	// 10
+	prefetcht0	31(%r14, %r12)	// 11
+#endif
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -17354,6 +17369,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	leaq		0(%r11, %r11, 2), %r12
 	leaq		0(%r10, %r11, 4), %r13
 	leaq		0(%r10, %r11, 8), %r14
+#if 0
 	prefetcht1	0(%r10)				// 0
 	prefetcht1	0(%r10, %r11)	// 1
 	prefetcht1	0(%r10, %r11, 2)	// 2
@@ -17366,6 +17382,20 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	prefetcht1	0(%r14, %r11)	// 9
 	prefetcht1	0(%r14, %r11, 2)	// 10
 	prefetcht1	0(%r14, %r12)	// 11
+#else
+	prefetcht1	31(%r10)				// 0
+	prefetcht1	31(%r10, %r11)	// 1
+	prefetcht1	31(%r10, %r11, 2)	// 2
+	prefetcht1	31(%r10, %r12)	// 3
+	prefetcht1	31(%r13)				// 4
+	prefetcht1	31(%r13, %r11)	// 5
+	prefetcht1	31(%r13, %r11, 2)	// 6
+	prefetcht1	31(%r13, %r12)	// 7
+	prefetcht1	31(%r14)				// 8
+	prefetcht1	31(%r14, %r11)	// 9
+	prefetcht1	31(%r14, %r11, 2)	// 10
+	prefetcht1	31(%r14, %r12)	// 11
+#endif
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -17838,6 +17868,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// prefetch C
 
+	prefetcht1	0(ARG2) // alpha
 	movq		ARG6, %r10 // beta
 	vmovsd		0(%r10), %xmm14
 	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
@@ -17849,9 +17880,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH0_12X4_LIB
+	INNER_PREFETCH1_12X4_LIB
 #else
-	CALL(inner_prefetch0_12x4_lib)
+	CALL(inner_prefetch1_12x4_lib)
 #endif
 
 100:
@@ -18013,6 +18044,28 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	// zero accumulation registers
 
 	ZERO_ACC
+
+
+	// prefetch C
+
+	prefetcht1	0(ARG2) // alpha
+	movq		ARG6, %r10 // beta
+	vmovsd		0(%r10), %xmm14
+	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			100f // end
+
+	movq	ARG7, %r10 // C
+	movq	ARG8, %r11 // ldc
+	sall	$ 3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH1_12X4_LIB
+#else
+	CALL(inner_prefetch1_12x4_lib)
+#endif
+
+100:
 
 
 	// call inner dgemm kernel nn
@@ -18482,6 +18535,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	// prefetch C
 
+	prefetcht1	0(ARG2) // alpha
 	movq		ARG6, %r10 // beta
 	vmovsd		0(%r10), %xmm14
 	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
@@ -18493,9 +18547,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	sall	$ 3, %r11d
 
 #if MACRO_LEVEL>=1
-	INNER_PREFETCH0_4X12_LIB
+	INNER_PREFETCH1_4X12_LIB
 #else
-	CALL(inner_prefetch0_4x12_lib)
+	CALL(inner_prefetch1_4x12_lib)
 #endif
 
 100:
