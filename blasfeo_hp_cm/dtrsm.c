@@ -45,6 +45,8 @@
 #include <blasfeo_memory.h>
 
 
+//#define PRINT_NAME
+
 
 #if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
 #define blasfeo_dmat blasfeo_cm_dmat
@@ -3756,7 +3758,7 @@ void blasfeo_hp_dtrsm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 
 //	goto rlnn_1;
-	goto rutn_2;
+//	goto rutn_2;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m<=300 & n<=300 & k0<K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -3999,18 +4001,10 @@ rutn_2:
 				for(iii=0; iii<nleft; iii++)
 					dB[iii] = 1.0/A[ll0+jj0+iii+(ll0+jj0+iii)*lda];
 
-//				printf("\nciao\n");
-//				blasfeo_pm_print_dmat(mleft, jj, &tA, 0, jj0+nleft);
-//				blasfeo_pm_print_dmat(nleft, jj, &tB, 0, nleft);
-//				d_print_mat(mleft, nleft, B+ii+(ll0+jj0)*ldb, ldb);
 				blasfeo_hp_dgemm_nt_m2(mleft, nleft, jj, d_minvalpha, pA+(jj0+nleft)*ps, sda, pB+nleft*ps, sdb, d_1, C+ii+(ll0+jj0)*ldc, ldc, D+ii+(ll0+jj0)*ldd, ldd);
-//				d_print_mat(mleft, nleft, D+ii+(ll0+jj0)*ldd, ldd);
 				blasfeo_hp_dtrsm_rutn_m2(mleft, nleft, alpha, pB, sdb, dB, D+ii+(ll0+jj0)*ldd, ldd, D+ii+(ll0+jj0)*ldd, ldd, pA+jj0*ps, sda);
-//				blasfeo_pm_print_dmat(mleft, kleft, &tA, 0, 0);
 
 				}
-//			blasfeo_pm_print_dmat(mleft, kleft, &tA, 0, 0);
-//				return;
 
 			for(jj=0; jj<ll0; jj+=nleft)
 				{
@@ -4024,18 +4018,9 @@ rutn_2:
 				kernel_dpack_buffer_ft(kleft, nleft, A+ll0+jj0*lda, lda, pB, sdb);
 #endif
 
-//				printf("\nciao\n");
-//				blasfeo_pm_print_dmat(mleft, kleft, &tA, 0, 0);
-//				blasfeo_pm_print_dmat(nleft, kleft, &tB, 0, 0);
-//				d_print_mat(mleft, nleft, B+ii+jj0*ldb, ldb);
 				blasfeo_hp_dgemm_nt_m2(mleft, nleft, kleft, d_minvalpha, pA, sda, pB, sdb, d_1, C+ii+jj0*ldc, ldc, D+ii+jj0*ldd, ldd);
-//				d_print_mat(mleft, nleft, D+ii+jj0*ldd, ldd);
-//				blasfeo_hp_dtrsm_rutn_m2(mleft, nleft, alpha, pB, sdb, dB, D+ii+(ll0+jj0)*ldd, ldd, D+ii+(ll0+jj0)*ldd, ldd, pA+jj0*ps, sda);
-//				blasfeo_pm_print_dmat(mleft, kleft, &tA, 0, 0);
 
 				}
-//			blasfeo_pm_print_dmat(mleft, kleft, &tA, 0, 0);
-//				return;
 
 			C = D;
 			ldc = ldd;
