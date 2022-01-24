@@ -1262,6 +1262,7 @@ void kernel_dpack_buffer_fn(int m, int n, double *A, int lda, double *pA, int sd
 void kernel_dpack_buffer_ft(int m, int n, double *A, int lda, double *pA, int sda);
 void kernel_dpack_buffer_ln(int m, double *A, int lda, double *pA, int sda);
 void kernel_dpack_buffer_lt(int m, double *A, int lda, double *pA, int sda);
+void kernel_dpack_buffer_ut(int m, double *A, int lda, double *pA, int sda);
 
 
 

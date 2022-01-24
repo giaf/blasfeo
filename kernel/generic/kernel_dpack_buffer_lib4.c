@@ -137,3 +137,30 @@ void kernel_dpack_buffer_lt(int m, double *A, int lda, double *pA, int sda)
 
 	}
 
+
+
+// upper transposed
+void kernel_dpack_buffer_ut(int m, double *A, int lda, double *pA, int sda)
+	{
+
+	const int ps = 4;
+
+	int ii;
+
+	for(ii=0; ii<m-3; ii+=4)
+		{
+//#if defined(TARGET_X64_INTEL_HASWELL)
+//		kernel_dpack_tn_4_p0_lib4(ii+4, A+ii*lda, lda, pA+ii*sda);
+//#else
+		kernel_dpack_tn_4_lib4(ii+4, A+ii*lda, lda, pA+ii*sda);
+//#endif
+		}
+	if(ii<m)
+		{
+		kernel_dpack_tn_4_vs_lib4(m, A+ii*lda, lda, pA+ii*sda, m-ii);
+		}
+
+	return;
+
+	}
+

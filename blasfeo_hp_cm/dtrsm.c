@@ -98,6 +98,274 @@
 
 
 
+#if 0
+static void blasfeo_hp_dtrsm_lutn_m1(int m, int n, double alpha, double *A, int lda, double *B, int ldb, double *D, int ldd, double *pU, int sdu, double *dA)
+	{
+
+	int ii, jj;
+
+	int ps = 4;
+
+	ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL)
+	for(; ii<m-11; ii+=12)
+		{
+		kernel_dpack_tn_4_lib4(ii+4, A+(ii+0)*lda, lda, pU+0*sdu);
+		kernel_dpack_tn_4_lib4(ii+8, A+(ii+4)*lda, lda, pU+4*sdu);
+		kernel_dpack_tn_4_lib4(ii+12, A+(ii+8)*lda, lda, pU+8*sdu);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dtrsm_nn_ll_inv_12x4_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii);
+			}
+		if(jj<n)
+			{
+			kernel_dtrsm_nn_ll_inv_12x4_vs_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto lutn_m1_left_4;
+			}
+		else if(m-ii<=8)
+			{
+			goto lutn_m1_left_8;
+			}
+		else
+			{
+			goto lutn_m1_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dpack_tn_4_lib4(ii+4, A+(ii+0)*lda, lda, pU+0*sdu);
+		kernel_dpack_tn_4_lib4(ii+8, A+(ii+4)*lda, lda, pU+4*sdu);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dtrsm_nn_ll_inv_8x4_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii);
+			}
+		if(jj<n)
+			{
+			kernel_dtrsm_nn_ll_inv_8x4_vs_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		if(m-ii<=4)
+			{
+			goto lutn_m1_left_4;
+			}
+		else
+			{
+			goto lutn_m1_left_8;
+			}
+		}
+#else
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dpack_tn_4_lib4(ii+4, A+ii*lda, lda, pU);
+		for(jj=0; jj<n-3; jj+=4)
+			{
+			kernel_dtrsm_nn_ll_inv_4x4_lib4ccc4(ii, pU, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, dA+ii);
+			}
+		if(jj<n)
+			{
+			kernel_dtrsm_nn_ll_inv_4x4_vs_lib4ccc4(ii, pU, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, dA+ii, m-ii, n-jj);
+			}
+		}
+	if(ii<m)
+		{
+		goto lutn_m1_left_4;
+		}
+#endif
+	goto lutn_m1_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL)
+lutn_m1_left_12:
+	kernel_dpack_tn_4_lib4(ii+4, A+(ii+0)*lda, lda, pU+0*sdu);
+	kernel_dpack_tn_4_lib4(ii+8, A+(ii+4)*lda, lda, pU+4*sdu);
+	kernel_dpack_tn_4_vs_lib4(m, A+(ii+8)*lda, lda, pU+8*sdu, m-ii-8);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dtrsm_nn_ll_inv_12x4_vs_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii, m-ii, n-jj);
+		}
+goto lutn_m1_return;
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+lutn_m1_left_8:
+	kernel_dpack_tn_4_lib4(ii+4, A+(ii+0)*lda, lda, pU+0*sdu);
+	kernel_dpack_tn_4_vs_lib4(m, A+(ii+4)*lda, lda, pU+4*sdu, m-ii-4);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dtrsm_nn_ll_inv_8x4_vs_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii, m-ii, n-jj);
+		}
+goto lutn_m1_return;
+#endif
+
+lutn_m1_left_4:
+	kernel_dpack_tn_4_vs_lib4(m, A+ii*lda, lda, pU, m-ii);
+	for(jj=0; jj<n; jj+=4)
+		{
+		kernel_dtrsm_nn_ll_inv_4x4_vs_lib4ccc4(ii, pU, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, dA+ii, m-ii, n-jj);
+		}
+goto lutn_m1_return;
+
+lutn_m1_return:
+	return;
+
+	return;
+
+	}
+#endif
+
+
+
+static void blasfeo_hp_dtrsm_llnn_m2(int m, int n, double alpha, double *pA0, int sda0, double *dA0, double *B, int ldb, double *D, int ldd, double *pB0, int sdb0)
+	{
+
+	double *pA = pB0;
+	int sda = sdb0;
+	double *pB = pA0;
+	int sdb = sda0;
+	double *dB = dA0;
+
+	int ii, jj;
+
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	const int ps = 4; // XXX TODO fix once implemented missing kernels !!!
+#else
+	const int ps = PS;
+#endif
+
+	ii = 0;
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	for(; ii<n-11; ii+=12)
+		{
+		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pA+ii*sda);
+		kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pA+(ii+4)*sda);
+		kernel_dpack_tn_4_lib4(m, B+(ii+8)*ldb, ldb, pA+(ii+8)*sda);
+		for(jj=0; jj<m-3; jj+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_12x4_lib4(jj, pA+ii*sda, sda, pB+jj*sdb, &alpha, pA+ii*sda+jj*ps, sda, pA+ii*sda+jj*ps, sda, pB+jj*ps+jj*sdb, dB+jj);
+			}
+		if(jj<m)
+			{
+			kernel_dtrsm_nt_rl_inv_12x4_vs_lib4(jj, pA+ii*sda, sda, pB+jj*sdb, &alpha, pA+ii*sda+jj*ps, sda, pA+ii*sda+jj*ps, sda, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
+			}
+		kernel_dunpack_nt_4_lib4(m, pA+ii*sda, D+ii*ldd, ldd);
+		kernel_dunpack_nt_4_lib4(m, pA+(ii+4)*sda, D+(ii+4)*ldd, ldd);
+		kernel_dunpack_nt_4_lib4(m, pA+(ii+8)*sda, D+(ii+8)*ldd, ldd);
+		}
+	if(ii<n)
+		{
+		if(n-ii<=4)
+			{
+			goto llnn_2_left_4;
+			}
+		if(n-ii<=8)
+			{
+			goto llnn_2_left_8;
+			}
+		else
+			{
+			goto llnn_2_left_12;
+			}
+		}
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	for(; ii<n-7; ii+=8)
+		{
+		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pA+ii*sda);
+		kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pA+(ii+4)*sda);
+		for(jj=0; jj<m-3; jj+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_8x4_lib4(jj, pA+ii*sda, sda, pB+jj*sdb, &alpha, pA+ii*sda+jj*ps, sda, pA+ii*sda+jj*ps, sda, pB+jj*ps+jj*sdb, dB+jj);
+			}
+		if(jj<m)
+			{
+			kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(jj, pA+ii*sda, sda, pB+jj*sdb, &alpha, pA+ii*sda+jj*ps, sda, pA+ii*sda+jj*ps, sda, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
+			}
+		kernel_dunpack_nt_4_lib4(m, pA+ii*sda, D+ii*ldd, ldd);
+		kernel_dunpack_nt_4_lib4(m, pA+(ii+4)*sda, D+(ii+4)*ldd, ldd);
+		}
+	if(ii<n)
+		{
+		if(n-ii<=4)
+			{
+			goto llnn_2_left_4;
+			}
+		else
+			{
+			goto llnn_2_left_8;
+			}
+		}
+#else
+	for(; ii<n-3; ii+=4)
+		{
+		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pA+ii*sda);
+		for(jj=0; jj<m-3; jj+=4)
+			{
+			kernel_dtrsm_nt_rl_inv_4x4_lib4(jj, pA+ii*sda, pB+jj*sdb, &alpha, pA+ii*sda+jj*ps, pA+ii*sda+jj*ps, pB+jj*ps+jj*sdb, dB+jj);
+			}
+		if(jj<m)
+			{
+			kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(jj, pA+ii*sda, pB+jj*sdb, &alpha, pA+ii*sda+jj*ps, pA+ii*sda+jj*ps, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
+			}
+		kernel_dunpack_nt_4_lib4(m, pA+ii*sda, D+ii*ldd, ldd);
+		}
+	if(ii<n)
+		{
+		goto llnn_2_left_4;
+		}
+#endif
+	goto llnn_2_return;
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+llnn_2_left_12:
+	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pA+ii*sda);
+	kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pA+(ii+4)*sda);
+	kernel_dpack_tn_4_vs_lib4(m, B+(ii+8)*ldb, ldb, pA+(ii+8)*sda, n-ii);
+	for(jj=0; jj<m; jj+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_12x4_vs_lib4(jj, pA+ii*sda, sda, pB+jj*sdb, &alpha, pA+ii*sda+jj*ps, sda, pA+ii*sda+jj*ps, sda, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
+		}
+	kernel_dunpack_nt_4_lib4(m, pA+ii*sda, D+ii*ldd, ldd);
+	kernel_dunpack_nt_4_lib4(m, pA+(ii+4)*sda, D+(ii+4)*ldd, ldd);
+	kernel_dunpack_nt_4_vs_lib4(m, pA+(ii+8)*sda, D+(ii+8)*ldd, ldd, n-ii-8);
+goto llnn_2_return;
+#endif
+
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+llnn_2_left_8:
+	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pA+ii*sda);
+	kernel_dpack_tn_4_vs_lib4(m, B+(ii+4)*ldb, ldb, pA+(ii+4)*sda, n-ii);
+	for(jj=0; jj<m; jj+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(jj, pA+ii*sda, sda, pB+jj*sdb, &alpha, pA+ii*sda+jj*ps, sda, pA+ii*sda+jj*ps, sda, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
+		}
+	kernel_dunpack_nt_4_lib4(m, pA+ii*sda, D+ii*ldd, ldd);
+	kernel_dunpack_nt_4_vs_lib4(m, pA+(ii+4)*sda, D+(ii+4)*ldd, ldd, n-ii-4);
+goto llnn_2_return;
+#endif
+
+llnn_2_left_4:
+	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pA+ii*sda, n-ii);
+	for(jj=0; jj<m; jj+=4)
+		{
+		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(jj, pA+ii*sda, pB+jj*sdb, &alpha, pA+ii*sda+jj*ps, pA+ii*sda+jj*ps, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
+		}
+	kernel_dunpack_nt_4_vs_lib4(m, pA+ii*sda, D+ii*ldd, ldd, n-ii);
+goto llnn_2_return;
+
+llnn_2_return:
+	return;
+
+	}
+
+
+
 static void blasfeo_hp_dtrsm_rutn_m2(int m, int n, double alpha, double *pA0, int sda0, double *dA0, double *B, int ldb, double *D, int ldd, double *pA, int sda)
 	{
 
@@ -250,129 +518,6 @@ rutn_2_left_4:
 	goto rutn_2_return;
 
 rutn_2_return:
-	return;
-
-	}
-
-
-
-static void blasfeo_hp_dtrsm_lutn_m1(int m, int n, double alpha, double *A, int lda, double *B, int ldb, double *D, int ldd, double *pU, int sdu, double *dA)
-	{
-
-	int ii, jj;
-
-	int ps = 4;
-
-	ii = 0;
-#if defined(TARGET_X64_INTEL_HASWELL)
-	for(; ii<m-11; ii+=12)
-		{
-		kernel_dpack_tn_4_lib4(ii+4, A+(ii+0)*lda, lda, pU+0*sdu);
-		kernel_dpack_tn_4_lib4(ii+8, A+(ii+4)*lda, lda, pU+4*sdu);
-		kernel_dpack_tn_4_lib4(ii+12, A+(ii+8)*lda, lda, pU+8*sdu);
-		for(jj=0; jj<n-3; jj+=4)
-			{
-			kernel_dtrsm_nn_ll_inv_12x4_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii);
-			}
-		if(jj<n)
-			{
-			kernel_dtrsm_nn_ll_inv_12x4_vs_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii, m-ii, n-jj);
-			}
-		}
-	if(ii<m)
-		{
-		if(m-ii<=4)
-			{
-			goto lutn_m1_left_4;
-			}
-		else if(m-ii<=8)
-			{
-			goto lutn_m1_left_8;
-			}
-		else
-			{
-			goto lutn_m1_left_12;
-			}
-		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	for(; ii<m-7; ii+=8)
-		{
-		kernel_dpack_tn_4_lib4(ii+4, A+(ii+0)*lda, lda, pU+0*sdu);
-		kernel_dpack_tn_4_lib4(ii+8, A+(ii+4)*lda, lda, pU+4*sdu);
-		for(jj=0; jj<n-3; jj+=4)
-			{
-			kernel_dtrsm_nn_ll_inv_8x4_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii);
-			}
-		if(jj<n)
-			{
-			kernel_dtrsm_nn_ll_inv_8x4_vs_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii, m-ii, n-jj);
-			}
-		}
-	if(ii<m)
-		{
-		if(m-ii<=4)
-			{
-			goto lutn_m1_left_4;
-			}
-		else
-			{
-			goto lutn_m1_left_8;
-			}
-		}
-#else
-	for(; ii<m-3; ii+=4)
-		{
-		kernel_dpack_tn_4_lib4(ii+4, A+ii*lda, lda, pU);
-		for(jj=0; jj<n-3; jj+=4)
-			{
-			kernel_dtrsm_nn_ll_inv_4x4_lib4ccc4(ii, pU, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, dA+ii);
-			}
-		if(jj<n)
-			{
-			kernel_dtrsm_nn_ll_inv_4x4_vs_lib4ccc4(ii, pU, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, dA+ii, m-ii, n-jj);
-			}
-		}
-	if(ii<m)
-		{
-		goto lutn_m1_left_4;
-		}
-#endif
-	goto lutn_m1_return;
-
-#if defined(TARGET_X64_INTEL_HASWELL)
-lutn_m1_left_12:
-	kernel_dpack_tn_4_lib4(ii+4, A+(ii+0)*lda, lda, pU+0*sdu);
-	kernel_dpack_tn_4_lib4(ii+8, A+(ii+4)*lda, lda, pU+4*sdu);
-	kernel_dpack_tn_4_vs_lib4(m, A+(ii+8)*lda, lda, pU+8*sdu, m-ii-8);
-	for(jj=0; jj<n; jj+=4)
-		{
-		kernel_dtrsm_nn_ll_inv_12x4_vs_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii, m-ii, n-jj);
-		}
-goto lutn_m1_return;
-#endif
-
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-lutn_m1_left_8:
-	kernel_dpack_tn_4_lib4(ii+4, A+(ii+0)*lda, lda, pU+0*sdu);
-	kernel_dpack_tn_4_vs_lib4(m, A+(ii+4)*lda, lda, pU+4*sdu, m-ii-4);
-	for(jj=0; jj<n; jj+=4)
-		{
-		kernel_dtrsm_nn_ll_inv_8x4_vs_lib4ccc4(ii, pU, sdu, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, sdu, dA+ii, m-ii, n-jj);
-		}
-goto lutn_m1_return;
-#endif
-
-lutn_m1_left_4:
-	kernel_dpack_tn_4_vs_lib4(m, A+ii*lda, lda, pU, m-ii);
-	for(jj=0; jj<n; jj+=4)
-		{
-		kernel_dtrsm_nn_ll_inv_4x4_vs_lib4ccc4(ii, pU, D+jj*ldd, ldd, &alpha, B+jj*ldb+ii, ldb, D+jj*ldd+ii, ldd, pU+ii*ps, dA+ii, m-ii, n-jj);
-		}
-goto lutn_m1_return;
-
-lutn_m1_return:
-	return;
-
 	return;
 
 	}
@@ -2882,20 +3027,19 @@ void blasfeo_hp_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 //	printf("\n%p %d %p %d %p %d\n", A, lda, B, ldb);
 
-	int ii, jj;
+	int ii, jj, ll;
+	int ii0, ll0, jj0, iii;
+	int mc, nc, kc;
+	int mleft, nleft, kleft;
+	int mc0, nc0, kc0;
+	int ldc1;
+	double beta1;
+	double *pA, *pB, *C1, *dA, *dB;
 
-	const int ps = 4; //D_PS;
-
-#if defined(TARGET_GENERIC)
-	double pd0[K_MAX_STACK];
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+	const int ps = 4; // XXX TODO fix once implemented missing kernels !!!
 #else
-	ALIGNED( double pd0[K_MAX_STACK], 64 );
-#endif
-
-#if defined(TARGET_GENERIC)
-	double pU0[M_KERNEL*K_MAX_STACK];
-#else
-	ALIGNED( double pU0[M_KERNEL*K_MAX_STACK], 64 );
+	const int ps = PS;
 #endif
 
 	int k0;
@@ -2905,8 +3049,15 @@ void blasfeo_hp_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 //	else
 //		k0 = n;
 
-	int sdu0 = (k0+3)/4*4;
-	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
+#if defined(TARGET_GENERIC)
+	double pU_stack[M_KERNEL*K_MAX_STACK];
+	double pd_stack[K_MAX_STACK];
+#else
+	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 64 );
+	ALIGNED( double pd_stack[K_MAX_STACK], 64 );
+#endif
+	int sdu_stack = K_MAX_STACK;
+	int k4 = (k0+3)/4*4;
 
 	struct blasfeo_pm_dmat tA, tB;
 	int sda, sdb;
@@ -2916,8 +3067,9 @@ void blasfeo_hp_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int m1, n1, k1;
 	int pack_B;
 
-	double *pU, *pA, *dA, *pB, *dB;
+	double *pU;
 	int sdu;
+	int pU_size;
 
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
@@ -2933,65 +3085,33 @@ void blasfeo_hp_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 lutn:
 //	goto lutn_m1;
-//	goto lutn_n1;
 //	goto llnn_2;
-#if 1
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if(m>=300 | n>=300 | m>K_MAX_STACK)
+	if(m<300 & n<300 & k0<=K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m>=64 | n>=64 | m>K_MAX_STACK)
+	if(m<64 & n<64 & k0<=K_MAX_STACK)
 #else
-	if(m>=12 | n>=12 | m>K_MAX_STACK)
+	if(m<12 & n<12 & k0<=K_MAX_STACK)
 #endif
 		{
-		goto llnn_2;
+		goto lutn_n1;
 		}
 	else
 		{
-//		if(n<=m)
-//			{
-			goto lutn_n1;
-//			}
-//		else
-//			{
-//			goto lutn_m1;
-//			}
+		goto llnn_2;
 		}
-#else
-	if(m<=K_MAX_STACK)
-		{
-		if(m>=n)
-			{
-			if(n<300 & m<300)
-				{
-//				printf("\nn1\n");
-				goto lutn_n1;
-				}
-			}
-		else
-			{
-			if(m<300)
-				{
-//				printf("\nm1\n");
-				goto lutn_m1;
-				}
-			}
-		}
-//	printf("\n2\n");
-	goto llnn_2;
-#endif
 
 	// never to get here
 	return;
 
+#if 0
 lutn_m1:
 
-	pU = pU0;
-	sdu = sdu0;
-	dA = pd0;
+	pU = pU_stack;
+	sdu = sdu_stack;
+	dA = pd_stack;
 
-	int nc = 256;
-	int nleft;
+	nc = 256;
 
 	// no block over m for now
 	for(ii=0; ii<m; ii++)
@@ -3006,13 +3126,14 @@ lutn_m1:
 		}
 
 	return;
+#endif
 
 
 lutn_n1:
 	// XXX limits of ii and jj swapped !!!
-	pU = pU0;
-	sdu = sdu0;
-	dA = pd0;
+	pU = pU_stack;
+	sdu = sdu_stack;
+	dA = pd_stack;
 
 	for(ii=0; ii<m; ii++)
 		dA[ii] = 1.0/A[ii+ii*lda];
@@ -3142,152 +3263,29 @@ lutn_n1_return:
 
 llnn_2:
 	m1 = (m+128-1)/128*128;
-	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
-	tB_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
+	n1 = (n+128-1)/128*128;
+	tA_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
+	tB_size = blasfeo_pm_memsize_dmat(ps, m1, n1);
 	mem = malloc(tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
-	blasfeo_pm_create_dmat(ps, m_kernel, m, &tA, (void *) mem_align);
-	blasfeo_pm_create_dmat(ps, m, m, &tB, (void *) (mem_align+tA_size));
+	blasfeo_pm_create_dmat(ps, m, m, &tA, (void *) mem_align);
+	blasfeo_pm_create_dmat(ps, m, n, &tB, (void *) (mem_align+tA_size));
 
-	pU = tA.pA;
-	sdu = tA.cn;
+	pA = tA.pA;
+	sda = tA.cn;
+	dA = tA.dA;
 	pB = tB.pA;
 	sdb = tB.cn;
-	dB = tB.dA;
 
+	// pack A
 	// upper to lower
-	for(ii=0; ii<m-3; ii+=4)
-		{
-		kernel_dpack_tn_4_lib4(ii+4, A+ii*lda, lda, pB+ii*sdb);
-		}
-	if(ii<m)
-		{
-		kernel_dpack_tn_4_vs_lib4(m, A+ii*lda, lda, pB+ii*sdb, m-ii);
-		}
-
+	kernel_dpack_buffer_ut(m, A, lda, pA, sda);
+	// diag A
 	for(ii=0; ii<m; ii++)
-		dB[ii] = 1.0/A[ii+ii*lda];
+		dA[ii] = 1.0/A[ii+ii*lda];
 
-	ii = 0;
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	for(; ii<n-11; ii+=12)
-		{
-		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
-		kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pU+4*sdu);
-		kernel_dpack_tn_4_lib4(m, B+(ii+8)*ldb, ldb, pU+8*sdu);
-		for(jj=0; jj<m-3; jj+=4)
-			{
-			kernel_dtrsm_nt_rl_inv_12x4_lib4(jj, pU, sdu, pB+jj*sdb, &alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, dB+jj);
-			}
-		if(jj<m)
-			{
-			kernel_dtrsm_nt_rl_inv_12x4_vs_lib4(jj, pU, sdu, pB+jj*sdb, &alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
-			}
-		kernel_dunpack_nt_4_lib4(m, pU, D+ii*ldd, ldd);
-		kernel_dunpack_nt_4_lib4(m, pU+4*sdu, D+(ii+4)*ldd, ldd);
-		kernel_dunpack_nt_4_lib4(m, pU+8*sdu, D+(ii+8)*ldd, ldd);
-		}
-	if(ii<n)
-		{
-		if(n-ii<=4)
-			{
-			goto llnn_2_left_4;
-			}
-		if(n-ii<=8)
-			{
-			goto llnn_2_left_8;
-			}
-		else
-			{
-			goto llnn_2_left_12;
-			}
-		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	for(; ii<n-7; ii+=8)
-		{
-		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
-		kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pU+4*sdu);
-		for(jj=0; jj<m-3; jj+=4)
-			{
-			kernel_dtrsm_nt_rl_inv_8x4_lib4(jj, pU, sdu, pB+jj*sdb, &alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, dB+jj);
-			}
-		if(jj<m)
-			{
-			kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(jj, pU, sdu, pB+jj*sdb, &alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
-			}
-		kernel_dunpack_nt_4_lib4(m, pU, D+ii*ldd, ldd);
-		kernel_dunpack_nt_4_lib4(m, pU+4*sdu, D+(ii+4)*ldd, ldd);
-		}
-	if(ii<n)
-		{
-		if(n-ii<=4)
-			{
-			goto llnn_2_left_4;
-			}
-		else
-			{
-			goto llnn_2_left_8;
-			}
-		}
-#else
-	for(; ii<n-3; ii+=4)
-		{
-		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
-		for(jj=0; jj<m-3; jj+=4)
-			{
-			kernel_dtrsm_nt_rl_inv_4x4_lib4(jj, pU, pB+jj*sdb, &alpha, pU+jj*ps, pU+jj*ps, pB+jj*ps+jj*sdb, dB+jj);
-			}
-		if(jj<m)
-			{
-			kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(jj, pU, pB+jj*sdb, &alpha, pU+jj*ps, pU+jj*ps, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
-			}
-		kernel_dunpack_nt_4_lib4(m, pU, D+ii*ldd, ldd);
-		}
-	if(ii<n)
-		{
-		goto llnn_2_left_4;
-		}
-#endif
-	goto llnn_2_return;
+	blasfeo_hp_dtrsm_llnn_m2(m, n, alpha, pA, sda, dA, B, ldb, D, ldd, pB, sdb);
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-llnn_2_left_12:
-	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
-	kernel_dpack_tn_4_lib4(m, B+(ii+4)*ldb, ldb, pU+4*sdu);
-	kernel_dpack_tn_4_vs_lib4(m, B+(ii+8)*ldb, ldb, pU+8*sdu, n-ii);
-	for(jj=0; jj<m; jj+=4)
-		{
-		kernel_dtrsm_nt_rl_inv_12x4_vs_lib4(jj, pU, sdu, pB+jj*sdb, &alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
-		}
-	kernel_dunpack_nt_4_lib4(m, pU, D+ii*ldd, ldd);
-	kernel_dunpack_nt_4_lib4(m, pU+4*sdu, D+(ii+4)*ldd, ldd);
-	kernel_dunpack_nt_4_vs_lib4(m, pU+8*sdu, D+(ii+8)*ldd, ldd, n-ii-8);
-goto llnn_2_return;
-#endif
-
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-llnn_2_left_8:
-	kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
-	kernel_dpack_tn_4_vs_lib4(m, B+(ii+4)*ldb, ldb, pU+4*sdu, n-ii);
-	for(jj=0; jj<m; jj+=4)
-		{
-		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4(jj, pU, sdu, pB+jj*sdb, &alpha, pU+jj*ps, sdu, pU+jj*ps, sdu, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
-		}
-	kernel_dunpack_nt_4_lib4(m, pU, D+ii*ldd, ldd);
-	kernel_dunpack_nt_4_vs_lib4(m, pU+4*sdu, D+(ii+4)*ldd, ldd, n-ii-4);
-goto llnn_2_return;
-#endif
-
-llnn_2_left_4:
-	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
-	for(jj=0; jj<m; jj+=4)
-		{
-		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4(jj, pU, pB+jj*sdb, &alpha, pU+jj*ps, pU+jj*ps, pB+jj*ps+jj*sdb, dB+jj, n-ii, m-jj);
-		}
-	kernel_dunpack_nt_4_vs_lib4(m, pU, D+ii*ldd, ldd, n-ii);
-goto llnn_2_return;
-
-llnn_2_return:
 	free(mem);
 	return;
 
