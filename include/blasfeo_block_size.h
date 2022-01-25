@@ -53,6 +53,7 @@
 #define D_PS 8 // panel size
 #define D_PLD 8 // 4 // GCD of panel length
 #define D_M_KERNEL 24 // max kernel size
+#define D_N_KERNEL 8 // max kernel size
 #define D_KC 128 //256 // 192
 #define D_NC 144 //72 //96 //72 // 120 // 512
 #define D_MC 2400 // 6000
@@ -60,6 +61,7 @@
 #define S_PS 16 // panel size
 #define S_PLD 4 // GCD of panel length TODO probably 16 when writing assebly
 #define S_M_KERNEL 32 // max kernel size
+#define S_N_KERNEL 8 // max kernel size
 #define S_KC 128 //256
 #define S_NC 128 //144
 #define S_MC 3000
@@ -74,6 +76,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 12 // max kernel size
+#define D_N_KERNEL 8 // max kernel size
 #define D_KC 256 // 192
 #define D_NC 64 //96 //72 // 120 // 512
 #define D_MC 1500
@@ -81,6 +84,7 @@
 #define S_PS 8 // panel size
 #define S_PLD 4 // 2 // GCD of panel length
 #define S_M_KERNEL 24 // max kernel size
+#define S_N_KERNEL 8 // max kernel size
 #define S_KC 256
 #define S_NC 144
 #define S_MC 3000
@@ -95,6 +99,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 8 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 256 //320 //256 //320
 #define D_NC 72 //64 //72 //60 // 120
 #define D_MC 1000 // 800
@@ -102,6 +107,7 @@
 #define S_PS 8 // panel size
 #define S_PLD 4 // 2 // GCD of panel length
 #define S_M_KERNEL 16 // max kernel size
+#define S_N_KERNEL 8 // max kernel size
 #define S_KC 256
 #define S_NC 144
 #define S_MC 2000
@@ -114,6 +120,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 256
 #define D_NC 128 // TODO these are just dummy
 #define D_MC 3000 // TODO these are just dummy
@@ -121,6 +128,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
+#define S_N_KERNEL 4 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -133,6 +141,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 256
 #define D_NC 128 // TODO these are just dummy
 #define D_MC 3000 // TODO these are just dummy
@@ -140,6 +149,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
+#define S_N_KERNEL 4 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -153,6 +163,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 256
 #define D_NC 128 // TODO these are just dummy
 #define D_MC 3000 // TODO these are just dummy
@@ -160,6 +171,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
+#define S_N_KERNEL 4 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -173,6 +185,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 256
 #define D_NC 128 // TODO these are just dummy
 #define D_MC 3000 // TODO these are just dummy
@@ -180,6 +193,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
+#define S_N_KERNEL 4 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -194,6 +208,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 8 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 512 //256
 #define D_NC 128 //256
 #define D_MC 6000
@@ -201,6 +216,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
+#define S_N_KERNEL 8 // max kernel size
 #define S_KC 512
 #define S_NC 256
 #define S_MC 6000
@@ -215,6 +231,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 8 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 512 //256
 #define D_NC 128 //256
 #define D_MC 6000
@@ -222,6 +239,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
+#define S_N_KERNEL 8 // max kernel size
 #define S_KC 512
 #define S_NC 256
 #define S_MC 6000
@@ -236,6 +254,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 8 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 320
 #define D_NC 256
 #define D_MC 6000
@@ -243,6 +262,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
+#define S_N_KERNEL 8 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -257,6 +277,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 8 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 128 //224 //256 //192
 #define D_NC 72 //40 //36 //48
 #define D_MC (4*192) //512 //488 //600
@@ -264,6 +285,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
+#define S_N_KERNEL 8 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -278,6 +300,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 12 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 224
 #define D_NC 160
 #define D_MC 6000
@@ -285,6 +308,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
+#define S_N_KERNEL 8 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -299,6 +323,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 12 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 160
 #define D_NC 128
 #define D_MC 6000
@@ -306,6 +331,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 8 // max kernel size
+#define S_N_KERNEL 8 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -319,6 +345,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 256
 #define D_NC 128 // TODO these are just dummy
 #define D_MC 3000 // TODO these are just dummy
@@ -326,6 +353,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
+#define S_N_KERNEL 4 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -339,6 +367,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 256
 #define D_NC 128 // TODO these are just dummy
 #define D_MC 3000 // TODO these are just dummy
@@ -346,6 +375,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
+#define S_N_KERNEL 4 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -359,6 +389,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 256
 #define D_NC 128 // TODO these are just dummy
 #define D_MC 3000 // TODO these are just dummy
@@ -366,6 +397,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
+#define S_N_KERNEL 4 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy
@@ -379,6 +411,7 @@
 #define D_PS 4 // panel size
 #define D_PLD 4 // 2 // GCD of panel length
 #define D_M_KERNEL 4 // max kernel size
+#define D_N_KERNEL 4 // max kernel size
 #define D_KC 256
 #define D_NC 128 // TODO these are just dummy
 #define D_MC 3000 // TODO these are just dummy
@@ -387,6 +420,7 @@
 #define S_PS 4
 #define S_PLD 4 //2
 #define S_M_KERNEL 4 // max kernel size
+#define S_N_KERNEL 4 // max kernel size
 #define S_KC 256
 #define S_NC 128 // TODO these are just dummy
 #define S_MC 3000 // TODO these are just dummy

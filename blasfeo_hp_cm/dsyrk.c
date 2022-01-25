@@ -2618,7 +2618,7 @@ void blasfeo_hp_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dm
 
 
 //	goto ln_1;
-	goto lx_2;
+//	goto lx_2;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>=200 | k>=200 | k>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
