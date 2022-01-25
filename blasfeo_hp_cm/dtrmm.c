@@ -98,10 +98,6 @@
 
 
 
-// TODO use dgemm_nt_n2 to block right variants !!!!!
-
-
-
 // XXX the B matrix is passed transposed !!!
 // TODO cortex A57 !!!
 static void blasfeo_hp_dtrmm_llnn_m2(int m, int n, double alpha, double *pA0, int sda0, double *pB0_t, int sdb0_t, double *D, int ldd)
@@ -3489,7 +3485,7 @@ rlnn_1_return:
 rutn_2:
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
-#if 0
+#if 1
 
 	// cache blocking alg
 
