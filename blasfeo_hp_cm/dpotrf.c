@@ -43,7 +43,6 @@
 #include <blasfeo_d_kernel.h>
 #include <blasfeo_stdlib.h>
 #include <blasfeo_memory.h>
-#include <blasfeo_d_blasfeo_hp_api.h>
 
 
 
@@ -63,6 +62,7 @@
 #define blasfeo_hp_dtrsm_rltn blasfeo_hp_cm_dtrsm_rltn
 #define blasfeo_hp_dsyrk3_ln blasfeo_hp_cm_dsyrk3_ln
 #endif
+#include <blasfeo_d_blasfeo_hp_api.h>
 
 
 
