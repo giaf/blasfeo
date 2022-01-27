@@ -32,8 +32,8 @@
 # Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             #
 #                                                                                                 #
 ###################################################################################################
-add_executable(benchmark_d_blas benchmark_d_blas.c)
-add_executable(benchmark_s_blas benchmark_s_blas.c)
+add_executable(benchmark_d_blas benchmark_d_blas_api.c)
+add_executable(benchmark_s_blas benchmark_s_blas_api.c)
 
 # link blas external blas implementations
 if(${EXTERNAL_BLAS} MATCHES OPENBLAS)
