@@ -86,6 +86,13 @@
 
 
 
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define blasfeo_hp_dgemm_tn blasfeo_hp_cm_dgemm_tn
+#endif
+#include <blasfeo_d_blasfeo_hp_api.h>
+
+
+
 #define CACHE_LINE_EL D_CACHE_LINE_EL
 #define L1_CACHE_EL D_L1_CACHE_EL
 #define L2_CACHE_EL D_L2_CACHE_EL
@@ -3087,6 +3094,7 @@ void blasfeo_hp_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 	double *C;
 	int ldc;
+	struct blasfeo_dmat *sC;
 
 
 lutn:
@@ -3320,7 +3328,16 @@ llnn_2:
 
 		C = B;
 		ldc = ldb;
+		sC = sB;
 
+#if 0
+
+		if(ii>0)
+			{
+
+			blasfeo_hp_dgemm_tn(mleft, n, ii, d_minvalpha, sA, 0, ii, sD, 0, 0, d_1, sC, ii, 0, sD, ii, 0);
+
+#else
 		for(ll=0; ll<ii; ll+=kleft)
 			{
 
@@ -3350,8 +3367,10 @@ llnn_2:
 
 				}
 
+#endif
 			C = D;
 			ldc = ldd;
+			sC = sD;
 
 			}
 
@@ -3385,6 +3404,7 @@ llnn_2:
 
 			C = D;
 			ldc = ldd;
+			sC = sD;
 
 			}
 
