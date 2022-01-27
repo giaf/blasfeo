@@ -67,7 +67,7 @@ set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
 # set(LA EXTERNAL_BLAS_WRAPPER CACHE STRING "Linear algebra backend")
 
 # Export additional back-ends with different naming
-set(BLASFEO_REF_API OFF)
+set(BLASFEO_REF_API ON)
 set(BLASFEO_HP_API OFF)
 
 # Select the Matrix Format internally used in the blasfeo_{d,s}mat structure
@@ -259,7 +259,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLA_${LA}")
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DLA_${LA}")
 
 if(${BLASFEO_REF_API})
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBLASREF_REF_API")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBLASFEO_REF_API")
 endif()
 
 # Specify the matrix format to use
