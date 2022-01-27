@@ -43,6 +43,7 @@
 #include <blasfeo_d_kernel.h>
 #include <blasfeo_stdlib.h>
 #include <blasfeo_memory.h>
+#include <blasfeo_d_blasfeo_hp_api.h>
 
 
 
@@ -54,6 +55,13 @@
 #define blasfeo_dpotrf_l blasfeo_cm_dpotrf_l
 #define blasfeo_dpotrf_u blasfeo_cm_dpotrf_u
 #define blasfeo_dpotrf_l_mn blasfeo_cm_dpotrf_l_mn
+#endif
+
+
+
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define blasfeo_hp_dtrsm_rltn blasfeo_hp_cm_dtrsm_rltn
+#define blasfeo_hp_dsyrk3_ln blasfeo_hp_cm_dsyrk3_ln
 #endif
 
 
@@ -757,14 +765,14 @@ l_2:
 
 	// cache blocking alg
 
-	mc0 = 3000; //MC;
+	mc0 = MC;
 	nc0 = NC;
 	kc0 = KC;
 
 	// these must all be multiple of ps !!!
-	mc0 = 16;
-	nc0 = 4;
-	kc0 = 8;
+//	mc0 = 12;
+//	nc0 = 4;
+//	kc0 = 8;
 
 	mc = m<mc0 ? m : mc0;
 //	nc = n<nc0 ? n : nc0;
@@ -810,35 +818,27 @@ l_2:
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
 
-			// pack A
-#if defined(TARGET_X64_INTEL_SKYLAKE_X)
-#else
-//			kernel_dpack_buffer_ft(kleft, mleft, A+ll+ii*lda, lda, pA, sda);
-//			kernel_dpack_buffer_ft(kleft, mleft, A+ll+ii*lda, lda, pA, sda);
-#endif
-
 			blasfeo_hp_dpotrf_l_mn_m2(mleft-ll, kleft, C+ii+ll+(ii+ll)*ldc, ldc, D+ii+ll+(ii+ll)*ldd, ldd, pA, dA, sda);
-
-//			blasfeo_pm_print_dmat(mleft, kleft, &tA, 0, 0);
 
 			for(jj=ll+kleft; jj<mleft; jj+=nleft)
 				{
 
 				nleft = mleft-jj<nc ? mleft-jj : nc;
 
-				// TODO dsyrk_ln_mn
-//				blasfeo_hp_dgemm_nt_m2(mleft-jj, nleft, kleft, d_m1, pA+(jj-ll)*sda, sda, pA+(jj-ll)*sda, sda, d_1, C+ii+jj+(ii+jj)*ldc, ldc, D+ii+jj+(ii+jj)*ldd, ldd);
 				blasfeo_hp_dsyrk_ln_mn_m2(mleft-jj, nleft, kleft, d_m1, pA+(jj-ll)*sda, sda, pA+(jj-ll)*sda, sda, d_1, C+ii+jj+(ii+jj)*ldc, ldc, D+ii+jj+(ii+jj)*ldd, ldd);
-//				d_print_mat(mleft-jj, nleft, D+ii+jj+(ii+jj)*ldd, ldd);
 
 				}
 
 			}
 
-		free(mem);
-		return;
+		blasfeo_hp_dtrsm_rltn(m-ii-mleft, mleft, 1.0, sD, di+ii, dj+ii, sC, ci+ii+mleft, cj+ii, sD, di+ii+mleft, dj+ii);
+
+		blasfeo_hp_dsyrk3_ln(m-ii-mleft, mleft, -1.0, sD, di+ii+mleft, dj+ii, 1.0, sC, ci+ii+mleft, cj+ii+mleft, sD, di+ii+mleft, dj+ii+mleft);
 
 		}
+
+	free(mem);
+	return;
 
 #else
 
