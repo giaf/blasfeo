@@ -78,10 +78,10 @@
 #endif
 
 
-#ifdef HP_BLAS // i.e. when compiled from blas_api/dgemm_ref.c
-#define blasfeo_hp_dgemm_nt_m2 blasfeo_hp_cm_dgemm_nt_m2
-#define blasfeo_hp_dgemm_nt_n2 blasfeo_hp_cm_dgemm_nt_n2
-#endif
+//#ifdef HP_BLAS // i.e. when compiled from blas_api/dgemm_ref.c
+//#define blasfeo_hp_dgemm_nt_m2 blasfeo_hp_cm_dgemm_nt_m2
+//#define blasfeo_hp_dgemm_nt_n2 blasfeo_hp_cm_dgemm_nt_n2
+//#endif
 
 
 #define CACHE_LINE_EL D_CACHE_LINE_EL
@@ -2550,22 +2550,22 @@ tt_n1_return:
 
 
 
-#ifdef HP_BLAS
-
-static void blas_hp_dgemm_nn(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
-	{
-
-#if defined(PRINT_NAME)
-	printf("\nblas_hp_dgemm_nn %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
-#endif
-
-	if(m<=0 | n<=0)
-		return;
-
-	int ldd = ldc;
-	double *D = C;
-
-#else
+//#ifdef HP_BLAS
+//
+//static void blas_hp_dgemm_nn(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
+//	{
+//
+//#if defined(PRINT_NAME)
+//	printf("\nblas_hp_dgemm_nn %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+//#endif
+//
+//	if(m<=0 | n<=0)
+//		return;
+//
+//	int ldd = ldc;
+//	double *D = C;
+//
+//#else
 
 void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
@@ -2587,7 +2587,7 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double *C = sC->pA + ci + cj*ldc;
 	double *D = sD->pA + di + dj*ldd;
 
-#endif
+//#endif
 
 //	printf("\n%p %d %p %d %p %d %p %d\n", A, lda, B, ldb, C, ldc, D, ldd);
 
@@ -3615,22 +3615,22 @@ nn_0_return:
 
 
 
-#ifdef HP_BLAS
-
-static void blas_hp_dgemm_nt(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
-	{
-
-#if defined(PRINT_NAME)
-	printf("\nblas_hp_dgemm_nt %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
-#endif
-
-	if(m<=0 | n<=0)
-		return;
-
-	int ldd = ldc;
-	double *D = C;
-
-#else
+//#ifdef HP_BLAS
+//
+//static void blas_hp_dgemm_nt(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
+//	{
+//
+//#if defined(PRINT_NAME)
+//	printf("\nblas_hp_dgemm_nt %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+//#endif
+//
+//	if(m<=0 | n<=0)
+//		return;
+//
+//	int ldd = ldc;
+//	double *D = C;
+//
+//#else
 
 void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
@@ -3652,7 +3652,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double *C = sC->pA + ci + cj*ldc;
 	double *D = sD->pA + di + dj*ldd;
 
-#endif
+//#endif
 
 	int ii, jj, ll;
 	int iii;
@@ -4311,22 +4311,22 @@ nt_0_return:
 
 
 
-#ifdef HP_BLAS
-
-static void blas_hp_dgemm_tn(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
-	{
-
-#if defined(PRINT_NAME)
-	printf("\nblas_hp_dgemm_tn %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
-#endif
-
-	if(m<=0 | n<=0)
-		return;
-
-	int ldd = ldc;
-	double *D = C;
-
-#else
+//#ifdef HP_BLAS
+//
+//static void blas_hp_dgemm_tn(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
+//	{
+//
+//#if defined(PRINT_NAME)
+//	printf("\nblas_hp_dgemm_tn %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+//#endif
+//
+//	if(m<=0 | n<=0)
+//		return;
+//
+//	int ldd = ldc;
+//	double *D = C;
+//
+//#else
 
 void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
@@ -4348,7 +4348,7 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double *C = sC->pA + ci + cj*ldc;
 	double *D = sD->pA + di + dj*ldd;
 
-#endif
+//#endif
 
 //	printf("\n%p %d %p %d %p %d %p %d\n", A, lda, B, ldb, C, ldc, D, ldd);
 
@@ -4872,22 +4872,22 @@ free(mem);
 
 
 
-#ifdef HP_BLAS
-
-static void blas_hp_dgemm_tt(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
-	{
-
-#if defined(PRINT_NAME)
-	printf("\nblas_hp_dgemm_tt %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
-#endif
-
-	if(m<=0 | n<=0)
-		return;
-
-	int ldd = ldc;
-	double *D = C;
-
-#else
+//#ifdef HP_BLAS
+//
+//static void blas_hp_dgemm_tt(int m, int n, int k, double alpha, double *A, int lda, double *B, int ldb, double beta, double *C, int ldc)
+//	{
+//
+//#if defined(PRINT_NAME)
+//	printf("\nblas_hp_dgemm_tt %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+//#endif
+//
+//	if(m<=0 | n<=0)
+//		return;
+//
+//	int ldd = ldc;
+//	double *D = C;
+//
+//#else
 
 void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
@@ -4909,7 +4909,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	double *C = sC->pA + ci + cj*ldc;
 	double *D = sD->pA + di + dj*ldd;
 
-#endif
+//#endif
 
 //	printf("\n%p %d %p %d %p %d %p %d\n", A, lda, B, ldb, C, ldc, D, ldd);
 
@@ -5577,7 +5577,7 @@ tt_0_return:
 
 
 #if defined(LA_HIGH_PERFORMANCE)
-#ifndef HP_BLAS
+//#ifndef HP_BLAS
 
 
 
@@ -5609,6 +5609,6 @@ void blasfeo_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA
 
 
 
-#endif
+//#endif
 #endif
 

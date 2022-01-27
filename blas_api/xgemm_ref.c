@@ -68,32 +68,32 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 #endif
 
 //#ifdef HP_BLAS_DP
-#ifdef HP_BLAS
-
-	if(*ta=='n' | *ta=='N')
-		{
-		if(*tb=='n' | *tb=='N')
-			{
-			HP_GEMM_NN(*pm, *pn, *pk, *palpha, A, *plda, B, *pldb, *pbeta, C, *pldc);
-			}
-		else
-			{
-			HP_GEMM_NT(*pm, *pn, *pk, *palpha, A, *plda, B, *pldb, *pbeta, C, *pldc);
-			}
-		}
-	else
-		{
-		if(*tb=='n' | *tb=='N')
-			{
-			HP_GEMM_TN(*pm, *pn, *pk, *palpha, A, *plda, B, *pldb, *pbeta, C, *pldc);
-			}
-		else
-			{
-			HP_GEMM_TT(*pm, *pn, *pk, *palpha, A, *plda, B, *pldb, *pbeta, C, *pldc);
-			}
-		}
-
-#else
+//#ifdef HP_BLAS
+//
+//	if(*ta=='n' | *ta=='N')
+//		{
+//		if(*tb=='n' | *tb=='N')
+//			{
+//			HP_GEMM_NN(*pm, *pn, *pk, *palpha, A, *plda, B, *pldb, *pbeta, C, *pldc);
+//			}
+//		else
+//			{
+//			HP_GEMM_NT(*pm, *pn, *pk, *palpha, A, *plda, B, *pldb, *pbeta, C, *pldc);
+//			}
+//		}
+//	else
+//		{
+//		if(*tb=='n' | *tb=='N')
+//			{
+//			HP_GEMM_TN(*pm, *pn, *pk, *palpha, A, *plda, B, *pldb, *pbeta, C, *pldc);
+//			}
+//		else
+//			{
+//			HP_GEMM_TT(*pm, *pn, *pk, *palpha, A, *plda, B, *pldb, *pbeta, C, *pldc);
+//			}
+//		}
+//
+//#else
 
 	struct MAT sA;
 	sA.pA = A;
@@ -130,7 +130,7 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 			}
 		}
 
-#endif
+//#endif
 
 #ifdef TIME_INT
 	double flops = 2 * *pm * *pn * *pk;

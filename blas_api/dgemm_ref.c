@@ -41,14 +41,14 @@
 
 
 
-#if ( defined(BLAS_API) & defined(LA_HIGH_PERFORMANCE) )
-#define HP_BLAS
-#define HP_BLAS_DP
-#define HP_GEMM_NN blas_hp_dgemm_nn
-#define HP_GEMM_NT blas_hp_dgemm_nt
-#define HP_GEMM_TN blas_hp_dgemm_tn
-#define HP_GEMM_TT blas_hp_dgemm_tt
-#endif
+//#if ( defined(BLAS_API) & defined(LA_HIGH_PERFORMANCE) )
+//#define HP_BLAS
+//#define HP_BLAS_DP
+//#define HP_GEMM_NN blas_hp_dgemm_nn
+//#define HP_GEMM_NT blas_hp_dgemm_nt
+//#define HP_GEMM_TN blas_hp_dgemm_tn
+//#define HP_GEMM_TT blas_hp_dgemm_tt
+//#endif
 
 
 
