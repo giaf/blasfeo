@@ -78,6 +78,10 @@
 #endif
 
 
+#ifdef HP_BLAS // i.e. when compiled from blas_api/dgemm_ref.c
+#define blasfeo_hp_dgemm_nt_m2 blasfeo_hp_cm_dgemm_nt_m2
+#endif
+
 
 #define CACHE_LINE_EL D_CACHE_LINE_EL
 #define L1_CACHE_EL D_L1_CACHE_EL
@@ -91,7 +95,7 @@
 
 
 
-static void blasfeo_hp_dgemm_nt_m2(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
+void blasfeo_hp_dgemm_nt_m2(int m, int n, int k, double alpha, double *pA, int sda, double *pB, int sdb, double beta, double *C, int ldc, double *D, int ldd)
 	{
 
 	int ii, jj;
@@ -2563,8 +2567,8 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 64 );
 //	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 4096 );
 #endif
-	int sdu_stack = (k+3)/4*4;
-	sdu_stack = sdu_stack<K_MAX_STACK ? sdu_stack : K_MAX_STACK;
+	int sdu_stack = K_MAX_STACK;
+	int k4 = (k+3)/4*4;
 
 	double *pU;
 	int sdu;
@@ -2729,6 +2733,8 @@ nn_m1:
 		sdu = sdu_stack;
 		}
 
+	sdu = k4<sdu ? k4 : sdu;
+
 //	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
 	kc = KC;
@@ -2802,6 +2808,8 @@ nn_n1:
 		pU = pU_stack;
 		sdu = sdu_stack;
 		}
+
+	sdu = k4<sdu ? k4 : sdu;
 
 //	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
@@ -3671,8 +3679,8 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #else
 	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 64 );
 #endif
-	int sdu_stack = (k+3)/4*4;
-	sdu_stack = sdu_stack<K_MAX_STACK ? sdu_stack : K_MAX_STACK;
+	int sdu_stack = K_MAX_STACK;
+	int k4 = (k+3)/4*4;
 
 	double *pU;
 	int sdu;
@@ -3828,6 +3836,8 @@ nt_m1:
 		sdu = sdu_stack;
 		}
 
+	sdu = k4<sdu ? k4 : sdu;
+
 //	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
 	kc = KC;
@@ -3881,6 +3891,8 @@ nt_n1:
 		pU = pU_stack;
 		sdu = sdu_stack;
 		}
+
+	sdu = k4<sdu ? k4 : sdu;
 
 //	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
@@ -4386,8 +4398,8 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #else
 	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 64 );
 #endif
-	int sdu_stack = (k+3)/4*4;
-	sdu_stack = sdu_stack<K_MAX_STACK ? sdu_stack : K_MAX_STACK;
+	int sdu_stack = K_MAX_STACK;
+	int k4 = (k+3)/4*4;
 
 	double *pU;
 	int sdu;
@@ -4509,6 +4521,8 @@ tn_m1:
 		sdu = sdu_stack;
 		}
 
+	sdu = k4<sdu ? k4 : sdu;
+
 //	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
 	kc = KC;
@@ -4564,6 +4578,8 @@ tn_n1:
 		pU = pU_stack;
 		sdu = sdu_stack;
 		}
+
+	sdu = k4<sdu ? k4 : sdu;
 
 //	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
@@ -4679,7 +4695,7 @@ tn_2:
 
 			mleft = m-ii<mc ? m-ii : mc;
 
-			// pack A
+			// pack and tran A
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 			for(iii=0; iii<mleft-7; iii+=8)
 				{
@@ -4973,8 +4989,8 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #else
 	ALIGNED( double pU_stack[M_KERNEL*K_MAX_STACK], 64 );
 #endif
-	int sdu_stack = (k+3)/4*4;
-	sdu_stack = sdu_stack<K_MAX_STACK ? sdu_stack : K_MAX_STACK;
+	int sdu_stack = K_MAX_STACK;
+	int k4 = (k+3)/4*4;
 
 	double *pU;
 	int sdu;
@@ -5130,6 +5146,8 @@ tt_m1:
 		sdu = sdu_stack;
 		}
 
+	sdu = k4<sdu ? k4 : sdu;
+
 //	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
 	kc = KC;
@@ -5183,6 +5201,8 @@ tt_n1:
 		pU = pU_stack;
 		sdu = sdu_stack;
 		}
+
+	sdu = k4<sdu ? k4 : sdu;
 
 //	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
 //	kc = 4;
