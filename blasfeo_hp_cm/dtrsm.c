@@ -233,7 +233,7 @@ lutn_m1_return:
 static void blasfeo_hp_dtrsm_llnn_m2(int m, int n, double alpha, double *pA0, int sda0, double *dA0, double *B, int ldb, double *D, int ldd, double *pB0, int sdb0)
 	{
 
-#if 1
+#if 0
 
 	double *pA = pA0;
 	int sda = sda0;
