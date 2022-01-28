@@ -327,7 +327,7 @@ static void blasfeo_hp_dtrsm_llnn_m2(int m, int n, double alpha, double *pA0, in
 
 #if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 llnn_2_left_12:
-	for(jj=0; jj<n-3; jj+=4)
+	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dtrsm_nt_ll_inv_12x4_vs_lib44cc4(ii, pA+ii*sda, sda, pB+jj*sdb, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, pA+ii*sda+ii*ps, sda, dA+ii, m-ii, n-jj);
 		kernel_dpack_tn_4_vs_lib4(m-ii, D+ii+jj*ldd, ldd, pB+jj*sdb+ii*ps, n-jj);
@@ -337,7 +337,7 @@ goto llnn_2_return;
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 llnn_2_left_8:
-	for(jj=0; jj<n-3; jj+=4)
+	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dtrsm_nt_ll_inv_8x4_vs_lib44cc4(ii, pA+ii*sda, sda, pB+jj*sdb, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, pA+ii*sda+ii*ps, sda, dA+ii, m-ii, n-jj);
 		kernel_dpack_tn_4_vs_lib4(m-ii, D+ii+jj*ldd, ldd, pB+jj*sdb+ii*ps, n-jj);
@@ -346,7 +346,7 @@ goto llnn_2_return;
 #endif
 
 llnn_2_left_4:
-	for(jj=0; jj<n-3; jj+=4)
+	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dtrsm_nt_ll_inv_4x4_vs_lib44cc4(ii, pA+ii*sda, pB+jj*sdb, &alpha, B+ii+jj*ldb, ldb, D+ii+jj*ldd, ldd, pA+ii*sda+ii*ps, dA+ii, m-ii, n-jj);
 		kernel_dpack_tn_4_vs_lib4(m-ii, D+ii+jj*ldd, ldd, pB+jj*sdb+ii*ps, n-jj);
