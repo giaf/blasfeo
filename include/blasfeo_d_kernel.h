@@ -1257,6 +1257,8 @@ void kernel_dgemm_tt_8x8_vs_libc8cc(int kmax, double *alpha, double *A, int lda,
 void kernel_dvecld_inc1(int kmax, double *x);
 void kernel_dveccp_inc1(int kmax, double *x, double *y);
 
+void kernel_dgetr_tn_4_lib(int kmax, double *A, int lda, double *C, int ldc);
+void kernel_dgetr_tn_4_vs_lib(int kmax, double *A, int lda, double *C, int ldc, int m1);
 
 
 // building blocks for blocked algorithms

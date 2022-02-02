@@ -50,6 +50,7 @@ KERNEL_OBJS = \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_diag_lib8.o \
 		kernel_sgetr_lib8.o \
@@ -79,6 +80,7 @@ KERNEL_OBJS = \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_16x4_lib8.o \
 		kernel_sgemm_8x8_lib8.o \

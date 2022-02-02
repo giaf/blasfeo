@@ -271,6 +271,7 @@ KERNEL_OBJS = \
 		kernel/avx/kernel_dgemm_diag_lib4.o \
 		kernel/avx/kernel_dgecp_lib4.o \
 		kernel/avx/kernel_dpack_lib4.o \
+		kernel/avx/kernel_dgetr_lib.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
@@ -318,6 +319,7 @@ KERNEL_OBJS = \
 		kernel/avx/kernel_dgecp_lib4.o \
 		kernel/avx/kernel_dgetr_lib4.o \
 		kernel/avx/kernel_dpack_lib4.o \
+		kernel/avx/kernel_dgetr_lib.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
@@ -364,6 +366,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
+		kernel/generic/kernel_dgetr_lib.o \
 		\
 		kernel/sse3/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
@@ -399,6 +402,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
+		kernel/generic/kernel_dgetr_lib.o \
 		\
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_diag_lib4.o \
@@ -434,6 +438,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
+		kernel/generic/kernel_dgetr_lib.o \
 		\
 		kernel/avx_x86/kernel_sgemm_4x4_lib4.o \
 		kernel/avx_x86/kernel_sgemv_4_lib4.o \
@@ -472,6 +477,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
+		kernel/generic/kernel_dgetr_lib.o \
 		\
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_diag_lib4.o \
@@ -510,6 +516,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
+		kernel/generic/kernel_dgetr_lib.o \
 		\
 		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
@@ -557,6 +564,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
+		kernel/generic/kernel_dgetr_lib.o \
 		\
 		kernel/armv8a/kernel_sgemm_16x4_lib4.o \
 		kernel/armv8a/kernel_sgemm_12x4_lib4.o \
@@ -597,6 +605,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
+		kernel/generic/kernel_dgetr_lib.o \
 		\
 		kernel/armv7a/kernel_sgemm_12x4_lib4.o \
 		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
@@ -634,6 +643,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
+		kernel/generic/kernel_dgetr_lib.o \
 		\
 		kernel/armv7a/kernel_sgemm_8x4_lib4.o \
 		kernel/armv7a/kernel_sgemm_4x4_lib4.o \
@@ -669,6 +679,7 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
+		kernel/generic/kernel_dgetr_lib.o \
 		\
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
 		kernel/generic/kernel_sgemm_diag_lib4.o \

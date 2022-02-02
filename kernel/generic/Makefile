@@ -88,6 +88,7 @@ KERNEL_OBJS = \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -118,6 +119,7 @@ KERNEL_OBJS = \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -148,6 +150,7 @@ KERNEL_OBJS = \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -178,6 +181,7 @@ KERNEL_OBJS = \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -208,6 +212,7 @@ KERNEL_OBJS = \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -238,6 +243,7 @@ KERNEL_OBJS = \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -268,6 +274,7 @@ KERNEL_OBJS = \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -300,6 +307,7 @@ KERNEL_OBJS = \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \
@@ -332,6 +340,7 @@ KERNEL_OBJS = \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemm_diag_lib4.o \

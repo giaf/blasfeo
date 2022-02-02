@@ -641,6 +641,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
@@ -685,6 +686,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
@@ -727,6 +729,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
 
 	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_sgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
@@ -761,6 +764,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
 
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
@@ -798,6 +802,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
 
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
@@ -844,6 +849,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
 
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
@@ -884,6 +890,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
 
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
@@ -920,6 +927,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
 
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
@@ -955,6 +963,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
 
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
@@ -989,6 +998,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
 
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
