@@ -124,6 +124,11 @@ void dtrtrs_(char *uplo, char *trans, char *diag, int *m, int *n, double *A, int
 
 
 
+// aux
+void dgetr_(int *m, int *n, double *A, int *lda, double *B, int *ldb);
+
+
+
 #ifdef CBLAS_API
 
 
@@ -195,6 +200,11 @@ void blasfeo_lapack_dpotrf(char *uplo, int *m, double *A, int *lda, int *info);
 void blasfeo_lapack_dpotrs(char *uplo, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
 //
 void blasfeo_lapack_dtrtrs(char *uplo, char *trans, char *diag, int *m, int *n, double *A, int *lda, double *B, int *ldb, int *info);
+
+
+
+// aux
+void blasfeo_blas_dgetr(int *m, int *n, double *A, int *lda, double *B, int *ldb);
 
 
 

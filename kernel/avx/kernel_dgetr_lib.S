@@ -207,6 +207,141 @@ NAME:
 // r14	<- ldc
 //
 #if MACRO_LEVEL>=1
+	.macro INNER_KERNEL_DGETR_TN_8_LIB
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_dgetr_tn_8_lib)
+#endif
+
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+	leaq	0(%r12, %r12, 2), %r15
+	leaq	0(%r14, %r14, 2), %rax
+
+	cmpl	$ 3, %r10d
+	jle		2f // clean-up loop
+
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd		0(%r11), %xmm0
+	vmovupd		0(%r11, %r12, 2), %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm0, %ymm0
+	vmovupd		0(%r11, %r12), %xmm1
+	vmovupd		0(%r11, %r15), %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm1, %ymm1
+	vmovupd		16(%r11), %xmm2
+	vmovupd		16(%r11, %r12, 2), %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm2, %ymm2
+	vmovupd		16(%r11, %r12), %xmm3
+	vmovupd		16(%r11, %r15), %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm3, %ymm3
+
+	leaq	0(%r11, %r12, 4), %rbx
+
+	vmovupd		0(%rbx), %xmm4
+	vmovupd		0(%rbx, %r12, 2), %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm4, %ymm4
+	vmovupd		0(%rbx, %r12), %xmm5
+	vmovupd		0(%rbx, %r15), %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm5, %ymm5
+	vmovupd		16(%rbx), %xmm6
+	vmovupd		16(%rbx, %r12, 2), %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm6, %ymm6
+	vmovupd		16(%rbx, %r12), %xmm7
+	vmovupd		16(%rbx, %r15), %xmm15
+	vinsertf128	$ 0x1, %xmm15, %ymm7, %ymm7
+
+	vunpcklpd	%ymm1, %ymm0, %ymm8
+	vmovupd		%ymm8, 0(%r13)
+	vunpckhpd	%ymm1, %ymm0, %ymm9
+	vmovupd		%ymm9, 0(%r13, %r14)
+	vunpcklpd	%ymm3, %ymm2, %ymm10
+	vmovupd		%ymm10, 0(%r13, %r14, 2)
+	vunpckhpd	%ymm3, %ymm2, %ymm11
+	vmovupd		%ymm11, 0(%r13, %rax)
+
+	vunpcklpd	%ymm5, %ymm4, %ymm8
+	vmovupd		%ymm8, 32(%r13)
+	vunpckhpd	%ymm5, %ymm4, %ymm9
+	vmovupd		%ymm9, 32(%r13, %r14)
+	vunpcklpd	%ymm7, %ymm6, %ymm10
+	vmovupd		%ymm10, 32(%r13, %r14, 2)
+	vunpckhpd	%ymm7, %ymm6, %ymm11
+	vmovupd		%ymm11, 32(%r13, %rax)
+
+	subl	$ 4, %r10d
+	addq	$ 32, %r11
+	leaq	0(%r13, %r14, 4), %r13
+
+	cmpl	$ 3, %r10d
+	jg		1b
+
+
+	cmpl	$ 0, %r10d
+	jle		0f // return
+
+
+2: // clean-up loop
+	
+	vmovsd		0(%r11), %xmm0
+	vmovsd		%xmm0, 0(%r13)
+	vmovsd		0(%r11, %r12), %xmm0
+	vmovsd		%xmm0, 8(%r13)
+	vmovsd		0(%r11, %r12, 2), %xmm0
+	vmovsd		%xmm0, 16(%r13)
+	vmovsd		0(%r11, %r15), %xmm0
+	vmovsd		%xmm0, 24(%r13)
+
+	leaq	0(%r11, %r12, 4), %rbx
+
+	vmovsd		0(%rbx), %xmm0
+	vmovsd		%xmm0, 32(%r13)
+	vmovsd		0(%rbx, %r12), %xmm0
+	vmovsd		%xmm0, 40(%r13)
+	vmovsd		0(%rbx, %r12, 2), %xmm0
+	vmovsd		%xmm0, 48(%r13)
+	vmovsd		0(%rbx, %r15), %xmm0
+	vmovsd		%xmm0, 56(%r13)
+
+	subl	$ 1, %r10d
+	addq	$ 8, %r11
+	addq	%r14, %r13
+
+	cmpl	$ 0, %r10d
+	jg		2b
+
+
+0: // return
+
+
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_dgetr_tn_8_lib)
+#endif
+
+
+
+
+
+// input arguments
+//
+// r10	<- kmax
+// r11	<- A
+// r12	<- lda
+// r13	<- C
+// r14	<- ldc
+//
+#if MACRO_LEVEL>=1
 	.macro INNER_KERNEL_DGETR_TN_4_LIB
 #else
 	.p2align 4,,15
@@ -555,6 +690,41 @@ NAME:
 
 	FUN_END(inner_kernel_dgetr_tn_1_lib)
 #endif
+
+
+
+
+
+//                            1         2          3        4          5
+// void kernel_dgetr_tn_8_lib(int kmax, double *A, int lda, double *C, int ldc)
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgetr_tn_8_lib)
+
+	PROLOGUE
+
+
+	movq	ARG1, %r10 // kmax
+	movq	ARG2, %r11 // A
+	movq	ARG3, %r12 // lda
+	sall	$ 3, %r12d
+	movq	ARG4, %r13 // C
+	movq	ARG5, %r14 // ldc
+	sall	$ 3, %r14d
+
+
+#if MACRO_LEVEL>=1
+	INNER_KERNEL_DGETR_TN_8_LIB
+#else
+	CALL(inner_kernel_dgetr_tn_8_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgetr_tn_8_lib)
 
 
 

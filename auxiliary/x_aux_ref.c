@@ -549,6 +549,7 @@ void REF_GESE(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 
 
 // copy and transpose a generic strmat into a generic strmat
+#ifndef HP_CM
 void REF_GETR(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	// invalidate stored inverse diagonal
@@ -582,6 +583,7 @@ void REF_GETR(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int 
 		}
 	return;
 	}
+#endif
 
 
 
@@ -1654,10 +1656,12 @@ void GESE(int m, int n, REAL alpha, struct MAT *sA, int ai, int aj)
 
 
 
+#ifndef HP_CM
 void GETR(int m, int n, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int bj)
 	{
 	REF_GETR(m, n, sA, ai, aj, sB, bi, bj);
 	}
+#endif
 
 
 

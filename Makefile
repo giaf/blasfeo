@@ -89,6 +89,7 @@ BLASFEO_HP_CM_OBJS = \
 		blasfeo_hp_cm/dtrmm.o \
 		blasfeo_hp_cm/dpotrf.o \
 		blasfeo_hp_cm/dgetrf.o \
+		blasfeo_hp_cm/dgetr.o \
 		\
 		blasfeo_hp_cm/sgemm.o \
 		blasfeo_hp_cm/strsm.o \
@@ -142,6 +143,7 @@ BLAS_OBJS += \
 		blas_api/dpotrf_ref.o \
 		blas_api/dpotrs.o \
 		blas_api/dtrtrs.o \
+		blas_api/dgetr_ref.o \
 		\
 		blas_api/saxpy.o \
 		blas_api/sdot.o \
