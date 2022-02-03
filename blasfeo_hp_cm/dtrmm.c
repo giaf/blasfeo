@@ -341,7 +341,6 @@ lunn_2_return:
 
 
 
-// TODO cortex A57 !!!
 static void blasfeo_hp_dtrmm_rutn_m2(int m, int n, double alpha, double *pA0, int sda0, double *pB0, int sdb0, double *D, int ldd)
 	{
 
@@ -388,7 +387,7 @@ static void blasfeo_hp_dtrmm_rutn_m2(int m, int n, double alpha, double *pA0, in
 			goto rutn_2_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		for(jj=0; jj<n-3; jj+=4)
@@ -439,7 +438,7 @@ rutn_2_left_12:
 goto rutn_2_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 rutn_2_left_8:
 	for(jj=0; jj<n; jj+=4)
 		{
@@ -3274,7 +3273,6 @@ llnu_2_return:
 
 
 
-// TODO optimize for cortex A57 !!!!!
 void blasfeo_hp_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
@@ -3354,12 +3352,12 @@ void blasfeo_hp_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 //	goto rlnn_1;
 //	goto rutn_2;
-#if defined(TARGET_X64_INTEL_HASWELL)
-	if(m<=300 & n<=300 & k0<K_MAX_STACK)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	if(m<300 & n<300 & k0<=K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m<64 & n<64 & k0<K_MAX_STACK)
+	if(m<64 & n<64 & k0<=K_MAX_STACK)
 #else
-	if(m<12 & n<12 & k0<K_MAX_STACK)
+	if(m<12 & n<12 & k0<=K_MAX_STACK)
 #endif
 		{
 		goto rlnn_1;
@@ -3406,7 +3404,7 @@ rlnn_1:
 			goto rlnn_1_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpack_nn_8_lib4(n, B+ii, ldb, pU, sdu);
@@ -3460,7 +3458,7 @@ rlnn_1_left_12:
 goto rlnn_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 rlnn_1_left_8:
 	kernel_dpack_nn_8_vs_lib4(n, B+ii, ldb, pU, sdu, m-ii);
 	for(jj=0; jj<n; jj+=4)
