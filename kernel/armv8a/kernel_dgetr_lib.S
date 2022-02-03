@@ -126,6 +126,201 @@ _ ## NAME:
 
 
 
+//                               w0        x1         w2       x3         w4       x5          x6
+// void kernel_dgetr_tn_8_p0_lib(int kmax, double *A, int lda, double *C, int ldc, double *Ap, double *Bp)
+
+	.align	4
+	GLOB(kernel_dgetr_tn_8_p0_lib)
+	FUN_START(kernel_dgetr_tn_8_p0_lib)
+	
+
+
+	PROLOGUE
+
+
+
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // lda
+	lsl		w10, w10, #3 // 8*sda
+	mov		x11, x3 // C
+	mov		w12, w4 // ldc
+	lsl		w12, w12, #3 // 8*sdc
+	mov		x13, x5 // Ap
+	mov		x14, x6 // Bp
+
+
+	cmp		w8, #0
+	ble		0f
+
+	cmp		w8, #3
+	ble		2f
+
+
+1: // main loop
+	mov		x15, x9
+
+	ldp		q0, q1, [x15, #0]
+	add		x15, x15, x10
+	ldp		q2, q3, [x15, #0]
+	add		x15, x15, x10
+	ldp		q4, q5, [x15, #0]
+	add		x15, x15, x10
+	ldp		q6, q7, [x15, #0]
+	add		x15, x15, x10
+
+	trn1	v24.2d, v0.2d, v2.2d
+	trn2	v2.2d, v0.2d, v2.2d
+	trn1	v25.2d, v5.2d, v7.2d
+	trn2	v7.2d, v5.2d, v7.2d
+	trn1	v26.2d, v1.2d, v3.2d
+	trn2	v27.2d, v1.2d, v3.2d
+	trn1	v1.2d, v4.2d, v6.2d
+	trn2	v3.2d, v4.2d, v6.2d
+
+	ldp		q8, q9, [x15, #0]
+	add		x15, x15, x10
+	ldp		q10, q11, [x15, #0]
+	add		x15, x15, x10
+	ldp		q12, q13, [x15, #0]
+	add		x15, x15, x10
+	ldp		q14, q15, [x15, #0]
+	add		x15, x15, x10
+
+	mov		x15, x13
+
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x15, #24]
+	add		x15, x15, x10
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x15, #24]
+	add		x15, x15, x10
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x15, #24]
+	add		x15, x15, x10
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x15, #24]
+	add		x15, x15, x10
+
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x15, #24]
+	add		x15, x15, x10
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x15, #24]
+	add		x15, x15, x10
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x15, #24]
+	add		x15, x15, x10
+	prfm	PLDL1KEEP, [x15, #0]
+	prfm	PLDL1KEEP, [x15, #24]
+	add		x15, x15, x10
+
+	trn1	v28.2d, v8.2d, v10.2d
+	trn2	v10.2d, v8.2d, v10.2d
+	trn1	v29.2d, v13.2d, v15.2d
+	trn2	v15.2d, v13.2d, v15.2d
+	trn1	v30.2d, v9.2d, v11.2d
+	trn2	v31.2d, v9.2d, v11.2d
+	trn1	v9.2d, v12.2d, v14.2d
+	trn2	v11.2d, v12.2d, v14.2d
+
+	stp		q24, q1, [x11, #0]
+	stp		q28, q9, [x11, #32]
+	add		x11, x11, x12
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x14, #24]
+	add		x14, x14, x12
+	stp		q2, q3, [x11, #0]
+	stp		q10, q11, [x11, #32]
+	add		x11, x11, x12
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x14, #24]
+	add		x14, x14, x12
+	stp		q26, q25, [x11, #0]
+	stp		q30, q29, [x11, #32]
+	add		x11, x11, x12
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x14, #24]
+	add		x14, x14, x12
+	stp		q27, q7, [x11, #0]
+	stp		q31, q15, [x11, #32]
+	add		x11, x11, x12
+	prfm	PLDL1KEEP, [x14, #0]
+	prfm	PLDL1KEEP, [x14, #24]
+	add		x14, x14, x12
+
+	sub		w8, w8, #4
+	add		x9, x9, #32
+//	add		x11, x11, #128
+	add		x13, x13, #32
+//	add		x14, x14, #128
+
+	cmp		w8, #3
+	bgt		1b
+
+
+	cmp		w8, #0
+	ble		0f
+
+
+2: // clean-up loop
+	mov		x15, x9
+
+	ldr		d0, [x15, #0]
+	add		x15, x15, x10
+	str		d0, [x11, #0]
+
+	ldr		d0, [x15, #0]
+	add		x15, x15, x10
+	str		d0, [x11, #8]
+
+	ldr		d0, [x15, #0]
+	add		x15, x15, x10
+	str		d0, [x11, #16]
+
+	ldr		d0, [x15, #0]
+	add		x15, x15, x10
+	str		d0, [x11, #24]
+
+	ldr		d0, [x15, #0]
+	add		x15, x15, x10
+	str		d0, [x11, #32]
+
+	ldr		d0, [x15, #0]
+	add		x15, x15, x10
+	str		d0, [x11, #40]
+
+	ldr		d0, [x15, #0]
+	add		x15, x15, x10
+	str		d0, [x11, #48]
+
+	ldr		d0, [x15, #0]
+	add		x15, x15, x10
+	str		d0, [x11, #56]
+
+	sub		w8, w8, #1
+	add		x9, x9, #8
+//	add		x11, x11, #32
+	add		x11, x11, x12
+
+	cmp		w8, #0
+	bgt		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dgetr_tn_8_p0_lib)
+
+
+
+
+
 //                            w0        x1         w2       x3         w4
 // void kernel_dgetr_tn_8_lib(int kmax, double *A, int lda, double *C, int ldc)
 
@@ -159,29 +354,13 @@ _ ## NAME:
 	mov		x13, x9
 
 	ldp		q0, q1, [x13, #0]
-//	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	ldp		q2, q3, [x13, #0]
-//	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	ldp		q4, q5, [x13, #0]
-//	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	ldp		q6, q7, [x13, #0]
-//	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
-
-//	prfm	PLDL1KEEP, [x13, #0]
-//	add		x13, x13, x10
-//	prfm	PLDL1KEEP, [x13, #0]
-//	add		x13, x13, x10
-//	prfm	PLDL1KEEP, [x13, #0]
-//	add		x13, x13, x10
-//	prfm	PLDL1KEEP, [x13, #0]
-//	add		x13, x13, x10
-
-//	prfm	PLDL1KEEP, [x11, #(128+0)]
-//	prfm	PLDL1KEEP, [x11, #(128+64)]
 
 	trn1	v24.2d, v0.2d, v2.2d
 	trn2	v2.2d, v0.2d, v2.2d
@@ -198,46 +377,13 @@ _ ## NAME:
 //	mov		v6.16b, v27.16b
 
 	ldp		q8, q9, [x13, #0]
-//	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	ldp		q10, q11, [x13, #0]
-//	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	ldp		q12, q13, [x13, #0]
-//	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
 	ldp		q14, q15, [x13, #0]
-//	prfm	PLDL1KEEP, [x13, #64]
 	add		x13, x13, x10
-
-	prfm	PLDL1KEEP, [x13, #0]
-	prfm	PLDL1KEEP, [x13, #24]
-	add		x13, x13, x10
-	prfm	PLDL1KEEP, [x13, #0]
-	prfm	PLDL1KEEP, [x13, #24]
-	add		x13, x13, x10
-	prfm	PLDL1KEEP, [x13, #0]
-	prfm	PLDL1KEEP, [x13, #24]
-	add		x13, x13, x10
-	prfm	PLDL1KEEP, [x13, #0]
-	prfm	PLDL1KEEP, [x13, #24]
-	add		x13, x13, x10
-
-	prfm	PLDL1KEEP, [x13, #0]
-	prfm	PLDL1KEEP, [x13, #24]
-	add		x13, x13, x10
-	prfm	PLDL1KEEP, [x13, #0]
-	prfm	PLDL1KEEP, [x13, #24]
-	add		x13, x13, x10
-	prfm	PLDL1KEEP, [x13, #0]
-	prfm	PLDL1KEEP, [x13, #24]
-	add		x13, x13, x10
-	prfm	PLDL1KEEP, [x13, #0]
-	prfm	PLDL1KEEP, [x13, #24]
-	add		x13, x13, x10
-
-//	prfm	PLDL1KEEP, [x11, #(128+0)]
-//	prfm	PLDL1KEEP, [x11, #(128+64)]
 
 	trn1	v28.2d, v8.2d, v10.2d
 	trn2	v10.2d, v8.2d, v10.2d
@@ -256,25 +402,17 @@ _ ## NAME:
 //	stp		q0, q1, [x11, #0]
 	stp		q24, q1, [x11, #0]
 	stp		q28, q9, [x11, #32]
-	prfm	PLDL1KEEP, [x11, #64]
-	prfm	PLDL1KEEP, [x11, #88]
 	add		x11, x11, x12
 	stp		q2, q3, [x11, #0]
 	stp		q10, q11, [x11, #32]
-	prfm	PLDL1KEEP, [x11, #64]
-	prfm	PLDL1KEEP, [x11, #88]
 //	stp		q4, q5, [x11, #0]
 	add		x11, x11, x12
 	stp		q26, q25, [x11, #0]
 	stp		q30, q29, [x11, #32]
-	prfm	PLDL1KEEP, [x11, #64]
-	prfm	PLDL1KEEP, [x11, #88]
 //	stp		q6, q7, [x11, #0]
 	add		x11, x11, x12
 	stp		q27, q7, [x11, #0]
 	stp		q31, q15, [x11, #32]
-	prfm	PLDL1KEEP, [x11, #64]
-	prfm	PLDL1KEEP, [x11, #88]
 	add		x11, x11, x12
 
 	sub		w8, w8, #4

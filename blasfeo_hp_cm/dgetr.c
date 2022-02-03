@@ -46,6 +46,53 @@
 
 
 
+static void blasfeo_dgetrf_p0(int m, int n, double *pA, int lda, double *pB, int ldb, double *pAp, double *pBp)
+	{
+	int ii;
+
+	ii=0;
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	for(; ii<n-8; ii+=8)
+		{
+		kernel_dgetr_tn_8_p0_lib(m, pA+ii*lda, lda, pB+ii, ldb, pA+(ii+8)*lda, pB+ii+8);
+		}
+	if(ii<n-7)
+		{
+		kernel_dgetr_tn_8_p0_lib(m, pA+ii*lda, lda, pB+ii, ldb, pAp, pBp);
+		ii+=8;
+		}
+	if(ii<n-3)
+		{
+		kernel_dgetr_tn_4_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		ii+=4;
+		}
+#elif defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	for(; ii<n-7; ii+=8)
+		{
+		kernel_dgetr_tn_8_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		}
+	if(ii<n-3)
+		{
+		kernel_dgetr_tn_4_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		ii+=4;
+		}
+#else
+	for(; ii<n-3; ii+=4)
+		{
+		kernel_dgetr_tn_4_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		}
+#endif
+	if(ii<n)
+		{
+		kernel_dgetr_tn_4_vs_lib(m, pA+ii*lda, lda, pB+ii, ldb, n-ii);
+		}
+	
+	return;
+
+	}
+
+
+
 static void blasfeo_dgetrf_0(int m, int n, double *pA, int lda, double *pB, int ldb)
 	{
 	int ii;
@@ -56,11 +103,17 @@ static void blasfeo_dgetrf_0(int m, int n, double *pA, int lda, double *pB, int 
 		{
 		kernel_dgetr_tn_8_lib(m, pA+ii*lda, lda, pB+ii, ldb);
 		}
-#endif
+	if(ii<n-3)
+		{
+		kernel_dgetr_tn_4_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		ii+=4;
+		}
+#else
 	for(; ii<n-3; ii+=4)
 		{
 		kernel_dgetr_tn_4_lib(m, pA+ii*lda, lda, pB+ii, ldb);
 		}
+#endif
 	if(ii<n)
 		{
 		kernel_dgetr_tn_4_vs_lib(m, pA+ii*lda, lda, pB+ii, ldb, n-ii);
@@ -82,14 +135,15 @@ void blasfeo_hp_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, str
 	double *pA = sA->pA + ai + aj*lda;
 	double *pB = sB->pA + bi + bj*ldb;
 
+	double *pAp, *pBp;
+
 	int ii, jj;
 
 	int mc = 16;
-	int nc = 16;
 
 	int mleft, nleft;
 
-	if(m<=44 & n<=44)
+	if(m<=56 & n<=56)
 		{
 
 		blasfeo_dgetrf_0(m, n, pA, lda, pB, ldb);
@@ -101,16 +155,11 @@ void blasfeo_hp_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, str
 		for(ii=0; ii<m; ii+=mleft)
 			{
 
-			mleft = m-ii<mc ? m-ii : mc;
+			mleft = m-ii<=mc ? m-ii : mc;
+			pAp = m-ii<=mc ? pA+ii : pA+ii+mc;
+			pBp = m-ii<=mc ? pB+ii*ldb : pB+(ii+mc)*ldb;
 
-			for(jj=0; jj<n; jj+=nleft)
-				{
-
-				nleft = n-jj<nc ? n-jj : nc;
-
-				blasfeo_dgetrf_0(mleft, nleft, pA+ii+jj*lda, lda, pB+jj+ii*ldb, ldb);
-
-				}
+			blasfeo_dgetrf_p0(mleft, n, pA+ii, lda, pB+ii*ldb, ldb, pAp, pBp);
 
 			}
 
