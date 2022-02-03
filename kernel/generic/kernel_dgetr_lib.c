@@ -33,9 +33,10 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <blasfeo_d_kernel.h>
 
 
-//#if ! ( defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
+#if ! ( defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) )
 void kernel_dgetr_tn_4_lib(int kmax, double *A, int lda, double *C, int ldc)
 {
 
@@ -81,7 +82,7 @@ void kernel_dgetr_tn_4_lib(int kmax, double *A, int lda, double *C, int ldc)
 	return;
 
 	}
-//#endif
+#endif
 
 
 

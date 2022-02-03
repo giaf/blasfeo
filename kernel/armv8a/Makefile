@@ -43,6 +43,7 @@ KERNEL_OBJS = \
 		kernel_dpack_lib4.o \
 		kernel_dgetrf_pivot_lib4.o \
 		kernel_dgemv_4_lib4.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_16x4_lib4.o \
 		kernel_sgemm_12x4_lib4.o \
@@ -64,6 +65,7 @@ KERNEL_OBJS = \
 		kernel_dpack_lib4.o \
 		kernel_dgetrf_pivot_lib4.o \
 		kernel_dgemv_4_lib4.o \
+		kernel_dgetr_lib.o \
 		\
 		kernel_sgemm_16x4_lib4.o \
 		kernel_sgemm_12x4_lib4.o \

@@ -51,7 +51,7 @@ static void blasfeo_dgetrf_0(int m, int n, double *pA, int lda, double *pB, int 
 	int ii;
 
 	ii=0;
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<n-7; ii+=8)
 		{
 		kernel_dgetr_tn_8_lib(m, pA+ii*lda, lda, pB+ii, ldb);
@@ -89,29 +89,32 @@ void blasfeo_hp_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, str
 
 	int mleft, nleft;
 
-#if 1
-
-	for(ii=0; ii<m; ii+=mleft)
+	if(m<=44 & n<=44)
 		{
 
-		mleft = m-ii<mc ? m-ii : mc;
+		blasfeo_dgetrf_0(m, n, pA, lda, pB, ldb);
 
-		for(jj=0; jj<n; jj+=nleft)
+		}
+	else
+		{
+
+		for(ii=0; ii<m; ii+=mleft)
 			{
 
-			nleft = n-jj<nc ? n-jj : nc;
+			mleft = m-ii<mc ? m-ii : mc;
 
-			blasfeo_dgetrf_0(mleft, nleft, pA+ii+jj*lda, lda, pB+jj+ii*ldb, ldb);
+			for(jj=0; jj<n; jj+=nleft)
+				{
+
+				nleft = n-jj<nc ? n-jj : nc;
+
+				blasfeo_dgetrf_0(mleft, nleft, pA+ii+jj*lda, lda, pB+jj+ii*ldb, ldb);
+
+				}
 
 			}
 
 		}
-
-#else
-
-	blasfeo_dgetrf_0(m, n, pA, lda, pB, ldb);
-
-#endif
 
 	return;
 	}
