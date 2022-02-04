@@ -1310,6 +1310,7 @@ NAME:
 
 	subl	$ 1, %r10d
 	addq	$ 32, %r11
+	addq	$ 32, %r12
 
 0:
 

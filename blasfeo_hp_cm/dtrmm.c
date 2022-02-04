@@ -146,7 +146,7 @@ static void blasfeo_hp_dtrmm_llnn_m2(int m, int n, double alpha, double *pA0, in
 			goto llnn_2_left_12;
 			}
 		}
-#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) // | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<n-7; ii+=8)
 		{
 		for(jj=0; jj<m-3; jj+=4)
@@ -197,7 +197,7 @@ llnn_2_left_12:
 goto llnn_2_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 llnn_2_left_8:
 	for(jj=0; jj<m; jj+=4)
 		{
@@ -541,7 +541,7 @@ void blasfeo_hp_dtrmm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 
 //	goto llnn_1;
 //	goto llnn_2;
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	if(m<200 & n<200 & k0<=K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m<64 & n<64 & k0<=K_MAX_STACK)
@@ -595,7 +595,7 @@ llnn_1:
 			goto llnn_1_left_12;
 			}
 		}
-#elif 0//defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) // | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<n-7; ii+=8)
 		{
 		kernel_dpack_tn_4_lib4(m, B+ii*ldb, ldb, pU);
@@ -653,7 +653,7 @@ llnn_1_left_12:
 goto llnn_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 llnn_1_left_8:
 	kernel_dpack_tn_4_vs_lib4(m, B+ii*ldb, ldb, pU, n-ii);
 	kernel_dpack_tn_4_vs_lib4(m, B+(ii+4)*ldb, ldb, pU+ps*sdu, n-(ii+4));

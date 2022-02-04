@@ -2993,6 +2993,312 @@ _ ## NAME:
 //
 // triangular multiplication:
 // side = right
+// uplo = lower
+// tran = transposed
+// not-unit diagonal
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- sda
+// x11  <- B
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRMM_NT_RL_8X4_LIB4
+#else
+	.align 4
+	FUN_START(inner_edge_trmm_nt_rl_8x4_lib4)
+#endif
+
+	add		x12, x9, x10
+
+	ldp		q24, q25, [x9, #(0*8+0*32)] // A
+	ldp		q26, q27, [x11, #(0*8+0*32)] // B
+	fmla	v0.2d, v24.2d, v26.d[0]
+	fmla	v1.2d, v25.2d, v26.d[0]
+	fmla	v2.2d, v24.2d, v26.d[1]
+	fmla	v3.2d, v25.2d, v26.d[1]
+	fmla	v4.2d, v24.2d, v27.d[0]
+	fmla	v5.2d, v25.2d, v27.d[0]
+	fmla	v6.2d, v24.2d, v27.d[1]
+	fmla	v7.2d, v25.2d, v27.d[1]
+	ldp		q28, q29, [x12, #(0*8+0*32)] // A
+	fmla	v8.2d, v28.2d, v26.d[0]
+	fmla	v9.2d, v29.2d, v26.d[0]
+	fmla	v10.2d, v28.2d, v26.d[1]
+	fmla	v11.2d, v29.2d, v26.d[1]
+	fmla	v12.2d, v28.2d, v27.d[0]
+	fmla	v13.2d, v29.2d, v27.d[0]
+	fmla	v14.2d, v28.2d, v27.d[1]
+	fmla	v15.2d, v29.2d, v27.d[1]
+
+	ldp		q24, q25, [x9, #(0*8+1*32)] // A
+	ldr		d26, [x11, #(1*8+1*32)] // B
+	ldr		q27, [x11, #(2*8+1*32)] // B
+	fmla	v2.2d, v24.2d, v26.d[0]
+	fmla	v3.2d, v25.2d, v26.d[0]
+	fmla	v4.2d, v24.2d, v27.d[0]
+	fmla	v5.2d, v25.2d, v27.d[0]
+	fmla	v6.2d, v24.2d, v27.d[1]
+	fmla	v7.2d, v25.2d, v27.d[1]
+	ldp		q28, q29, [x12, #(0*8+1*32)] // A
+	fmla	v10.2d, v28.2d, v26.d[0]
+	fmla	v11.2d, v29.2d, v26.d[0]
+	fmla	v12.2d, v28.2d, v27.d[0]
+	fmla	v13.2d, v29.2d, v27.d[0]
+	fmla	v14.2d, v28.2d, v27.d[1]
+	fmla	v15.2d, v29.2d, v27.d[1]
+
+	ldp		q24, q25, [x9, #(0*8+2*32)] // A
+	ldr		q27, [x11, #(2*8+2*32)] // B
+	fmla	v4.2d, v24.2d, v27.d[0]
+	fmla	v5.2d, v25.2d, v27.d[0]
+	fmla	v6.2d, v24.2d, v27.d[1]
+	fmla	v7.2d, v25.2d, v27.d[1]
+	ldp		q28, q29, [x12, #(0*8+2*32)] // A
+	fmla	v12.2d, v28.2d, v27.d[0]
+	fmla	v13.2d, v29.2d, v27.d[0]
+	fmla	v14.2d, v28.2d, v27.d[1]
+	fmla	v15.2d, v29.2d, v27.d[1]
+
+	ldp		q24, q25, [x9, #(0*8+3*32)] // A
+	ldr		d27, [x11, #(3*8+3*32)] // B
+	fmla	v6.2d, v24.2d, v27.d[0]
+	fmla	v7.2d, v25.2d, v27.d[0]
+	ldp		q28, q29, [x12, #(0*8+3*32)] // A
+	fmla	v14.2d, v28.2d, v27.d[0]
+	fmla	v15.2d, v29.2d, v27.d[0]
+
+	sub		w8, w8, #4
+	add		x9, x9, #128
+	add		x11, x11, #128
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trmm_nt_rl_8x4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular multiplication:
+// side = right
+// uplo = lower
+// tran = transposed
+// not-unit diagonal
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// x10  <- sda
+// x11  <- B
+// w12  <- n1
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRMM_NT_RL_8X4_VS_LIB4
+#else
+	.align 4
+	FUN_START(inner_edge_trmm_nt_rl_8x4_vs_lib4)
+#endif
+
+	cmp		w12, #0
+	ble		0f
+
+	add		x13, x9, x10
+
+	cmp		w12, #4
+	blt		1f
+
+	ldp		q24, q25, [x9, #(0*8+0*32)] // A
+	ldp		q26, q27, [x11, #(0*8+0*32)] // B
+	fmla	v0.2d, v24.2d, v26.d[0]
+	fmla	v1.2d, v25.2d, v26.d[0]
+	fmla	v2.2d, v24.2d, v26.d[1]
+	fmla	v3.2d, v25.2d, v26.d[1]
+	fmla	v4.2d, v24.2d, v27.d[0]
+	fmla	v5.2d, v25.2d, v27.d[0]
+	fmla	v6.2d, v24.2d, v27.d[1]
+	fmla	v7.2d, v25.2d, v27.d[1]
+	ldp		q28, q29, [x13, #(0*8+0*32)] // A
+	fmla	v8.2d, v28.2d, v26.d[0]
+	fmla	v9.2d, v29.2d, v26.d[0]
+	fmla	v10.2d, v28.2d, v26.d[1]
+	fmla	v11.2d, v29.2d, v26.d[1]
+	fmla	v12.2d, v28.2d, v27.d[0]
+	fmla	v13.2d, v29.2d, v27.d[0]
+	fmla	v14.2d, v28.2d, v27.d[1]
+	fmla	v15.2d, v29.2d, v27.d[1]
+
+	ldp		q24, q25, [x9, #(0*8+1*32)] // A
+	ldr		d26, [x11, #(1*8+1*32)] // B
+	ldr		q27, [x11, #(2*8+1*32)] // B
+	fmla	v2.2d, v24.2d, v26.d[0]
+	fmla	v3.2d, v25.2d, v26.d[0]
+	fmla	v4.2d, v24.2d, v27.d[0]
+	fmla	v5.2d, v25.2d, v27.d[0]
+	fmla	v6.2d, v24.2d, v27.d[1]
+	fmla	v7.2d, v25.2d, v27.d[1]
+	ldp		q28, q29, [x13, #(0*8+1*32)] // A
+	fmla	v10.2d, v28.2d, v26.d[0]
+	fmla	v11.2d, v29.2d, v26.d[0]
+	fmla	v12.2d, v28.2d, v27.d[0]
+	fmla	v13.2d, v29.2d, v27.d[0]
+	fmla	v14.2d, v28.2d, v27.d[1]
+	fmla	v15.2d, v29.2d, v27.d[1]
+
+	ldp		q24, q25, [x9, #(0*8+2*32)] // A
+	ldr		q27, [x11, #(2*8+2*32)] // B
+	fmla	v4.2d, v24.2d, v27.d[0]
+	fmla	v5.2d, v25.2d, v27.d[0]
+	fmla	v6.2d, v24.2d, v27.d[1]
+	fmla	v7.2d, v25.2d, v27.d[1]
+	ldp		q28, q29, [x13, #(0*8+2*32)] // A
+	fmla	v12.2d, v28.2d, v27.d[0]
+	fmla	v13.2d, v29.2d, v27.d[0]
+	fmla	v14.2d, v28.2d, v27.d[1]
+	fmla	v15.2d, v29.2d, v27.d[1]
+
+	ldp		q24, q25, [x9, #(0*8+3*32)] // A
+	ldr		d27, [x11, #(3*8+3*32)] // B
+	fmla	v6.2d, v24.2d, v27.d[0]
+	fmla	v7.2d, v25.2d, v27.d[0]
+	ldp		q28, q29, [x13, #(0*8+3*32)] // A
+	fmla	v14.2d, v28.2d, v27.d[0]
+	fmla	v15.2d, v29.2d, v27.d[0]
+
+	sub		w8, w8, #4
+	add		x9, x9, #128
+	add		x11, x11, #128
+
+	b		0f
+
+1:
+
+	cmp		w12, #3
+	blt		1f
+
+	ldp		q24, q25, [x9, #(0*8+0*32)] // A
+	ldr		q26, [x11, #(0*8+0*32)] // B
+	ldr		d27, [x11, #(2*8+0*32)] // B
+	fmla	v0.2d, v24.2d, v26.d[0]
+	fmla	v1.2d, v25.2d, v26.d[0]
+	fmla	v2.2d, v24.2d, v26.d[1]
+	fmla	v3.2d, v25.2d, v26.d[1]
+	fmla	v4.2d, v24.2d, v27.d[0]
+	fmla	v5.2d, v25.2d, v27.d[0]
+	ldp		q28, q29, [x13, #(0*8+0*32)] // A
+	fmla	v8.2d, v28.2d, v26.d[0]
+	fmla	v9.2d, v29.2d, v26.d[0]
+	fmla	v10.2d, v28.2d, v26.d[1]
+	fmla	v11.2d, v29.2d, v26.d[1]
+	fmla	v12.2d, v28.2d, v27.d[0]
+	fmla	v13.2d, v29.2d, v27.d[0]
+
+	ldp		q24, q25, [x9, #(0*8+1*32)] // A
+	ldr		d26, [x11, #(1*8+1*32)] // B
+	ldr		d27, [x11, #(2*8+1*32)] // B
+	fmla	v2.2d, v24.2d, v26.d[0]
+	fmla	v3.2d, v25.2d, v26.d[0]
+	fmla	v4.2d, v24.2d, v27.d[0]
+	fmla	v5.2d, v25.2d, v27.d[0]
+	ldp		q28, q29, [x13, #(0*8+1*32)] // A
+	fmla	v10.2d, v28.2d, v26.d[0]
+	fmla	v11.2d, v29.2d, v26.d[0]
+	fmla	v12.2d, v28.2d, v27.d[0]
+	fmla	v13.2d, v29.2d, v27.d[0]
+
+	ldp		q24, q25, [x9, #(0*8+2*32)] // A
+	ldr		d27, [x11, #(2*8+2*32)] // B
+	fmla	v4.2d, v24.2d, v27.d[0]
+	fmla	v5.2d, v25.2d, v27.d[0]
+	ldp		q28, q29, [x13, #(0*8+2*32)] // A
+	fmla	v12.2d, v28.2d, v27.d[0]
+	fmla	v13.2d, v29.2d, v27.d[0]
+
+	sub		w8, w8, #3
+	add		x9, x9, #96
+	add		x11, x11, #96
+
+	b		0f
+
+1:
+
+	cmp		w12, #2
+	blt		1f
+
+	ldp		q24, q25, [x9, #(0*8+0*32)] // A
+	ldr		q26, [x11, #(0*8+0*32)] // B
+	fmla	v0.2d, v24.2d, v26.d[0]
+	fmla	v1.2d, v25.2d, v26.d[0]
+	fmla	v2.2d, v24.2d, v26.d[1]
+	fmla	v3.2d, v25.2d, v26.d[1]
+	ldp		q28, q29, [x13, #(0*8+0*32)] // A
+	fmla	v8.2d, v28.2d, v26.d[0]
+	fmla	v9.2d, v29.2d, v26.d[0]
+	fmla	v10.2d, v28.2d, v26.d[1]
+	fmla	v11.2d, v29.2d, v26.d[1]
+
+	ldp		q24, q25, [x9, #(0*8+1*32)] // A
+	ldr		d26, [x11, #(1*8+1*32)] // B
+	fmla	v2.2d, v24.2d, v26.d[0]
+	fmla	v3.2d, v25.2d, v26.d[0]
+	ldp		q28, q29, [x13, #(0*8+1*32)] // A
+	fmla	v10.2d, v28.2d, v26.d[0]
+	fmla	v11.2d, v29.2d, v26.d[0]
+
+	sub		w8, w8, #2
+	add		x9, x9, #64
+	add		x11, x11, #64
+
+	b		0f
+
+1:
+
+//	cmp		w12, #1
+//	blt		0f
+
+	ldp		q24, q25, [x9, #(0*8+0*32)] // A
+	ldr		d26, [x11, #(0*8+0*32)] // B
+	fmla	v0.2d, v24.2d, v26.d[0]
+	fmla	v1.2d, v25.2d, v26.d[0]
+	ldp		q28, q29, [x13, #(0*8+0*32)] // A
+	fmla	v8.2d, v28.2d, v26.d[0]
+	fmla	v9.2d, v29.2d, v26.d[0]
+
+	sub		w8, w8, #2
+	add		x9, x9, #32
+	add		x11, x11, #32
+
+	b		0f
+
+0:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trmm_nt_rl_8x4_vs_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular multiplication:
+// side = right
 // uplo = upper
 // tran = transposed
 // not-unit diagonal
