@@ -2727,6 +2727,159 @@ _ ## NAME:
 
 // subroutine
 //
+// triangular substitution:
+// side = right
+// uplo = upper
+// tran = transposed
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// x8   <- E
+// x9   <- inv_diag_E
+//
+// output arguments:
+// x8   <- E
+// x9   <- inv_diag_E
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_RUT_INV_4X4_LIB4
+#else
+	.align 4
+	FUN_START(inner_edge_trsm_rut_inv_4x4_lib4)
+#endif
+	
+	ldr			d16, [x9, #24] // E_inv[3]
+	fmul		v6.2d, v6.2d, v16.d[0]
+	fmul		v7.2d, v7.2d, v16.d[0]
+	ldr			d16, [x8, #112] // E[2+4*3]
+	fmls		v4.2d, v6.2d, v16.d[0]
+	fmls		v5.2d, v7.2d, v16.d[0]
+	ldr			d16, [x8, #104] // E[1+4*3]
+	fmls		v2.2d, v6.2d, v16.d[0]
+	fmls		v3.2d, v7.2d, v16.d[0]
+	ldr			d16, [x8, #96] // E[0+4*3]
+	fmls		v0.2d, v6.2d, v16.d[0]
+	fmls		v1.2d, v7.2d, v16.d[0]
+
+	ldr			d16, [x9, #16] // E_inv[2]
+	fmul		v4.2d, v4.2d, v16.d[0]
+	fmul		v5.2d, v5.2d, v16.d[0]
+	ldr			d16, [x8, #72] // E[1+4*2]
+	fmls		v2.2d, v4.2d, v16.d[0]
+	fmls		v3.2d, v5.2d, v16.d[0]
+	ldr			d16, [x8, #64] // E[0+4*2]
+	fmls		v0.2d, v4.2d, v16.d[0]
+	fmls		v1.2d, v5.2d, v16.d[0]
+
+	ldr			d16, [x9, #8] // E_inv[1]
+	fmul		v2.2d, v2.2d, v16.d[0]
+	fmul		v3.2d, v3.2d, v16.d[0]
+	ldr			d16, [x8, #32] // E[0+4*1]
+	fmls		v0.2d, v2.2d, v16.d[0]
+	fmls		v1.2d, v3.2d, v16.d[0]
+
+	ldr			d16, [x9, #0] // E_inv[0]
+	fmul		v0.2d, v0.2d, v16.d[0]
+	fmul		v1.2d, v1.2d, v16.d[0]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trsm_rut_inv_4x4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// triangular substitution:
+// side = right
+// uplo = upper
+// tran = transposed
+// requires explicit inverse of diagonal
+//
+// input arguments:
+// x8   <- E
+// x9   <- inv_diag_E
+// w10  <- n1
+//
+// output arguments:
+// x8   <- E
+// x9   <- inv_diag_E
+// w10  <- n1
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_TRSM_RUT_INV_4X4_VS_LIB4
+#else
+	.align 4
+	FUN_START(inner_edge_trsm_rut_inv_4x4_vs_lib4)
+#endif
+	
+	cmp		w10, #3
+	ble		1f
+
+	ldr			d16, [x9, #24] // E_inv[3]
+	fmul		v6.2d, v6.2d, v16.d[0]
+	fmul		v7.2d, v7.2d, v16.d[0]
+	ldr			d16, [x8, #112] // E[2+4*3]
+	fmls		v4.2d, v6.2d, v16.d[0]
+	fmls		v5.2d, v7.2d, v16.d[0]
+	ldr			d16, [x8, #104] // E[1+4*3]
+	fmls		v2.2d, v6.2d, v16.d[0]
+	fmls		v3.2d, v7.2d, v16.d[0]
+	ldr			d16, [x8, #96] // E[0+4*3]
+	fmls		v0.2d, v6.2d, v16.d[0]
+	fmls		v1.2d, v7.2d, v16.d[0]
+
+1:
+	cmp		w10, #2
+	ble		1f
+
+	ldr			d16, [x9, #16] // E_inv[2]
+	fmul		v4.2d, v4.2d, v16.d[0]
+	fmul		v5.2d, v5.2d, v16.d[0]
+	ldr			d16, [x8, #72] // E[1+4*2]
+	fmls		v2.2d, v4.2d, v16.d[0]
+	fmls		v3.2d, v5.2d, v16.d[0]
+	ldr			d16, [x8, #64] // E[0+4*2]
+	fmls		v0.2d, v4.2d, v16.d[0]
+	fmls		v1.2d, v5.2d, v16.d[0]
+
+1:
+	cmp		w10, #1
+	ble		1f
+
+	ldr			d16, [x9, #8] // E_inv[1]
+	fmul		v2.2d, v2.2d, v16.d[0]
+	fmul		v3.2d, v3.2d, v16.d[0]
+	ldr			d16, [x8, #32] // E[0+4*1]
+	fmls		v0.2d, v2.2d, v16.d[0]
+	fmls		v1.2d, v3.2d, v16.d[0]
+
+1:
+
+	ldr			d16, [x9, #0] // E_inv[0]
+	fmul		v0.2d, v0.2d, v16.d[0]
+	fmul		v1.2d, v1.2d, v16.d[0]
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_trsm_rut_inv_4x4_vs_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
 // cholesky factorization 
 //
 // input arguments:

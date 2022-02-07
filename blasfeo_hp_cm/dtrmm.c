@@ -99,7 +99,6 @@
 
 
 // XXX the B matrix is passed transposed !!!
-// TODO cortex A57 !!!
 static void blasfeo_hp_dtrmm_llnn_m2(int m, int n, double alpha, double *pA0, int sda0, double *pB0_t, int sdb0_t, double *D, int ldd)
 	{
 
@@ -461,7 +460,6 @@ rutn_2_return:
 
 
 
-// TODO optimize for cortex A57 !!!!!
 void blasfeo_hp_dtrmm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 
