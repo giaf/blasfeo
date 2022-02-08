@@ -78,7 +78,15 @@ obj_cblas: | $(CBLAS_DIR)
 	@echo "FFLAGS = $(CFLAGS)" >> $(CBLAS_DIR)/Makefile.in
 	@echo "BLLIB = $(BLAS_DIR)/blas_LINUX.a" >> $(CBLAS_DIR)/Makefile.in
 	@echo "CFLAGS += $(BLASFEO_CBLAS_DEF)" >> $(CBLAS_DIR)/Makefile.in
+ifeq ($(EXT_DEP), 0)
+	cp $(CBLAS_DIR)/src/cblas_xerbla.c $(CBLAS_DIR)/src/cblas_xerbla_bkp.c
+	@echo "void cblas_xerbla(int info, const char *rout, const char *form, ...)" > $(CBLAS_DIR)/src/cblas_xerbla.c
+	@echo "{ return; }" >> $(CBLAS_DIR)/src/cblas_xerbla.c
+endif
 	(cd $(CBLAS_DIR); $(MAKE) alllib)
+ifeq ($(EXT_DEP), 0)
+	cp $(CBLAS_DIR)/src/cblas_xerbla_bkp.c $(CBLAS_DIR)/src/cblas_xerbla.c
+endif
 
 
 $(CBLAS_DIR):
