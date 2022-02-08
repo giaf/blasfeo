@@ -622,4 +622,115 @@ _ ## NAME:
 
 
 
+//                            w0        x1         w2       x3         w4
+// void kernel_dgetr_nt_4_lib(int kmax, double *A, int lda, double *C, int ldc)
+
+	.align	4
+	GLOB(kernel_dgetr_nt_4_lib)
+	FUN_START(kernel_dgetr_nt_4_lib)
+	
+
+
+	PROLOGUE
+
+
+
+	mov		w8, w0 // kmax
+	mov		x9, x1 // A
+	mov		w10, w2 // lda
+	lsl		w10, w10, #3 // 8*sda
+	mov		x11, x3 // C
+	mov		w12, w4 // ldc
+	lsl		w12, w12, #3 // 8*sdc
+
+
+	cmp		w8, #0
+	ble		0f
+
+	cmp		w8, #3
+	ble		2f
+
+
+1: // main loop
+	ldp		q0, q1, [x9, #0]
+	add		x9, x9, x10
+	ldp		q2, q3, [x9, #0]
+	add		x9, x9, x10
+	ldp		q4, q5, [x9, #0]
+	add		x9, x9, x10
+	ldp		q6, q7, [x9, #0]
+	add		x9, x9, x10
+
+	trn1	v24.2d, v0.2d, v2.2d
+	trn2	v2.2d, v0.2d, v2.2d
+	trn1	v25.2d, v5.2d, v7.2d
+	trn2	v7.2d, v5.2d, v7.2d
+	trn1	v26.2d, v1.2d, v3.2d
+	trn2	v27.2d, v1.2d, v3.2d
+	trn1	v1.2d, v4.2d, v6.2d
+	trn2	v3.2d, v4.2d, v6.2d
+
+	mov		x13, x11
+
+	stp		q24, q1, [x13, #0]
+	add		x13, x13, x12
+	stp		q2, q3, [x13, #0]
+	add		x13, x13, x12
+	stp		q26, q25, [x13, #0]
+	add		x13, x13, x12
+	stp		q27, q7, [x13, #0]
+	add		x13, x13, x12
+
+	sub		w8, w8, #4
+	add		x11, x11, #32
+
+	cmp		w8, #3
+	bgt		1b
+
+
+	cmp		w8, #0
+	ble		0f
+
+
+2: // clean-up loop
+	mov		x13, x11
+
+	ldr		d0, [x9, #0]
+	str		d0, [x11, #0]
+	add		x13, x13, x10
+
+	ldr		d0, [x9, #8]
+	str		d0, [x11, #0]
+	add		x13, x13, x10
+
+	ldr		d0, [x9, #16]
+	str		d0, [x11, #0]
+	add		x13, x13, x10
+
+	ldr		d0, [x9, #24]
+	str		d0, [x11, #0]
+	add		x13, x13, x10
+
+	sub		w8, w8, #1
+	add		x9, x9, x10
+	add		x11, x11, #8
+
+	cmp		w8, #0
+	bgt		2b
+
+
+0: // return
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dgetr_tn_4_lib)
+
+
+
+
+
 

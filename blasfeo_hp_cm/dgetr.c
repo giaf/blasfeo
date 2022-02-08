@@ -46,7 +46,7 @@
 
 
 
-static void blasfeo_dgetrf_p0(int m, int n, double *pA, int lda, double *pB, int ldb, double *pAp, double *pBp)
+static void blasfeo_dgetrf_m0_p0(int m, int n, double *pA, int lda, double *pB, int ldb, double *pAp, double *pBp)
 	{
 	int ii;
 
@@ -93,7 +93,7 @@ static void blasfeo_dgetrf_p0(int m, int n, double *pA, int lda, double *pB, int
 
 
 
-static void blasfeo_dgetrf_0(int m, int n, double *pA, int lda, double *pB, int ldb)
+static void blasfeo_dgetrf_m0(int m, int n, double *pA, int lda, double *pB, int ldb)
 	{
 	int ii;
 
@@ -125,6 +125,77 @@ static void blasfeo_dgetrf_0(int m, int n, double *pA, int lda, double *pB, int 
 
 
 
+#if 0
+static void blasfeo_dgetrf_n0_p0(int m, int n, double *pA, int lda, double *pB, int ldb, double *pAp, double *pBp)
+	{
+	int ii;
+
+	ii=0;
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	for(; ii<m-8; ii+=8)
+		{
+		kernel_dgetr_nt_8_p0_lib(n, pA+ii, lda, pB+ii*ldb, ldb, pA+ii+8, pB+(ii+8)*ldb);
+		}
+	if(ii<m-7)
+		{
+		kernel_dgetr_nt_8_p0_lib(n, pA+ii, lda, pB+ii*ldb, ldb, pAp, pBp);
+		ii+=8;
+		}
+	if(ii<m-3)
+		{
+		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb, ldb);
+		ii+=4;
+		}
+#else
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb, ldb);
+		}
+#endif
+	if(ii<m)
+		{
+//		kernel_dgetr_nt_4_vs_lib(n, pA+ii, lda, pB+ii*ldb, ldb, m-ii);
+		}
+	
+	return;
+
+	}
+
+
+
+static void blasfeo_dgetrf_n0(int m, int n, double *pA, int lda, double *pB, int ldb)
+	{
+	int ii;
+
+	ii=0;
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+	for(; ii<m-7; ii+=8)
+		{
+		kernel_dgetr_nt_8_lib(n, pA+ii, lda, pB+ii*ldb, ldb);
+		}
+	if(ii<m-3)
+		{
+		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb, ldb);
+		ii+=4;
+		}
+#else
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb, ldb);
+		}
+#endif
+	if(ii<m)
+		{
+//		kernel_dgetr_nt_4_vs_lib(n, pA+ii, lda, pB+ii*ldb, ldb, m-ii);
+		}
+	
+	return;
+
+	}
+#endif
+
+
+
 // copy and transpose a generic strmat into a generic strmat
 void blasfeo_hp_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj)
 	{
@@ -140,13 +211,16 @@ void blasfeo_hp_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, str
 	int ii, jj;
 
 	int mc = 16;
+	int nc = 16;
 
 	int mleft, nleft;
+
+#if 1
 
 	if(m<=56 & n<=56)
 		{
 
-		blasfeo_dgetrf_0(m, n, pA, lda, pB, ldb);
+		blasfeo_dgetrf_m0(m, n, pA, lda, pB, ldb);
 
 		}
 	else
@@ -159,11 +233,38 @@ void blasfeo_hp_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, str
 			pAp = m-ii<=mc ? pA+ii : pA+ii+mc;
 			pBp = m-ii<=mc ? pB+ii*ldb : pB+(ii+mc)*ldb;
 
-			blasfeo_dgetrf_p0(mleft, n, pA+ii, lda, pB+ii*ldb, ldb, pAp, pBp);
+			blasfeo_dgetrf_m0_p0(mleft, n, pA+ii, lda, pB+ii*ldb, ldb, pAp, pBp);
 
 			}
 
 		}
+
+#else
+
+	if(m<=56 & n<=56)
+		{
+
+		blasfeo_dgetrf_n0(m, n, pA, lda, pB, ldb);
+
+		}
+	else
+		{
+
+		for(ii=0; ii<n; ii+=nleft)
+			{
+
+			nleft = n-ii<=nc ? n-ii : nc;
+			pAp = n-ii<=nc ? pA+ii*lda : pA+(ii+nc)*lda;
+			pBp = n-ii<=nc ? pB+ii : pB+ii+nc;
+
+			blasfeo_dgetrf_n0(m, nleft, pA+ii*lda, lda, pB+ii, ldb);
+//			blasfeo_dgetrf_n0_p0(m, nleft, pA+ii*lda, lda, pB+ii, ldb, pAp, pBp);
+
+			}
+
+		}
+
+#endif
 
 	return;
 	}
