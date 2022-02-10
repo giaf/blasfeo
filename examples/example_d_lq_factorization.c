@@ -236,6 +236,7 @@ int main()
 
 	d_free(A);
 	v_free_align(sA_mem);
+	v_free_align(sA_fact_mem);
 	v_free_align(sL_mem);
 	v_free_align(sQ_mem);
 	v_free_align(sE_mem);
