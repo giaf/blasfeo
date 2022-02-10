@@ -622,6 +622,7 @@ _ ## NAME:
 
 
 
+#if 0 // XXX
 //                            w0        x1         w2       x3         w4
 // void kernel_dgetr_nt_4_lib(int kmax, double *A, int lda, double *C, int ldc)
 
@@ -727,7 +728,8 @@ _ ## NAME:
 
 	ret
 
-	FUN_END(kernel_dgetr_tn_4_lib)
+	FUN_END(kernel_dgetr_nt_4_lib)
+#endif
 
 
 

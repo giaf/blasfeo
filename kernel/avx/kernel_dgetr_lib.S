@@ -198,6 +198,7 @@ NAME:
 
 
 
+#if 0 // XXX
 // input arguments
 //
 // r10	<- kmax
@@ -356,11 +357,13 @@ NAME:
 
 	FUN_END(inner_kernel_dgetr_nt_8_p0_lib)
 #endif
+#endif
 
 
 
 
 
+#if 0 // XXX
 // input arguments
 //
 // r10	<- kmax
@@ -491,11 +494,13 @@ NAME:
 
 	FUN_END(inner_kernel_dgetr_nt_8_lib)
 #endif
+#endif
 
 
 
 
 
+#if 0 // XXX
 // input arguments
 //
 // r10	<- kmax
@@ -590,6 +595,7 @@ NAME:
 	ret
 
 	FUN_END(inner_kernel_dgetr_nt_4_lib)
+#endif
 #endif
 
 
@@ -1093,6 +1099,7 @@ NAME:
 
 
 
+#if 0 // XXX
 //                               1         2          3        4          5
 // void kernel_dgetr_nt_8_p0_lib(int kmax, double *A, int lda, double *C, int ldc, double *Ap, double *Bp)
 
@@ -1125,11 +1132,13 @@ NAME:
 	ret
 
 	FUN_END(kernel_dgetr_nt_8_p0_lib)
+#endif
 
 
 
 
 
+#if 0
 //                            1         2          3        4          5
 // void kernel_dgetr_nt_8_lib(int kmax, double *A, int lda, double *C, int ldc)
 
@@ -1160,11 +1169,13 @@ NAME:
 	ret
 
 	FUN_END(kernel_dgetr_nt_8_lib)
+#endif
 
 
 
 
 
+#if 0 // XXX
 //                            1         2          3        4          5
 // void kernel_dgetr_nt_4_lib(int kmax, double *A, int lda, double *C, int ldc)
 
@@ -1195,6 +1206,7 @@ NAME:
 	ret
 
 	FUN_END(kernel_dgetr_nt_4_lib)
+#endif
 
 
 
