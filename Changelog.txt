@@ -3,8 +3,8 @@ BLASFEO ChangeLog
 
 
 ====================================================================
-Version 0.1.3-master
-23-Dec-2020
+Version 0.1.3
+10-Feb-2022
 
 BLASFEO_API:
 	* use macros in REFERENCE backend to allow column- and panel-major formats
@@ -16,6 +16,13 @@ BLAS_API:
 	* spotrf for all targets (partially optimized for avx2 and armv8a, generic for others)
 	* dgemm: optimize switching algorithm for Intel Haswell and ARM Cortex A57
 	* dgemm: some work on cache blocking: k-block (all targets), m- and n-block (haswell, sandybridge, cortexa76, cortexa73, cortexa57, cortexa55, cortexa53)
+	* cache-blocking for dgemm, sgemm, dsyrk, dtrmm (llnn, lltn, rlnn), dtrsm (rlnn, lutn, rltn), dpotrf (l); fully optimized for haswell and cortexa57 targets.
+	* dgetr: optimize for haswell, sandybridge, cortexa57, cortexa53
+
+x64:
+	* Intel Skylake X:
+		- optimize panel-major routines needed in HPIPM
+		- optimize column-major dgemm
 
 ARMv8A:
 	* add kernel sgemm nt {8x4,8x8} lib44cc & some relative spotrf kernels
@@ -26,6 +33,7 @@ ARMv8A:
 	* add Cortex A73 target (makefile only for now)
 	* add Cortex A55 target (makefile only for now)
 	* add Cortex A76 target (makefile only for now)
+	* add Apple M1 target (makefile only for now)
 
 ====================================================================
 Version 0.1.2
