@@ -15,10 +15,11 @@ The API is non-destructive, and compared to the BLAS API it has an additional ma
 | ----------------------------- | -------------------------------------------------- |
 | BLASFEO <br> (small matrices) | dgemm, dsyrk, dtrmm, dtrsm, dpotrf, dgetrf, dgeqrf, dgelqf, <br> sgemm, ssyrk, strmm, strsm, spotrf |
 | BLAS    <br> (small matrices) | dgemm, dsyrk, dtrmm, dtrsm, dpotrf, dgetrf <br> sgemm, strsm, spotrf |
-| BLAS    <br> (large matrices) | dgemm, dsyrk <br> sgemm |
+| BLAS    <br> (large matrices) | dgemm, dsyrk, dtrmm*, dtrsm*, dpotrf*, <br> sgemm |
 
 Note: BLASFEO is currently under active development.
 Some of the routines listed in the previous table may only be optimized for some variants, and provide reference implementations for other variants.
+E.g. only some variants of the routines marked with '*' are optimized for large matrices.
 
 ## Supported Computer Architectures
 
