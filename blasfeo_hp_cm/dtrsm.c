@@ -5073,12 +5073,12 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 //	goto rltn_1;
 //	goto rltn_2;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	if(m<200 | n<200 | k0<=K_MAX_STACK)
-//	if(m<256 | n<256 | k0<=K_MAX_STACK)
+	if(m<200 & n<200 & k0<=K_MAX_STACK)
+//	if(m<256 & n<256 & k0<=K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-	if(m<64 | n<64 | k0<=K_MAX_STACK)
+	if(m<64 & n<64 & k0<=K_MAX_STACK)
 #else
-	if(m<12 | n<12 | k0<=K_MAX_STACK)
+	if(m<12 & n<12 & k0<=K_MAX_STACK)
 #endif
 		{
 		goto rltn_1;
