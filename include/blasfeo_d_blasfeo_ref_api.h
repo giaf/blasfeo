@@ -119,6 +119,8 @@ void blasfeo_ref_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct b
 // z <= beta * y + alpha * A * x, where A is symmetric and only the lower triangular patr of A is accessed
 void blasfeo_ref_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
 void blasfeo_ref_dsymv_l_mn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
+// z <= beta * y + alpha * A * x, where A is symmetric and only the upper triangular patr of A is accessed
+void blasfeo_ref_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
 
 // diagonal
 

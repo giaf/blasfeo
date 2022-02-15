@@ -234,7 +234,7 @@ void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, in
 
 	if(m<=0)
 		return;
-	
+
 	const int bs = 4;
 
 	int ii, n1;
@@ -583,6 +583,24 @@ void blasfeo_hp_dsymv_l_mn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 		}
 	
 	return;
+	}
+
+
+
+void blasfeo_hp_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+#if defined(BLASFEO_REF_API)
+		blasfeo_ref_dsymv_u(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+		return;
+#else
+		printf("\nblasfeo_dsymv_u: feature not implemented yet\n");
+		exit(1);
+#endif
+
 	}
 
 
@@ -1786,6 +1804,13 @@ void blasfeo_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int a
 void blasfeo_dsymv_l_mn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 	blasfeo_hp_dsymv_l_mn(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void blasfeo_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+	blasfeo_hp_dsymv_u(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 	}
 
 

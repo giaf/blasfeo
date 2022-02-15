@@ -309,6 +309,41 @@ void REF_SYMV_L_MN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
+void REF_SYMV_U(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	int ii, jj;
+	REAL
+		y_0, y_1;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *z = sz->pa + zi;
+	ii = 0;
+	for(; ii<m; ii++)
+		{
+		y_0 = 0.0;
+		jj = 0;
+		for(; jj<=ii; jj++)
+			{
+			y_0 += XMATEL_A(aai+jj, aaj+ii) * x[jj];
+			}
+		for( ; jj<m; jj++)
+			{
+			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[jj];
+			}
+		z[ii] = beta * y[ii] + alpha * y_0;
+		}
+	return;
+	}
+
+
+
 static void REF_TRMV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
@@ -1324,6 +1359,13 @@ void SYMV_L(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx,
 void SYMV_L_MN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	REF_SYMV_L_MN(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
+
+
+
+void SYMV_U(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
+	{
+	REF_SYMV_U(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 	}
 
 
