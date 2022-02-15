@@ -36,13 +36,12 @@
 include ../Makefile.rule
 include Makefile.netlib_cblas
 
-BLAS_NETLIB = blas-3.8.0
+BLAS_VERSION = 3.10.0
 BLAS_DIR = blas
 
-CBLAS_NETLIB = cblas
 CBLAS_DIR = cblas
 
-LAPACK_NETLIB = lapack-3.8.0
+LAPACK_VERSION = 3.10.0
 LAPACK_DIR = lapack
 
 
@@ -59,9 +58,9 @@ obj_blas: | $(BLAS_DIR)
 
 $(BLAS_DIR):
 	@echo "downloading BLAS ..."
-	wget www.netlib.org/blas/$(BLAS_NETLIB).tgz -O $(BLAS_NETLIB).tgz
+	wget www.netlib.org/blas/blas-$(BLAS_VERSION).tgz -O blas-$(BLAS_VERSION).tgz
 	mkdir -p $(BLAS_DIR)
-	tar -xzf $(BLAS_NETLIB).tgz -C $(BLAS_DIR) --strip-components 1
+	tar -xzf blas-$(BLAS_VERSION).tgz -C $(BLAS_DIR) --strip-components 1
 	cp $(BLAS_DIR)/make.inc $(BLAS_DIR)/make.inc.bkp
 
 
@@ -91,9 +90,9 @@ endif
 
 $(CBLAS_DIR):
 	@echo "downloading CBLAS ..."
-	wget www.netlib.org/blas/blast-forum/$(CBLAS_NETLIB).tgz -O $(CBLAS_NETLIB).tgz
+	wget www.netlib.org/blas/blast-forum/cblas.tgz -O cblas.tgz
 	mkdir -p $(CBLAS_DIR)
-	tar -xzf $(CBLAS_NETLIB).tgz -C $(CBLAS_DIR) --strip-components 1
+	tar -xzf cblas.tgz -C $(CBLAS_DIR) --strip-components 1
 	cp $(CBLAS_DIR)/Makefile.in $(CBLAS_DIR)/Makefile.in.bkp
 
 
@@ -112,16 +111,19 @@ obj_lapack: | $(LAPACK_DIR)
 
 $(LAPACK_DIR):
 	@echo "downloading LAPACK ..."
-	wget www.netlib.org/lapack/$(LAPACK_NETLIB).tar.gz -O $(LAPACK_NETLIB).tar.gz
+	# up to 3.8.0
+	# wget www.netlib.org/lapack/lapack-$(LAPACK_VERSION).tar.gz -O lapack-$(LAPACK_VERSION).tar.gz # up to 3.8.0
+	# from 3.9.0
+	wget https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v$(LAPACK_VERSION).tar.gz -O lapack-$(LAPACK_VERSION).tar.gz
 	mkdir -p $(LAPACK_DIR)
-	tar -xzf $(LAPACK_NETLIB).tar.gz -C $(LAPACK_DIR) --strip-components 1
+	tar -xzf lapack-$(LAPACK_VERSION).tar.gz -C $(LAPACK_DIR) --strip-components 1
 
 
 obj_lapacke: obj_lapack
 	@echo "compiling LAPACKE ..."
 	@echo "CFLAGS = $(CFLAGS)" >> $(LAPACK_DIR)/make.inc
 	# XXX hack to fix a bug in lapacke in lapack-3.8.0
-	sed -i 's/OBJ_B = \\/OBJ_B = lapacke_dsytrf_aa_work.o lapacke_ssytrf_aa_work.o \\/g' $(LAPACK_DIR)/LAPACKE/src/Makefile
+	#sed -i 's/OBJ_B = \\/OBJ_B = lapacke_dsytrf_aa_work.o lapacke_ssytrf_aa_work.o \\/g' $(LAPACK_DIR)/LAPACKE/src/Makefile
 	# XXX hack till here
 	(cd $(LAPACK_DIR); $(MAKE) lapackelib)
 
@@ -143,11 +145,11 @@ endif
 
 deep_clean:
 	rm -rf $(BLAS_DIR)
-	rm -rf $(BLAS_NETLIB).tgz
+	rm -rf blas-$(BLAS_VERSION).tgz
 	rm -rf $(CBLAS_DIR)
-	rm -rf $(CBLAS_NETLIB).tgz
+	rm -rf cblas.tgz
 	rm -rf $(LAPACK_DIR)
-	rm -rf $(LAPACK_NETLIB).tar.gz
+	rm -rf lapack-$(LAPACK_VERSION).tar.gz
 
 
 .PHONY: obj_blas obj_cblas obj_lapack clean deep_clean obj_lapacke
