@@ -90,6 +90,10 @@ void dcopy_(int *n, double *x, int *incx, double *y, int *incy);
 //
 double ddot_(int *n, double *x, int *incx, double *y, int *incy);
 
+// BLAS 2
+//
+void dsymv_(char *uplo, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
+
 // BLAS 3
 //
 void dgemm_(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
@@ -168,6 +172,10 @@ void blasfeo_blas_daxpy(int *n, double *alpha, double *x, int *incx, double *y, 
 double blasfeo_blas_ddot(int *n, double *x, int *incx, double *y, int *incy);
 //
 void blasfeo_blas_dcopy(int *n, double *x, int *incx, double *y, int *incy);
+
+// BLAS 2
+//
+void blasfeo_blas_dsymv(char *uplo, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
 
 // BLAS 3
 //
