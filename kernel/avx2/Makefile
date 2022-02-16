@@ -49,6 +49,7 @@ KERNEL_OBJS = \
 		kernel_dgemm_8x4_lib4.o \
 		kernel_dgemm_4x4_lib4.o \
 		kernel_dgemv_8_lib4.o \
+		kernel_dgemv_4_lib4.o \
 		kernel_dsymv_6_lib4.o \
 		kernel_dgetrf_pivot_lib4.o \
 		kernel_dgebp_lib4.o \

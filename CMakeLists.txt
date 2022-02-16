@@ -635,18 +635,19 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemv_8_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemv_4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dsymv_6_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetrf_pivot_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgebp_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgelqf_4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
@@ -692,6 +693,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 

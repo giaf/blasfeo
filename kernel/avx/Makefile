@@ -45,7 +45,6 @@ endif
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 KERNEL_OBJS = \
 		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_4_lib4.o \
 		kernel_dgeqrf_4_lib4.o \
 		kernel_dgecp_lib4.o \
 		kernel_dgetr_lib4.o \
