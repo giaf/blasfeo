@@ -90,6 +90,7 @@ BLASFEO_HP_CM_OBJS = \
 		blasfeo_hp_cm/dpotrf.o \
 		blasfeo_hp_cm/dgetrf.o \
 		blasfeo_hp_cm/dgetr.o \
+		blasfeo_hp_cm/dsymv.o \
 		\
 		blasfeo_hp_cm/sgemm.o \
 		blasfeo_hp_cm/strsm.o \
@@ -276,6 +277,7 @@ KERNEL_OBJS = \
 		kernel/avx/kernel_dpack_lib4.o \
 		kernel/avx/kernel_dgetr_lib.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \
@@ -324,6 +326,7 @@ KERNEL_OBJS = \
 		kernel/avx/kernel_dpack_lib4.o \
 		kernel/avx/kernel_dgetr_lib.o \
 		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
 		kernel/generic/kernel_dpack_buffer_lib4.o \
 		kernel/generic/kernel_ddot_lib.o \
 		kernel/generic/kernel_daxpy_lib.o \

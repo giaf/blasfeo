@@ -1028,4 +1028,10 @@ void kernel_dsymv_l_4_lib4(int kmax, double *alpha, double *A, int sda, double *
 
 
 
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
+
+#include "kernel_dsymv_4_lib.c"
+
+#endif
 

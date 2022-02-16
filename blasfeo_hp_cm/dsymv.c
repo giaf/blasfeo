@@ -36,71 +36,86 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <blasfeo_target.h>
+#include <blasfeo_block_size.h>
 #include <blasfeo_common.h>
+#include <blasfeo_stdlib.h>
+#include <blasfeo_d_aux.h>
+#include <blasfeo_d_kernel.h>
+#include <blasfeo_memory.h>
+
+#include <blasfeo_timing.h>
 
 
 
-#define HP_CM
-#define DP
-
-
-
-#if defined(MF_COLMAJ)
-	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
-#else // MF_PANELMAJ
-	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+#if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
+#define blasfeo_dmat blasfeo_cm_dmat
+#define blasfeo_dvec blasfeo_cm_dvec
+#define blasfeo_hp_dsymv_l blasfeo_hp_cm_dsymv_l
+#define blasfeo_dsymv_l blasfeo_cm_dsymv_l
 #endif
 
 
 
-#define REAL double
-#define XMAT blasfeo_dmat
-#define XMATEL BLASFEO_DMATEL
-#define XVEC blasfeo_dvec
-#define XVECEL BLASFEO_DVECEL
+void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+	{
+
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_hp_dsymv_l (cm) %d %%f %p %d %d %p %d %f %p %d %p %d\n", m, k, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+#endif
+
+	if(m<=0 | (alpha==0 & beta==0))
+		return;
+
+	// extract pointer to column-major matrices from structures
+	int lda = sA->m;
+	double *A = sA->pA + ai + aj*lda;
+	double *x = sx->pa + xi;
+	double *y = sy->pa + yi;
+	double *z = sz->pa + zi;
+
+	int ii;
+
+	// copy and scale y into z
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		z[ii+0] = beta*y[ii+0];
+		z[ii+1] = beta*y[ii+1];
+		z[ii+2] = beta*y[ii+2];
+		z[ii+3] = beta*y[ii+3];
+		}
+	for(; ii<m; ii++)
+		{
+		z[ii+0] = beta*y[ii+0];
+		}
+
+	// main loop
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		kernel_dsymv_l_4_libc(m-ii, &alpha, A+ii+ii*lda, lda, x+ii, z+ii);
+		}
+	// clean up at the end
+	if(ii<m)
+		{
+		kernel_dsymv_l_4_vs_libc(m-ii, &alpha, A+ii+ii*lda, lda, x+ii, z+ii, m-ii);
+		}
+	
+	return;
+	}
 
 
 
-#define REF_GEMV_N blasfeo_hp_dgemv_n
-#define REF_GEMV_NT blasfeo_hp_dgemv_nt
-#define REF_GEMV_T blasfeo_hp_dgemv_t
-#define REF_SYMV_L blasfeo_hp_dsymv_l
-#define REF_SYMV_L_MN blasfeo_hp_dsymv_l_mn
-#define REF_SYMV_U blasfeo_hp_dsymv_u
-#define REF_TRMV_LNN blasfeo_hp_dtrmv_lnn
-#define REF_TRMV_LTN blasfeo_hp_dtrmv_ltn
-#define REF_TRMV_UNN blasfeo_hp_dtrmv_unn
-#define REF_TRMV_UTN blasfeo_hp_dtrmv_utn
-#define REF_TRSV_LNN blasfeo_hp_dtrsv_lnn
-#define REF_TRSV_LNN_MN blasfeo_hp_dtrsv_lnn_mn
-#define REF_TRSV_LNU blasfeo_hp_dtrsv_lnu
-#define REF_TRSV_LTN blasfeo_hp_dtrsv_ltn
-#define REF_TRSV_LTN_MN blasfeo_hp_dtrsv_ltn_mn
-#define REF_TRSV_LTU blasfeo_hp_dtrsv_ltu
-#define REF_TRSV_UNN blasfeo_hp_dtrsv_unn
-#define REF_TRSV_UTN blasfeo_hp_dtrsv_utn
-
-#define GEMV_N blasfeo_dgemv_n
-#define GEMV_NT blasfeo_dgemv_nt
-#define GEMV_T blasfeo_dgemv_t
-#define SYMV_L blasfeo_dsymv_l
-#define SYMV_L_MN blasfeo_dsymv_l_mn
-#define SYMV_U blasfeo_dsymv_u
-#define TRMV_LNN blasfeo_dtrmv_lnn
-#define TRMV_LTN blasfeo_dtrmv_ltn
-#define TRMV_UNN blasfeo_dtrmv_unn
-#define TRMV_UTN blasfeo_dtrmv_utn
-#define TRSV_LNN blasfeo_dtrsv_lnn
-#define TRSV_LNN_MN blasfeo_dtrsv_lnn_mn
-#define TRSV_LNU blasfeo_dtrsv_lnu
-#define TRSV_LTN blasfeo_dtrsv_ltn
-#define TRSV_LTN_MN blasfeo_dtrsv_ltn_mn
-#define TRSV_LTU blasfeo_dtrsv_ltu
-#define TRSV_UNN blasfeo_dtrsv_unn
-#define TRSV_UTN blasfeo_dtrsv_utn
+#if defined(LA_HIGH_PERFORMANCE)
 
 
 
-#include "x_blas2_ref.c"
+void blasfeo_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+
+	{
+	blasfeo_hp_dsymv_l(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	}
 
 
+#endif

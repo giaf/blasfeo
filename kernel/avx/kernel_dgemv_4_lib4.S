@@ -1450,6 +1450,47 @@ NAME:
 
 // common inner routine with file scope
 //
+// scale for generic alpha and beta=1.0
+//
+// input arguments:
+// r10  <- alpha
+// r11  <- y
+// ymm0 <- [z0 z1 z2 z3]
+//
+// output arguments:
+// r10  <- alpha
+// r11  <- y
+// ymm0 <- [z0 z1 z2 z3]
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_A1_4_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_scale_a1_4_lib4)
+#endif
+
+	// alpha
+	vbroadcastsd	0(%r10), %ymm15
+	vmulpd			%ymm0, %ymm15, %ymm0
+
+	// beta
+	vmovupd			0(%r11), %ymm14
+	vaddpd			%ymm0, %ymm14, %ymm0
+	
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+	FUN_END(inner_scale_a1_4_lib4)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
 // triangular substitution with vector RHS
 //
 // input arguments:
@@ -4095,6 +4136,17 @@ NAME:
 	ret
 
 	FUN_END(kernel_dsymv_l_4_gen_lib4)
+
+
+
+
+
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
+
+#include "kernel_dgemv_4_lib.S"
+
+#endif
 
 
 

@@ -38,6 +38,7 @@ include ../../Makefile.rule
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 KERNEL_OBJS = kernel_dgemv_4_lib4.o \
+		kernel_dsymv_4_lib4.o \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
@@ -57,6 +58,7 @@ endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 KERNEL_OBJS = kernel_dgemv_4_lib4.o \
+		kernel_dsymv_4_lib4.o \
 		kernel_dpack_buffer_lib4.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
@@ -382,4 +384,5 @@ clean:
 	rm -f *.gcov
 
 kernel_dgemm_4x4_lib4.o: kernel_dgemm_4x4_lib4.c kernel_dgemm_4x4_lib.c
+kernel_dsymv_4_lib4.o: kernel_dsymv_4_lib4.c kernel_dsymv_4_lib.c
 kernel_sgemm_4x4_lib4.o: kernel_sgemm_4x4_lib4.c kernel_sgemm_4x4_lib.c
