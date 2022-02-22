@@ -46,6 +46,7 @@ OBJS += dgemm_ref.o # XXX
 OBJS += dsyrk_ref.o # XXX
 OBJS += dtrmm_ref.o # XXX
 OBJS += dtrsm_ref.o # XXX
+OBJS += dsyr2k_ref.o # XXX
 OBJS += dgesv.o
 OBJS += dgetrf_ref.o # XXX
 OBJS += dgetrs.o
@@ -78,6 +79,7 @@ dgemm_ref.o: dgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/dgemm.c
 dsyrk_ref.o: dsyrk_ref.c xsyrk_ref.c
 dtrmm_ref.o: dtrmm_ref.c xtrmm_ref.c
 dtrsm_ref.o: dtrsm_ref.c xtrsm_ref.c
+dsyr2k_ref.o: dsyr2k_ref.c xsyr2k_ref.c
 dpotrf_ref.o: dpotrf_ref.c xpotrf_ref.c
 dgetrf_ref.o: dgetrf_ref.c xgetrf_ref.c
 dgetr_ref.o: dgetr_ref.c xgetr_ref.c

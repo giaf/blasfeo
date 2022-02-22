@@ -136,6 +136,7 @@ BLAS_OBJS += \
 		blas_api/dsyrk_ref.o \
 		blas_api/dtrmm_ref.o \
 		blas_api/dtrsm_ref.o \
+		blas_api/dsyr2k_ref.o \
 		blas_api/dgesv.o \
 		blas_api/dgetrf_ref.o \
 		blas_api/dgetrs.o \

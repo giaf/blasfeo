@@ -216,7 +216,7 @@ DBLAS3 =
 #DBLAS3 += netlib/blas/dgemm.o
 DBLAS3 += netlib/blas/dsymm.o
 #DBLAS3 += netlib/blas/dsyrk.o
-DBLAS3 += netlib/blas/dsyr2k.o
+#DBLAS3 += netlib/blas/dsyr2k.o
 #DBLAS3 += netlib/blas/dtrmm.o
 #DBLAS3 += netlib/blas/dtrsm.o
 

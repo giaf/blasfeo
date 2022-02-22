@@ -540,6 +540,7 @@ file(GLOB BLAS_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/dsyrk_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dtrmm_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dsyr2k_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dgesv.c
 	${PROJECT_SOURCE_DIR}/blas_api/dgetrf_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dgetrs.c
