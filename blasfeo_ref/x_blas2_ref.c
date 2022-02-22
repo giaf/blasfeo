@@ -311,6 +311,7 @@ void REF_SYMV_L_MN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void REF_SYMV_U(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
@@ -343,6 +344,7 @@ void REF_SYMV_U(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC 
 		}
 	return;
 	}
+#endif
 
 
 
@@ -1367,10 +1369,12 @@ void SYMV_L_MN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void SYMV_U(int m, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	REF_SYMV_U(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 	}
+#endif
 
 
 

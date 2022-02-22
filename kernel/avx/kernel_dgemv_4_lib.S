@@ -69,10 +69,10 @@
 // ymm9  <- x_n_3
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMV_ADD_NT_4_LIBC
+	.macro INNER_KERNEL_GEMV_NT_4_LIBC
 #else
 	.p2align 4,,15
-	FUN_START(inner_kernel_gemv_add_nt_4_libc)
+	FUN_START(inner_kernel_gemv_nt_4_libc)
 #endif
 
 	cmpl	$ 0, %r10d
@@ -89,28 +89,6 @@
 	
 	vmovupd	0(%r13), %ymm12
 	vmovupd	0(%r14), %ymm13
-
-#if 0
-
-	vmovupd		0(%r11), %ymm14
-	vfmadd231pd	%ymm14, %ymm12, %ymm0
-	vfmadd231pd	%ymm14, %ymm6, %ymm13
-
-	subl	$ 4, %r10d
-
-	vmovupd	0(%r11, %r12), %ymm14
-	vfmadd231pd	%ymm14, %ymm12, %ymm1
-	vfmadd231pd	%ymm14, %ymm7, %ymm13
-	
-	vmovupd	0(%r11, %r12, 2), %ymm14
-	vfmadd231pd	%ymm14, %ymm12, %ymm2
-	vfmadd231pd	%ymm14, %ymm8, %ymm13
-
-	vmovupd	0(%r11, %r15), %ymm14
-	vfmadd231pd	%ymm14, %ymm12, %ymm3
-	vfmadd231pd	%ymm14, %ymm9, %ymm13
-
-#else
 
 	vmovupd	0(%r11), %ymm14
 	vmulpd	%ymm14, %ymm12, %ymm15
@@ -137,8 +115,6 @@
 	vaddpd	%ymm3, %ymm15, %ymm3
 	vmulpd	%ymm14, %ymm9, %ymm15
 	vaddpd	%ymm13, %ymm15, %ymm13
-
-#endif
 
 	vmovupd	%ymm13, 0(%r14) 
 
@@ -217,7 +193,7 @@
 #else
 	ret
 
-	FUN_END(inner_kernel_gemv_add_nt_4_libc)
+	FUN_END(inner_kernel_gemv_nt_4_libc)
 #endif
 
 
@@ -258,10 +234,10 @@
 // ymm9  <- x_n_3
 
 #if MACRO_LEVEL>=2
-	.macro INNER_EDGE_DSYMV_ADD_NT_4_LIBC
+	.macro INNER_EDGE_SYMV_NT_L_4_LIBC
 #else
 	.p2align 4,,15
-	FUN_START(inner_edge_dsymv_add_nt_4_libc)
+	FUN_START(inner_edge_symv_nt_l_4_libc)
 #endif
 
 	leaq	0(%r12, %r12, 2), %r15
@@ -320,9 +296,112 @@
 #else
 	ret
 
-	FUN_END(inner_edge_dsymv_add_nt_4_libc)
+	FUN_END(inner_edge_symv_nt_l_4_libc)
 #endif
 
+
+
+
+
+
+// common inner routine with file scope
+//
+// input arguments:
+// r10   <- kmax
+// r11   <- A
+// r12   <- bs*sda*sizeof(double) = 32*sda
+// r13   <- x_t
+// r14   <- z_n
+// ymm0  <- [z_t_0a z_t_0b z_t_0c z_t_0d]
+// ymm1  <- [z_t_1a z_t_1b z_t_1c z_t_1d]
+// ymm2  <- [z_t_2a z_t_2b z_t_2c z_t_2d]
+// ymm3  <- [z_t_3a z_t_3b z_t_3c z_t_3d]
+// ymm6  <- x_n_0
+// ymm7  <- x_n_1
+// ymm8  <- x_n_2
+// ymm9  <- x_n_3
+
+//
+// output arguments:
+// r10   <- kmax-4
+// r11   <- A+4*k*sizeof(double)
+// r12   <- bs*sda*sizeof(double) = 32*sda
+// r13   <- x_t+k*sizeof(double)
+// r14   <- z_n+k*sizeof(double)
+// ymm0  <- [z_t_0a z_t_0b z_t_0c z_t_0d]
+// ymm1  <- [z_t_1a z_t_1b z_t_1c z_t_1d]
+// ymm2  <- [z_t_2a z_t_2b z_t_2c z_t_2d]
+// ymm3  <- [z_t_3a z_t_3b z_t_3c z_t_3d]
+// ymm6  <- x_n_0
+// ymm7  <- x_n_1
+// ymm8  <- x_n_2
+// ymm9  <- x_n_3
+
+#if MACRO_LEVEL>=2
+	.macro INNER_EDGE_SYMV_NT_U_4_LIBC
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_symv_nt_u_4_libc)
+#endif
+
+	leaq	0(%r12, %r12, 2), %r15
+
+	vmovupd		0(%r13), %ymm12
+	vmovupd		0(%r14), %ymm13
+
+	vmovupd		0(%r11), %ymm14
+	vxorpd		%ymm15, %ymm15, %ymm15
+	vblendpd	$ 0x1, %ymm14, %ymm15, %ymm14
+	vmulpd	%ymm14, %ymm12, %ymm15
+	vaddpd	%ymm0, %ymm15, %ymm0
+//	vmulpd	%ymm14, %ymm6, %ymm15
+//	vaddpd	%ymm13, %ymm15, %ymm13
+
+	vmovupd	0(%r11, %r12), %ymm14
+	vxorpd		%ymm15, %ymm15, %ymm15
+	vblendpd	$ 0x3, %ymm14, %ymm15, %ymm14
+	vmulpd	%ymm14, %ymm12, %ymm15
+	vaddpd	%ymm1, %ymm15, %ymm1
+	vxorpd		%ymm15, %ymm15, %ymm15
+	vblendpd	$ 0x1, %ymm14, %ymm15, %ymm14
+	vmulpd	%ymm14, %ymm7, %ymm15
+	vaddpd	%ymm13, %ymm15, %ymm13
+	
+	vmovupd	0(%r11, %r12, 2), %ymm14
+	vxorpd		%ymm15, %ymm15, %ymm15
+	vblendpd	$ 0x7, %ymm14, %ymm15, %ymm14
+	vmulpd	%ymm14, %ymm12, %ymm15
+	vaddpd	%ymm2, %ymm15, %ymm2
+	vxorpd		%ymm15, %ymm15, %ymm15
+	vblendpd	$ 0x3, %ymm14, %ymm15, %ymm14
+	vmulpd	%ymm14, %ymm8, %ymm15
+	vaddpd	%ymm13, %ymm15, %ymm13
+
+	vmovupd	0(%r11, %r15), %ymm14
+//	vxorpd		%ymm15, %ymm15, %ymm15
+//	vblendpd	$ 0x7, %ymm14, %ymm15, %ymm14
+	vmulpd	%ymm14, %ymm12, %ymm15
+	vaddpd	%ymm3, %ymm15, %ymm3
+	vxorpd		%ymm15, %ymm15, %ymm15
+	vblendpd	$ 0x7, %ymm14, %ymm15, %ymm14
+	vmulpd	%ymm14, %ymm9, %ymm15
+	vaddpd	%ymm13, %ymm15, %ymm13
+
+	vmovupd		%ymm13, 0(%r14) 
+
+	addq	$ 32, %r11
+	addq	$ 32, %r13
+	addq	$ 32, %r14
+	
+	subq	$ 4, %r10
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_symv_nt_u_4_libc)
+#endif
 
 
 
@@ -371,15 +450,15 @@
 	movq	ARG6, %r14  // z_n
 
 #if MACRO_LEVEL>=2
-	INNER_EDGE_DSYMV_ADD_NT_4_LIBC
+	INNER_EDGE_SYMV_NT_L_4_LIBC
 #else
-	CALL(inner_edge_dsymv_add_nt_4_libc)
+	CALL(inner_edge_symv_nt_l_4_libc)
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMV_ADD_NT_4_LIBC
+	INNER_KERNEL_GEMV_NT_4_LIBC
 #else
-	CALL(inner_kernel_gemv_add_nt_4_libc)
+	CALL(inner_kernel_gemv_nt_4_libc)
 #endif
 
 
@@ -418,6 +497,102 @@
 
 	FUN_END(kernel_dsymv_l_4_libc)
 
+
+
+
+
+//                            1      2              3          4        5            6
+// void kernel_dsymv_u_4_libc(int k, double *alpha, double *A, int lda, double *x_t, double *z_n);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsymv_u_4_libc)
+	
+
+	PROLOGUE
+
+
+	// zero accumulation registers y_t
+
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm0, %ymm2
+	vmovapd	%ymm0, %ymm3
+
+	// initialize x_n
+	movq	ARG2, %r10 // alpha
+	vbroadcastsd 0(%r10), %ymm15
+
+	movq	ARG5, %r10 // x_n
+	leaq	0(%r10, ARG1, 8), %r10 // x_n + k
+
+	vbroadcastsd 0(%r10), %ymm6
+	vmulpd		%ymm15, %ymm6, %ymm6
+	vbroadcastsd 8(%r10), %ymm7
+	vmulpd		%ymm15, %ymm7, %ymm7
+	vbroadcastsd 16(%r10), %ymm8
+	vmulpd		%ymm15, %ymm8, %ymm8
+	vbroadcastsd 24(%r10), %ymm9
+	vmulpd		%ymm15, %ymm9, %ymm9
+
+
+	// inner edge dsyrk & kernel dgemv nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // lda
+	sall	$ 3, %r12d // lda*sizeof(double)
+	movq	ARG5, %r13  // x_t
+	movq	ARG6, %r14  // z_n
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_NT_4_LIBC
+#else
+	CALL(inner_kernel_gemv_nt_4_libc)
+#endif
+
+#if MACRO_LEVEL>=2
+	INNER_EDGE_SYMV_NT_U_4_LIBC
+#else
+	CALL(inner_edge_symv_nt_u_4_libc)
+#endif
+
+
+	// call inner blend t scale a1
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG6, %r11   // z_t
+	leaq	0(%r11, ARG1, 8), %r11 // z_t + k
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_LIB4
+#else
+	CALL(inner_blend_t_lib4)
+#endif
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_A1_4_LIB4
+#else
+	CALL(inner_scale_a1_4_lib4)
+#endif
+
+
+	// store
+
+	movq	ARG6, %r10 // z_t 
+	leaq	0(%r10, ARG1, 8), %r10 // z_t + k
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_LIB4
+#else
+	CALL(inner_store_4_lib4)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dsymv_u_4_libc)
 
 
 

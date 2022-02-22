@@ -77,8 +77,8 @@
 
 
 
-#ifdef HP_BLAS
-#include "../blasfeo_hp_cm/sgemm.c"
-#endif
+//#ifdef HP_BLAS
+//#include "../blasfeo_hp_cm/sgemm.c"
+//#endif
 
 #include "xgemm_ref.c"

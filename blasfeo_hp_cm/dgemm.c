@@ -36,6 +36,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//#define PRINT_NAME
+
 //#if defined(OS_LINUX)
 //#include <sys/mman.h>
 //#endif
