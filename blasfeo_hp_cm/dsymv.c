@@ -52,7 +52,9 @@
 #define blasfeo_dmat blasfeo_cm_dmat
 #define blasfeo_dvec blasfeo_cm_dvec
 #define blasfeo_hp_dsymv_l blasfeo_hp_cm_dsymv_l
+#define blasfeo_hp_dsymv_u blasfeo_hp_cm_dsymv_u
 #define blasfeo_dsymv_l blasfeo_cm_dsymv_l
+#define blasfeo_dsymv_u blasfeo_cm_dsymv_u
 #endif
 
 
