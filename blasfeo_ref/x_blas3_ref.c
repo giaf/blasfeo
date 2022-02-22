@@ -4648,6 +4648,50 @@ void REF_SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 
 
 
+// dsyr2k lower not-transposed
+void REF_SYR2K_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REAL d_1 = 1.0;
+	REF_SYRK_LN(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	REF_SYRK_LN(m, k, alpha, sB, bi, bj, sA, ai, aj, d_1, sD, di, dj, sD, di, dj);
+	return;
+	}
+
+
+
+// dsyr2k lower transposed
+void REF_SYR2K_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REAL d_1 = 1.0;
+	REF_SYRK_LT(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	REF_SYRK_LT(m, k, alpha, sB, bi, bj, sA, ai, aj, d_1, sD, di, dj, sD, di, dj);
+	return;
+	}
+
+
+
+// dsyr2k upper not-transposed
+void REF_SYR2K_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REAL d_1 = 1.0;
+	REF_SYRK_UN(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	REF_SYRK_UN(m, k, alpha, sB, bi, bj, sA, ai, aj, d_1, sD, di, dj, sD, di, dj);
+	return;
+	}
+
+
+
+// dsyr2k upper transposed
+void REF_SYR2K_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REAL d_1 = 1.0;
+	REF_SYRK_UT(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	REF_SYRK_UT(m, k, alpha, sB, bi, bj, sA, ai, aj, d_1, sD, di, dj, sD, di, dj);
+	return;
+	}
+
+
+
 #if (defined(LA_REFERENCE) & defined(REF)) | (defined(LA_HIGH_PERFORMANCE) & defined(HP_CM)) | (defined(REF_BLAS))
 
 
@@ -5034,5 +5078,31 @@ void SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct X
 	}
 
 
+
+void SYR2K_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_SYR2K_LN(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void SYR2K_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_SYR2K_LT(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void SYR2K_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_SYR2K_UN(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void SYR2K_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_SYR2K_UT(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
 
 #endif

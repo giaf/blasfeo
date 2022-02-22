@@ -113,6 +113,11 @@
 #define REF_TRSM_RUNU blasfeo_ref_dtrsm_runu
 #define REF_TRSM_RUTN blasfeo_ref_dtrsm_rutn
 #define REF_TRSM_RUTU blasfeo_ref_dtrsm_rutu
+// syrk
+#define REF_SYR2K_LN blasfeo_ref_dsyr2k_ln
+#define REF_SYR2K_LT blasfeo_ref_dsyr2k_lt
+#define REF_SYR2K_UN blasfeo_ref_dsyr2k_un
+#define REF_SYR2K_UT blasfeo_ref_dsyr2k_ut
 
 // gemm
 #define GEMM_NN blasfeo_dgemm_nn
@@ -159,6 +164,11 @@
 #define TRSM_RUNU blasfeo_dtrsm_runu
 #define TRSM_RUTN blasfeo_dtrsm_rutn
 #define TRSM_RUTU blasfeo_dtrsm_rutu
+// syr2k
+#define SYR2K_LN blasfeo_dsyr2k_ln
+#define SYR2K_LT blasfeo_dsyr2k_lt
+#define SYR2K_UN blasfeo_dsyr2k_un
+#define SYR2K_UT blasfeo_dsyr2k_ut
 
 
 

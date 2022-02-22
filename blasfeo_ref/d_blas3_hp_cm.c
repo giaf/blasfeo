@@ -38,6 +38,7 @@
 
 #include <blasfeo_common.h>
 #include <blasfeo_d_aux.h>
+#include <blasfeo_d_blasfeo_hp_api.h>
 
 
 
@@ -113,6 +114,11 @@
 #define REF_TRSM_RUNU blasfeo_hp_dtrsm_runu
 #define REF_TRSM_RUTN blasfeo_hp_dtrsm_rutn
 #define REF_TRSM_RUTU blasfeo_hp_dtrsm_rutu
+// syr2k
+#define REF_SYR2K_LN blasfeo_hp_dsyr2k_ln
+#define REF_SYR2K_LT blasfeo_hp_dsyr2k_lt
+#define REF_SYR2K_UN blasfeo_hp_dsyr2k_un
+#define REF_SYR2K_UT blasfeo_hp_dsyr2k_ut
 
 // gemm
 #define GEMM_NN blasfeo_dgemm_nn
@@ -159,6 +165,11 @@
 #define TRSM_RUNU blasfeo_dtrsm_runu
 #define TRSM_RUTN blasfeo_dtrsm_rutn
 #define TRSM_RUTU blasfeo_dtrsm_rutu
+// syr2k
+#define SYR2K_LN blasfeo_dsyr2k_ln
+#define SYR2K_LT blasfeo_dsyr2k_lt
+#define SYR2K_UN blasfeo_dsyr2k_un
+#define SYR2K_UT blasfeo_dsyr2k_ut
 
 
 
