@@ -33,22 +33,73 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x, int *pincx, REAL *beta, REAL *y, int *pincy)
+void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x0, int *pincx, REAL *beta, REAL *y0, int *pincy)
 	{
-
-	if(*pincx!=1 & *pincy!=1)
-		{
-		printf("\nblasfeo_symv: feature not implemented yet: incx!=1 and incy!=1\n");
-		exit(1);
-		}
 
 #if defined(DIM_CHECK)
 	if( !(*uplo=='l' | *uplo=='l' | *uplo=='U' | *uplo=='U') )
 		{
-		printf("\nBLASFEO: potrf: wrong value for uplo\n");
+		printf("\nBLASFEO: symv: wrong value for uplo: %c\n", uplo);
+		return;
+		}
+	if(*pincx==0 | *pincy==0)
+		{
+		printf("\nBLASFEO: symv: wrong value for incx or incy: %d %d\n", *pincx, *pincy);
 		return;
 		}
 #endif
+
+	int ii;
+
+	REAL *x, *y;
+	int kx, ky;
+
+	REAL x_stack[K_MAX_STACK];
+	REAL y_stack[K_MAX_STACK];
+
+	int n = *pn;
+	int incx = *pincx;
+	int incy = *pincy;
+
+	if(incx==1)
+		{
+		x = x0;
+		}
+	else
+		{
+		if(n>K_MAX_STACK)
+			x = malloc(n*sizeof(REAL));
+		else
+			x = x_stack;
+
+		if(incx>0)
+			kx = 0;
+		else
+			kx = - (n-1) * incx;
+
+		for(ii=0; ii<n; ii++)
+			x[ii] = x0[kx + ii*incx];
+		}
+
+	if(incy==1)
+		{
+		y = y0;
+		}
+	else
+		{
+		if(n>K_MAX_STACK)
+			y = malloc(n*sizeof(REAL));
+		else
+			y = y_stack;
+
+		if(incy>0)
+			ky = 0;
+		else
+			ky = - (n-1) * incy;
+
+		for(ii=0; ii<n; ii++)
+			y[ii] = y0[ky + ii*incy];
+		}
 
 	struct MAT sA;
 	sA.pA = A;
@@ -62,11 +113,26 @@ void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x, int *pi
 
 	if(*uplo=='l' | *uplo=='L')
 		{
-		SYMV_L(*pn, *alpha, &sA, 0, 0, &sx, 0, *beta, &sy, 0, &sy, 0);
+		SYMV_L(n, *alpha, &sA, 0, 0, &sx, 0, *beta, &sy, 0, &sy, 0);
 		}
 	else
 		{
-		SYMV_U(*pn, *alpha, &sA, 0, 0, &sx, 0, *beta, &sy, 0, &sy, 0);
+		SYMV_U(n, *alpha, &sA, 0, 0, &sx, 0, *beta, &sy, 0, &sy, 0);
+		}
+
+	if(incx!=1)
+		{
+		if(n>K_MAX_STACK)
+			free(x);
+		}
+
+	if(incy!=1)
+		{
+		for(ii=0; ii<n; ii++)
+			y0[ky + ii*incy] = y[ii];
+
+		if(n>K_MAX_STACK)
+			free(y);
 		}
 
 	return;
