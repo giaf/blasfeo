@@ -153,7 +153,7 @@ CBLAS2 += netlib/blas/cher2.o
 CBLAS2 += netlib/blas/chpr2.o
 
 DBLAS2 =
-DBLAS2 += netlib/blas/dgemv.o
+#DBLAS2 += netlib/blas/dgemv.o
 DBLAS2 += netlib/blas/dgbmv.o
 #DBLAS2 += netlib/blas/dsymv.o
 DBLAS2 += netlib/blas/dsbmv.o

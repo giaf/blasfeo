@@ -92,6 +92,8 @@ double ddot_(int *n, double *x, int *incx, double *y, int *incy);
 
 // BLAS 2
 //
+void dgemv_(char *tran, int *m, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
+//
 void dsymv_(char *uplo, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
 
 // BLAS 3
@@ -174,6 +176,8 @@ double blasfeo_blas_ddot(int *n, double *x, int *incx, double *y, int *incy);
 void blasfeo_blas_dcopy(int *n, double *x, int *incx, double *y, int *incy);
 
 // BLAS 2
+//
+void blasfeo_blas_dgemv(char *trans, int *m, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
 //
 void blasfeo_blas_dsymv(char *uplo, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
 
