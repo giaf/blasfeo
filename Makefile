@@ -90,6 +90,7 @@ BLASFEO_HP_CM_OBJS = \
 		blasfeo_hp_cm/dpotrf.o \
 		blasfeo_hp_cm/dgetrf.o \
 		blasfeo_hp_cm/dgetr.o \
+		blasfeo_hp_cm/dgemv.o \
 		blasfeo_hp_cm/dsymv.o \
 		\
 		blasfeo_hp_cm/sgemm.o \

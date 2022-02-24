@@ -1143,6 +1143,51 @@ NAME:
 // r10  <- alpha
 // r11  <- beta
 // r12  <- y
+// ymm0 <- [z0 z1 z2 z3]
+//
+// output arguments:
+// r10  <- alpha
+// r11  <- beta
+// r12  <- y
+// ymm0 <- [z0 z1 z2 z3]
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_AB_4_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_scale_ab_4_lib4)
+#endif
+
+	// alpha
+	vbroadcastsd	0(%r10), %ymm15
+	vmulpd	%ymm0, %ymm15, %ymm0
+
+	// beta
+	vbroadcastsd	0(%r11), %ymm15
+	vmovupd		0(%r12), %ymm14
+	vmulpd		%ymm15, %ymm14, %ymm14
+	vaddpd		%ymm0, %ymm14, %ymm0
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+	FUN_END(inner_scale_ab_4_lib4)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// blend for ta==n, scale for generic alpha and beta
+//
+// input arguments:
+// r10  <- alpha
+// r11  <- beta
+// r12  <- y
 // ymm0 <- [z0 z1 z2 z3]_a
 // ymm1 <- [z0 z1 z2 z3]_b
 // ymm2 <- [z0 z1 z2 z3]_c

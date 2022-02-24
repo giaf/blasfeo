@@ -384,5 +384,6 @@ clean:
 	rm -f *.gcov
 
 kernel_dgemm_4x4_lib4.o: kernel_dgemm_4x4_lib4.c kernel_dgemm_4x4_lib.c
+kernel_dgemv_4_lib4.o: kernel_dgemv_4_lib4.c kernel_dgemv_4_lib.c
 kernel_dsymv_4_lib4.o: kernel_dsymv_4_lib4.c kernel_dsymv_4_lib.c
 kernel_sgemm_4x4_lib4.o: kernel_sgemm_4x4_lib4.c kernel_sgemm_4x4_lib.c

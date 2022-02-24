@@ -51,22 +51,20 @@
 #if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
 #define blasfeo_dmat blasfeo_cm_dmat
 #define blasfeo_dvec blasfeo_cm_dvec
-#define blasfeo_hp_dsymv_l blasfeo_hp_cm_dsymv_l
-#define blasfeo_hp_dsymv_u blasfeo_hp_cm_dsymv_u
-#define blasfeo_dsymv_l blasfeo_cm_dsymv_l
-#define blasfeo_dsymv_u blasfeo_cm_dsymv_u
+#define blasfeo_hp_dgemv_t blasfeo_hp_cm_dgemv_t
+#define blasfeo_dgemv_t blasfeo_cm_dgemv_t
 #endif
 
 
 
-void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+void blasfeo_hp_dgemv_t(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
 #if defined(PRINT_NAME)
-	printf("\nblasfeo_hp_dsymv_l (cm) %d %f %p %d %d %p %d %f %p %d %p %d\n", m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	printf("\nblasfeo_hp_dgemv_t (cm) %d %d %f %p %d %d %p %d %f %p %d %p %d\n", m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 #endif
 
-	if(m<=0 | (alpha==0 & beta==0))
+	if(m<=0 | n<=0 | (alpha==0 & beta==0))
 		return;
 
 	// extract pointer to column-major matrices from structures
@@ -78,80 +76,17 @@ void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, in
 
 	int ii;
 
-	// copy and scale y into z
-	ii = 0;
-	for(; ii<m-3; ii+=4)
-		{
-		z[ii+0] = beta*y[ii+0];
-		z[ii+1] = beta*y[ii+1];
-		z[ii+2] = beta*y[ii+2];
-		z[ii+3] = beta*y[ii+3];
-		}
-	for(; ii<m; ii++)
-		{
-		z[ii+0] = beta*y[ii+0];
-		}
-
 	// main loop
 	ii = 0;
-	for(; ii<m-3; ii+=4)
+	for(; ii<n-3; ii+=4)
 		{
-		kernel_dsymv_l_4_libc(m-ii, &alpha, A+ii+ii*lda, lda, x+ii, z+ii);
+//		kernel_dgemv_t_4_libc(m, &alpha, A+ii*lda, lda, x, &beta, y+ii, z+ii);
+		kernel_dgemv_t_4_vs_libc(m, &alpha, A+ii*lda, lda, x, &beta, y+ii, z+ii, 4);
 		}
 	// clean up at the end
-	if(ii<m)
+	if(ii<n)
 		{
-		kernel_dsymv_l_4_vs_libc(m-ii, &alpha, A+ii+ii*lda, lda, x+ii, z+ii, m-ii);
-		}
-	
-	return;
-	}
-
-
-
-void blasfeo_hp_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
-	{
-
-#if defined(PRINT_NAME)
-	printf("\nblasfeo_hp_dsymv_u (cm) %d %f %p %d %d %p %d %f %p %d %p %d\n", m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
-#endif
-
-	if(m<=0 | (alpha==0 & beta==0))
-		return;
-
-	// extract pointer to column-major matrices from structures
-	int lda = sA->m;
-	double *A = sA->pA + ai + aj*lda;
-	double *x = sx->pa + xi;
-	double *y = sy->pa + yi;
-	double *z = sz->pa + zi;
-
-	int ii;
-
-	// copy and scale y into z
-	ii = 0;
-	for(; ii<m-3; ii+=4)
-		{
-		z[ii+0] = beta*y[ii+0];
-		z[ii+1] = beta*y[ii+1];
-		z[ii+2] = beta*y[ii+2];
-		z[ii+3] = beta*y[ii+3];
-		}
-	for(; ii<m; ii++)
-		{
-		z[ii+0] = beta*y[ii+0];
-		}
-
-	// main loop
-	ii = 0;
-	for(; ii<m-3; ii+=4)
-		{
-		kernel_dsymv_u_4_libc(ii, &alpha, A+ii*lda, lda, x, z);
-		}
-	// clean up at the end
-	if(ii<m)
-		{
-		kernel_dsymv_u_4_vs_libc(ii, &alpha, A+ii*lda, lda, x, z, m-ii);
+		kernel_dgemv_t_4_vs_libc(m, &alpha, A+ii*lda, lda, x, &beta, y+ii, z+ii, n-ii);
 		}
 	
 	return;
@@ -163,18 +98,10 @@ void blasfeo_hp_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, in
 
 
 
-void blasfeo_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
+void blasfeo_dgemv_t(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 
 	{
-	blasfeo_hp_dsymv_l(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
-	}
-
-
-
-void blasfeo_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
-
-	{
-	blasfeo_hp_dsymv_u(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+	blasfeo_hp_dgemv_t(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 	}
 
 

@@ -35,7 +35,7 @@
 
 
 
-#include "../../include/blasfeo_d_kernel.h"
+#include <blasfeo_d_kernel.h>
 
 
 
@@ -1591,5 +1591,10 @@ void kernel_dtrmv_ut_4_lib4(int kmax, double *A, int sda, double *x, double *z)
 
 
 
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
+#include "kernel_dgemv_4_lib.c"
+
+#endif
 

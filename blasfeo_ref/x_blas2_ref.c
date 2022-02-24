@@ -116,6 +116,7 @@ void REF_GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struc
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void REF_GEMV_T(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
@@ -161,6 +162,7 @@ void REF_GEMV_T(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struc
 		}
 	return;
 	}
+#endif
 
 
 
@@ -1339,10 +1341,12 @@ void GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XV
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void GEMV_T(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	REF_GEMV_T(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 	}
+#endif
 
 
 

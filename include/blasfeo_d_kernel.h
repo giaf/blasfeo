@@ -1253,6 +1253,8 @@ void kernel_dgemm_tt_8x8_vs_libc8cc(int kmax, double *alpha, double *A, int lda,
 
 
 // level 2 BLAS
+void kernel_dgemv_t_4_libc(int kmax, double *alpha, double *A, int lda, double *x, double *beta, double *y, double *z);
+void kernel_dgemv_t_4_vs_libc(int kmax, double *alpha, double *A, int lda, double *x, double *beta, double *y, double *z, int km);
 void kernel_dsymv_l_4_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z);
 void kernel_dsymv_l_4_vs_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z, int km);
 void kernel_dsymv_u_4_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z);
