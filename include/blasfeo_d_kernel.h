@@ -1261,6 +1261,8 @@ void kernel_dsymv_l_4_libc(int kmax, double *alpha, double *A, int lda, double *
 void kernel_dsymv_l_4_vs_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z, int km);
 void kernel_dsymv_u_4_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z);
 void kernel_dsymv_u_4_vs_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z, int km);
+void kernel_dger_4_libc(int kmax, double *alpha, double *x, double *y, double *C, int ldc, double *D, int ldd);
+void kernel_dger_4_vs_libc(int kmax, double *alpha, double *x, double *y, double *C, int ldc, double *D, int ldd, int km);
 
 
 

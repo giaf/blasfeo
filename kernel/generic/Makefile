@@ -40,6 +40,7 @@ ifeq ($(TARGET), X64_INTEL_HASWELL)
 KERNEL_OBJS = kernel_dgemv_4_lib4.o \
 		kernel_dsymv_4_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		\
@@ -60,6 +61,7 @@ ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
 KERNEL_OBJS = kernel_dgemv_4_lib4.o \
 		kernel_dsymv_4_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		\
@@ -88,6 +90,7 @@ KERNEL_OBJS = \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		kernel_dgetr_lib.o \
@@ -119,6 +122,7 @@ KERNEL_OBJS = \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		kernel_dgetr_lib.o \
@@ -150,6 +154,7 @@ KERNEL_OBJS = \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		kernel_dgetr_lib.o \
@@ -181,6 +186,7 @@ KERNEL_OBJS = \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		kernel_dgetr_lib.o \
@@ -212,6 +218,7 @@ KERNEL_OBJS = \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		kernel_dgetr_lib.o \
@@ -243,6 +250,7 @@ KERNEL_OBJS = \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		kernel_dgetr_lib.o \
@@ -274,6 +282,7 @@ KERNEL_OBJS = \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		kernel_dgetr_lib.o \
@@ -307,6 +316,7 @@ KERNEL_OBJS = \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		kernel_dgetr_lib.o \
@@ -340,6 +350,7 @@ KERNEL_OBJS = \
 		kernel_dgetr_lib4.o \
 		kernel_dpack_lib4.o \
 		kernel_dpack_buffer_lib4.o \
+		kernel_dger_lib.o \
 		kernel_ddot_lib.o \
 		kernel_daxpy_lib.o \
 		kernel_dgetr_lib.o \

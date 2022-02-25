@@ -1332,6 +1332,7 @@ void REF_TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void REF_GER(int m, int n, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	int ii, jj;
@@ -1379,6 +1380,7 @@ void REF_GER(int m, int n, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy,
 		}
 	return;
 	}
+#endif
 
 
 
@@ -1520,10 +1522,12 @@ void TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void GER(int m, int n, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_GER(m, n, alpha, sx, xi, sy, yi, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 
