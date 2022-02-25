@@ -876,6 +876,20 @@ void blasfeo_hp_dtrsv_utn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct
 
 
 
+void blasfeo_hp_dger(int m, int n, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_dger(m, n, alpha, sx, xi, sy, yi, sC, ci, cj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_dger: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
 #if defined(LA_HIGH_PERFORMANCE)
 
 
@@ -1016,6 +1030,13 @@ void blasfeo_dtrsv_unn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 void blasfeo_dtrsv_utn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
 	blasfeo_hp_dtrsv_utn(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void blasfeo_dger(int m, int n, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dger(m, n, alpha, sx, xi, sy, yi, sC, ci, cj, sD, di, dj);
 	}
 
 

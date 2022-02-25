@@ -51,7 +51,9 @@
 #if ( defined(BLAS_API) & defined(MF_PANELMAJ) )
 #define blasfeo_dmat blasfeo_cm_dmat
 #define blasfeo_dvec blasfeo_cm_dvec
+#define blasfeo_hp_dgemv_n blasfeo_hp_cm_dgemv_n
 #define blasfeo_hp_dgemv_t blasfeo_hp_cm_dgemv_t
+#define blasfeo_dgemv_n blasfeo_cm_dgemv_n
 #define blasfeo_dgemv_t blasfeo_cm_dgemv_t
 #endif
 

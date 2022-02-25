@@ -46,8 +46,12 @@
 
 #if defined(MF_COLMAJ)
 	#define XMATEL_A(X, Y) pA[(X)+lda*(Y)]
+	#define XMATEL_C(X, Y) pC[(X)+ldc*(Y)]
+	#define XMATEL_D(X, Y) pD[(X)+ldd*(Y)]
 #else // MF_PANELMAJ
 	#define XMATEL_A(X, Y) XMATEL(sA, X, Y)
+	#define XMATEL_C(X, Y) XMATEL(sC, X, Y)
+	#define XMATEL_D(X, Y) XMATEL(sD, X, Y)
 #endif
 
 
@@ -78,6 +82,7 @@
 #define REF_TRSV_LTU blasfeo_hp_strsv_ltu
 #define REF_TRSV_UNN blasfeo_hp_strsv_unn
 #define REF_TRSV_UTN blasfeo_hp_strsv_utn
+#define REF_GER blasfeo_hp_sger
 
 #define GEMV_N blasfeo_sgemv_n
 #define GEMV_NT blasfeo_sgemv_nt
@@ -97,6 +102,7 @@
 #define TRSV_LTU blasfeo_strsv_ltu
 #define TRSV_UNN blasfeo_strsv_unn
 #define TRSV_UTN blasfeo_strsv_utn
+#define GER blasfeo_sger
 
 
 

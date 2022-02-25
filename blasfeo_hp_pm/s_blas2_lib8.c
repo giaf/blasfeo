@@ -1107,6 +1107,20 @@ void blasfeo_hp_ssymv_u(int m, float alpha, struct blasfeo_smat *sA, int ai, int
 
 
 
+void blasfeo_hp_sger(int m, int n, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_sger(m, n, alpha, sx, xi, sy, yi, sC, ci, cj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_sger: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
 #if defined(LA_HIGH_PERFORMANCE)
 
 
@@ -1248,6 +1262,13 @@ void blasfeo_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct bl
 //	{
 //	blasfeo_hp_strsv_utn(m, sA, ai, aj, sx, xi, sz, zi);
 //	}
+
+
+
+void blasfeo_sger(int m, int n, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sy, int yi, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_sger(m, n, alpha, sx, xi, sy, yi, sC, ci, cj, sD, di, dj);
+	}
 
 
 

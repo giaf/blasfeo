@@ -121,6 +121,8 @@ void blasfeo_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int a
 void blasfeo_dsymv_l_mn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
 // z <= beta * y + alpha * A * x, where A is symmetric and only the upper triangular patr of A is accessed
 void blasfeo_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
+// D = C + alpha * x * y^T
+void blasfeo_dger(int m, int n, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
 
 // diagonal
 
@@ -337,9 +339,16 @@ void blasfeo_cm_dtrmm_runn(int m, int n, double alpha, struct blasfeo_cm_dmat *s
 void blasfeo_cm_dtrmm_runu(int m, int n, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, struct blasfeo_cm_dmat *sD, int di, int dj);
 void blasfeo_cm_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, struct blasfeo_cm_dmat *sD, int di, int dj);
 void blasfeo_cm_dtrmm_rutu(int m, int n, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, struct blasfeo_cm_dmat *sD, int di, int dj);
+void blasfeo_cm_dsyr2k_ln(int m, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
+void blasfeo_cm_dsyr2k_lt(int m, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
+void blasfeo_cm_dsyr2k_un(int m, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
+void blasfeo_cm_dsyr2k_ut(int m, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
 // BLAS 2
+void blasfeo_cm_dgemv_n(int m, int n, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dvec *sx, int xi, double beta, struct blasfeo_cm_dvec *sy, int yi, struct blasfeo_cm_dvec *sz, int zi);
+void blasfeo_cm_dgemv_t(int m, int n, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dvec *sx, int xi, double beta, struct blasfeo_cm_dvec *sy, int yi, struct blasfeo_cm_dvec *sz, int zi);
 void blasfeo_cm_dsymv_l(int m, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dvec *sx, int xi, double beta, struct blasfeo_cm_dvec *sy, int yi, struct blasfeo_cm_dvec *sz, int zi);
 void blasfeo_cm_dsymv_u(int m, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dvec *sx, int xi, double beta, struct blasfeo_cm_dvec *sy, int yi, struct blasfeo_cm_dvec *sz, int zi);
+void blasfeo_cm_dger(int m, int n, double alpha, struct blasfeo_cm_dvec *sx, int xi, struct blasfeo_cm_dvec *sy, int yi, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
 // LAPACK
 void blasfeo_cm_dpotrf_l(int m, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
 void blasfeo_cm_dpotrf_u(int m, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);

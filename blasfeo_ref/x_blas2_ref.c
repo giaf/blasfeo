@@ -1332,6 +1332,56 @@ void REF_TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 
 
 
+void REF_GER(int m, int n, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	int ii, jj;
+	REAL
+		c_00,
+		x_0,
+		y_0, y_1;
+#if defined(MF_COLMAJ)
+	int ldc = sC->m;
+	int ldd = sD->m;
+	REAL *pC = sC->pA + ci + cj*ldc;
+	REAL *pD = sD->pA + di + dj*ldd;
+	const int cci=0; const int ccj=0;
+	const int ddi=0; const int ddj=0;
+#else
+	int cci=ci; int ccj=cj;
+	int ddi=di; int ddj=dj;
+#endif
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	jj = 0;
+#if 1
+	for(; jj<n-1; jj+=2)
+		{
+		y_0 = alpha * y[jj+0];
+		y_1 = alpha * y[jj+1];
+		ii = 0;
+		for(; ii<m; ii++)
+			{
+			x_0 = x[ii];
+			XMATEL_D(ddi+ii, ddj+jj+0) = XMATEL_C(cci+ii, ccj+jj+0) + x_0 * y_0;
+			XMATEL_D(ddi+ii, ddj+jj+1) = XMATEL_C(cci+ii, ccj+jj+1) + x_0 * y_1;
+			}
+		}
+#endif
+	for(; jj<n; jj++)
+		{
+		y_0 = alpha * y[jj];
+		ii = 0;
+		for(; ii<m; ii++)
+			{
+			x_0 = x[ii];
+			XMATEL_D(ddi+ii, ddj+jj) = XMATEL_C(cci+ii, ccj+jj) + x_0 * y_0;
+			}
+		}
+	return;
+	}
+
+
+
 #if (defined(LA_REFERENCE) & defined(REF)) | (defined(LA_HIGH_PERFORMANCE) & defined(HP_CM))
 
 
@@ -1466,6 +1516,13 @@ void TRSV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 void TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	REF_TRSV_UTN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
+
+
+
+void GER(int m, int n, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+	REF_GER(m, n, alpha, sx, xi, sy, yi, sC, ci, cj, sD, di, dj);
 	}
 
 

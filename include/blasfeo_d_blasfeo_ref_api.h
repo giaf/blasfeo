@@ -121,6 +121,8 @@ void blasfeo_ref_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, i
 void blasfeo_ref_dsymv_l_mn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
 // z <= beta * y + alpha * A * x, where A is symmetric and only the upper triangular patr of A is accessed
 void blasfeo_ref_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi);
+// D = C + alpha * x * y^T
+void blasfeo_ref_dger(int m, int n, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sy, int yi, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
 
 // diagonal
 
