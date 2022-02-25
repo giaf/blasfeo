@@ -41,6 +41,134 @@
 // r10d  <- k
 // r11   <- A
 // r12   <- lda*sizeof(double)
+// r13   <- z_n
+// ymm0  <- x_n_0
+// ymm1  <- x_n_1
+// ymm2  <- x_n_2
+// ymm3  <- x_n_3
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+4*k*sizeof(double)
+// r12   <- lda*sizeof(double)
+// r14   <- z_n+k*sizeof(double)
+// ymm0  <- x_n_0
+// ymm1  <- x_n_1
+// ymm2  <- x_n_2
+// ymm3  <- x_n_3
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMV_N_4_LIBC
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_gemv_n_4_libc)
+#endif
+
+	cmpl	$ 0, %r10d
+	jle		2f // return
+
+	leaq	0(%r12, %r12, 2), %r14
+
+	cmpl	$ 4, %r10d
+	jl		0f // clean-up loop
+
+	// main loop
+	.p2align 3
+1: // main loop
+	
+	vmovupd	0(%r13), %ymm8
+
+	vmovupd		0(%r11), %ymm14
+	vmulpd	%ymm14, %ymm0, %ymm15
+	vaddpd	%ymm8, %ymm15, %ymm8
+
+	subl	$ 4, %r10d
+
+	vmovupd	0(%r11, %r12), %ymm14
+	vmulpd	%ymm14, %ymm1, %ymm15
+	vaddpd	%ymm8, %ymm15, %ymm8
+	
+	vmovupd	0(%r11, %r12, 2), %ymm14
+	vmulpd	%ymm14, %ymm2, %ymm15
+	vaddpd	%ymm8, %ymm15, %ymm8
+
+	vmovupd	0(%r11, %r14), %ymm14
+	vmulpd	%ymm14, %ymm3, %ymm15
+	vaddpd	%ymm8, %ymm15, %ymm8
+
+	vmovupd	%ymm8, 0(%r13) 
+
+	addq	$ 32, %r11
+	addq	$ 32, %r13
+	
+	cmpl	$ 3, %r10d
+
+	jg		1b // main loop 
+
+
+	// consider clean-up
+	cmpl	$ 0, %r10d
+	jle		2f // return
+
+0: // clean-up
+	
+	vcvtsi2sd	%r10d, %xmm14, %xmm14
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm13
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm13
+#endif
+	vmovddup	%xmm14, %xmm14
+	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
+	vsubpd		%ymm14, %ymm13, %ymm11
+
+	vmaskmovpd	0(%r13), %ymm11, %ymm8
+
+	vmaskmovpd	0(%r11), %ymm11, %ymm14
+	vmulpd	%ymm14, %ymm0, %ymm15
+	vaddpd	%ymm8, %ymm15, %ymm8
+	
+	vmaskmovpd	0(%r11, %r12), %ymm11, %ymm14
+	vmulpd	%ymm14, %ymm1, %ymm15
+	vaddpd	%ymm8, %ymm15, %ymm8
+	
+	vmaskmovpd	0(%r11, %r12, 2), %ymm11, %ymm14
+	vmulpd	%ymm14, %ymm2, %ymm15
+	vaddpd	%ymm8, %ymm15, %ymm8
+
+	vmaskmovpd	0(%r11, %r14), %ymm11, %ymm14
+	vmulpd	%ymm14, %ymm3, %ymm15
+	vaddpd	%ymm8, %ymm15, %ymm8
+		
+	vmaskmovpd	%ymm8, %ymm11, 0(%r13)
+
+	sall	$ 3, %r10d // *sizeof(double)
+	addq	%r10, %r11
+	addq	%r10, %r13
+	xorl	%r10d, %r10d
+	
+	
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemv_n_4_libc)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- lda*sizeof(double)
 // r13   <- x
 // ymm0  <- [z0a z0b z0c z0d]
 // ymm1  <- [z1a z1b z1c z1d]
@@ -527,6 +655,57 @@
 
 	FUN_END(inner_edge_symv_nt_u_4_libc)
 #endif
+
+
+
+
+
+//                            1      2              3          4        5          6
+// void kernel_dgemv_n_4_libc(int k, double *alpha, double *A, int lda, double *x, double *z);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dgemv_n_4_libc)
+	
+
+	PROLOGUE
+
+
+	// initialize x_n
+	movq	ARG2, %r10 // alpha
+	vbroadcastsd 0(%r10), %ymm15
+
+	movq	ARG5, %r10 // x_n
+
+	vbroadcastsd 0(%r10), %ymm0
+	vmulpd		%ymm15, %ymm0, %ymm0
+	vbroadcastsd 8(%r10), %ymm1
+	vmulpd		%ymm15, %ymm1, %ymm1
+	vbroadcastsd 16(%r10), %ymm2
+	vmulpd		%ymm15, %ymm2, %ymm2
+	vbroadcastsd 24(%r10), %ymm3
+	vmulpd		%ymm15, %ymm3, %ymm3
+
+
+	// inner edge dsyrk & kernel dgemv nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A
+	movq	ARG4, %r12 // lda
+	sall	$ 3, %r12d // lda*sizeof(double)
+	movq	ARG6, %r13  // z_n
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_N_4_LIBC
+#else
+	CALL(inner_kernel_gemv_n_4_libc)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dgemv_n_4_libc)
 
 
 

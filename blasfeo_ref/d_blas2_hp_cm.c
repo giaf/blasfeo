@@ -37,6 +37,7 @@
 #include <stdio.h>
 
 #include <blasfeo_common.h>
+#include <blasfeo_d_blasfeo_hp_api.h>
 
 
 

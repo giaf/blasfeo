@@ -35,6 +35,7 @@
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void REF_GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	int ii, jj;
@@ -113,6 +114,7 @@ void REF_GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struc
 #endif
 	return;
 	}
+#endif
 
 
 
@@ -1334,10 +1336,12 @@ void REF_TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void GEMV_N(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, REAL beta, struct XVEC *sy, int yi, struct XVEC *sz, int zi)
 	{
 	REF_GEMV_N(m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 	}
+#endif
 
 
 

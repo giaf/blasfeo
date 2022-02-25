@@ -37,6 +37,453 @@
 
 
 
+// XXX copy and scale y_n into z_n outside the kernel !!!!!
+#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_dgemv_n_4_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z)
+	{
+
+	if(kmax<=0) 
+		return;
+	
+	int k;
+
+	double
+		a_00, a_01, a_02, a_03,
+		x_0, x_1, x_2, x_3, y_0;
+	
+	x_0 = alpha[0]*x[0];
+	x_1 = alpha[0]*x[1];
+	x_2 = alpha[0]*x[2];
+	x_3 = alpha[0]*x[3];
+
+	k = 0;
+	for(; k<kmax-3; k+=4)
+		{
+
+		// 0
+		y_0 = z[0]; 
+
+		a_00 = A[0+lda*0];
+		a_01 = A[0+lda*1];
+		a_02 = A[0+lda*2];
+		a_03 = A[0+lda*3];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+		y_0 += a_02 * x_2;
+		y_0 += a_03 * x_3;
+
+		z[0] = y_0;
+
+
+		// 1
+		y_0 = z[1]; 
+
+		a_00 = A[1+lda*0];
+		a_01 = A[1+lda*1];
+		a_02 = A[1+lda*2];
+		a_03 = A[1+lda*3];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+		y_0 += a_02 * x_2;
+		y_0 += a_03 * x_3;
+
+		z[1] = y_0;
+
+
+		// 2
+		y_0 = z[2]; 
+
+		a_00 = A[2+lda*0];
+		a_01 = A[2+lda*1];
+		a_02 = A[2+lda*2];
+		a_03 = A[2+lda*3];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+		y_0 += a_02 * x_2;
+		y_0 += a_03 * x_3;
+
+		z[2] = y_0;
+
+
+		// 3
+		y_0 = z[3]; 
+
+		a_00 = A[3+lda*0];
+		a_01 = A[3+lda*1];
+		a_02 = A[3+lda*2];
+		a_03 = A[3+lda*3];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+		y_0 += a_02 * x_2;
+		y_0 += a_03 * x_3;
+
+		z[3] = y_0;
+
+
+		A += 4;
+		z += 4;
+
+		}
+	for(; k<kmax; k++)
+		{
+
+		// 0
+		y_0 = z[0]; 
+
+		a_00 = A[0+lda*0];
+		a_01 = A[0+lda*1];
+		a_02 = A[0+lda*2];
+		a_03 = A[0+lda*3];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+		y_0 += a_02 * x_2;
+		y_0 += a_03 * x_3;
+
+		z[0] = y_0;
+
+		A += 1;
+		z += 1;
+
+		}
+	
+	return;
+
+	}
+#endif
+
+
+
+#if 1 //defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+static void kernel_dgemv_n_3_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z)
+	{
+
+	if(kmax<=0) 
+		return;
+	
+	int k;
+
+	double
+		a_00, a_01, a_02,
+		x_0, x_1, x_2, y_0;
+	
+	x_0 = alpha[0]*x[0];
+	x_1 = alpha[0]*x[1];
+	x_2 = alpha[0]*x[2];
+
+	k = 0;
+	for(; k<kmax-3; k+=4)
+		{
+
+		// 0
+		y_0 = z[0]; 
+
+		a_00 = A[0+lda*0];
+		a_01 = A[0+lda*1];
+		a_02 = A[0+lda*2];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+		y_0 += a_02 * x_2;
+
+		z[0] = y_0;
+
+
+		// 1
+		y_0 = z[1]; 
+
+		a_00 = A[1+lda*0];
+		a_01 = A[1+lda*1];
+		a_02 = A[1+lda*2];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+		y_0 += a_02 * x_2;
+
+		z[1] = y_0;
+
+
+		// 2
+		y_0 = z[2]; 
+
+		a_00 = A[2+lda*0];
+		a_01 = A[2+lda*1];
+		a_02 = A[2+lda*2];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+		y_0 += a_02 * x_2;
+
+		z[2] = y_0;
+
+
+		// 3
+		y_0 = z[3]; 
+
+		a_00 = A[3+lda*0];
+		a_01 = A[3+lda*1];
+		a_02 = A[3+lda*2];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+		y_0 += a_02 * x_2;
+
+		z[3] = y_0;
+
+
+		A += 4;
+		z += 4;
+
+		}
+	for(; k<kmax; k++)
+		{
+
+		// 0
+		y_0 = z[0]; 
+
+		a_00 = A[0+lda*0];
+		a_01 = A[0+lda*1];
+		a_02 = A[0+lda*2];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+		y_0 += a_02 * x_2;
+
+		z[0] = y_0;
+
+		A += 1;
+		z += 1;
+
+		}
+	
+	return;
+
+	}
+#endif
+
+
+
+#if 1 //defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+static void kernel_dgemv_n_2_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z)
+	{
+
+	if(kmax<=0) 
+		return;
+	
+	int k;
+
+	double
+		a_00, a_01,
+		x_0, x_1, y_0;
+	
+	x_0 = alpha[0]*x[0];
+	x_1 = alpha[0]*x[1];
+
+	k = 0;
+	for(; k<kmax-3; k+=4)
+		{
+
+		// 0
+		y_0 = z[0]; 
+
+		a_00 = A[0+lda*0];
+		a_01 = A[0+lda*1];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+
+		z[0] = y_0;
+
+
+		// 1
+		y_0 = z[1]; 
+
+		a_00 = A[1+lda*0];
+		a_01 = A[1+lda*1];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+
+		z[1] = y_0;
+
+
+		// 2
+		y_0 = z[2]; 
+
+		a_00 = A[2+lda*0];
+		a_01 = A[2+lda*1];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+
+		z[2] = y_0;
+
+
+		// 3
+		y_0 = z[3]; 
+
+		a_00 = A[3+lda*0];
+		a_01 = A[3+lda*1];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+
+		z[3] = y_0;
+
+
+		A += 4;
+		z += 4;
+
+		}
+	for(; k<kmax; k++)
+		{
+
+		// 0
+		y_0 = z[0]; 
+
+		a_00 = A[0+lda*0];
+		a_01 = A[0+lda*1];
+		
+		y_0 += a_00 * x_0;
+		y_0 += a_01 * x_1;
+
+		z[0] = y_0;
+
+		A += 1;
+		z += 1;
+
+		}
+	
+	return;
+
+	}
+#endif
+
+
+
+#if 1 //defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+static void kernel_dgemv_n_1_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z)
+	{
+
+	if(kmax<=0) 
+		return;
+	
+	int k;
+
+	double
+		a_00,
+		x_0, y_0;
+	
+	x_0 = alpha[0]*x[0];
+
+	k = 0;
+	for(; k<kmax-3; k+=4)
+		{
+
+		// 0
+		y_0 = z[0]; 
+
+		a_00 = A[0+lda*0];
+		
+		y_0 += a_00 * x_0;
+
+		z[0] = y_0;
+
+
+		// 1
+		y_0 = z[1]; 
+
+		a_00 = A[1+lda*0];
+		
+		y_0 += a_00 * x_0;
+
+		z[1] = y_0;
+
+
+		// 2
+		y_0 = z[2]; 
+
+		a_00 = A[2+lda*0];
+		
+		y_0 += a_00 * x_0;
+
+		z[2] = y_0;
+
+
+		// 3
+		y_0 = z[3]; 
+
+		a_00 = A[3+lda*0];
+		
+		y_0 += a_00 * x_0;
+
+		z[3] = y_0;
+
+
+		A += 4;
+		z += 4;
+
+		}
+	for(; k<kmax; k++)
+		{
+
+		// 0
+		y_0 = z[0]; 
+
+		a_00 = A[0+lda*0];
+		
+		y_0 += a_00 * x_0;
+
+		z[0] = y_0;
+
+		A += 1;
+		z += 1;
+
+		}
+	
+	return;
+
+	}
+#endif
+
+
+
+#if 1 //defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+// XXX copy and scale y_n into z_n outside the kernel !!!!!
+void kernel_dgemv_n_4_vs_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z, int km)
+	{
+
+	if(km<=0)
+		return;
+
+	if(km==1)
+		{
+		kernel_dgemv_n_1_libc(kmax, alpha, A, lda, x, z);
+		}
+	else if(km==2)
+		{
+		kernel_dgemv_n_2_libc(kmax, alpha, A, lda, x, z);
+		}
+	else if(km==3)
+		{
+		kernel_dgemv_n_3_libc(kmax, alpha, A, lda, x, z);
+		}
+	else
+		{
+		kernel_dgemv_n_4_libc(kmax, alpha, A, lda, x, z);
+		}
+
+	return;
+
+	}
+#endif
+
+
+
 #if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 void kernel_dgemv_t_4_libc(int kmax, double *alpha, double *A, int lda, double *x, double *beta, double *y, double *z)
 	{
