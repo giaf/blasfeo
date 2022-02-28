@@ -553,6 +553,7 @@ file(GLOB BLAS_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/dgetr_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dsymv_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dgemv_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/dger_ref.c # XXX
 
 	${PROJECT_SOURCE_DIR}/blas_api/saxpy.c
 	${PROJECT_SOURCE_DIR}/blas_api/sdot.c

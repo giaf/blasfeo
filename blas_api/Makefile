@@ -58,6 +58,7 @@ OBJS += dtrtrs.o
 OBJS += dgetr_ref.o # XXX
 OBJS += dgemv_ref.o # XXX
 OBJS += dsymv_ref.o # XXX
+OBJS += dger_ref.o # XXX
 
 OBJS += saxpy.o
 OBJS += sdot.o
@@ -86,6 +87,7 @@ dgetrf_ref.o: dgetrf_ref.c xgetrf_ref.c
 dgetr_ref.o: dgetr_ref.c xgetr_ref.c
 dgemv_ref.o: dgemv_ref.c xgemv_ref.c
 dsymv_ref.o: dsymv_ref.c xsymv_ref.c
+dger_ref.o: dger_ref.c xger_ref.c
 
 sgemm_ref.o: sgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/sgemm.c
 strsm_ref.o: strsm_ref.c xtrsm_ref.c

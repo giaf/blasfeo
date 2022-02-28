@@ -150,6 +150,7 @@ BLAS_OBJS += \
 		blas_api/dgetr_ref.o \
 		blas_api/dgemv_ref.o \
 		blas_api/dsymv_ref.o \
+		blas_api/dger_ref.o \
 		\
 		blas_api/saxpy.o \
 		blas_api/sdot.o \
