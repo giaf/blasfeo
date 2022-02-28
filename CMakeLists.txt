@@ -640,6 +640,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemv_8_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemv_4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dsymv_6_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dger_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgetrf_pivot_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgebp_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgelqf_4_lib4.S
@@ -689,6 +690,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_8_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemv_4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dsymv_6_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dger_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetrf_pivot_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgeqrf_4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgebp_lib4.S

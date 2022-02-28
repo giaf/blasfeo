@@ -269,12 +269,13 @@ KERNEL_OBJS = \
 		kernel/avx2/kernel_dgemm_8x4_lib4.o \
 		kernel/avx2/kernel_dgemm_4x4_lib4.o \
 		kernel/avx2/kernel_dgemv_8_lib4.o \
+		kernel/avx2/kernel_dgemv_4_lib4.o \
 		kernel/avx2/kernel_dsymv_6_lib4.o \
+		kernel/avx2/kernel_dger_lib4.o \
 		kernel/avx2/kernel_dgetrf_pivot_lib4.o \
 		kernel/avx2/kernel_dgebp_lib4.o \
 		kernel/avx2/kernel_dgelqf_4_lib4.o \
 		kernel/avx2/kernel_dgetr_lib4.o \
-		kernel/avx2/kernel_dgemv_4_lib4.o \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
 		kernel/avx/kernel_dgemm_diag_lib4.o \
 		kernel/avx/kernel_dgecp_lib4.o \
@@ -323,6 +324,7 @@ KERNEL_OBJS = \
 		kernel/avx/kernel_dgemv_8_lib4.o \
 		kernel/avx/kernel_dgemv_4_lib4.o \
 		kernel/avx/kernel_dsymv_6_lib4.o \
+		kernel/avx/kernel_dger_lib4.o \
 		kernel/avx/kernel_dgetrf_pivot_lib4.o \
 		kernel/avx/kernel_dgeqrf_4_lib4.o \
 		kernel/avx/kernel_dgebp_lib4.o \
