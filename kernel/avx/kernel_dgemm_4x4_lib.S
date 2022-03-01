@@ -7468,6 +7468,331 @@
 
 
 
+//                                   1      2              3           4           5           6           7             8          9        10         11
+// void kernel_dger2k_nt_4x4_lib44cc(int k, double *alpha, double *A0, double *B0, double *A1, double *B1, double *beta, double *C, int ldc, double *D, int ldd);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dger2k_nt_4x4_lib44cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// prefetch C
+
+	movq		ARG7, %r10 // beta
+	vmovsd		0(%r10), %xmm14
+	vxorpd		%xmm15, %xmm15, %xmm15 // 0.0
+	vucomisd	%xmm15, %xmm14 // beta==0.0 ?
+	je			100f // end
+
+	movq	ARG8, %r10 // C
+	movq	ARG9, %r11 // ldc
+	sall	$ 3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH0_4X4_LIB
+#else
+	CALL(inner_prefetch0_4x4_lib)
+#endif
+
+100:
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A0
+	movq	ARG4, %r12  // B0
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+	movq	ARG1, %r10 // k
+	movq	ARG5, %r11  // A1
+	movq	ARG6, %r12  // B1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$ 3, %r13d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB
+#else
+	CALL(inner_scale_ab_4x4_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$ 3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_LIB
+#else
+	CALL(inner_store_4x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dger2k_nt_4x4_lib44cc)
+
+
+
+
+
+//                                      1      2              3           4           5           6           7             8          9        10         11       12      13
+// void kernel_dger2k_nt_4x4_vs_lib44cc(int k, double *alpha, double *A0, double *B0, double *A1, double *B1, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dger2k_nt_4x4_vs_lib44cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A0
+	movq	ARG4, %r12  // B0
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+	movq	ARG1, %r10 // k
+	movq	ARG5, %r11  // A1
+	movq	ARG6, %r12  // B1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$ 3, %r13d
+	movq	ARG12, %r14 // m1
+	movq	ARG13, %r15 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_VS_LIB
+#else
+	CALL(inner_scale_ab_4x4_vs_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$ 3, %r11d
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4X4_VS_LIB
+#else
+	CALL(inner_store_4x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dger2k_nt_4x4_vs_lib44cc)
+
+
+
+
+
+//                                     1      2              3           4           5           6           7             8          9        10         11
+// void kernel_dsyr2k_nt_l_4x4_lib44cc(int k, double *alpha, double *A0, double *B0, double *A1, double *B1, double *beta, double *C, int ldc, double *D, int ldd);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsyr2k_nt_l_4x4_lib44cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A0
+	movq	ARG4, %r12  // B0
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+	movq	ARG1, %r10 // k
+	movq	ARG5, %r11  // A1
+	movq	ARG6, %r12  // B1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$ 3, %r13d
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_LIB
+#else
+	CALL(inner_scale_ab_4x4_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$ 3, %r11d
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_LIB
+#else
+	CALL(inner_store_l_4x4_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dsyr2k_nt_l_4x4_lib44cc)
+
+
+
+
+
+//                                        1      2              3           4           5           6           7             8          9        10         11       12      13
+// void kernel_dsyr2k_nt_l_4x4_vs_lib44cc(int k, double *alpha, double *A0, double *B0, double *A1, double *B1, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsyr2k_nt_l_4x4_vs_lib44cc)
+
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nn
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11  // A0
+	movq	ARG4, %r12  // B0
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+	movq	ARG1, %r10 // k
+	movq	ARG5, %r11  // A1
+	movq	ARG6, %r12  // B1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_4X4_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_4x4_lib4)
+#endif
+
+
+	// call inner blend
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG7, %r11 // beta
+	movq	ARG8, %r12   // C
+	movq	ARG9, %r13   // ldc
+	sall	$ 3, %r13d
+	movq	ARG12, %r14 // m1
+	movq	ARG13, %r15 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_4X4_VS_LIB
+#else
+	CALL(inner_scale_ab_4x4_vs_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG10, %r10 // D
+	movq	ARG11, %r11 // ldd
+	sall	$ 3, %r11d
+	movq	ARG12, %r12 // m1
+	movq	ARG13, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_4X4_VS_LIB
+#else
+	CALL(inner_store_l_4x4_vs_lib)
+#endif
+
+
+	EPILOGUE
+
+	ret
+
+	FUN_END(kernel_dsyr2k_nt_l_4x4_vs_lib44cc)
+
+
+
+
+
 //                                    1      2              3          4          5        6             7          8        9          10
 // void kernel_dtrmm_nn_rl_4x4_lib4ccc(int k, double *alpha, double *A, double *B, int ldb, double *beta, double *C, int ldc, double *D, int ldd);
 

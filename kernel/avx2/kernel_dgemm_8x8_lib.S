@@ -1330,6 +1330,174 @@
 
 
 
+//                                     1      2              3           4         5           6         7           8         9           10        11            12         13       14         15
+// void kernel_dsyr2k_nt_l_8x8_lib44cc(int k, double *alpha, double *A0, int sda0, double *B0, int sdb0, double *A1, int sda1, double *B1, int sdb1, double *beta, double *C, int ldc, double *D, int ldd);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsyr2k_nt_l_8x8_lib44cc)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A0
+	movq	ARG4, %r12 // sda0
+	sall	$ 5, %r12d // 4*sda0*sizeof(double)
+	movq	ARG5, %r13 // B0
+	movq	ARG6, %r14 // sdb0
+	sall	$ 5, %r14d // 4*sdb0*sizeof(double)
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X8_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_8x8_lib4)
+#endif
+
+	movq	ARG1, %r10 // k
+	movq	ARG7, %r11 // A0
+	movq	ARG8, %r12 // sda0
+	sall	$ 5, %r12d // 4*sda0*sizeof(double)
+	movq	ARG9, %r13 // B0
+	movq	ARG10, %r14 // sdb0
+	sall	$ 5, %r14d // 4*sdb0*sizeof(double)
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X8_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_8x8_lib4)
+#endif
+
+
+	// call inner blender nn
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG11, %r11 // beta
+	movq	ARG12, %r12 // C
+	movq	ARG13, %r13 // ldc
+	sall	$ 3, %r13d // sdc*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X8_LIB
+#else
+	CALL(inner_scale_ab_8x8_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG14, %r10 // store address D
+	movq	ARG15, %r11 // ldd
+	sall	$ 3, %r11d // sdd*sizeof(double)
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X8_LIB
+#else
+	CALL(inner_store_l_8x8_lib)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dsyr2k_nt_l_8x8_lib44cc)
+
+
+
+
+
+//                                        1      2              3           4         5           6         7           8         9           10        11            12         13       14         15       16      17
+// void kernel_dsyr2k_nt_l_8x8_vs_lib44cc(int k, double *alpha, double *A0, int sda0, double *B0, int sdb0, double *A1, int sda1, double *B1, int sdb1, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.p2align 4,,15
+	GLOB_FUN_START(kernel_dsyr2k_nt_l_8x8_vs_lib44cc)
+	
+	PROLOGUE
+
+	// zero accumulation registers
+
+	ZERO_ACC
+
+
+	// call inner dgemm kernel nt
+
+	movq	ARG1, %r10 // k
+	movq	ARG3, %r11 // A0
+	movq	ARG4, %r12 // sda0
+	sall	$ 5, %r12d // 4*sda0*sizeof(double)
+	movq	ARG5, %r13 // B0
+	movq	ARG6, %r14 // sdb0
+	sall	$ 5, %r14d // 4*sdb0*sizeof(double)
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X8_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_8x8_lib4)
+#endif
+
+	movq	ARG1, %r10 // k
+	movq	ARG7, %r11 // A0
+	movq	ARG8, %r12 // sda0
+	sall	$ 5, %r12d // 4*sda0*sizeof(double)
+	movq	ARG9, %r13 // B0
+	movq	ARG10, %r14 // sdb0
+	sall	$ 5, %r14d // 4*sdb0*sizeof(double)
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_DGEMM_NT_8X8_LIB4
+#else
+	CALL(inner_kernel_dgemm_nt_8x8_lib4)
+#endif
+
+
+	// call inner blender nn
+
+	movq	ARG2, %r10 // alpha
+	movq	ARG11, %r11 // beta
+	movq	ARG12, %r12 // C
+	movq	ARG13, %r13 // ldc
+	sall	$ 3, %r13d // sdc*sizeof(double)
+	movq	ARG16, %r14 // m1
+	movq	ARG17, %r15 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X8_VS_LIB
+#else
+	CALL(inner_scale_ab_8x8_vs_lib)
+#endif
+
+
+	// store n
+
+	movq	ARG14, %r10 // store address D
+	movq	ARG15, %r11 // ldd
+	sall	$ 3, %r11d // sdd*sizeof(double)
+	movq	ARG16, %r12 // m1
+	movq	ARG17, %r13 // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X8_VS_LIB
+#else
+	CALL(inner_store_l_8x8_vs_lib)
+#endif
+
+
+	EPILOGUE
+	
+	ret
+
+	FUN_END(kernel_dsyr2k_nt_l_8x8_vs_lib44cc)
+
+
+
+
+
 //                                    1      2          3        4          5        6          7        8          9        10
 // void kernel_dpotrf_nt_l_8x8_lib44cc(int k, double *A, int sda, double *B, int sdb, double *C, int ldc, double *D, int ldd, double *inv_diag_D);
 
