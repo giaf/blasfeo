@@ -56,12 +56,18 @@
 #define blasfeo_hp_dsyrk3_ut blasfeo_hp_cm_dsyrk3_ut
 #define blasfeo_hp_dsyrk_ln blasfeo_hp_cm_dsyrk_ln
 #define blasfeo_hp_dsyrk_ln_mn blasfeo_hp_cm_dsyrk_ln_mn
+#define blasfeo_hp_dsyrk_lt blasfeo_hp_cm_dsyrk_lt
+#define blasfeo_hp_dsyrk_un blasfeo_hp_cm_dsyrk_un
+#define blasfeo_hp_dsyrk_ut blasfeo_hp_cm_dsyrk_ut
 #define blasfeo_dsyrk3_ln blasfeo_cm_dsyrk3_ln
 #define blasfeo_dsyrk3_lt blasfeo_cm_dsyrk3_lt
 #define blasfeo_dsyrk3_un blasfeo_cm_dsyrk3_un
 #define blasfeo_dsyrk3_ut blasfeo_cm_dsyrk3_ut
 #define blasfeo_dsyrk_ln blasfeo_cm_dsyrk_ln
 #define blasfeo_dsyrk_ln_mn blasfeo_cm_dsyrk_ln_mn
+#define blasfeo_dsyrk_lt blasfeo_cm_dsyrk_lt
+#define blasfeo_dsyrk_un blasfeo_cm_dsyrk_un
+#define blasfeo_dsyrk_ut blasfeo_cm_dsyrk_ut
 #endif
 
 
@@ -3058,6 +3064,265 @@ lx_2_return:
 
 
 
+// dsyrk_lower transposed
+void blasfeo_hp_dsyrk_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	if(m<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	double
+		c_00, c_01,
+		c_10, c_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		// diagonal
+		c_00 = 0.0;
+		c_10 = 0.0;
+		c_11 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[kk+(jj+0)*lda] * pB[kk+(jj+0)*ldb];
+			c_10 += pA[kk+(jj+1)*lda] * pB[kk+(jj+0)*ldb];
+			c_11 += pA[kk+(jj+1)*lda] * pB[kk+(jj+1)*ldb];
+			}
+		pD[(jj+0)+(jj+0)*ldd] = beta * pC[(jj+0)+(jj+0)*ldc] + alpha * c_00;
+		pD[(jj+1)+(jj+0)*ldd] = beta * pC[(jj+1)+(jj+0)*ldc] + alpha * c_10;
+		pD[(jj+1)+(jj+1)*ldd] = beta * pC[(jj+1)+(jj+1)*ldc] + alpha * c_11;
+		// lower
+		ii = jj+2;
+		for(; ii<m-1; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[kk+(ii+0)*lda] * pB[kk+(jj+0)*ldb];
+				c_10 += pA[kk+(ii+1)*lda] * pB[kk+(jj+0)*ldb];
+				c_01 += pA[kk+(ii+0)*lda] * pB[kk+(jj+1)*ldb];
+				c_11 += pA[kk+(ii+1)*lda] * pB[kk+(jj+1)*ldb];
+				}
+			pD[(ii+0)+(jj+0)*ldd] = beta * pC[(ii+0)+(jj+0)*ldc] + alpha * c_00;
+			pD[(ii+1)+(jj+0)*ldd] = beta * pC[(ii+1)+(jj+0)*ldc] + alpha * c_10;
+			pD[(ii+0)+(jj+1)*ldd] = beta * pC[(ii+0)+(jj+1)*ldc] + alpha * c_01;
+			pD[(jj+1)+(jj+1)*ldd] = beta * pC[(ii+1)+(jj+1)*ldc] + alpha * c_11;
+			}
+		for(; ii<m; ii++)
+			{
+			c_00 = 0.0;
+			c_01 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[kk+(ii+0)*lda] * pB[kk+(jj+0)*ldb];
+				c_01 += pA[kk+(ii+0)*lda] * pB[kk+(jj+1)*ldb];
+				}
+			pD[(ii+0)+(jj+0)*ldd] = beta * pC[(ii+0)+(jj+0)*ldc] + alpha * c_00;
+			pD[(ii+0)+(jj+1)*ldd] = beta * pC[(ii+0)+(jj+1)*ldc] + alpha * c_01;
+			}
+		}
+	if(jj<m)
+		{
+		// diagonal
+		c_00 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[kk+(jj+0)*lda] * pB[kk+(jj+0)*ldb];
+			}
+		pD[(jj+0)+(jj+0)*ldd] = beta * pC[(jj+0)+(jj+0)*ldc] + alpha * c_00;
+		}
+	return;
+	}
+
+
+
+// dsyrk_upper not-transposed
+void blasfeo_hp_dsyrk_un(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	if(m<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	double
+		c_00, c_01,
+		c_10, c_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		// upper
+		ii = 0;
+		for(; ii<jj; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[(ii+0)+kk*lda] * pB[(jj+0)+kk*ldb];
+				c_10 += pA[(ii+1)+kk*lda] * pB[(jj+0)+kk*ldb];
+				c_01 += pA[(ii+0)+kk*lda] * pB[(jj+1)+kk*ldb];
+				c_11 += pA[(ii+1)+kk*lda] * pB[(jj+1)+kk*ldb];
+				}
+			pD[(ii+0)+(jj+0)*ldd] = beta * pC[(ii+0)+(jj+0)*ldc] + alpha * c_00;
+			pD[(ii+1)+(jj+0)*ldd] = beta * pC[(ii+1)+(jj+0)*ldc] + alpha * c_10;
+			pD[(ii+0)+(jj+1)*ldd] = beta * pC[(ii+0)+(jj+1)*ldc] + alpha * c_01;
+			pD[(jj+1)+(jj+1)*ldd] = beta * pC[(ii+1)+(jj+1)*ldc] + alpha * c_11;
+			}
+		// diagonal
+		c_00 = 0.0;
+		c_01 = 0.0;
+		c_11 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[(jj+0)+kk*lda] * pB[(jj+0)+kk*ldb];
+			c_01 += pA[(jj+0)+kk*lda] * pB[(jj+1)+kk*ldb];
+			c_11 += pA[(jj+1)+kk*lda] * pB[(jj+1)+kk*ldb];
+			}
+		pD[(jj+0)+(jj+0)*ldd] = beta * pC[(jj+0)+(jj+0)*ldc] + alpha * c_00;
+		pD[(jj+0)+(jj+1)*ldd] = beta * pC[(jj+0)+(jj+1)*ldc] + alpha * c_01;
+		pD[(jj+1)+(jj+1)*ldd] = beta * pC[(jj+1)+(jj+1)*ldc] + alpha * c_11;
+		}
+	if(jj<m)
+		{
+		// upper
+		ii = 0;
+		for(; ii<jj; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[(ii+0)+kk*lda] * pB[(jj+0)+kk*ldb];
+				c_10 += pA[(ii+1)+kk*lda] * pB[(jj+0)+kk*ldb];
+				}
+			pD[(ii+0)+(jj+0)*ldd] = beta * pC[(ii+0)+(jj+0)*ldc] + alpha * c_00;
+			pD[(ii+1)+(jj+0)*ldd] = beta * pC[(ii+1)+(jj+0)*ldc] + alpha * c_10;
+			}
+		// diagonal
+		c_00 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[(jj+0)+kk*lda] * pB[(jj+0)+kk*ldb];
+			}
+		pD[(jj+0)+(jj+0)*ldd] = beta * pC[(jj+0)+(jj+0)*ldc] + alpha * c_00;
+		}
+	return;
+	}
+
+
+
+// dsyrk_upper transposed
+void blasfeo_hp_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	if(m<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk;
+	double
+		c_00, c_01,
+		c_10, c_11;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	double *pA = sA->pA + ai + aj*lda;
+	double *pB = sB->pA + bi + bj*ldb;
+	double *pC = sC->pA + ci + cj*ldc;
+	double *pD = sD->pA + di + dj*ldd;
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		// upper
+		ii = 0;
+		for(; ii<jj; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			c_01 = 0.0;
+			c_11 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[kk+(ii+0)*lda] * pB[kk+(jj+0)*ldb];
+				c_10 += pA[kk+(ii+1)*lda] * pB[kk+(jj+0)*ldb];
+				c_01 += pA[kk+(ii+0)*lda] * pB[kk+(jj+1)*ldb];
+				c_11 += pA[kk+(ii+1)*lda] * pB[kk+(jj+1)*ldb];
+				}
+			pD[(ii+0)+(jj+0)*ldd] = beta * pC[(ii+0)+(jj+0)*ldc] + alpha * c_00;
+			pD[(ii+1)+(jj+0)*ldd] = beta * pC[(ii+1)+(jj+0)*ldc] + alpha * c_10;
+			pD[(ii+0)+(jj+1)*ldd] = beta * pC[(ii+0)+(jj+1)*ldc] + alpha * c_01;
+			pD[(jj+1)+(jj+1)*ldd] = beta * pC[(ii+1)+(jj+1)*ldc] + alpha * c_11;
+			}
+		// diagonal
+		c_00 = 0.0;
+		c_01 = 0.0;
+		c_11 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[kk+(jj+0)*lda] * pB[kk+(jj+0)*ldb];
+			c_01 += pA[kk+(jj+0)*lda] * pB[kk+(jj+1)*ldb];
+			c_11 += pA[kk+(jj+1)*lda] * pB[kk+(jj+1)*ldb];
+			}
+		pD[(jj+0)+(jj+0)*ldd] = beta * pC[(jj+0)+(jj+0)*ldc] + alpha * c_00;
+		pD[(jj+0)+(jj+1)*ldd] = beta * pC[(jj+0)+(jj+1)*ldc] + alpha * c_01;
+		pD[(jj+1)+(jj+1)*ldd] = beta * pC[(jj+1)+(jj+1)*ldc] + alpha * c_11;
+		}
+	if(jj<m)
+		{
+		// upper
+		ii = 0;
+		for(; ii<jj; ii+=2)
+			{
+			c_00 = 0.0;
+			c_10 = 0.0;
+			for(kk=0; kk<k; kk++)
+				{
+				c_00 += pA[kk+(ii+0)*lda] * pB[kk+(jj+0)*ldb];
+				c_10 += pA[kk+(ii+1)*lda] * pB[kk+(jj+0)*ldb];
+				}
+			pD[(ii+0)+(jj+0)*ldd] = beta * pC[(ii+0)+(jj+0)*ldc] + alpha * c_00;
+			pD[(ii+1)+(jj+0)*ldd] = beta * pC[(ii+1)+(jj+0)*ldc] + alpha * c_10;
+			}
+		// diagonal
+		c_00 = 0.0;
+		for(kk=0; kk<k; kk++)
+			{
+			c_00 += pA[kk+(jj+0)*lda] * pB[kk+(jj+0)*ldb];
+			}
+		pD[(jj+0)+(jj+0)*ldd] = beta * pC[(jj+0)+(jj+0)*ldc] + alpha * c_00;
+		}
+	return;
+	}
+
+
+
 #if defined(LA_HIGH_PERFORMANCE)
 
 
@@ -3100,6 +3365,27 @@ void blasfeo_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int a
 void blasfeo_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
 	{
 	blasfeo_hp_dsyrk_ln_mn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_dsyrk_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dsyrk_lt(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_dsyrk_un(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dsyrk_un(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+	}
+
+
+
+void blasfeo_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj)
+	{
+	blasfeo_hp_dsyrk_ut(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
 
 

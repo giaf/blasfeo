@@ -489,6 +489,7 @@ file(GLOB BLASFEO_HP_CM_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dsyrk.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dtrsm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dtrmm.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dsyr2k.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dpotrf.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgetrf.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgetr.c

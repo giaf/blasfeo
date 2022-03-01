@@ -87,6 +87,7 @@ BLASFEO_HP_CM_OBJS = \
 		blasfeo_hp_cm/dsyrk.o \
 		blasfeo_hp_cm/dtrsm.o \
 		blasfeo_hp_cm/dtrmm.o \
+		blasfeo_hp_cm/dsyr2k.o \
 		blasfeo_hp_cm/dpotrf.o \
 		blasfeo_hp_cm/dgetrf.o \
 		blasfeo_hp_cm/dgetr.o \

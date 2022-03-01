@@ -4353,6 +4353,7 @@ void REF_SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, in
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dsyrk_lower transposed
 void REF_SYRK_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -4447,9 +4448,11 @@ void REF_SYRK_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dsyrk_upper not-transposed
 void REF_SYRK_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -4546,9 +4549,11 @@ void REF_SYRK_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dsyrk_upper transposed
 void REF_SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -4645,9 +4650,11 @@ void REF_SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, stru
 		}
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dsyr2k lower not-transposed
 void REF_SYR2K_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -4656,9 +4663,11 @@ void REF_SYR2K_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, str
 	REF_SYRK_LN(m, k, alpha, sB, bi, bj, sA, ai, aj, d_1, sD, di, dj, sD, di, dj);
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dsyr2k lower transposed
 void REF_SYR2K_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -4667,9 +4676,11 @@ void REF_SYR2K_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, str
 	REF_SYRK_LT(m, k, alpha, sB, bi, bj, sA, ai, aj, d_1, sD, di, dj, sD, di, dj);
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dsyr2k upper not-transposed
 void REF_SYR2K_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -4678,9 +4689,11 @@ void REF_SYR2K_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, str
 	REF_SYRK_UN(m, k, alpha, sB, bi, bj, sA, ai, aj, d_1, sD, di, dj, sD, di, dj);
 	return;
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 // dsyr2k upper transposed
 void REF_SYR2K_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
@@ -4689,6 +4702,7 @@ void REF_SYR2K_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, str
 	REF_SYRK_UT(m, k, alpha, sB, bi, bj, sA, ai, aj, d_1, sD, di, dj, sD, di, dj);
 	return;
 	}
+#endif
 
 
 
@@ -5058,51 +5072,65 @@ void SYRK_LN_MN(int m, int n, int k, REAL alpha, struct XMAT *sA, int ai, int aj
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void SYRK_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_SYRK_LT(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void SYRK_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_SYRK_UN(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_SYRK_UT(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void SYR2K_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_SYR2K_LN(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void SYR2K_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_SYR2K_LT(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void SYR2K_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_SYR2K_UN(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 
 
+#if ! ( defined(HP_CM) & defined(DP) )
 void SYR2K_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
 	{
 	REF_SYR2K_UT(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	}
+#endif
 
 #endif
