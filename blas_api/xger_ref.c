@@ -111,7 +111,7 @@ void BLAS_GER(int *pm, int *pn, REAL *alpha, REAL *x0, int *pincx, REAL *y0, int
 	struct VEC sy;
 	sy.pa = y;
 
-	GER(m, n, *alpha, &sy, 0, &sy, 0, &sA, 0, 0, &sA, 0, 0);
+	GER(m, n, *alpha, &sx, 0, &sy, 0, &sA, 0, 0, &sA, 0, 0);
 
 	if(incx!=1)
 		{
