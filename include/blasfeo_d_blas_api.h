@@ -95,6 +95,8 @@ double ddot_(int *n, double *x, int *incx, double *y, int *incy);
 void dgemv_(char *tran, int *m, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
 //
 void dsymv_(char *uplo, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
+//
+void dger_(int *m, int *n, double *alpha, double *x, int *incx, double *y, int *incy, double *A, int *lda);
 
 // BLAS 3
 //
@@ -105,6 +107,8 @@ void dsyrk_(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int 
 void dtrmm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
 //
 void dtrsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
+//
+void dsyr2k_(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
 
 
 
@@ -180,6 +184,8 @@ void blasfeo_blas_dcopy(int *n, double *x, int *incx, double *y, int *incy);
 void blasfeo_blas_dgemv(char *trans, int *m, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
 //
 void blasfeo_blas_dsymv(char *uplo, int *n, double *alpha, double *A, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
+//
+void blasfeo_blas_dger(int *m, int *n, double *alpha, double *x, int *incx, double *y, int *incy, double *A, int *lda);
 
 // BLAS 3
 //
@@ -190,6 +196,8 @@ void blasfeo_blas_dsyrk(char *uplo, char *ta, int *m, int *k, double *alpha, dou
 void blasfeo_blas_dtrmm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
 //
 void blasfeo_blas_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
+//
+void blasfeo_blas_dsyr2k(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
 
 
 
