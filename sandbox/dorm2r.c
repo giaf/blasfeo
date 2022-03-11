@@ -88,7 +88,7 @@
 
 
 
-void dlarf_(char *, int *, int *, double *, int *, double *, double *, int *, double *);
+void dlarf_mod(char *, int *, int *, double *, int *, double *, double *, int *, double *);
 bool lsame_(char *, char *);
 void xerbla_(char *, int *);
 
@@ -216,7 +216,7 @@ void dorm2r_mod(char *side, char *trans, int *pm, int *pn, int *pk, double *A, i
 
 		aii = A[ii-1+(ii-1)*lda];
 		A[ii-1+(ii-1)*lda] = 1.0;
-		dlarf_(side, &mi, &ni, &A[ii-1+(ii-1)*lda], &i_1, &tau[ii-1], &C[ic-1+(jc-1)*ldc], &ldc, &work[0]);
+		dlarf_mod(side, &mi, &ni, &A[ii-1+(ii-1)*lda], &i_1, &tau[ii-1], &C[ic-1+(jc-1)*ldc], &ldc, &work[0]);
 		A[ii-1+(ii-1)*lda] = aii;
 		}
 

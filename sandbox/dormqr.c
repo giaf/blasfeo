@@ -97,7 +97,7 @@
 
 
 void dlarfb_mod(char *, char *, char *, char *, int *, int *, int *, double *, int *, double *, int *, double *, int *, double *, int *);
-void dlarft_(char *, char *, int *, int *, double *, int *, double *, double *, int *);
+void dlarft_mod(char *, char *, int *, int *, double *, int *, double *, double *, int *);
 void dorm2r_mod(char *, char *, int *, int *, int *, double *, int *, double *, double *, int *, double *, int *);
 int ilaenv_(int *, char *, char *, int *, int *, int *, int *);
 bool lsame_(char *, char *);
@@ -288,7 +288,7 @@ void dormqr_mod(char *side, char *trans, int *pm, int *pn, int *pk, double *A, i
 /*		   H = H(i) H(i+1) . . . H(i+ib-1) */
 
 			i_t2 = nq - ii + 1; // XXX as in lapack 3.10
-			dlarft_("Forward", "Columnwise", &i_t2, &ib, &A[ii-1+(ii-1)*lda], &lda, &tau[ii-1], &work[iwt], &ldt); // XXX as in lapack 3.10
+			dlarft_mod("Forward", "Columnwise", &i_t2, &ib, &A[ii-1+(ii-1)*lda], &lda, &tau[ii-1], &work[iwt], &ldt); // XXX as in lapack 3.10
 			if (left)
 				{
 
