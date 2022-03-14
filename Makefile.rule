@@ -248,6 +248,11 @@ EXT_DEP = 1
 SANDBOX_MODE = 0
 # SANDBOX_MODE = 1
 
+# Enables the compilation of experimental routines
+#
+EXPERIMENTAL = 0
+# EXPERIMENTAL = 1
+
 # Enable on-line checks for matrix and vector dimensions (experimental)
 #
 RUNTIME_CHECKS = 0
@@ -278,6 +283,7 @@ CC ?= gcc
 # CC = x86_64-w64-mingw32-gcc
 # CC = arm-linux-gnueabihf-gcc
 # CC = /opt/ndk/bin/aarch64-linux-android-gcc
+# CC = /home/gianluca/android-ndk-r23b/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android31-clang
 
 # archive routine
 #

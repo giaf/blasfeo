@@ -56,6 +56,16 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_blas_dgemv dgemv_
+#define blasfeo_blas_dger dger_
+#define blasfeo_lapack_dlarf dlarf_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -63,15 +73,13 @@
 
 
 
-void blasfeo_blas_dgemv(char *, int *, int *, double *, double *, int *, double *, int *, double *, double *, int *);
-void blasfeo_blas_dger(int *, int *, double *, double *, int *, double *, int *, double *, int *);
 int iladlc_(int *, int *, double *, int *);
 int iladlr_(int *, int *, double *, int *);
 bool lsame_(char *, char *);
 
 
 
-void dlarf_mod(char *side, int *pm, int *pn, double *v, int *pincv, double *tau, double *C, int *pldc, double *work)
+void blasfeo_lapack_dlarf(char *side, int *pm, int *pn, double *v, int *pincv, double *tau, double *C, int *pldc, double *work)
 	{
 
 	int m = *pm;

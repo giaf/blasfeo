@@ -114,6 +114,16 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_blas_dgemm dgemm_
+#define blasfeo_lapack_dlaed0 dlaed0_
+#define blasfeo_lapack_dstedc dstedc_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -121,9 +131,8 @@
 
 
 
-void blasfeo_blas_dgemm(char *, char *, int *, int *, int *, double *, double *, int *, double *, int *, double *, double *, int *);
 void dlacpy_(char *, int *, int *, double *, int *, double *, int *);
-void dlaed0_mod(int *, int *, int *, double *, double *, double *, int *, double *, int *, double *, int *, int *);
+void blasfeo_lapack_dlaed0(int *, int *, int *, double *, double *, double *, int *, double *, int *, double *, int *, int *);
 double dlamch_(char *);
 double dlanst_(char *, int *, double *, double *);
 void dlascl_(char *, int *, int *, double *, double *, int *, int *, double *, int *, int *);
@@ -138,7 +147,7 @@ void xerbla_(char *, int *);
 
 
 
-void dstedc_mod(char *compz, int *pn, double *d, double *e, double *Z, int *pldz, double *work, int *lwork, int *iwork, int *liwork, int *info)
+void blasfeo_lapack_dstedc(char *compz, int *pn, double *d, double *e, double *Z, int *pldz, double *work, int *lwork, int *iwork, int *liwork, int *info)
 	{
 
 	int n = *pn;
@@ -376,7 +385,7 @@ void dstedc_mod(char *compz, int *pn, double *d, double *e, double *Z, int *pldz
 					{
 					strtrw = start;
 					}
-				dlaed0_mod(&icompz, &n, &m, &d[start-1], &e[start-1], &Z[strtrw-1 + (start-1) * ldz], &ldz, &work[0], &n, &work[storez-1], &iwork[0], info);
+				blasfeo_lapack_dlaed0(&icompz, &n, &m, &d[start-1], &e[start-1], &Z[strtrw-1 + (start-1) * ldz], &ldz, &work[0], &n, &work[storez-1], &iwork[0], info);
 				if (*info != 0)
 					{
 					*info = (*info / (m + 1) + start - 1) * (n + 1) + *info % (m + 1) + start - 1;

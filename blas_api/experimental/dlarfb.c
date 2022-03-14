@@ -79,6 +79,16 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_blas_dgemm dgemm_
+#define blasfeo_blas_dtrmm dtrmm_
+#define blasfeo_lapack_dlarfb dlarfb_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -87,15 +97,13 @@
 
 
 void dcopy_(int *, double *, int *, double *, int *);
-void blasfeo_blas_dgemm(char *, char *, int *, int *, int *, double *, double *, int *, double *, int *, double *, double *, int *);
-void blasfeo_blas_dtrmm(char *, char *, char *, char *, int *, int *, double *, double *, int *, double *, int *);
 int iladlc_(int *, int *, double *, int *);
 int iladlr_(int *, int *, double *, int *);
 bool lsame_(char *, char *);
 
 
 
-void dlarfb_mod(char *side, char *trans, char *direct, char *storev, int *pm, int *pn, int *pk, double *V, int *pldv, double *T, int *pldt, double *C, int *pldc, double *work, int *pldwork)
+void blasfeo_lapack_dlarfb(char *side, char *trans, char *direct, char *storev, int *pm, int *pn, int *pk, double *V, int *pldv, double *T, int *pldt, double *C, int *pldc, double *work, int *pldwork)
 	{
 
 	int m = *pm;

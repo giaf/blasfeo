@@ -108,6 +108,17 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_lapack_dormtr dormtr_
+#define blasfeo_lapack_dstedc dstedc_
+#define blasfeo_lapack_dsytrd dsytrd_
+#define blasfeo_lapack_dsyevd dsyevd_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -119,18 +130,18 @@ void dlacpy_(char *, int *, int *, double *, int *, double *, int *);
 double dlamch_(char *);
 double dlansy_(char *, char *, int *, double *, int *, double *);
 void dlascl_(char *, int *, int *, double *, double *, int *, int *, double *, int *, int *);
-void dormtr_mod(char *, char *, char *, int *, int *, double *, int *, double *, double *, int *, double *, int *, int *);
+void blasfeo_lapack_dormtr(char *, char *, char *, int *, int *, double *, int *, double *, double *, int *, double *, int *, int *);
 void dscal_(int *, double *, double *, int *);
-void dstedc_mod(char *, int *, double *, double *, double *, int *, double *, int*, int*, int*, int*);
+void blasfeo_lapack_dstedc(char *, int *, double *, double *, double *, int *, double *, int*, int*, int*, int*);
 void dsterf_(int *, double *, double *, int *);
-void dsytrd_mod(char *, int *, double *, int *, double *, double *, double *, double *, int *, int *);
+void blasfeo_lapack_dsytrd(char *, int *, double *, int *, double *, double *, double *, double *, int *, int *);
 int ilaenv_(int *, char *, char *, int *, int *, int *, int *);
 bool lsame_(char *, char *);
 void xerbla_(char *, int *);
 
 
 
-void dsyevd_mod(char *jobz, char *uplo, int *pn, double *A, int *plda, double *w, double *work, int *lwork, int *iwork, int *liwork, int *info)
+void blasfeo_lapack_dsyevd(char *jobz, char *uplo, int *pn, double *A, int *plda, double *w, double *work, int *lwork, int *iwork, int *liwork, int *info)
 	{
 
 	int n = *pn;
@@ -275,7 +286,7 @@ void dsyevd_mod(char *jobz, char *uplo, int *pn, double *A, int *plda, double *w
 	indwk2 = indwrk + n*n;
 	llwrk2 = *lwork - indwk2; // + 1;
 
-	dsytrd_mod(uplo, &n, &A[0], &lda, &w[0], &work[inde], &work[indtau], &work[indwrk], &llwork, &iinfo);
+	blasfeo_lapack_dsytrd(uplo, &n, &A[0], &lda, &w[0], &work[inde], &work[indtau], &work[indwrk], &llwork, &iinfo);
 //	lopt = (int) (2*n + work[indwrk]); // removed in 3.10 vs 3.2.1
 
 /*	 For eigenvalues only, call DSTERF.  For eigenvectors, first call */
@@ -289,8 +300,8 @@ void dsyevd_mod(char *jobz, char *uplo, int *pn, double *A, int *plda, double *w
 		}
 	else
 		{
-		dstedc_mod("I", &n, &w[0], &work[inde], &work[indwrk], &n, &work[indwk2], &llwrk2, &iwork[0], liwork, info);
-		dormtr_mod("L", uplo, "N", &n, &n, &A[0], &lda, &work[indtau], &work[indwrk], &n, &work[indwk2], &llwrk2, &iinfo);
+		blasfeo_lapack_dstedc("I", &n, &w[0], &work[inde], &work[indwrk], &n, &work[indwk2], &llwrk2, &iwork[0], liwork, info);
+		blasfeo_lapack_dormtr("L", uplo, "N", &n, &n, &A[0], &lda, &work[indtau], &work[indwrk], &n, &work[indwk2], &llwrk2, &iinfo);
 		dlacpy_("A", &n, &n, &work[indwrk], &n, &A[0], &lda);
 //		lopt = max(lopt, 2*n*n + 6*n + 1); // removed in 3.10 vs 3.2.1
 		}

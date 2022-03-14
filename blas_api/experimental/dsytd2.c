@@ -110,6 +110,16 @@
 
 
 
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_lapack_dlaed1 dlaed1_
+#define blasfeo_blas_dsymv dsymv_
+#define blasfeo_blas_ddot ddot_
+#define blasfeo_blas_daxpy daxpy_
+#define blasfeo_lapack_dsytd2 dsytd2_
+#endif
+
+
+
 #define min(x, y) (((x) < (y)) ? (x) : (y))
 #define max(x, y) (((x) > (y)) ? (x) : (y))
 
@@ -122,7 +132,7 @@ void xerbla_(char *, int *);
 
 
 
-void dsytd2_mod(char *uplo, int *pn, double *A, int *plda, double *d, double *e, double *tau, int *info)
+void blasfeo_lapack_dsytd2(char *uplo, int *pn, double *A, int *plda, double *d, double *e, double *tau, int *info)
 	{
 
 	int n = *pn;

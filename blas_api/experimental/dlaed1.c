@@ -91,6 +91,15 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_lapack_dlaed3 dlaed3_
+#define blasfeo_lapack_dlaed1 dlaed1_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -101,13 +110,13 @@
 void dcopy_(int *, double *, int *, double *, int *);
 void dlacpy_(char *, int *, int *, double *, int *, double *, int *);
 void dlaed2_(int *, int *, int *, double *, double *, int *, int *, double *, double *, double *, double *, double *, int *, int *, int *, int *, int *);
-void dlaed3_mod(int *, int *, int *, double *, double *, int *, double *, double *, double *, int *, int *, double *, double *, int *);
+void blasfeo_lapack_dlaed3(int *, int *, int *, double *, double *, int *, double *, double *, double *, int *, int *, double *, double *, int *);
 void dlamrg_(int *, int *, double *, int *, int *, int *);
 void xerbla_(char *, int *);
 
 
 
-void dlaed1_mod(int *pn, double *d, double *Q, int *pldq, int *indxq, double *rho, int *cutpnt, double *work, int *iwork, int *info)
+void blasfeo_lapack_dlaed1(int *pn, double *d, double *Q, int *pldq, int *indxq, double *rho, int *cutpnt, double *work, int *iwork, int *info)
 	{
 
 	int n = *pn;
@@ -188,7 +197,7 @@ void dlaed1_mod(int *pn, double *d, double *Q, int *pldq, int *indxq, double *rh
     if (k != 0)
 		{
 		is = (iwork[coltyp] + iwork[coltyp+1]) * *cutpnt + (iwork[coltyp+1] + iwork[coltyp+2]) * (n - *cutpnt) + iq2+1;
-		dlaed3_mod(&k, &n, cutpnt, &d[0], &Q[0], &ldq, rho, &work[idlmda], &work[iq2], &iwork[indxc], &iwork[coltyp], &work[iw], &work[is-1], info);
+		blasfeo_lapack_dlaed3(&k, &n, cutpnt, &d[0], &Q[0], &ldq, rho, &work[idlmda], &work[iq2], &iwork[indxc], &iwork[coltyp], &work[iw], &work[is-1], info);
 		if (*info != 0)
 			{
 			goto L20;

@@ -33,67 +33,39 @@
 #                                                                                                 #
 ###################################################################################################
 
-include ../Makefile.rule
+include ../../Makefile.rule
 
 OBJS =
 
 ifeq ($(BLAS_API), 1)
+ifeq ($(EXPERIMENTAL), 1)
 
-OBJS += dcopy.o
-OBJS += daxpy.o
-OBJS += ddot.o
-OBJS += dgemm_ref.o # XXX
-OBJS += dsyrk_ref.o # XXX
-OBJS += dtrmm_ref.o # XXX
-OBJS += dtrsm_ref.o # XXX
-OBJS += dsyr2k_ref.o # XXX
-OBJS += dgesv.o
-OBJS += dgetrf_ref.o # XXX
-OBJS += dgetrs.o
-OBJS += dlaswp.o
-OBJS += dposv.o
-OBJS += dpotrf_ref.o # XXX
-OBJS += dpotrs.o
-OBJS += dtrtrs.o
-OBJS += dgetr_ref.o # XXX
-OBJS += dgemv_ref.o # XXX
-OBJS += dsymv_ref.o # XXX
-OBJS += dger_ref.o # XXX
+OBJS += dsyevr.o
+OBJS += dsyevd.o
+OBJS += dsytrd.o
+OBJS += dsytd2.o
+OBJS += dlatrd.o
+OBJS += dormtr.o
+OBJS += dormqr.o
+OBJS += dorm2r.o
+OBJS += dlarfb.o
+OBJS += dlarft.o
+OBJS += dlarf.o
+OBJS += dstedc.o
+OBJS += dlaed0.o
+OBJS += dlaed1.o
+OBJS += dlaed3.o
 
-OBJS += saxpy.o
-OBJS += sdot.o
-OBJS += sgemm_ref.o # XXX
-OBJS += strsm_ref.o # XXX
-OBJS += spotrf_ref.o # XXX
-
-
+endif # EXPERIMENTAL
 endif # BLAS_API
 
 obj: $(OBJS)
-ifeq ($(EXPERIMENTAL), 1)
-	( cd experimental; $(MAKE) obj)
-endif
 
 clean:
-	make -C experimental clean
 	rm -f *.o
 	rm -f *.s
 	rm -f *.gcda
 	rm -f *.gcno
 	rm -f *.gcov
 
-dgemm_ref.o: dgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/dgemm.c
-dsyrk_ref.o: dsyrk_ref.c xsyrk_ref.c
-dtrmm_ref.o: dtrmm_ref.c xtrmm_ref.c
-dtrsm_ref.o: dtrsm_ref.c xtrsm_ref.c
-dsyr2k_ref.o: dsyr2k_ref.c xsyr2k_ref.c
-dpotrf_ref.o: dpotrf_ref.c xpotrf_ref.c
-dgetrf_ref.o: dgetrf_ref.c xgetrf_ref.c
-dgetr_ref.o: dgetr_ref.c xgetr_ref.c
-dgemv_ref.o: dgemv_ref.c xgemv_ref.c
-dsymv_ref.o: dsymv_ref.c xsymv_ref.c
-dger_ref.o: dger_ref.c xger_ref.c
 
-sgemm_ref.o: sgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/sgemm.c
-strsm_ref.o: strsm_ref.c xtrsm_ref.c
-spotrf_ref.o: spotrf_ref.c xpotrf_ref.c

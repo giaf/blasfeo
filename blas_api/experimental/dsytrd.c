@@ -122,20 +122,29 @@
 
 
 
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_lapack_dlatrd dlatrd_
+#define blasfeo_blas_dsyr2k dsyr2k_
+#define blasfeo_lapack_dsytd2 dsytd2_
+#define blasfeo_lapack_dsytrd dsytrd_
+#endif
+
+
+
 #define min(x, y) (((x) < (y)) ? (x) : (y))
 #define max(x, y) (((x) > (y)) ? (x) : (y))
 
 
 
-void dlatrd_mod(char *, int *, int *, double *, int *, double *, double *, double *, int *);
-void dsytd2_mod(char *, int *, double *, int *, double *, double *, double *, int *);
+void blasfeo_lapack_dlatrd(char *, int *, int *, double *, int *, double *, double *, double *, int *);
+void blasfeo_lapack_dsytd2(char *, int *, double *, int *, double *, double *, double *, int *);
 int ilaenv_(int *, char *, char *, int *, int *, int *, int *);
 bool lsame_(char *, char *);
 void xerbla_(char *, int *);
 
 
 
-void dsytrd_mod(char *uplo, int *pn, double *A, int *plda, double *d, double *e, double *tau, double * work, int *lwork, int *info)
+void blasfeo_lapack_dsytrd(char *uplo, int *pn, double *A, int *plda, double *d, double *e, double *tau, double * work, int *lwork, int *info)
 	{
 
 	int n = *pn;
@@ -263,7 +272,7 @@ void dsytrd_mod(char *uplo, int *pn, double *A, int *plda, double *d, double *e,
 /*		   the matrix */
 
 			i_t0 = ii+nb;
-			dlatrd_mod(uplo, &i_t0, &nb, &A[0], &lda, &e[0], &tau[0], &work[0], &ldwork);
+			blasfeo_lapack_dlatrd(uplo, &i_t0, &nb, &A[0], &lda, &e[0], &tau[0], &work[0], &ldwork);
 
 /*		   Update the unreduced submatrix A(1:i-1,1:i-1), using an */
 /*		   update of the form:  A := A - V*W' - W*V' */
@@ -283,7 +292,7 @@ void dsytrd_mod(char *uplo, int *pn, double *A, int *plda, double *d, double *e,
 
 /*		Use unblocked code to reduce the last or only block */
 
-		dsytd2_mod(uplo, &kk, &A[0], &lda, &d[0], &e[0], &tau[0], &iinfo);
+		blasfeo_lapack_dsytd2(uplo, &kk, &A[0], &lda, &d[0], &e[0], &tau[0], &iinfo);
 		}
 	else
 		{
@@ -298,7 +307,7 @@ void dsytrd_mod(char *uplo, int *pn, double *A, int *plda, double *d, double *e,
 /*		   the matrix */
 
 		i_t0 = n-ii;
-		dlatrd_mod(uplo, &i_t0, &nb, &A[ii+ii*lda], &lda, &e[ii], &tau[ii], &work[0], &ldwork);
+		blasfeo_lapack_dlatrd(uplo, &i_t0, &nb, &A[ii+ii*lda], &lda, &e[ii], &tau[ii], &work[0], &ldwork);
 
 /*		   Update the unreduced submatrix A(i+ib:n,i+ib:n), using */
 /*		   an update of the form:  A := A - V*W' - W*V' */
@@ -319,7 +328,7 @@ void dsytrd_mod(char *uplo, int *pn, double *A, int *plda, double *d, double *e,
 /*		Use unblocked code to reduce the last or only block */
 
 	i_t0 = n-ii;
-	dsytd2_mod(uplo, &i_t0, &A[ii+ii*lda], &lda, &d[ii], &e[ii], &tau[ii], &iinfo);
+	blasfeo_lapack_dsytd2(uplo, &i_t0, &A[ii+ii*lda], &lda, &d[ii], &e[ii], &tau[ii], &iinfo);
 	}
 
 	work[0] = (double) lwkopt;

@@ -103,6 +103,15 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_blas_dgemm dgemm_
+#define blasfeo_lapack_dlaed3 dlaed3_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -111,7 +120,6 @@
 
 
 void dcopy_(int *, double *, int *, double *, int *);
-void blasfeo_blas_dgemm(char *, char *, int *, int *, int *, double *, double *, int *, double *, int *, double *, double *, int *);
 void dlacpy_(char *, int *, int *, double *, int *, double *, int *);
 void dlaed4_(int *, int *, double *, double *, double *, double *, double *, int *);
 double dlamc3_(double *, double *);
@@ -129,7 +137,7 @@ void xerbla_(char *, int *);
 
 
 
-void dlaed3_mod(int *pk, int *pn, int *pn1, double *d, double *Q, int *pldq, double *rho, double *dlamda, double *q2, int *indx, int *ctot, double *w, double *s, int *info)
+void blasfeo_lapack_dlaed3(int *pk, int *pn, int *pn1, double *d, double *Q, int *pldq, double *rho, double *dlamda, double *q2, int *indx, int *ctot, double *w, double *s, int *info)
 	{
 
 	int k = *pk;

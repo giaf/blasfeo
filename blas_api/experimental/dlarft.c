@@ -95,6 +95,15 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_blas_dgemv dgemv_
+#define blasfeo_lapack_dlarft dlarft_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -102,13 +111,12 @@
 
 
 
-void blasfeo_blas_dgemv(char *, int *, int *, double *, double *, int *, double *, int *, double *, double *, int *);
 void dtrmv_(char *, char *, char *, int *, double *, int *, double *, int *);
 bool lsame_(char *, char *);
 
 
 
-void dlarft_mod(char *direct, char *storev, int *pn, int *pk, double *V, int *pldv, double *tau, double *T, int *pldt)
+void blasfeo_lapack_dlarft(char *direct, char *storev, int *pn, int *pk, double *V, int *pldv, double *tau, double *T, int *pldt)
 	{
 
 	int n = *pn;

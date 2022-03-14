@@ -81,6 +81,15 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_lapack_dlarf dlarf_
+#define blasfeo_lapack_dlorm2r dorm2r0_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -88,13 +97,13 @@
 
 
 
-void dlarf_mod(char *, int *, int *, double *, int *, double *, double *, int *, double *);
+void blasfeo_lapack_dlarf(char *, int *, int *, double *, int *, double *, double *, int *, double *);
 bool lsame_(char *, char *);
 void xerbla_(char *, int *);
 
 
 
-void dorm2r_mod(char *side, char *trans, int *pm, int *pn, int *pk, double *A, int *plda, double *tau, double *C, int *pldc, double *work, int *info)
+void blasfeo_lapack_dorm2r(char *side, char *trans, int *pm, int *pn, int *pk, double *A, int *plda, double *tau, double *C, int *pldc, double *work, int *info)
 	{
 
 	int m = *pm;
@@ -216,7 +225,7 @@ void dorm2r_mod(char *side, char *trans, int *pm, int *pn, int *pk, double *A, i
 
 		aii = A[ii-1+(ii-1)*lda];
 		A[ii-1+(ii-1)*lda] = 1.0;
-		dlarf_mod(side, &mi, &ni, &A[ii-1+(ii-1)*lda], &i_1, &tau[ii-1], &C[ic-1+(jc-1)*ldc], &ldc, &work[0]);
+		blasfeo_lapack_dlarf(side, &mi, &ni, &A[ii-1+(ii-1)*lda], &i_1, &tau[ii-1], &C[ic-1+(jc-1)*ldc], &ldc, &work[0]);
 		A[ii-1+(ii-1)*lda] = aii;
 		}
 

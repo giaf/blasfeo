@@ -89,6 +89,17 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_lapack_dlarfb dlarfb_
+#define blasfeo_lapack_dlarft dlarft_
+#define blasfeo_lapack_dorm2r dorm2r_
+#define blasfeo_lapack_dormqr dormqr_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -96,16 +107,16 @@
 
 
 
-void dlarfb_mod(char *, char *, char *, char *, int *, int *, int *, double *, int *, double *, int *, double *, int *, double *, int *);
-void dlarft_mod(char *, char *, int *, int *, double *, int *, double *, double *, int *);
-void dorm2r_mod(char *, char *, int *, int *, int *, double *, int *, double *, double *, int *, double *, int *);
+void blasfeo_lapack_dlarfb(char *, char *, char *, char *, int *, int *, int *, double *, int *, double *, int *, double *, int *, double *, int *);
+void blasfeo_lapack_dlarft(char *, char *, int *, int *, double *, int *, double *, double *, int *);
+void blasfeo_lapack_dorm2r(char *, char *, int *, int *, int *, double *, int *, double *, double *, int *, double *, int *);
 int ilaenv_(int *, char *, char *, int *, int *, int *, int *);
 bool lsame_(char *, char *);
 void xerbla_(char *, int *);
 
 
 
-void dormqr_mod(char *side, char *trans, int *pm, int *pn, int *pk, double *A, int *plda, double *tau, double *C, int *pldc, double *work, int *lwork, int *info)
+void blasfeo_lapack_dormqr(char *side, char *trans, int *pm, int *pn, int *pk, double *A, int *plda, double *tau, double *C, int *pldc, double *work, int *lwork, int *info)
 	{
 
 	int m = *pm;
@@ -245,7 +256,7 @@ void dormqr_mod(char *side, char *trans, int *pm, int *pn, int *pk, double *A, i
 
 /*		Use unblocked code */
 
-		dorm2r_mod(side, trans, &m, &n, &k, &A[0], &lda, &tau[0], &C[0], &ldc, &work[0], &iinfo);
+		blasfeo_lapack_dorm2r(side, trans, &m, &n, &k, &A[0], &lda, &tau[0], &C[0], &ldc, &work[0], &iinfo);
 		}
 	else
 		{
@@ -288,7 +299,7 @@ void dormqr_mod(char *side, char *trans, int *pm, int *pn, int *pk, double *A, i
 /*		   H = H(i) H(i+1) . . . H(i+ib-1) */
 
 			i_t2 = nq - ii + 1; // XXX as in lapack 3.10
-			dlarft_mod("Forward", "Columnwise", &i_t2, &ib, &A[ii-1+(ii-1)*lda], &lda, &tau[ii-1], &work[iwt], &ldt); // XXX as in lapack 3.10
+			blasfeo_lapack_dlarft("Forward", "Columnwise", &i_t2, &ib, &A[ii-1+(ii-1)*lda], &lda, &tau[ii-1], &work[iwt], &ldt); // XXX as in lapack 3.10
 			if (left)
 				{
 
@@ -308,7 +319,7 @@ void dormqr_mod(char *side, char *trans, int *pm, int *pn, int *pk, double *A, i
 
 /*		   Apply H or H' */
 
-			dlarfb_mod(side, trans, "Forward", "Columnwise", &mi, &ni, &ib, &A[ii-1+(ii-1)*lda], &lda, &work[iwt], &ldt, &C[ic-1+(jc-1)*ldc], &ldc, &work[0], &ldwork); // XXX as in lapack 3.10
+			blasfeo_lapack_dlarfb(side, trans, "Forward", "Columnwise", &mi, &ni, &ib, &A[ii-1+(ii-1)*lda], &lda, &work[iwt], &ldt, &C[ic-1+(jc-1)*ldc], &ldc, &work[0], &ldwork); // XXX as in lapack 3.10
 			}
 		}
 

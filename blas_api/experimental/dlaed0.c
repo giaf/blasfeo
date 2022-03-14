@@ -94,6 +94,16 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_lapack_dlaed1 dlaed1_
+#define blasfeo_blas_dgemm dgemm_
+#define blasfeo_lapack_dlaed0 dlaed0_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -103,16 +113,15 @@
 
 void dcopy_(int *, double *, int *, double *, int *);
 void dlacpy_(char *, int *, int *, double *, int *, double *, int *);
-void dlaed1_mod(int *, double *, double *, int *, int *, double *, int *, double *, int *, int *);
+void blasfeo_lapack_dlaed1(int *, double *, double *, int *, int *, double *, int *, double *, int *, int *);
 void dlaed7_(int *, int *, int *, int *, int *, int *, double *, double *, int *, int *, double *, int *, double *, int *, int *, int *, int *, int *, double *, double *, int *, int *);
-void blasfeo_blas_dgemm(char *, char *, int *, int *, int *, double *, double *, int *, double *, int *, double *, double *, int *);
 void dsteqr_(char *, int *, double *, double *, double *, int *, double *, int *);
 int ilaenv_(int *, char *, char *, int *, int *, int *, int *);
 void xerbla_(char *, int *);
 
 
 
-void dlaed0_mod(int *icompq, int *qsiz, int *pn, double *d, double *e, double *Q, int *pldq, double *Qstore, int *pldqs, double *work, int *iwork, int *info)
+void blasfeo_lapack_dlaed0(int *icompq, int *qsiz, int *pn, double *d, double *e, double *Q, int *pldq, double *Qstore, int *pldqs, double *work, int *iwork, int *info)
 	{
 
 	int i_0 = 0;
@@ -324,7 +333,7 @@ L80:
 
 			if (*icompq == 2)
 				{
-				dlaed1_mod(&matsiz, &d[submat-1], &Q[submat-1 + (submat-1) * ldq], &ldq, &iwork[indxq + submat - 1], &e[submat + msd2 - 2], &msd2, &work[0], &iwork[subpbs], info);
+				blasfeo_lapack_dlaed1(&matsiz, &d[submat-1], &Q[submat-1 + (submat-1) * ldq], &ldq, &iwork[indxq + submat - 1], &e[submat + msd2 - 2], &msd2, &work[0], &iwork[subpbs], info);
 				}
 			else
 				{

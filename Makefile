@@ -903,6 +903,30 @@ endif
 
 
 
+ifeq ($(EXPERIMENTAL), 1)
+
+ifeq ($(BLAS_API), 1)
+OBJS += blas_api/experimental/dsyevr.o
+OBJS += blas_api/experimental/dsyevd.o
+OBJS += blas_api/experimental/dsytrd.o
+OBJS += blas_api/experimental/dsytd2.o
+OBJS += blas_api/experimental/dlatrd.o
+OBJS += blas_api/experimental/dormtr.o
+OBJS += blas_api/experimental/dormqr.o
+OBJS += blas_api/experimental/dorm2r.o
+OBJS += blas_api/experimental/dlarfb.o
+OBJS += blas_api/experimental/dlarft.o
+OBJS += blas_api/experimental/dlarf.o
+OBJS += blas_api/experimental/dstedc.o
+OBJS += blas_api/experimental/dlaed0.o
+OBJS += blas_api/experimental/dlaed1.o
+OBJS += blas_api/experimental/dlaed3.o
+endif
+
+endif
+
+
+
 # Define targets
 
 

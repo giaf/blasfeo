@@ -137,6 +137,16 @@
 
 
 
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_blas_dgemv dgemv_
+#define blasfeo_blas_dsymv dsymv_
+#define blasfeo_blas_ddot ddot_
+#define blasfeo_blas_daxpy daxpy_
+#define blasfeo_lapack_dlatrd dlatrd_
+#endif
+
+
+
 #define min(x, y) (((x) < (y)) ? (x) : (y))
 #define max(x, y) (((x) > (y)) ? (x) : (y))
 
@@ -148,7 +158,7 @@ bool lsame_(char *, char *);
 
 
 
-void dlatrd_mod(char *uplo, int *pn, int *pnb, double *A, int *plda, double *e, double *tau, double *w, int *pldw)
+void blasfeo_lapack_dlatrd(char *uplo, int *pn, int *pnb, double *A, int *plda, double *e, double *tau, double *w, int *pldw)
 	{
 
 	int n = *pn;

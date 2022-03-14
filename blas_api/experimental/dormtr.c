@@ -91,6 +91,15 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <blasfeo_d_blas_api.h>
+
+
+
+#if defined(FORTRAN_BLAS_API)
+#define blasfeo_lapack_dormqr dormqr_
+#define blasfeo_lapack_dormtr dormtr_
+#endif
+
 
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
@@ -99,14 +108,14 @@
 
 
 void dormql_(char *, char *, int *, int *, int *, double *, int *, double *, double *, int *, double *, int *, int *);
-void dormqr_mod(char *, char *, int *, int *, int *, double *, int *, double *, double *, int *, double *, int *, int *);
+void blasfeo_lapack_dormqr(char *, char *, int *, int *, int *, double *, int *, double *, double *, int *, double *, int *, int *);
 int ilaenv_(int *, char *, char *, int *, int *, int *, int *);
 bool lsame_(char *, char *);
 void xerbla_(char *, int *);
 
 
 
-void dormtr_mod(char *side, char *uplo, char *trans, int *pm, int *pn, double *A, int *plda, double *tau, double *C, int *pldc, double *work, int *lwork, int *info)
+void blasfeo_lapack_dormtr(char *side, char *uplo, char *trans, int *pm, int *pn, double *A, int *plda, double *tau, double *C, int *pldc, double *work, int *lwork, int *info)
 	{
 
 	int m = *pm;
@@ -266,7 +275,7 @@ void dormtr_mod(char *side, char *uplo, char *trans, int *pm, int *pn, double *A
 			i2 = 1;
 			}
 		i_t0 = nq - 1;
-		dormqr_mod(side, trans, &mi, &ni, &i_t0, &A[1+0*lda], &lda, &tau[0], &C[i1+i2*ldc], &ldc, &work[0], lwork, &iinfo);
+		blasfeo_lapack_dormqr(side, trans, &mi, &ni, &i_t0, &A[1+0*lda], &lda, &tau[0], &C[i1+i2*ldc], &ldc, &work[0], lwork, &iinfo);
 		}
 
 	work[0] = (double) lwkopt;
