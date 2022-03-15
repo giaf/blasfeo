@@ -47,30 +47,53 @@
 #endif
 
 
-float blasfeo_blas_sdot(int *ptr_n, float *x, int *ptr_ix, float *y, int *ptr_iy)
+float blasfeo_blas_sdot(int *pn, float *x, int *pincx, float *y, int *pincy)
 	{
-	int n = *ptr_n;
-	int ix = *ptr_ix;
-	int iy = *ptr_iy;
+	int n = *pn;
+	int incx = *pincx;
+	int incy = *pincy;
+
+	int ix, iy;
+	int ii;
 
 	float res = 0.0;
 
 	if(n<=0)
+		{
 		return res;
+		}
 
-	int ii;
-	if ((ix==1) & (iy==1))
+	if ((incx==1) & (incy==1))
 		{
 		kernel_sdot_11_lib(n, x, y, &res);
 //		for(ii=0; ii<n; ii++)
-//			res += y[ii]*x[ii];
+//			res += x[ii]*y[ii];
 		}
 	else
 		{
+		if(incx<0)
+			{
+			ix = - (n-1) * incx;
+			}
+		else
+			{
+			ix = 0;
+			}
+		if(incy<0)
+			{
+			iy = - (n-1) * incy;
+			}
+		else
+			{
+			iy = 0;
+			}
 		for(ii=0; ii<n; ii++)
-			res += y[ii*iy]*x[ii*ix];
+			{
+			res += x[ix]*y[iy];
+			ix += incx;
+			iy += incy;
+			}
 		}
-
 	return res;
 
 	}

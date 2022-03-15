@@ -47,29 +47,54 @@
 #endif
 
 
-void blasfeo_blas_saxpy(int *ptr_n, float *alpha, float *x, int *ptr_ix, float *y, int *ptr_iy)
+void blasfeo_blas_saxpy(int *pn, float *alpha, float *x, int *pincx, float *y, int *pincy)
 	{
-	int n = *ptr_n;
-	int ix = *ptr_ix;
-	int iy = *ptr_iy;
+	int n = *pn;
+	int incx = *pincx;
+	int incy = *pincy;
+
+	int ix, iy;
+	int ii;
 
 	if(n<=0)
-		return;
-	if(*alpha==0.0)
-		return;
-
-	int ii;
-	ii = 0;
-	if ((ix == 1) && (iy ==1))
 		{
-//		for(; ii<n; ii++)
+		return;
+		}
+	if(*alpha==0.0)
+		{
+		return;
+		}
+
+	if ((incx == 1) && (incy ==1))
+		{
+//		for(ii=0; ii<n; ii++)
 //			y[ii] = y[ii] + *alpha*x[ii];
 		kernel_saxpy_11_lib(n, alpha, x, y);
 		}
 	else
 		{
-		for(; ii<n; ii++)
-			y[ii*iy] = y[ii*iy] + *alpha*x[ii*ix];
+		if(incx<0)
+			{
+			ix = - (n-1) * incx;
+			}
+		else
+			{
+			ix = 0;
+			}
+		if(incy<0)
+			{
+			iy = - (n-1) * incy;
+			}
+		else
+			{
+			iy = 0;
+			}
+		for(ii=0; ii<n; ii++)
+			{
+			y[iy] = y[iy] + *alpha*x[ix];
+			ix += incx;
+			iy += incy;
+			}
 		}
 	return;
 	}
