@@ -904,6 +904,138 @@ void SYRK_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct X
 
 
 
+// dsyr2k lower not-transposed
+void SYR2K_LN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA + ai + aj*sA->m;
+	REAL *pB = sB->pA + bi + bj*sB->m;
+	REAL *pC = sC->pA + ci + cj*sC->m;
+	REAL *pD = sD->pA + di + dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	SYR2K(&cl, &cn, &m, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+	return;
+	}
+
+
+
+// dsyr2k lower transposed
+void SYR2K_LT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA + ai + aj*sA->m;
+	REAL *pB = sB->pA + bi + bj*sB->m;
+	REAL *pC = sC->pA + ci + cj*sC->m;
+	REAL *pD = sD->pA + di + dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	SYR2K(&cl, &ct, &m, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+	return;
+	}
+
+
+
+// dsyr2k lower not-transposed
+void SYR2K_UN(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA + ai + aj*sA->m;
+	REAL *pB = sB->pA + bi + bj*sB->m;
+	REAL *pC = sC->pA + ci + cj*sC->m;
+	REAL *pD = sD->pA + di + dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	SYR2K(&cu, &cn, &m, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+	return;
+	}
+
+
+
+// dsyr2k lower transposed
+void SYR2K_UT(int m, int k, REAL alpha, struct XMAT *sA, int ai, int aj, struct XMAT *sB, int bi, int bj, REAL beta, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int jj;
+	char cl = 'l';
+	char cn = 'n';
+	char cr = 'r';
+	char ct = 't';
+	char cu = 'u';
+	REAL *pA = sA->pA + ai + aj*sA->m;
+	REAL *pB = sB->pA + bi + bj*sB->m;
+	REAL *pC = sC->pA + ci + cj*sC->m;
+	REAL *pD = sD->pA + di + dj*sD->m;
+	int i1 = 1;
+	int lda = sA->m;
+	int ldb = sB->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(beta==0.0 || pC==pD))
+		{
+		for(jj=0; jj<m; jj++)
+			COPY(&m, pC+jj*sC->m, &i1, pD+jj*sD->m, &i1);
+		}
+	SYR2K(&cu, &ct, &m, &k, &alpha, pA, &lda, pB, &ldb, &beta, pD, &ldd);
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice

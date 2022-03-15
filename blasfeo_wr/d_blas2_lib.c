@@ -44,7 +44,7 @@
 #elif defined(EXTERNAL_BLAS_ARMPL)
 #include "armpl.h"
 #else
-#include "../include/d_blas.h"
+#include <d_blas.h>
 #endif
 #endif
 
@@ -77,12 +77,14 @@
 #define TRSV_LTU blasfeo_dtrsv_ltu
 #define TRSV_UNN blasfeo_dtrsv_unn
 #define TRSV_UTN blasfeo_dtrsv_utn
+#define GER blasfeo_dger
 
 #define COPY dcopy_
 #define GEMV dgemv_
 #define SYMV dsymv_
 #define TRMV dtrmv_
 #define TRSV dtrsv_
+#define GER_ dger_
 
 
 

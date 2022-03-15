@@ -77,12 +77,14 @@
 #define TRSV_LTU blasfeo_strsv_ltu
 #define TRSV_UNN blasfeo_strsv_unn
 #define TRSV_UTN blasfeo_strsv_utn
+#define GER blasfeo_sger
 
 #define COPY scopy_
 #define GEMV sgemv_
 #define SYMV ssymv_
 #define TRMV strmv_
 #define TRSV strsv_
+#define GER_ sger_
 
 
 

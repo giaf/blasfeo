@@ -85,12 +85,17 @@
 #define TRSM_RUNU blasfeo_strsm_runu
 #define TRSM_RUTN blasfeo_strsm_rutn
 #define TRSM_RUTU blasfeo_strsm_rutu
+#define SYR2K_LN blasfeo_ssyr2k_ln
+#define SYR2K_LT blasfeo_ssyr2k_lt
+#define SYR2K_UN blasfeo_ssyr2k_un
+#define SYR2K_UT blasfeo_ssyr2k_ut
 
 #define COPY scopy_
 #define GEMM sgemm_
 #define SYRK ssyrk_
 #define TRMM strmm_
 #define TRSM strsm_
+#define SYR2K ssyr2k_
 
 
 

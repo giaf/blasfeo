@@ -611,6 +611,35 @@ void TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 
 
 
+void GER(int m, int n, REAL alpha, struct XVEC *sx, int xi, struct XVEC *sy, int yi, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj)
+	{
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	REAL *x = sx->pa + xi;
+	REAL *y = sy->pa + yi;
+	REAL *pC = sC->pA+ci+cj*sC->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	int i1 = 1;
+	int tmp;
+	int jj;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			{
+			tmp = m-jj;
+			COPY(&tmp, pC+jj*ldc+jj, &i1, pD+jj*ldd+jj, &i1);
+			}
+		}
+	GER_(&m, &n, &alpha, x, &i1, y, &i1, pD, &ldd);
+	return;
+	}
+
+
+
 #else
 
 #error : wrong LA choice
