@@ -302,7 +302,7 @@ _ ## NAME:
 	// main loop
 1:
 	
-	ldp		q24, q25, [x11, #(0*32)]
+	ldp		q24, q25, [x11], #32
 
 	ldp		q16, q17, [x9, #(0*32)]
 	ldp		q18, q19, [x9, #(1*32)]
@@ -320,7 +320,6 @@ _ ## NAME:
 //	prfm	PLDL1KEEP, [x9, #64]
 	prfm	PLDL1KEEP, [x9, x12]
 	fmla	v3.2d, v22.2d, v24.2d
-	add		x11, x11, #32
 
 	fmla	v0.2d, v17.2d, v25.2d
 //	prfm	PLDL1KEEP, [x11, #0]
@@ -1282,6 +1281,16 @@ _ ## NAME:
 
 	FUN_END(kernel_dtrsv_lt_inv_4_lib4)
 
+
+
+
+
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
+
+#include "kernel_dgemv_4_lib.S"
+
+#endif
 
 
 

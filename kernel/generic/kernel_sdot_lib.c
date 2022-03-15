@@ -52,16 +52,16 @@ void kernel_sdot_11_lib(int n, float *x, float *y, float *res)
 	ii = 0;
 	for(; ii<n-3; ii+=4)
 		{
-		tmp_res[0] += y[0]*x[0];
-		tmp_res[1] += y[1]*x[1];
-		tmp_res[2] += y[2]*x[2];
-		tmp_res[3] += y[3]*x[3];
+		tmp_res[0] += x[0]*y[0];
+		tmp_res[1] += x[1]*y[1];
+		tmp_res[2] += x[2]*y[2];
+		tmp_res[3] += x[3]*y[3];
 		x += 4;
 		y += 4;
 		}
 	for(; ii<n; ii++)
 		{
-		tmp_res[0] += y[0]*x[0];
+		tmp_res[0] += x[0]*y[0];
 		x += 1;
 		y += 1;
 		}

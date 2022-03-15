@@ -66,7 +66,7 @@ void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, in
 	printf("\nblasfeo_hp_dsymv_l (cm) %d %f %p %d %d %p %d %f %p %d %p %d\n", m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 #endif
 
-	if(m<=0 | (alpha==0 & beta==0))
+	if((m<=0) | (alpha==0 & beta==0))
 		return;
 
 	// extract pointer to column-major matrices from structures
@@ -116,7 +116,7 @@ void blasfeo_hp_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, in
 	printf("\nblasfeo_hp_dsymv_u (cm) %d %f %p %d %d %p %d %f %p %d %p %d\n", m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 #endif
 
-	if(m<=0 | (alpha==0 & beta==0))
+	if((m<=0) | (alpha==0 & beta==0))
 		return;
 
 	// extract pointer to column-major matrices from structures

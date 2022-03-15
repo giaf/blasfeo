@@ -2,7 +2,7 @@
 *                                                                                                 *
 * This file is part of BLASFEO.                                                                   *
 *                                                                                                 *
-* BLASFEO -- BLAS for embedded optimization.                                                      *
+* BLASFEO -- BLAS For Embedded Optimization.                                                      *
 * Copyright (C) 2019 by Gianluca Frison.                                                          *
 * Developed at IMTEK (University of Freiburg) under the supervision of Moritz Diehl.              *
 * All rights reserved.                                                                            *
@@ -33,49 +33,176 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
 
 
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// w10  <- lda*sizeof(double)
+// x11  <- x
+//
+// output arguments:
 
-#if defined(BLAS_API)
-
-
-
-void kernel_ddot_11_lib(int n, double *x, double *y, double *res)
-	{
-
-	int ii;
-
-	double tmp_res[4];
-	tmp_res[0] = 0.0;
-	tmp_res[1] = 0.0;
-	tmp_res[2] = 0.0;
-	tmp_res[3] = 0.0;
-
-	ii = 0;
-	for(; ii<n-3; ii+=4)
-		{
-		tmp_res[0] += x[0]*y[0];
-		tmp_res[1] += x[1]*y[1];
-		tmp_res[2] += x[2]*y[2];
-		tmp_res[3] += x[3]*y[3];
-		x += 4;
-		y += 4;
-		}
-	for(; ii<n; ii++)
-		{
-		tmp_res[0] += x[0]*y[0];
-		x += 1;
-		y += 1;
-		}
-
-	*res = tmp_res[0]+tmp_res[1]+tmp_res[2]+tmp_res[3];
-
-	return;
-
-	}
-
-
-
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMV_T_4_LIBC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemv_t_4_libc)
 #endif
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x12, x9, x10
+	add		x13, x9, x10, lsl #1
+	add		x14, x12, x10, lsl #1
+
+	// prefetch
+//	prfm	PLDL1KEEP, [x9, #0]
+//	prfm	PLDL1KEEP, [x9, #64]
+//	prfm	PLDL1KEEP, [x11, #0]
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+//	prfm	PLDL1KEEP, [x9, x10]
+//	prfm	PLDL1KEEP, [x9, x12]
+//	prfm	PLDL1KEEP, [x11, #32]
+
+	// main loop
+1:
+	
+	ldp		q24, q25, [x11], #32
+
+	ldp		q16, q17, [x9], #32
+	ldp		q18, q19, [x12], #32
+	ldp		q20, q21, [x13], #32
+	ldp		q22, q23, [x14], #32
+
+	// unroll x4
+	fmla	v0.2d, v16.2d, v24.2d
+	fmla	v1.2d, v18.2d, v24.2d
+//	prfm	PLDL1KEEP, [x9, #96]
+
+	fmla	v2.2d, v20.2d, v24.2d
+	fmla	v3.2d, v22.2d, v24.2d
+//	prfm	PLDL1KEEP, [x12, #96]
+
+	fmla	v0.2d, v17.2d, v25.2d
+	fmla	v1.2d, v19.2d, v25.2d
+//	prfm	PLDL1KEEP, [x13, #96]
+	sub		w8, w8, #4
+
+	fmla	v2.2d, v21.2d, v25.2d
+	cmp		w8, #4
+	fmla	v3.2d, v23.2d, v25.2d
+//	prfm	PLDL1KEEP, [x14, #96]
+
+	bgt		1b
+
+0:
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// unroll 0
+	ldr		d24, [x11], #8
+	ldr		d16, [x9], #8
+	ldr		d18, [x12], #8
+	ldr		d20, [x13], #8
+	ldr		d22, [x14], #8
+	fmla	v0.2d, v16.2d, v24.2d
+	fmla	v1.2d, v18.2d, v24.2d
+	fmla	v2.2d, v20.2d, v24.2d
+	fmla	v3.2d, v22.2d, v24.2d
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemv_t_4_libc)
+#endif
+
+
+
+//                            w0        x1             x2         w3       x4         x5            x6         x7
+// void kernel_dgemv_t_4_libc(int kmax, double *alpha, double *A, int lda, double *x, double *beta, double *y, double *z)
+
+	.align	4
+	GLOB(kernel_dgemv_t_4_libc)
+	FUN_START(kernel_dgemv_t_4_libc)
+	
+
+	PROLOGUE
+
+
+	ZERO_ACC_T
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		w10, w3 // lda
+	lsl		w10, w10, #3 // 8*lda
+	mov		x11, x4 // x
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_T_4_LIBC
+#else
+	CALL(inner_kernel_gemv_t_4_libc)
+#endif
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	mov		x9, x5 // beta
+	mov		x10, x6 // y
+
+#if MACRO_LEVEL>=1
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_AB_4_LIB4
+#else
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_ab_4_lib4)
+#endif
+
+
+	// store n
+	mov		x8, x7 // z
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_4_LIB4
+#else
+	CALL(inner_store_4_lib4)
+#endif
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dgemv_t_4_libc)
+
+
+
+
+
+
