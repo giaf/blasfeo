@@ -154,10 +154,10 @@ _ ## NAME:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	.macro INNER_KERNEL_GEMM_NT_4X4_LIB4
 #else
 	.align	4
-	FUN_START(inner_kernel_gemm_add_nt_4x4_lib4)
+	FUN_START(inner_kernel_gemm_nt_4x4_lib4)
 #endif
 
 
@@ -648,7 +648,7 @@ _ ## NAME:
 #else
 	ret
 
-	FUN_END(inner_kernel_gemm_add_nt_4x4_lib4)
+	FUN_END(inner_kernel_gemm_nt_4x4_lib4)
 #endif
 
 
@@ -666,10 +666,10 @@ _ ## NAME:
 // output arguments:
 
 #if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	.macro INNER_KERNEL_GEMM_NN_4X4_LIB4
 #else
 	.align	4
-	FUN_START(inner_kernel_gemm_add_nn_4x4_lib4)
+	FUN_START(inner_kernel_gemm_nn_4x4_lib4)
 #endif
 
 
@@ -1414,7 +1414,7 @@ _ ## NAME:
 #else
 	ret
 
-	FUN_END(inner_kernel_gemm_add_nn_4x4_lib4)
+	FUN_END(inner_kernel_gemm_nn_4x4_lib4)
 #endif
 
 
@@ -1943,10 +1943,10 @@ _ ## NAME:
 // w12   <- offsetB
 
 #if MACRO_LEVEL>=1
-	.macro INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+	.macro INNER_EDGE_GEMM_NN_4X4_LIB4
 #else
 	.align	4
-	FUN_START(inner_edge_gemm_add_nn_4x4_lib4)
+	FUN_START(inner_edge_gemm_nn_4x4_lib4)
 #endif
 
 	cmp		w12, #0
@@ -2002,7 +2002,7 @@ _ ## NAME:
 #else
 	ret
 
-	FUN_END(inner_edge_gemm_add_nn_4x4_lib4)
+	FUN_END(inner_edge_gemm_nn_4x4_lib4)
 #endif
 	
 
@@ -3607,9 +3607,9 @@ _ ## NAME:
 	mov		x10, x3 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_NT_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nt_4x4_lib4)
+	CALL(inner_kernel_gemm_nt_4x4_lib4)
 #endif
 
 
@@ -3673,9 +3673,9 @@ _ ## NAME:
 	mov		x10, x3 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_NT_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nt_4x4_lib4)
+	CALL(inner_kernel_gemm_nt_4x4_lib4)
 #endif
 
 
@@ -3744,15 +3744,15 @@ _ ## NAME:
 	mov		w12, w3 // offsetB
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+	INNER_EDGE_GEMM_NN_4X4_LIB4
 #else
-	CALL(inner_edge_gemm_add_nn_4x4_lib4)
+	CALL(inner_edge_gemm_nn_4x4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_GEMM_NN_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nn_4x4_lib4)
+	CALL(inner_kernel_gemm_nn_4x4_lib4)
 #endif
 
 
@@ -3821,15 +3821,15 @@ _ ## NAME:
 // TODO offsetB
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+	INNER_EDGE_GEMM_NN_4X4_LIB4
 #else
-	CALL(inner_edge_gemm_add_nn_4x4_lib4)
+	CALL(inner_edge_gemm_nn_4x4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_GEMM_NN_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nn_4x4_lib4)
+	CALL(inner_kernel_gemm_nn_4x4_lib4)
 #endif
 
 
@@ -4029,9 +4029,9 @@ _ ## NAME:
 	mov		x10, x3 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_NT_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nt_4x4_lib4)
+	CALL(inner_kernel_gemm_nt_4x4_lib4)
 #endif
 
 
@@ -4095,9 +4095,9 @@ _ ## NAME:
 	mov		x10, x3 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_NT_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nt_4x4_lib4)
+	CALL(inner_kernel_gemm_nt_4x4_lib4)
 #endif
 
 
@@ -4166,15 +4166,15 @@ _ ## NAME:
 	mov		w12, w3 // offsetB
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+	INNER_EDGE_GEMM_NN_4X4_LIB4
 #else
-	CALL(inner_edge_gemm_add_nn_4x4_lib4)
+	CALL(inner_edge_gemm_nn_4x4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_GEMM_NN_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nn_4x4_lib4)
+	CALL(inner_kernel_gemm_nn_4x4_lib4)
 #endif
 
 
@@ -4241,15 +4241,15 @@ _ ## NAME:
 	mov		w12, w3 // offsetB
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_GEMM_ADD_NN_4X4_LIB4
+	INNER_EDGE_GEMM_NN_4X4_LIB4
 #else
-	CALL(inner_edge_gemm_add_nn_4x4_lib4)
+	CALL(inner_edge_gemm_nn_4x4_lib4)
 #endif
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_GEMM_NN_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nn_4x4_lib4)
+	CALL(inner_kernel_gemm_nn_4x4_lib4)
 #endif
 
 
@@ -4315,9 +4315,9 @@ _ ## NAME:
 	mov		x10, x2 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_NT_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nt_4x4_lib4)
+	CALL(inner_kernel_gemm_nt_4x4_lib4)
 #endif
 
 
@@ -4392,9 +4392,9 @@ _ ## NAME:
 	mov		x10, x2 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_NT_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nt_4x4_lib4)
+	CALL(inner_kernel_gemm_nt_4x4_lib4)
 #endif
 
 
@@ -4472,9 +4472,9 @@ _ ## NAME:
 	mov		x10, x2 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_NT_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nt_4x4_lib4)
+	CALL(inner_kernel_gemm_nt_4x4_lib4)
 #endif
 
 
@@ -4548,9 +4548,9 @@ _ ## NAME:
 	mov		x10, x2 // B
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_4X4_LIB4
+	INNER_KERNEL_GEMM_NT_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nt_4x4_lib4)
+	CALL(inner_kernel_gemm_nt_4x4_lib4)
 #endif
 
 
@@ -4629,9 +4629,9 @@ _ ## NAME:
 	lsl		w11, w11, #5 // 32*sdb
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_GEMM_NN_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nn_4x4_lib4)
+	CALL(inner_kernel_gemm_nn_4x4_lib4)
 #endif
 
 
@@ -4707,9 +4707,9 @@ _ ## NAME:
 	lsl		w11, w11, #5 // 32*sdb
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NN_4X4_LIB4
+	INNER_KERNEL_GEMM_NN_4X4_LIB4
 #else
-	CALL(inner_kernel_gemm_add_nn_4x4_lib4)
+	CALL(inner_kernel_gemm_nn_4x4_lib4)
 #endif
 
 

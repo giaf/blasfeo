@@ -120,7 +120,7 @@ static void blasfeo_hp_dger2k_nt_m2(int m, int n, int k, double alpha, double *p
 			goto nt_m2_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		for(jj=0; jj<n-3; jj+=4)
@@ -171,7 +171,7 @@ nt_m2_left_12:
 	goto nt_m2_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 nt_m2_left_8:
 	for(jj=0; jj<n; jj+=4)
 		{
@@ -234,7 +234,7 @@ static void blasfeo_hp_dsyr2k_ln_m2(int m, int k, double alpha, double *pA, int 
 			goto ln_m2_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		for(jj=0; jj<ii; jj+=4)
@@ -287,7 +287,7 @@ ln_m2_left_12:
 	goto ln_m2_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 ln_m2_left_8:
 	for(jj=0; jj<ii; jj+=4)
 		{
@@ -358,7 +358,7 @@ static void blasfeo_hp_dsyr2k_ln_m1(int m, int k, double alpha, double *A, int l
 			goto ln_1_left_12;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
 		kernel_dpack_nn_8_lib4(k, A+ii, lda, pU, sdu);
@@ -414,7 +414,7 @@ ln_1_left_12:
 	goto ln_1_return;
 #endif
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 ln_1_left_8:
 	kernel_dpack_nn_8_vs_lib4(k, A+ii, lda, pU, sdu, m-ii);
 	kernel_dpack_nn_8_vs_lib4(k, B+ii, ldb, pU+k*ps, sdu, m-ii);
@@ -516,6 +516,9 @@ void blasfeo_hp_dsyr2k_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #if defined(TARGET_X64_INTEL_HASWELL)
 	const int l2_cache_el = L2_CACHE_EL;
 #endif
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	const int llc_cache_el = LLC_CACHE_EL;
+#endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
 
 	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
@@ -542,7 +545,8 @@ void blasfeo_hp_dsyr2k_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m<64 & 2*k<64)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	if(m<32 & 2*k<32)
+//	if(m<32 & 2*k<32)
+	if( m<=2*m_kernel | 2*m*k_block < llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	if(m<16 & 2*k<16)
 #else

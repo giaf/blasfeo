@@ -9372,7 +9372,7 @@
 	ZERO_ACC
 
 
-	// call inner dgemm kernel nn
+	// call inner dgemm kernel nt
 
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A0
@@ -9463,7 +9463,7 @@
 	ZERO_ACC
 
 
-	// call inner dgemm kernel nn
+	// call inner dgemm kernel nt
 
 	movq	ARG15, %r14  // n1
 	cmpl	$ 1, %r14d

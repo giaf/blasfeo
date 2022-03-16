@@ -40988,6 +40988,713 @@
 
 
 
+//                                   w0     x1             x2          w3        x4         w5         x6          w7        sp+0        sp+8      sp+16         sp+24      sp+32    sp+40      sp+48
+// void kernel_dger2k_nt_8x4_lib4ccc(int k, double *alpha, double *A0, int sda0, double *B0, int ldb0, double *A1, int sda1, double *B1, int ldb1, double *beta, double *C, int ldc, double *D, int ldd);
+
+	.align	4
+	GLOB(kernel_dger2k_nt_8x4_lib4ccc)
+	FUN_START(kernel_dger2k_nt_8x4_lib4ccc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A0
+	mov		w10, w3 // sda0
+	lsl		w10, w10, #5 // 32*sda0
+	mov		x11, x4 // B0
+	mov		w12, w5 // ldb0
+	lsl		w12, w12, #3 // 8*ldb0
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4C
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4c)
+#endif
+
+	mov		w8, w0 // kmax
+	mov		x9, x6 // A1
+	mov		w10, w7 // sda1
+	lsl		w10, w10, #5 // 32*sda1
+	ldr		x11, [sp, #(STACKSIZE + 0)] // B1
+	ldr		w12, [sp, #(STACKSIZE + 8)] // ldb1
+	lsl		w12, w12, #3 // 8*ldb1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4C
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4c)
+#endif
+
+
+
+	// prefetch
+	ldr		x8, [sp, #(STACKSIZE + 40)] // D
+	ldr		w9, [sp, #(STACKSIZE + 48)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_8X4_LIB
+#else
+	CALL(inner_prefetch_8x4_lib)
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	ldr		x9, [sp, #(STACKSIZE + 16)] // beta
+	ldr		x10, [sp, #(STACKSIZE + 24)] // C
+	ldr		w11, [sp, #(STACKSIZE + 32)] // ldc
+	lsl		w11, w11, #3 // 8*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB
+#else
+	CALL(inner_scale_ab_8x4_lib)
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 40)] // D
+	ldr		w9, [sp, #(STACKSIZE + 48)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_LIB
+#else
+	CALL(inner_store_8x4_lib)
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dger2k_nt_8x4_lib4ccc)
+
+
+
+
+
+//                                   w0     x1             x2          w3        x4         w5         x6          w7        sp+0        sp+8      sp+16         sp+24      sp+32    sp+40      sp+48    sp+56   sp+64
+// void kernel_dger2k_nt_8x4_lib4ccc(int k, double *alpha, double *A0, int sda0, double *B0, int ldb0, double *A1, int sda1, double *B1, int ldb1, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.align	4
+	GLOB(kernel_dger2k_nt_8x4_vs_lib4ccc)
+	FUN_START(kernel_dger2k_nt_8x4_vs_lib4ccc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	ldr		w13, [sp, #(STACKSIZE + 32)] // n1
+	cmp		w13, #1
+	bgt		100f
+
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		w10, w3 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x4 // B
+	mov		w12, w5 // sda
+	lsl		w12, w12, #3 // 8*ldb
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X1_LIB4C
+#else
+	CALL(inner_kernel_gemm_add_nt_8x1_lib4c)
+#endif
+
+	mov		w8, w0 // kmax
+	mov		x9, x6 // A1
+	mov		w10, w7 // sda1
+	lsl		w10, w10, #5 // 32*sda1
+	ldr		x11, [sp, #(STACKSIZE + 0)] // B1
+	ldr		w12, [sp, #(STACKSIZE + 8)] // ldb1
+	lsl		w12, w12, #3 // 8*ldb1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X1_LIB4C
+#else
+	CALL(inner_kernel_gemm_add_nt_8x1_lib4c)
+#endif
+
+	b		103f
+
+100:
+
+	ldr		w13, [sp, #(STACKSIZE + 32)] // n1
+	cmp		w13, #2
+	bgt		101f
+
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		w10, w3 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x4 // B
+	mov		w12, w5 // sda
+	lsl		w12, w12, #3 // 8*ldb
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X2_LIB4C
+#else
+	CALL(inner_kernel_gemm_add_nt_8x2_lib4c)
+#endif
+	
+	mov		w8, w0 // kmax
+	mov		x9, x6 // A1
+	mov		w10, w7 // sda1
+	lsl		w10, w10, #5 // 32*sda1
+	ldr		x11, [sp, #(STACKSIZE + 0)] // B1
+	ldr		w12, [sp, #(STACKSIZE + 8)] // ldb1
+	lsl		w12, w12, #3 // 8*ldb1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X2_LIB4C
+#else
+	CALL(inner_kernel_gemm_add_nt_8x2_lib4c)
+#endif
+	
+	b		103f
+
+101:
+
+	ldr		w13, [sp, #(STACKSIZE + 32)] // n1
+	cmp		w13, #3
+	bgt		102f
+
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		w10, w3 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x4 // B
+	mov		w12, w5 // sda
+	lsl		w12, w12, #3 // 8*ldb
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X3_LIB4C
+#else
+	CALL(inner_kernel_gemm_add_nt_8x3_lib4c)
+#endif
+	
+	mov		w8, w0 // kmax
+	mov		x9, x6 // A1
+	mov		w10, w7 // sda1
+	lsl		w10, w10, #5 // 32*sda1
+	ldr		x11, [sp, #(STACKSIZE + 0)] // B1
+	ldr		w12, [sp, #(STACKSIZE + 8)] // ldb1
+	lsl		w12, w12, #3 // 8*ldb1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X3_LIB4C
+#else
+	CALL(inner_kernel_gemm_add_nt_8x3_lib4c)
+#endif
+	
+	b		103f
+
+102:
+
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		w10, w3 // sda
+	lsl		w10, w10, #5 // 32*sda
+	mov		x11, x4 // B
+	mov		w12, w5 // sda
+	lsl		w12, w12, #3 // 8*ldb
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4C
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4c)
+#endif
+
+	mov		w8, w0 // kmax
+	mov		x9, x6 // A1
+	mov		w10, w7 // sda1
+	lsl		w10, w10, #5 // 32*sda1
+	ldr		x11, [sp, #(STACKSIZE + 0)] // B1
+	ldr		w12, [sp, #(STACKSIZE + 8)] // ldb1
+	lsl		w12, w12, #3 // 8*ldb1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4C
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4c)
+#endif
+
+103:
+
+
+
+	// prefetch
+	// TODO prefetch vs
+//	ldr		x8, [sp, #(STACKSIZE + 40)] // D
+//	ldr		w9, [sp, #(STACKSIZE + 48)] // ldd
+//	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+//	INNER_PREFETCH_8X4_LIB
+#else
+//	CALL(inner_prefetch_8x4_lib)
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	ldr		x9, [sp, #(STACKSIZE + 16)] // beta
+	ldr		x10, [sp, #(STACKSIZE + 24)] // C
+	ldr		w11, [sp, #(STACKSIZE + 32)] // ldc
+	lsl		w11, w11, #3 // 8*sdc
+	ldr		w12, [sp, #(STACKSIZE + 56)] // m1
+	ldr		w13, [sp, #(STACKSIZE + 64)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_VS_LIB
+#else
+	CALL(inner_scale_ab_8x4_vs_lib)
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 40)] // D
+	ldr		w9, [sp, #(STACKSIZE + 48)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+	ldr		w10, [sp, #(STACKSIZE + 56)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 64)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_VS_LIB
+#else
+	CALL(inner_store_8x4_vs_lib)
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dger2k_nt_8x4_vs_lib4ccc)
+
+
+
+
+
+//                                   w0     x1             x2          w3        x4          x5          w6        x7          sp+0          sp+8       sp+16    sp+24      sp+32
+// void kernel_dger2k_nt_8x4_lib44cc(int k, double *alpha, double *A0, int sda0, double *B0, double *A1, int sda1, double *B1, double *beta, double *C, int ldc, double *D, int ldd);
+
+	.align	4
+	GLOB(kernel_dger2k_nt_8x4_lib44cc)
+	FUN_START(kernel_dger2k_nt_8x4_lib44cc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// prefetch C
+	ldr		x8, [sp, #(STACKSIZE + 0)] // beta
+	ld1		{v29.2d}, [x8]
+	fcmpe	d29, #0.0
+	beq		100f
+
+	ldr		x8, [sp, #(STACKSIZE + 8)] // C
+	ldr		w9, [sp, #(STACKSIZE + 16)] // ldc
+	lsl		w9, w9, #3 // 8*ldc
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_8X4_LIB
+#else
+	CALL(inner_prefetch_8x4_lib)
+#endif
+
+100:
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A0
+	mov		w10, w3 // sda0
+	lsl		w10, w10, #5 // 32*sda0
+	mov		x11, x4 // B0
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4)
+#endif
+
+	mov		w8, w0 // kmax
+	mov		x9, x5 // A1
+	mov		w10, w6 // sda1
+	lsl		w10, w10, #5 // 32*sda1
+	mov		x11, x7 // B1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4)
+#endif
+
+
+
+	// prefetch
+	ldr		x8, [sp, #(STACKSIZE + 24)] // D
+	ldr		w9, [sp, #(STACKSIZE + 32)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_8X4_LIB
+#else
+	CALL(inner_prefetch_8x4_lib)
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	ldr		x9, [sp, #(STACKSIZE + 0)] // beta
+	ldr		x10, [sp, #(STACKSIZE + 8)] // C
+	ldr		w11, [sp, #(STACKSIZE + 16)] // ldc
+	lsl		w11, w11, #3 // 8*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB
+#else
+	CALL(inner_scale_ab_8x4_lib)
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 24)] // D
+	ldr		w9, [sp, #(STACKSIZE + 32)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_LIB
+#else
+	CALL(inner_store_8x4_lib)
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dger2k_nt_8x4_lib44cc)
+
+
+
+
+
+//                                   w0     x1             x2          w3        x4          x5          w6        x7          sp+0          sp+8       sp+16    sp+24      sp+32    sp+40   sp+48
+// void kernel_dger2k_nt_8x4_lib44cc(int k, double *alpha, double *A0, int sda0, double *B0, double *A1, int sda1, double *B1, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.align	4
+	GLOB(kernel_dger2k_nt_8x4_vs_lib44cc)
+	FUN_START(kernel_dger2k_nt_8x4_vs_lib44cc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A0
+	mov		w10, w3 // sda0
+	lsl		w10, w10, #5 // 32*sda0
+	mov		x11, x4 // B0
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4)
+#endif
+
+	mov		w8, w0 // kmax
+	mov		x9, x5 // A1
+	mov		w10, w6 // sda1
+	lsl		w10, w10, #5 // 32*sda1
+	mov		x11, x7 // B1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4)
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	ldr		x9, [sp, #(STACKSIZE + 0)] // beta
+	ldr		x10, [sp, #(STACKSIZE + 8)] // C
+	ldr		w11, [sp, #(STACKSIZE + 16)] // ldc
+	lsl		w11, w11, #3 // 8*sdc
+	ldr		w12, [sp, #(STACKSIZE + 40)] // m1
+	ldr		w13, [sp, #(STACKSIZE + 48)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_VS_LIB
+#else
+	CALL(inner_scale_ab_8x4_vs_lib)
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 24)] // D
+	ldr		w9, [sp, #(STACKSIZE + 32)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+	ldr		w10, [sp, #(STACKSIZE + 40)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 48)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_8X4_VS_LIB
+#else
+	CALL(inner_store_8x4_vs_lib)
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dger2k_nt_8x4_vs_lib44cc)
+
+
+
+
+
+//                                     w0     x1             x2          w3        x4          x5          w6        x7          sp+0          sp+8       sp+16    sp+24      sp+32
+// void kernel_dsyr2k_nt_l_8x4_lib44cc(int k, double *alpha, double *A0, int sda0, double *B0, double *A1, int sda1, double *B1, double *beta, double *C, int ldc, double *D, int ldd);
+
+	.align	4
+	GLOB(kernel_dsyr2k_nt_l_8x4_lib44cc)
+	FUN_START(kernel_dsyr2k_nt_l_8x4_lib44cc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A0
+	mov		w10, w3 // sda0
+	lsl		w10, w10, #5 // 32*sda0
+	mov		x11, x4 // B0
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4)
+#endif
+
+	mov		w8, w0 // kmax
+	mov		x9, x5 // A1
+	mov		w10, w6 // sda1
+	lsl		w10, w10, #5 // 32*sda1
+	mov		x11, x7 // B1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4)
+#endif
+
+
+
+	// prefetch
+	ldr		x8, [sp, #(STACKSIZE + 24)] // D
+	ldr		w9, [sp, #(STACKSIZE + 32)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_PREFETCH_8X4_LIB
+#else
+	CALL(inner_prefetch_8x4_lib)
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	ldr		x9, [sp, #(STACKSIZE + 0)] // beta
+	ldr		x10, [sp, #(STACKSIZE + 8)] // C
+	ldr		w11, [sp, #(STACKSIZE + 16)] // ldc
+	lsl		w11, w11, #3 // 8*sdc
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_LIB
+#else
+	CALL(inner_scale_ab_8x4_lib)
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 24)] // D
+	ldr		w9, [sp, #(STACKSIZE + 32)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X4_LIB
+#else
+	CALL(inner_store_l_8x4_lib)
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dsyr2k_nt_l_8x4_lib44cc)
+
+
+
+
+
+//                                   w0     x1             x2          w3        x4          x5          w6        x7          sp+0          sp+8       sp+16    sp+24      sp+32    sp+40   sp+48
+// void kernel_dsyr2k_nt_l_8x4_lib44cc(int k, double *alpha, double *A0, int sda0, double *B0, double *A1, int sda1, double *B1, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+
+	.align	4
+	GLOB(kernel_dsyr2k_nt_l_8x4_vs_lib44cc)
+	FUN_START(kernel_dsyr2k_nt_l_8x4_vs_lib44cc)
+	
+
+
+	PROLOGUE
+
+
+
+	ZERO_ACC
+
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A0
+	mov		w10, w3 // sda0
+	lsl		w10, w10, #5 // 32*sda0
+	mov		x11, x4 // B0
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4)
+#endif
+
+	mov		w8, w0 // kmax
+	mov		x9, x5 // A1
+	mov		w10, w6 // sda1
+	lsl		w10, w10, #5 // 32*sda1
+	mov		x11, x7 // B1
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMM_ADD_NT_8X4_LIB4
+#else
+	CALL(inner_kernel_gemm_add_nt_8x4_lib4)
+#endif
+
+
+
+	// call inner blend for generic alpha and beta
+	mov		x8, x1 // alpha
+	ldr		x9, [sp, #(STACKSIZE + 0)] // beta
+	ldr		x10, [sp, #(STACKSIZE + 8)] // C
+	ldr		w11, [sp, #(STACKSIZE + 16)] // ldc
+	lsl		w11, w11, #3 // 8*sdc
+	ldr		w12, [sp, #(STACKSIZE + 40)] // m1
+	ldr		w13, [sp, #(STACKSIZE + 48)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_SCALE_AB_8X4_VS_LIB
+#else
+	CALL(inner_scale_ab_8x4_vs_lib)
+#endif
+
+
+
+	// store n
+	ldr		x8, [sp, #(STACKSIZE + 24)] // D
+	ldr		w9, [sp, #(STACKSIZE + 32)] // ldd
+	lsl		w9, w9, #3 // 8*sdd
+	ldr		w10, [sp, #(STACKSIZE + 40)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 48)] // n1
+
+#if MACRO_LEVEL>=1
+	INNER_STORE_L_8X4_VS_LIB
+#else
+	CALL(inner_store_l_8x4_vs_lib)
+#endif
+
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dsyr2k_nt_l_8x4_vs_lib44cc)
+
+
+
+
+
+
 //                                          w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8
 // void kernel_dtrmm_nt_rl_4x8_tran_lib444c(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int ldd)
 
