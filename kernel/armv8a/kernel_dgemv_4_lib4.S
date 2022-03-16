@@ -688,6 +688,42 @@ _ ## NAME:
 // subroutine
 //
 // input arguments:
+// x8   <- alpha
+// x9  <- y
+//
+// output arguments:
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_A1_4_LIB4
+#else
+	.align	4
+	FUN_START(inner_scale_a1_4_lib4)
+#endif
+
+	ldr		d28, [x8]
+
+	fmul	v0.2d, v0.2d, v28.d[0]
+	fmul	v1.2d, v1.2d, v28.d[0]
+
+	ldp		q24, q25, [x9, #0]
+	fadd	v0.2d, v0.2d, v24.2d
+	fadd	v1.2d, v1.2d, v25.2d
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_scale_a1_4_lib4)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
 // x8  <- y
 //
 // output arguments:
