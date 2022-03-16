@@ -886,6 +886,9 @@ void blasfeo_hp_dsyrk3_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #if defined(TARGET_X64_INTEL_HASWELL)
 	const int l2_cache_el = L2_CACHE_EL;
 #endif
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	const int llc_cache_el = LLC_CACHE_EL;
+#endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
 
 	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
@@ -910,7 +913,8 @@ void blasfeo_hp_dsyrk3_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m<64 & k<64)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	if(m<32 & k<32)
+//	if(m<32 & k<32)
+	if( m<=2*m_kernel | 2*m*k_block < llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	if(m<16 & k<16)
 #else
@@ -1228,7 +1232,7 @@ void blasfeo_hp_dsyrk3_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 	const int m_kernel = M_KERNEL;
 	const int l1_cache_el = L1_CACHE_EL;
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	const int llc_cache_el = LLC_CACHE_EL;
 #endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
@@ -1239,6 +1243,8 @@ void blasfeo_hp_dsyrk3_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	const int m_kernel_cache = (m_kernel+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
 	int m_min = m_cache<m_kernel_cache ? m_cache : m_kernel_cache;
 //	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
+	int k_block = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	k_block = k<=k_block ? k : k_block; // m1 and n1 alg are blocked !!!
 
 	int k_a = k==lda ? k : k_cache;
 	int m_c = m==ldc ? m : m_cache;
@@ -1253,7 +1259,8 @@ void blasfeo_hp_dsyrk3_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m<64 & k<64)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	if(m<32 & k<32)
+//	if(m<32 & k<32)
+	if( m<=2*m_kernel | 2*m*k_block < llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	if(m<16 & k<16)
 #else
@@ -1577,6 +1584,9 @@ void blasfeo_hp_dsyrk3_un(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #if defined(TARGET_X64_INTEL_HASWELL)
 	const int l2_cache_el = L2_CACHE_EL;
 #endif
+#if defined(TARGET_ARMV8A_ARM_CORTEX_A57)
+	const int llc_cache_el = LLC_CACHE_EL;
+#endif
 	const int reals_per_cache_line = CACHE_LINE_EL;
 
 	const int m_cache = (m+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
@@ -1601,7 +1611,8 @@ void blasfeo_hp_dsyrk3_un(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m<64 & k<64)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	if(m<32 & k<32)
+//	if(m<32 & k<32)
+	if( m<=2*m_kernel | 2*m*k_block < llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	if(m<16 & k<16)
 #else
@@ -1916,7 +1927,7 @@ void blasfeo_hp_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	void *mem;
 	char *mem_align;
 	int m1, n1, k1;
-#if defined(TARGET_X64_INTEL_HASWELL)
+#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
 	const int llc_cache_el = LLC_CACHE_EL;
 #endif
 	int pack_B;
@@ -1931,6 +1942,8 @@ void blasfeo_hp_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	const int m_kernel_cache = (m_kernel+reals_per_cache_line-1)/reals_per_cache_line*reals_per_cache_line;
 	int m_min = m_cache<m_kernel_cache ? m_cache : m_kernel_cache;
 //	int n_min = n_cache<m_kernel_cache ? n_cache : m_kernel_cache;
+	int k_block = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+	k_block = k<=k_block ? k : k_block; // m1 and n1 alg are blocked !!!
 
 	int k_a = k==lda ? k : k_cache;
 	int m_c = m==ldc ? m : m_cache;
@@ -1945,7 +1958,8 @@ void blasfeo_hp_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m<64 & k<64)
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	if(m<32 & k<32)
+//	if(m<32 & k<32)
+	if( m<=2*m_kernel | 2*m*k_block < llc_cache_el )
 #elif defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	if(m<16 & k<16)
 #else
@@ -3085,6 +3099,14 @@ void blasfeo_hp_dsyrk_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 	double *pB = sB->pA + bi + bj*ldb;
 	double *pC = sC->pA + ci + cj*ldc;
 	double *pD = sD->pA + di + dj*ldd;
+
+	// call routine exploiting A==B
+	if(pA==pB & lda==ldb)
+		{
+		blasfeo_hp_dsyrk3_lt(m, k, alpha, sA, ai, aj, beta, sC, ci, cj, sD, di, dj);
+		return;
+		}
+
 	jj = 0;
 	for(; jj<m-1; jj+=2)
 		{
@@ -3170,6 +3192,14 @@ void blasfeo_hp_dsyrk_un(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 	double *pB = sB->pA + bi + bj*ldb;
 	double *pC = sC->pA + ci + cj*ldc;
 	double *pD = sD->pA + di + dj*ldd;
+
+	// call routine exploiting A==B
+	if(pA==pB & lda==ldb)
+		{
+		blasfeo_hp_dsyrk3_un(m, k, alpha, sA, ai, aj, beta, sC, ci, cj, sD, di, dj);
+		return;
+		}
+
 	jj = 0;
 	for(; jj<m-1; jj+=2)
 		{
@@ -3257,6 +3287,14 @@ void blasfeo_hp_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 	double *pB = sB->pA + bi + bj*ldb;
 	double *pC = sC->pA + ci + cj*ldc;
 	double *pD = sD->pA + di + dj*ldd;
+
+	// call routine exploiting A==B
+	if(pA==pB & lda==ldb)
+		{
+		blasfeo_hp_dsyrk3_ut(m, k, alpha, sA, ai, aj, beta, sC, ci, cj, sD, di, dj);
+		return;
+		}
+
 	jj = 0;
 	for(; jj<m-1; jj+=2)
 		{
