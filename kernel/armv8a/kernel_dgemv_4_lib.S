@@ -41,6 +41,120 @@
 // w8   <- k
 // x9   <- A
 // w10  <- lda*sizeof(double)
+// x11  <- z
+// v0   <- [x_0, x_1]
+// v1   <- [x_2, x_3]
+//
+// output arguments:
+
+#if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMV_N_4_LIBC
+#else
+	.align	4
+	FUN_START(inner_kernel_gemv_n_4_libc)
+#endif
+
+	// early return
+	cmp		w8, #0
+	ble		2f // return
+
+	add		x12, x9, x10
+	add		x13, x9, x10, lsl #1
+	add		x14, x12, x10, lsl #1
+
+	// prefetch
+//	prfm	PLDL1KEEP, [x9, #0]
+//	prfm	PLDL1KEEP, [x9, #64]
+//	prfm	PLDL1KEEP, [x11, #0]
+
+	// preload
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
+
+	// prefetch
+//	prfm	PLDL1KEEP, [x9, x10]
+//	prfm	PLDL1KEEP, [x9, x12]
+//	prfm	PLDL1KEEP, [x11, #32]
+
+	// main loop
+1:
+	
+	ldp		q24, q25, [x11] //, #32
+
+	ldp		q16, q17, [x9], #32
+	ldp		q18, q19, [x12], #32
+	ldp		q20, q21, [x13], #32
+	ldp		q22, q23, [x14], #32
+
+	// unroll x4
+	fmla	v24.2d, v16.2d, v0.d[0]
+	fmla	v25.2d, v17.2d, v0.d[0]
+//	prfm	PLDL1KEEP, [x9, #96]
+
+	fmla	v24.2d, v18.2d, v0.d[1]
+	fmla	v25.2d, v19.2d, v0.d[1]
+//	prfm	PLDL1KEEP, [x12, #96]
+
+	fmla	v24.2d, v20.2d, v1.d[0]
+	fmla	v25.2d, v21.2d, v1.d[0]
+//	prfm	PLDL1KEEP, [x13, #96]
+	sub		w8, w8, #4
+
+	fmla	v24.2d, v22.2d, v1.d[1]
+	cmp		w8, #4
+	fmla	v25.2d, v23.2d, v1.d[1]
+//	prfm	PLDL1KEEP, [x14, #96]
+
+	stp		q24, q25, [x11], #32
+//	add		x11, x11, #32
+
+	bgt		1b
+
+0:
+
+	cmp		w8, #0
+	ble		2f // return
+
+3: // clean1-up loop
+
+	// unroll 0
+	ldr		d24, [x11] //, #8
+	ldr		d16, [x9], #8
+	ldr		d18, [x12], #8
+	ldr		d20, [x13], #8
+	ldr		d22, [x14], #8
+	fmla	v24.2d, v16.2d, v0.d[0]
+	fmla	v24.2d, v18.2d, v0.d[1]
+	fmla	v24.2d, v20.2d, v1.d[0]
+	fmla	v24.2d, v22.2d, v1.d[1]
+	str		d24, [x11], #8
+
+	sub		w8, w8, #1
+	cmp		w8, #0
+
+	bgt		3b
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemv_n_4_libc)
+#endif
+
+
+
+
+
+// subroutine
+//
+// input arguments:
+// w8   <- k
+// x9   <- A
+// w10  <- lda*sizeof(double)
 // x11  <- x
 //
 // output arguments:
@@ -138,6 +252,52 @@
 
 	FUN_END(inner_kernel_gemv_t_4_libc)
 #endif
+
+
+
+
+
+//                            w0        x1             x2         w3       x4         x5
+// void kernel_dgemv_n_4_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z)
+
+	.align	4
+	GLOB(kernel_dgemv_n_4_libc)
+	FUN_START(kernel_dgemv_n_4_libc)
+	
+
+	PROLOGUE
+
+
+	// initialize n
+	ldr		d16, [x1]
+	ldp		q0, q1, [x4]
+	fmul	v0.2d, v0.2d, v16.d[0]
+	fmul	v1.2d, v1.2d, v16.d[0]
+
+
+	// call inner kernel gemm nt
+	mov		w8, w0 // kmax
+	mov		x9, x2 // A
+	mov		w10, w3 // lda
+	lsl		w10, w10, #3 // 8*lda
+	mov		x11, x5 // z
+
+#if MACRO_LEVEL>=2
+	INNER_KERNEL_GEMV_N_4_LIBC
+#else
+	CALL(inner_kernel_gemv_n_4_libc)
+#endif
+
+
+	EPILOGUE
+
+	mov	x0, #0
+
+	ret
+
+	FUN_END(kernel_dgemv_n_4_libc)
+
+
 
 
 
