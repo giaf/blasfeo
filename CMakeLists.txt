@@ -809,6 +809,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgetrf_pivot_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemv_4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgetr_lib.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
@@ -858,6 +859,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgetrf_pivot_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemv_4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgetr_lib.S
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c

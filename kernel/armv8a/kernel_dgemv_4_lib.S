@@ -82,33 +82,32 @@
 	
 	ldp		q24, q25, [x11] //, #32
 
-	ldp		q16, q17, [x9], #32
-	ldp		q18, q19, [x12], #32
-	ldp		q20, q21, [x13], #32
-	ldp		q22, q23, [x14], #32
-
 	// unroll x4
+	ldp		q16, q17, [x9], #32
 	fmla	v24.2d, v16.2d, v0.d[0]
 	fmla	v25.2d, v17.2d, v0.d[0]
 //	prfm	PLDL1KEEP, [x9, #96]
 
+	ldp		q18, q19, [x12], #32
 	fmla	v24.2d, v18.2d, v0.d[1]
 	fmla	v25.2d, v19.2d, v0.d[1]
 //	prfm	PLDL1KEEP, [x12, #96]
 
+	ldp		q20, q21, [x13], #32
 	fmla	v24.2d, v20.2d, v1.d[0]
 	fmla	v25.2d, v21.2d, v1.d[0]
 //	prfm	PLDL1KEEP, [x13, #96]
 	sub		w8, w8, #4
 
+	ldp		q22, q23, [x14], #32
 	fmla	v24.2d, v22.2d, v1.d[1]
-	cmp		w8, #4
 	fmla	v25.2d, v23.2d, v1.d[1]
 //	prfm	PLDL1KEEP, [x14, #96]
 
 	stp		q24, q25, [x11], #32
 //	add		x11, x11, #32
 
+	cmp		w8, #4
 	bgt		1b
 
 0:
@@ -121,18 +120,18 @@
 	// unroll 0
 	ldr		d24, [x11] //, #8
 	ldr		d16, [x9], #8
-	ldr		d18, [x12], #8
-	ldr		d20, [x13], #8
-	ldr		d22, [x14], #8
 	fmla	v24.2d, v16.2d, v0.d[0]
+	ldr		d18, [x12], #8
 	fmla	v24.2d, v18.2d, v0.d[1]
+	ldr		d20, [x13], #8
 	fmla	v24.2d, v20.2d, v1.d[0]
+	ldr		d22, [x14], #8
 	fmla	v24.2d, v22.2d, v1.d[1]
 	str		d24, [x11], #8
 
 	sub		w8, w8, #1
-	cmp		w8, #0
 
+	cmp		w8, #0
 	bgt		3b
 
 2: // return
@@ -198,30 +197,29 @@
 	
 	ldp		q24, q25, [x11], #32
 
-	ldp		q16, q17, [x9], #32
-	ldp		q18, q19, [x12], #32
-	ldp		q20, q21, [x13], #32
-	ldp		q22, q23, [x14], #32
-
 	// unroll x4
+	ldp		q16, q17, [x9], #32
 	fmla	v0.2d, v16.2d, v24.2d
 	fmla	v1.2d, v18.2d, v24.2d
 //	prfm	PLDL1KEEP, [x9, #96]
 
+	ldp		q18, q19, [x12], #32
 	fmla	v2.2d, v20.2d, v24.2d
 	fmla	v3.2d, v22.2d, v24.2d
 //	prfm	PLDL1KEEP, [x12, #96]
 
+	ldp		q20, q21, [x13], #32
 	fmla	v0.2d, v17.2d, v25.2d
 	fmla	v1.2d, v19.2d, v25.2d
 //	prfm	PLDL1KEEP, [x13, #96]
 	sub		w8, w8, #4
 
+	ldp		q22, q23, [x14], #32
 	fmla	v2.2d, v21.2d, v25.2d
-	cmp		w8, #4
 	fmla	v3.2d, v23.2d, v25.2d
 //	prfm	PLDL1KEEP, [x14, #96]
 
+	cmp		w8, #4
 	bgt		1b
 
 0:
@@ -234,17 +232,17 @@
 	// unroll 0
 	ldr		d24, [x11], #8
 	ldr		d16, [x9], #8
-	ldr		d18, [x12], #8
-	ldr		d20, [x13], #8
-	ldr		d22, [x14], #8
 	fmla	v0.2d, v16.2d, v24.2d
+	ldr		d18, [x12], #8
 	fmla	v1.2d, v18.2d, v24.2d
+	ldr		d20, [x13], #8
 	fmla	v2.2d, v20.2d, v24.2d
+	ldr		d22, [x14], #8
 	fmla	v3.2d, v22.2d, v24.2d
 
 	sub		w8, w8, #1
-	cmp		w8, #0
 
+	cmp		w8, #0
 	bgt		3b
 
 2: // return

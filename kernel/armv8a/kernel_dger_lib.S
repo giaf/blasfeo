@@ -35,126 +35,107 @@
 
 
 
-// common inner routine with file scope
+
+
+// subroutine
 //
 // input arguments:
-// r10d  <- k
-// r11   <- x
-// r12   <- C
-// r13   <- ldc*sizeof(double)
-// r14   <- D
-// r15   <- ldd*sizeof(double)
-// ymm0  <- y_0
-// ymm1  <- y_1
-// ymm2  <- y_2
-// ymm3  <- y_3
-
+// w8   <- k
+// x9   <- x
+// x10  <- C
+// w11  <- ldc*sizeof(double)
+// x12  <- C
+// w13  <- ldc*sizeof(double)
+// v0   <- [y_0, y_1]
+// v1   <- [y_2, y_3]
 //
 // output arguments:
-// r10d  <- 0
-// r11   <-
-// r12   <-
-// r13   <-
-// r14   <-
-// r15   <-
-// ymm0  <-
-// ymm1  <-
-// ymm2  <-
-// ymm3  <-
 
 #if MACRO_LEVEL>=2
 	.macro INNER_KERNEL_GER_4_LIBC
 #else
-	.p2align 4,,15
+	.align	4
 	FUN_START(inner_kernel_ger_4_libc)
 #endif
 
-	cmpl	$ 0, %r10d
-	jle		2f // return
+	// early return
+	cmp		w8, #0
+	ble		2f // return
 
-	leaq	0(%r13, %r13, 2), %rax
-	leaq	0(%r15, %r15, 2), %rbx
+	add		x14, x10, x11
+	add		x15, x10, x11, lsl #1
+	add		x16, x14, x11, lsl #1
 
-	cmpl	$ 4, %r10d
-	jl		0f // clean-up loop
+	add		x17, x12, x13
+	add		x18, x12, x13, lsl #1
+	add		x19, x17, x13, lsl #1
+
+	cmp		w8, #4
+	ble		0f // consider clean up loop
 
 	// main loop
-	.p2align 3
-1: // main loop
+1:
 	
-	vmovupd	0(%r11), %ymm12
+	ldp		q8, q9, [x9], #32
 
-	vmovupd		0(%r12), %ymm4
-	vfmadd231pd	%ymm12, %ymm0, %ymm4
+	ldp		q16, q17, [x10], #32
+	fmla	v16.2d, v8.2d, v0.d[0]
+	fmla	v17.2d, v9.2d, v0.d[0]
 
-	vmovupd		0(%r12, %r13), %ymm5
-	vfmadd231pd	%ymm12, %ymm1, %ymm5
+	ldp		q18, q19, [x14], #32
+	fmla	v18.2d, v8.2d, v0.d[1]
+	fmla	v19.2d, v9.2d, v0.d[1]
 
-	vmovupd		0(%r12, %r13, 2), %ymm6
-	vfmadd231pd	%ymm12, %ymm2, %ymm6
+	ldp		q20, q21, [x15], #32
+	fmla	v20.2d, v8.2d, v1.d[0]
+	fmla	v21.2d, v9.2d, v1.d[0]
 
-	vmovupd		0(%r12, %rax), %ymm7
-	vfmadd231pd	%ymm12, %ymm3, %ymm7
+	ldp		q22, q23, [x16], #32
+	fmla	v22.2d, v8.2d, v1.d[1]
+	fmla	v23.2d, v9.2d, v1.d[1]
 
-	vmovupd		%ymm4, 0(%r14) 
-	vmovupd		%ymm5, 0(%r14, %r15) 
-	vmovupd		%ymm6, 0(%r14, %r15, 2) 
-	vmovupd		%ymm7, 0(%r14, %rbx) 
+	sub		w8, w8, #4
 
-	subl	$ 4, %r10d
-	addq	$ 32, %r11
-	addq	$ 32, %r12
-	addq	$ 32, %r14
-	
-	cmpl	$ 3, %r10d
+	stp		q16, q17, [x12], #32
+	stp		q18, q19, [x17], #32
+	stp		q20, q21, [x18], #32
+	stp		q22, q23, [x19], #32
 
-	jg		1b // main loop 
+	cmp		w8, #4
+	bgt		1b
 
+0:
 
-	// consider clean-up
-	cmpl	$ 0, %r10d
-	jle		2f // return
+	cmp		w8, #0
+	ble		2f // return
 
-0: // clean-up
-	
-	vcvtsi2sd	%r10d, %xmm14, %xmm14
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC00(%rip), %ymm13
-#elif defined(OS_MAC)
-	vmovupd		LC00(%rip), %ymm13
-#endif
-	vmovddup	%xmm14, %xmm14
-	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
-	vsubpd		%ymm14, %ymm13, %ymm13
+3: // clean1-up loop
 
+	// unroll 0
+	ldr		d8, [x9], #8
 
-	vmaskmovpd	0(%r11), %ymm13, %ymm12
+	ldr		d16, [x10], #8
+	fmla	v16.2d, v8.2d, v0.d[0]
 
-	vmaskmovpd	0(%r12), %ymm13, %ymm4
-	vfmadd231pd	%ymm12, %ymm0, %ymm4
+	ldr		d18, [x14], #8
+	fmla	v18.2d, v8.2d, v0.d[1]
 
-	vmaskmovpd	0(%r12, %r13), %ymm13, %ymm5
-	vfmadd231pd	%ymm12, %ymm1, %ymm5
+	ldr		d20, [x15], #8
+	fmla	v20.2d, v8.2d, v1.d[0]
 
-	vmaskmovpd	0(%r12, %r13, 2), %ymm13, %ymm6
-	vfmadd231pd	%ymm12, %ymm2, %ymm6
+	ldr		d22, [x16], #8
+	fmla	v22.2d, v8.2d, v1.d[1]
 
-	vmaskmovpd	0(%r12, %rax), %ymm13, %ymm7
-	vfmadd231pd	%ymm12, %ymm3, %ymm7
+	sub		w8, w8, #1
 
-	vmaskmovpd	%ymm4, %ymm13, 0(%r14) 
-	vmaskmovpd	%ymm5, %ymm13, 0(%r14, %r15) 
-	vmaskmovpd	%ymm6, %ymm13, 0(%r14, %r15, 2) 
-	vmaskmovpd	%ymm7, %ymm13, 0(%r14, %rbx) 
+	str		d16, [x12], #8
+	str		d18, [x17], #8
+	str		d20, [x18], #8
+	str		d22, [x19], #8
 
+	cmp		w8, #0
+	bgt		3b
 
-	sall	$ 3, %r10d // *sizeof(double)
-	addq	%r10, %r11
-	addq	%r10, %r12
-	addq	%r10, %r14
-	xorl	%r10d, %r10d
-	
-	
 2: // return
 
 #if MACRO_LEVEL>=2
@@ -169,42 +150,33 @@
 
 
 
-//                         1      2              3          4          5          6        7          8
-// void kernel_dger_4_libc(int k, double *alpha, double *x, double *y, double *C, int ldc, double *D, int ldd);
+//                       w0        x1             x2         x3         x4         w5       x6         w7
+// void kernel_dger_libc(int kmax, double *alpha, double *x, double *y, double *C, int ldc, double *D, int ldd)
 
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_dger_4_libc)
+	.align	4
+	GLOB(kernel_dger_4_libc)
+	FUN_START(kernel_dger_4_libc)
 	
 
 	PROLOGUE
 
 
-	// initialize x_n
-	movq	ARG2, %r10 // alpha
-	vbroadcastsd 0(%r10), %ymm15
-
-	movq	ARG4, %r10 // y
-
-	vbroadcastsd 0(%r10), %ymm0
-	vmulpd		%ymm15, %ymm0, %ymm0
-	vbroadcastsd 8(%r10), %ymm1
-	vmulpd		%ymm15, %ymm1, %ymm1
-	vbroadcastsd 16(%r10), %ymm2
-	vmulpd		%ymm15, %ymm2, %ymm2
-	vbroadcastsd 24(%r10), %ymm3
-	vmulpd		%ymm15, %ymm3, %ymm3
+	// initialize n
+	ldr		d16, [x1] // alpha
+	ldp		q0, q1, [x3] // y
+	fmul	v0.2d, v0.2d, v16.d[0]
+	fmul	v1.2d, v1.2d, v16.d[0]
 
 
-	// inner edge dsyrk & kernel dgemv nt
-
-	movq	ARG1, %r10 // k
-	movq	ARG3, %r11 // x
-	movq	ARG5, %r12 // C
-	movq	ARG6, %r13 // ldc
-	sall	$ 3, %r13d // ldc*sizeof(double)
-	movq	ARG7, %r14 // D
-	movq	ARG8, %r15 // ldd
-	sall	$ 3, %r15d // ldd*sizeof(double)
+	// call inner kernel gemv n
+	mov		w8, w0 // kmax
+	mov		x9, x2 // x
+	mov		x10, x4 // C
+	mov		w11, w5 // ldc
+	lsl		w11, w11, #3 // 8*ldc
+	mov		x12, x6 // D
+	mov		w13, w7 // ldd
+	lsl		w13, w13, #3 // 8*ldd
 
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GER_4_LIBC
@@ -214,6 +186,8 @@
 
 
 	EPILOGUE
+
+	mov	x0, #0
 
 	ret
 

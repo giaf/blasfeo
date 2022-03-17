@@ -44,6 +44,7 @@ KERNEL_OBJS = \
 		kernel_dgetrf_pivot_lib4.o \
 		kernel_dgemv_4_lib4.o \
 		kernel_dgetr_lib.o \
+		kernel_dger_lib4.o \
 		\
 		kernel_sgemm_16x4_lib4.o \
 		kernel_sgemm_12x4_lib4.o \
@@ -66,6 +67,7 @@ KERNEL_OBJS = \
 		kernel_dgetrf_pivot_lib4.o \
 		kernel_dgemv_4_lib4.o \
 		kernel_dgetr_lib.o \
+		kernel_dger_lib4.o \
 		\
 		kernel_sgemm_16x4_lib4.o \
 		kernel_sgemm_12x4_lib4.o \
@@ -105,6 +107,7 @@ kernel_dgemm_8x4_lib4.o: kernel_dgemm_8x4_lib4.S kernel_dgemm_8x4_lib.S
 kernel_dgemm_12x4_lib4.o: kernel_dgemm_12x4_lib4.S kernel_dgemm_12x4_lib.S
 kernel_dgetrf_pivot_lib4.o: kernel_dgetrf_pivot_lib4.c kernel_dgetrf_pivot_lib.c
 kernel_dgemv_4_lib4.o: kernel_dgemv_4_lib4.S kernel_dgemv_4_lib.S
+kernel_dger_lib4.o: kernel_dger_lib4.S kernel_dger_lib.S
 
 kernel_sgemm_4x4_lib4.o: kernel_sgemm_4x4_lib4.S kernel_sgemm_4x4_lib.S
 kernel_sgemm_8x4_lib4.o: kernel_sgemm_8x4_lib4.S kernel_sgemm_8x4_lib.S

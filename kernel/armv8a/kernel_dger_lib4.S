@@ -35,189 +35,121 @@
 
 
 
-// common inner routine with file scope
-//
-// input arguments:
-// r10d  <- k
-// r11   <- x
-// r12   <- C
-// r13   <- ldc*sizeof(double)
-// r14   <- D
-// r15   <- ldd*sizeof(double)
-// ymm0  <- y_0
-// ymm1  <- y_1
-// ymm2  <- y_2
-// ymm3  <- y_3
+#if defined(OS_LINUX)
 
-//
-// output arguments:
-// r10d  <- 0
-// r11   <-
-// r12   <-
-// r13   <-
-// r14   <-
-// r15   <-
-// ymm0  <-
-// ymm1  <-
-// ymm2  <-
-// ymm3  <-
+#define STACKSIZE 11*16
+#define PROLOGUE \
+	sub sp, sp, #(11 * 16); \
+	stp d8, d9, [sp, #(0 * 16)]; \
+	stp d10, d11, [sp, #(1 * 16)]; \
+	stp d12, d13, [sp, #(2 * 16)]; \
+	stp d14, d15, [sp, #(3 * 16)]; \
+	stp x18, x19, [sp, #(4 * 16)]; \
+	stp x20, x21, [sp, #(5 * 16)]; \
+	stp x22, x23, [sp, #(6 * 16)]; \
+	stp x24, x25, [sp, #(7 * 16)]; \
+	stp x26, x27, [sp, #(8 * 16)]; \
+	stp x28, x29, [sp, #(9 * 16)]; \
+	str x30, [sp, #(10 * 16)];
+#define EPILOGUE \
+	ldp d8, d9, [sp, #(0 * 16)]; \
+	ldp d10, d11, [sp, #(1 * 16)]; \
+	ldp d12, d13, [sp, #(2 * 16)]; \
+	ldp d14, d15, [sp, #(3 * 16)]; \
+	ldp x18, x19, [sp, #(4 * 16)]; \
+	ldp x20, x21, [sp, #(5 * 16)]; \
+	ldp x22, x23, [sp, #(6 * 16)]; \
+	ldp x24, x25, [sp, #(7 * 16)]; \
+	ldp x26, x27, [sp, #(8 * 16)]; \
+	ldp x28, x29, [sp, #(9 * 16)]; \
+	ldr x30, [sp, #(10 * 16)]; \
+	add sp, sp, #(11 * 16);
+#define GLOB(NAME) \
+	.global	NAME
+#define FUN_START(NAME) \
+	.type NAME, %function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define CALL(NAME) \
+	bl NAME
+//#define ZERO_ACC_N \
+//	fmov	d0, xzr; \
+//	fmov    d1, d0
+//#define ZERO_ACC_T \
+//	fmov	d0, xzr; \
+//	fmov    d1, d0; \
+//	fmov    d2, d0; \
+//	fmov    d3, d0
 
-#if MACRO_LEVEL>=2
-	.macro INNER_KERNEL_GER_4_LIBC
-#else
-	.p2align 4,,15
-	FUN_START(inner_kernel_ger_4_libc)
-#endif
+#else // defined(OS_MAC)
 
-	cmpl	$ 0, %r10d
-	jle		2f // return
+#define STACKSIZE 11*16
+.macro PROLOGUE
+	sub sp, sp, #(11 * 16)
+	stp d8, d9, [sp, #(0 * 16)]
+	stp d10, d11, [sp, #(1 * 16)]
+	stp d12, d13, [sp, #(2 * 16)]
+	stp d14, d15, [sp, #(3 * 16)]
+	stp x18, x19, [sp, #(4 * 16)]
+	stp x20, x21, [sp, #(5 * 16)]
+	stp x22, x23, [sp, #(6 * 16)]
+	stp x24, x25, [sp, #(7 * 16)]
+	stp x26, x27, [sp, #(8 * 16)]
+	stp x28, x29, [sp, #(9 * 16)]
+	str x30, [sp, #(10 * 16)]
+.endm
+.macro EPILOGUE
+	ldp d8, d9, [sp, #(0 * 16)]
+	ldp d10, d11, [sp, #(1 * 16)]
+	ldp d12, d13, [sp, #(2 * 16)]
+	ldp d14, d15, [sp, #(3 * 16)]
+	ldp x18, x19, [sp, #(4 * 16)]
+	ldp x20, x21, [sp, #(5 * 16)]
+	ldp x22, x23, [sp, #(6 * 16)]
+	ldp x24, x25, [sp, #(7 * 16)]
+	ldp x26, x27, [sp, #(8 * 16)]
+	ldp x28, x29, [sp, #(9 * 16)]
+	ldr x30, [sp, #(10 * 16)]
+	add sp, sp, #(11 * 16)
+.endm
+#define GLOB(NAME) \
+	.globl _ ## NAME
+#define FUN_START(NAME) \
+_ ## NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	bl _ ## NAME
+//.macro ZERO_ACC_N
+//	fmov	d0, xzr
+//	fmov    d1, d0
+//.endm
+//.macro ZERO_ACC_T
+//	fmov	d0, xzr
+//	fmov    d1, d0
+//	fmov    d2, d0
+//	fmov    d3, d0
+//.endm
 
-	leaq	0(%r13, %r13, 2), %rax
-	leaq	0(%r15, %r15, 2), %rbx
-
-	cmpl	$ 4, %r10d
-	jl		0f // clean-up loop
-
-	// main loop
-	.p2align 3
-1: // main loop
-	
-	vmovupd	0(%r11), %ymm12
-
-	vmovupd		0(%r12), %ymm4
-	vfmadd231pd	%ymm12, %ymm0, %ymm4
-
-	vmovupd		0(%r12, %r13), %ymm5
-	vfmadd231pd	%ymm12, %ymm1, %ymm5
-
-	vmovupd		0(%r12, %r13, 2), %ymm6
-	vfmadd231pd	%ymm12, %ymm2, %ymm6
-
-	vmovupd		0(%r12, %rax), %ymm7
-	vfmadd231pd	%ymm12, %ymm3, %ymm7
-
-	vmovupd		%ymm4, 0(%r14) 
-	vmovupd		%ymm5, 0(%r14, %r15) 
-	vmovupd		%ymm6, 0(%r14, %r15, 2) 
-	vmovupd		%ymm7, 0(%r14, %rbx) 
-
-	subl	$ 4, %r10d
-	addq	$ 32, %r11
-	addq	$ 32, %r12
-	addq	$ 32, %r14
-	
-	cmpl	$ 3, %r10d
-
-	jg		1b // main loop 
-
-
-	// consider clean-up
-	cmpl	$ 0, %r10d
-	jle		2f // return
-
-0: // clean-up
-	
-	vcvtsi2sd	%r10d, %xmm14, %xmm14
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovupd		.LC00(%rip), %ymm13
-#elif defined(OS_MAC)
-	vmovupd		LC00(%rip), %ymm13
-#endif
-	vmovddup	%xmm14, %xmm14
-	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
-	vsubpd		%ymm14, %ymm13, %ymm13
-
-
-	vmaskmovpd	0(%r11), %ymm13, %ymm12
-
-	vmaskmovpd	0(%r12), %ymm13, %ymm4
-	vfmadd231pd	%ymm12, %ymm0, %ymm4
-
-	vmaskmovpd	0(%r12, %r13), %ymm13, %ymm5
-	vfmadd231pd	%ymm12, %ymm1, %ymm5
-
-	vmaskmovpd	0(%r12, %r13, 2), %ymm13, %ymm6
-	vfmadd231pd	%ymm12, %ymm2, %ymm6
-
-	vmaskmovpd	0(%r12, %rax), %ymm13, %ymm7
-	vfmadd231pd	%ymm12, %ymm3, %ymm7
-
-	vmaskmovpd	%ymm4, %ymm13, 0(%r14) 
-	vmaskmovpd	%ymm5, %ymm13, 0(%r14, %r15) 
-	vmaskmovpd	%ymm6, %ymm13, 0(%r14, %r15, 2) 
-	vmaskmovpd	%ymm7, %ymm13, 0(%r14, %rbx) 
-
-
-	sall	$ 3, %r10d // *sizeof(double)
-	addq	%r10, %r11
-	addq	%r10, %r12
-	addq	%r10, %r14
-	xorl	%r10d, %r10d
-	
-	
-2: // return
-
-#if MACRO_LEVEL>=2
-	.endm
-#else
-	ret
-
-	FUN_END(inner_kernel_ger_4_libc)
 #endif
 
 
 
 
 
-//                         1      2              3          4          5          6        7          8
-// void kernel_dger_4_libc(int k, double *alpha, double *x, double *y, double *C, int ldc, double *D, int ldd);
 
-	.p2align 4,,15
-	GLOB_FUN_START(kernel_dger_4_libc)
-	
-
-	PROLOGUE
+	.text
 
 
-	// initialize x_n
-	movq	ARG2, %r10 // alpha
-	vbroadcastsd 0(%r10), %ymm15
-
-	movq	ARG4, %r10 // y
-
-	vbroadcastsd 0(%r10), %ymm0
-	vmulpd		%ymm15, %ymm0, %ymm0
-	vbroadcastsd 8(%r10), %ymm1
-	vmulpd		%ymm15, %ymm1, %ymm1
-	vbroadcastsd 16(%r10), %ymm2
-	vmulpd		%ymm15, %ymm2, %ymm2
-	vbroadcastsd 24(%r10), %ymm3
-	vmulpd		%ymm15, %ymm3, %ymm3
 
 
-	// inner edge dsyrk & kernel dgemv nt
 
-	movq	ARG1, %r10 // k
-	movq	ARG3, %r11 // x
-	movq	ARG5, %r12 // C
-	movq	ARG6, %r13 // ldc
-	sall	$ 3, %r13d // ldc*sizeof(double)
-	movq	ARG7, %r14 // D
-	movq	ARG8, %r15 // ldd
-	sall	$ 3, %r15d // ldd*sizeof(double)
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
 
-#if MACRO_LEVEL>=2
-	INNER_KERNEL_GER_4_LIBC
-#else
-	CALL(inner_kernel_ger_4_libc)
+#include "kernel_dger_lib.S"
+
 #endif
-
-
-	EPILOGUE
-
-	ret
-
-	FUN_END(kernel_dger_4_libc)
 
 
 
