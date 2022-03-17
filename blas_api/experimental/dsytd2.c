@@ -111,7 +111,6 @@
 
 
 #if defined(FORTRAN_BLAS_API)
-#define blasfeo_lapack_dlaed1 dlaed1_
 #define blasfeo_blas_dsymv dsymv_
 #define blasfeo_blas_ddot ddot_
 #define blasfeo_blas_daxpy daxpy_
