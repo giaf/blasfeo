@@ -197,24 +197,25 @@
 	
 	ldp		q24, q25, [x11], #32
 
-	// unroll x4
 	ldp		q16, q17, [x9], #32
+	ldp		q18, q19, [x12], #32
+	ldp		q20, q21, [x13], #32
+	ldp		q22, q23, [x14], #32
+
+	// unroll x4
 	fmla	v0.2d, v16.2d, v24.2d
 	fmla	v1.2d, v18.2d, v24.2d
 //	prfm	PLDL1KEEP, [x9, #96]
 
-	ldp		q18, q19, [x12], #32
 	fmla	v2.2d, v20.2d, v24.2d
 	fmla	v3.2d, v22.2d, v24.2d
 //	prfm	PLDL1KEEP, [x12, #96]
 
-	ldp		q20, q21, [x13], #32
 	fmla	v0.2d, v17.2d, v25.2d
 	fmla	v1.2d, v19.2d, v25.2d
 //	prfm	PLDL1KEEP, [x13, #96]
 	sub		w8, w8, #4
 
-	ldp		q22, q23, [x14], #32
 	fmla	v2.2d, v21.2d, v25.2d
 	fmla	v3.2d, v23.2d, v25.2d
 //	prfm	PLDL1KEEP, [x14, #96]
