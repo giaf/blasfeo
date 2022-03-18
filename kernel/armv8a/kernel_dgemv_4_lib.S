@@ -174,8 +174,10 @@
 	ble		2f // return
 
 	add		x12, x9, x10
-	add		x13, x9, x10, lsl #1
-	add		x14, x12, x10, lsl #1
+	add		x13, x12, x10
+	add		x14, x13, x10
+//	add		x13, x9, x10, lsl #1
+//	add		x14, x12, x10, lsl #1
 
 	// prefetch
 //	prfm	PLDL1KEEP, [x9, #0]
@@ -232,13 +234,18 @@
 
 	// unroll 0
 	ldr		d24, [x11], #8
+    ins     v24.d[1], xzr
 	ldr		d16, [x9], #8
+    ins     v16.d[1], xzr
 	fmla	v0.2d, v16.2d, v24.2d
 	ldr		d18, [x12], #8
+    ins     v18.d[1], xzr
 	fmla	v1.2d, v18.2d, v24.2d
 	ldr		d20, [x13], #8
+    ins     v20.d[1], xzr
 	fmla	v2.2d, v20.2d, v24.2d
 	ldr		d22, [x14], #8
+    ins     v22.d[1], xzr
 	fmla	v3.2d, v22.2d, v24.2d
 
 	sub		w8, w8, #1

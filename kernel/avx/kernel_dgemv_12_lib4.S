@@ -840,6 +840,11 @@ NAME:
 
 	// beta
 	vbroadcastsd	0(%r11), %ymm15
+
+	vxorpd		%ymm14, %ymm14, %ymm14 // 0.0
+	vucomisd	%xmm14, %xmm15 // beta==0.0 ?
+	je			0f // end
+
 	vmovupd		0(%r12), %ymm14
 	vmulpd		%ymm15, %ymm14, %ymm14
 	vaddpd		%ymm0, %ymm14, %ymm0
@@ -849,6 +854,8 @@ NAME:
 	vmovupd		64(%r12), %ymm14
 	vmulpd		%ymm15, %ymm14, %ymm14
 	vaddpd		%ymm2, %ymm14, %ymm2
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -930,6 +937,11 @@ NAME:
 
 	// beta
 	vbroadcastsd	0(%r11), %ymm15
+
+	vxorpd		%ymm14, %ymm14, %ymm14 // 0.0
+	vucomisd	%xmm14, %xmm15 // beta==0.0 ?
+	je			0f // end
+
 	vmovupd		0(%r12), %ymm14
 	vmulpd		%ymm15, %ymm14, %ymm14
 	vaddpd		%ymm0, %ymm14, %ymm0
@@ -939,7 +951,9 @@ NAME:
 	vmovupd		64(%r12), %ymm14
 	vmulpd		%ymm15, %ymm14, %ymm14
 	vaddpd		%ymm2, %ymm14, %ymm2
-	
+
+0:
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
