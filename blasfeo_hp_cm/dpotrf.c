@@ -36,6 +36,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//#define PRINT_NAME
+
 #include <blasfeo_target.h>
 #include <blasfeo_block_size.h>
 #include <blasfeo_common.h>

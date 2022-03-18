@@ -36,6 +36,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//#define PRINT_NAME
+
 #include <blasfeo_target.h>
 #include <blasfeo_block_size.h>
 #include <blasfeo_common.h>
@@ -44,8 +46,6 @@
 #include <blasfeo_stdlib.h>
 #include <blasfeo_memory.h>
 
-
-//#define PRINT_NAME
 
 
 #if ( defined(BLAS_API) & defined(MF_PANELMAJ) )

@@ -162,6 +162,8 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 
 
 
+//		goto alg1;
+//		goto alg2;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>300 | n>300 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)

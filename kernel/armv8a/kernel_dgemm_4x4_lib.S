@@ -21364,7 +21364,7 @@
 	CALL(inner_edge_trmm_nn_rl_4x4_vs_lib4c)
 #endif
 
-	ldr		w12, [sp, #(STACKSIZE + 16)] // m1
+	ldr		w12, [sp, #(STACKSIZE + 24)] // n1
 	cmp		w12, #1
 	bgt		100f
 
@@ -21378,7 +21378,7 @@
 
 100:
 
-	ldr		w12, [sp, #(STACKSIZE + 16)] // m1
+	ldr		w12, [sp, #(STACKSIZE + 24)] // n1
 	cmp		w12, #2
 	bgt		101f
 
@@ -21392,7 +21392,7 @@
 
 101:
 
-	ldr		w12, [sp, #(STACKSIZE + 16)] // m1
+	ldr		w12, [sp, #(STACKSIZE + 24)] // n1
 	cmp		w12, #3
 	bgt		102f
 
