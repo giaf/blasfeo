@@ -204,16 +204,35 @@ void kernel_sgemv_nt_4_vs_lib4(int kmax, float *alpha_n, float *alpha_t, float *
 		}
 	
 	// store t
-	z_t[0] = alpha_t[0]*y_t_0 + beta_t[0]*y_t[0];
-	if(km>1)
+	if(beta_t[0]==0.0)
 		{
-		z_t[1] = alpha_t[0]*y_t_1 + beta_t[0]*y_t[1];
-		if(km>2)
+		z_t[0] = alpha_t[0]*y_t_0;
+		if(km>1)
 			{
-			z_t[2] = alpha_t[0]*y_t_2 + beta_t[0]*y_t[2];
-			if(km>3)
+			z_t[1] = alpha_t[0]*y_t_1;
+			if(km>2)
 				{
-				z_t[3] = alpha_t[0]*y_t_3 + beta_t[0]*y_t[3];
+				z_t[2] = alpha_t[0]*y_t_2;
+				if(km>3)
+					{
+					z_t[3] = alpha_t[0]*y_t_3;
+					}
+				}
+			}
+		}
+	else
+		{
+		z_t[0] = alpha_t[0]*y_t_0 + beta_t[0]*y_t[0];
+		if(km>1)
+			{
+			z_t[1] = alpha_t[0]*y_t_1 + beta_t[0]*y_t[1];
+			if(km>2)
+				{
+				z_t[2] = alpha_t[0]*y_t_2 + beta_t[0]*y_t[2];
+				if(km>3)
+					{
+					z_t[3] = alpha_t[0]*y_t_3 + beta_t[0]*y_t[3];
+					}
 				}
 			}
 		}

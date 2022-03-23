@@ -1011,12 +1011,19 @@ NAME:
 
 	// beta
 	movddup	0(%r11), %xmm15
+
+	vxorpd		%xmm14, %xmm14, %xmm14 // 0.0
+	vucomisd	%xmm14, %xmm15 // beta==0.0 ?
+	je			0f // end
+
 	movupd	0(%r12), %xmm14
 	mulpd	%xmm15, %xmm14
 	addpd	%xmm14, %xmm0
 	movupd	16(%r12), %xmm14
 	mulpd	%xmm15, %xmm14
 	addpd	%xmm14, %xmm1
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm
@@ -1069,6 +1076,11 @@ NAME:
 
 	// beta
 	movddup	0(%r11), %xmm15
+
+	vxorpd		%xmm14, %xmm14, %xmm14 // 0.0
+	vucomisd	%xmm14, %xmm15 // beta==0.0 ?
+	je			0f // end
+
 	movupd	0(%r12), %xmm14
 	mulpd	%xmm15, %xmm14
 	addpd	%xmm14, %xmm0
@@ -1076,6 +1088,7 @@ NAME:
 	mulpd	%xmm15, %xmm14
 	addpd	%xmm14, %xmm1
 
+0:
 
 #if MACRO_LEVEL>=1
 	.endm

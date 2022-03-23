@@ -944,17 +944,35 @@ void blasfeo_hp_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blas
 	int ii;
 
 	// copy and scale y_n int z_n
-	ii = 0;
-	for(; ii<m-3; ii+=4)
+	if(beta_n==0.0)
 		{
-		z_n[ii+0] = beta_n*y_n[ii+0];
-		z_n[ii+1] = beta_n*y_n[ii+1];
-		z_n[ii+2] = beta_n*y_n[ii+2];
-		z_n[ii+3] = beta_n*y_n[ii+3];
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			z_n[ii+0] = 0.0;
+			z_n[ii+1] = 0.0;
+			z_n[ii+2] = 0.0;
+			z_n[ii+3] = 0.0;
+			}
+		for(; ii<m; ii++)
+			{
+			z_n[ii+0] = 0.0;
+			}
 		}
-	for(; ii<m; ii++)
+	else
 		{
-		z_n[ii+0] = beta_n*y_n[ii+0];
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			z_n[ii+0] = beta_n*y_n[ii+0];
+			z_n[ii+1] = beta_n*y_n[ii+1];
+			z_n[ii+2] = beta_n*y_n[ii+2];
+			z_n[ii+3] = beta_n*y_n[ii+3];
+			}
+		for(; ii<m; ii++)
+			{
+			z_n[ii+0] = beta_n*y_n[ii+0];
+			}
 		}
 	
 	ii = 0;
@@ -989,17 +1007,35 @@ void blasfeo_hp_ssymv_l(int m, float alpha, struct blasfeo_smat *sA, int ai, int
 	float *z = sz->pa + zi;
 
 	// copy and scale y int z
-	ii = 0;
-	for(; ii<m-3; ii+=4)
+	if(beta==0.0)
 		{
-		z[ii+0] = beta*y[ii+0];
-		z[ii+1] = beta*y[ii+1];
-		z[ii+2] = beta*y[ii+2];
-		z[ii+3] = beta*y[ii+3];
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			z[ii+0] = 0.0;
+			z[ii+1] = 0.0;
+			z[ii+2] = 0.0;
+			z[ii+3] = 0.0;
+			}
+		for(; ii<m; ii++)
+			{
+			z[ii+0] = 0.0;
+			}
 		}
-	for(; ii<m; ii++)
+	else
 		{
-		z[ii+0] = beta*y[ii+0];
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			z[ii+0] = beta*y[ii+0];
+			z[ii+1] = beta*y[ii+1];
+			z[ii+2] = beta*y[ii+2];
+			z[ii+3] = beta*y[ii+3];
+			}
+		for(; ii<m; ii++)
+			{
+			z[ii+0] = beta*y[ii+0];
+			}
 		}
 	
 	// clean up at the beginning
@@ -1050,17 +1086,35 @@ void blasfeo_hp_ssymv_l_mn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	float *z = sz->pa + zi;
 
 	// copy and scale y int z
-	ii = 0;
-	for(; ii<m-3; ii+=4)
+	if(beta==0.0)
 		{
-		z[ii+0] = beta*y[ii+0];
-		z[ii+1] = beta*y[ii+1];
-		z[ii+2] = beta*y[ii+2];
-		z[ii+3] = beta*y[ii+3];
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			z[ii+0] = 0.0;
+			z[ii+1] = 0.0;
+			z[ii+2] = 0.0;
+			z[ii+3] = 0.0;
+			}
+		for(; ii<m; ii++)
+			{
+			z[ii+0] = 0.0;
+			}
 		}
-	for(; ii<m; ii++)
+	else
 		{
-		z[ii+0] = beta*y[ii+0];
+		ii = 0;
+		for(; ii<m-3; ii+=4)
+			{
+			z[ii+0] = beta*y[ii+0];
+			z[ii+1] = beta*y[ii+1];
+			z[ii+2] = beta*y[ii+2];
+			z[ii+3] = beta*y[ii+3];
+			}
+		for(; ii<m; ii++)
+			{
+			z[ii+0] = beta*y[ii+0];
+			}
 		}
 	
 	// clean up at the beginning

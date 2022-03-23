@@ -7510,15 +7510,15 @@
 
 	// prefetch D
 
-	movq	ARG12, %r10 // D
-	movq	ARG13, %r11 // ldd
-	sall	$ 3, %r11d
-
-#if MACRO_LEVEL>=1
-	INNER_PREFETCH0_4X4_LIB
-#else
-	CALL(inner_prefetch0_4x4_lib)
-#endif
+//	movq	ARG12, %r10 // D
+//	movq	ARG13, %r11 // ldd
+//	sall	$ 3, %r11d
+//
+//#if MACRO_LEVEL>=1
+//	INNER_PREFETCH0_4X4_LIB
+//#else
+//	CALL(inner_prefetch0_4x4_lib)
+//#endif
 
 
 	// call inner blend
@@ -7700,15 +7700,15 @@
 	// prefetch D
 	// TODO prefetch vs !!!
 
-	movq	ARG12, %r10 // D
-	movq	ARG13, %r11 // ldd
-	sall	$ 3, %r11d
-
-#if MACRO_LEVEL>=1
-	INNER_PREFETCH0_4X4_LIB
-#else
-	CALL(inner_prefetch0_4x4_lib)
-#endif
+//	movq	ARG12, %r10 // D
+//	movq	ARG13, %r11 // ldd
+//	sall	$ 3, %r11d
+//
+//#if MACRO_LEVEL>=1
+//	INNER_PREFETCH0_4X4_LIB
+//#else
+//	CALL(inner_prefetch0_4x4_lib)
+//#endif
 
 
 	// call inner blend
@@ -7778,11 +7778,11 @@
 	movq	ARG9, %r11 // ldc
 	sall	$ 3, %r11d
 
-#if MACRO_LEVEL>=1
-	INNER_PREFETCH0_4X4_LIB
-#else
-	CALL(inner_prefetch0_4x4_lib)
-#endif
+//#if MACRO_LEVEL>=1
+//	INNER_PREFETCH0_4X4_LIB
+//#else
+//	CALL(inner_prefetch0_4x4_lib)
+//#endif
 
 100:
 

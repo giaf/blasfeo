@@ -103,10 +103,20 @@ void kernel_sgemv_n_4_lib4(int kmax, float *alpha, float *A, float *x, float *be
 
 		}
 
-	z[0] = alpha[0]*yy[0] + beta[0]*y[0];
-	z[1] = alpha[0]*yy[1] + beta[0]*y[1];
-	z[2] = alpha[0]*yy[2] + beta[0]*y[2];
-	z[3] = alpha[0]*yy[3] + beta[0]*y[3];
+	if(beta[0]==0.0)
+		{
+		z[0] = alpha[0]*yy[0];
+		z[1] = alpha[0]*yy[1];
+		z[2] = alpha[0]*yy[2];
+		z[3] = alpha[0]*yy[3];
+		}
+	else
+		{
+		z[0] = alpha[0]*yy[0] + beta[0]*y[0];
+		z[1] = alpha[0]*yy[1] + beta[0]*y[1];
+		z[2] = alpha[0]*yy[2] + beta[0]*y[2];
+		z[3] = alpha[0]*yy[3] + beta[0]*y[3];
+		}
 
 	return;
 
@@ -242,10 +252,20 @@ void kernel_sgemv_t_4_lib4(int kmax, float *alpha, int offA, float *A, int sda, 
 		
 		}
 
-	z[0] = alpha[0]*yy[0] + beta[0]*y[0];
-	z[1] = alpha[0]*yy[1] + beta[0]*y[1];
-	z[2] = alpha[0]*yy[2] + beta[0]*y[2];
-	z[3] = alpha[0]*yy[3] + beta[0]*y[3];
+	if(beta[0]==0.0)
+		{
+		z[0] = alpha[0]*yy[0];
+		z[1] = alpha[0]*yy[1];
+		z[2] = alpha[0]*yy[2];
+		z[3] = alpha[0]*yy[3];
+		}
+	else
+		{
+		z[0] = alpha[0]*yy[0] + beta[0]*y[0];
+		z[1] = alpha[0]*yy[1] + beta[0]*y[1];
+		z[2] = alpha[0]*yy[2] + beta[0]*y[2];
+		z[3] = alpha[0]*yy[3] + beta[0]*y[3];
+		}
 
 	return;
 

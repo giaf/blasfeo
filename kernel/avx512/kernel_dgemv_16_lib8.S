@@ -404,10 +404,17 @@ NAME:
 
 	// beta
 	vbroadcastsd	0(%r11), %zmm25
+
+	vxorpd		%zmm24, %zmm24, %zmm24 // 0.0
+	vucomisd	%xmm24, %xmm25 // beta==0.0 ?
+	je			0f // end
+
 	vmovupd			0(%r12), %zmm24
 	vfmadd231pd		%zmm25, %zmm24, %zmm0
 	vmovupd			64(%r12), %zmm24
 	vfmadd231pd		%zmm25, %zmm24, %zmm1
+
+0:
 
 #if MACRO_LEVEL>=1
 	.endm

@@ -641,7 +641,7 @@ _ ## NAME:
 
 	fmul	v0.4s, v0.4s, v28.s[0]
 
-	fcmpe	d29, #0.0
+	fcmpe	s29, #0.0
 	beq		0f
 
 	ldr		q24, [x10, #0]
