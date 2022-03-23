@@ -493,6 +493,7 @@ file(GLOB BLASFEO_HP_CM_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dpotrf.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgetrf.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgetr.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgemv.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dsymv.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dger.c
 
@@ -651,10 +652,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_diag_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
-	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_buffer_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
@@ -699,10 +701,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
-	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgetr_lib.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dsymv_4_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_buffer_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 
@@ -742,7 +745,8 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_buffer_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
@@ -778,7 +782,8 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_buffer_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
@@ -819,7 +824,8 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_buffer_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
@@ -869,7 +875,8 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_buffer_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
@@ -911,7 +918,8 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_buffer_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
@@ -949,7 +957,8 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_buffer_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
@@ -986,7 +995,8 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgecp_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_buffer_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
@@ -1022,7 +1032,8 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetrf_pivot_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgeqrf_4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_lib4.c
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dpack_buffer_lib4.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
