@@ -250,7 +250,7 @@ void blasfeo_hp_dgemv_nt(int m, int n, double alpha_n, double alpha_t, struct bl
 void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, double beta, struct blasfeo_dvec *sy, int yi, struct blasfeo_dvec *sz, int zi)
 	{
 
-	if(m<=0 | (alpha==0 & beta==0))
+	if((m<=0) | (alpha==0 & beta==0))
 		return;
 
 	const int bs = 4;
