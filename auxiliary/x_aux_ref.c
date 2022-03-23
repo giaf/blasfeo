@@ -998,11 +998,12 @@ void REF_VECNRM_INF(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 	REAL tmp;
 	for(ii=0; ii<m; ii++)
 		{
-#ifdef USE_C99_MATH
+#if 0 //def USE_C99_MATH // does not propagate NaN !!!
 		norm = FMAX(norm, FABS(x[ii]));
 #else // no c99
 		tmp = FABS(x[ii]);
-		norm = tmp>norm ? tmp : norm;
+//		norm = tmp>norm ? tmp : norm; // does not propagate NaN !!!
+		norm = norm>=tmp ? norm : tmp;
 #endif
 		}
 	*ptr_norm = norm;

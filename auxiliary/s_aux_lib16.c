@@ -1219,12 +1219,14 @@ void blasfeo_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm
 	float tmp;
 	for(ii=0; ii<m; ii++)
 		{
-#ifdef USE_C99_MATH
+#if 0 //def USE_C99_MATH // does not propagate NaN !!!
 		norm = fmax(norm, fabs(x[ii]));
-#else
+#else // no c99
 		tmp = fabs(x[ii]);
-		norm = tmp>norm ? tmp : norm;
+//		norm = tmp>norm ? tmp : norm; // does not propagate NaN !!!
+		norm = norm>=tmp ? norm : tmp;
 #endif
+
 		}
 	*ptr_norm = norm;
 	return;
