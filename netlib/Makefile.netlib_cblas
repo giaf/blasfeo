@@ -174,7 +174,8 @@ SLEV2 += netlib/cblas/src/cblas_strsv.o
 # All object files for double real precision
 #
 DLEV2 =
-DLEV2 += netlib/cblas/src/cblas_dgemv.o
+DLEV2_DONE =
+DLEV2_DONE += netlib/cblas/src/cblas_dgemv.o
 DLEV2 += netlib/cblas/src/cblas_dgbmv.o
 DLEV2 += netlib/cblas/src/cblas_dger.o
 DLEV2 += netlib/cblas/src/cblas_dsbmv.o
@@ -239,6 +240,8 @@ ZLEV2 += netlib/cblas/src/cblas_zhpr2.o
 # All object files
 #
 ALEV2 = $(SLEV2) $(DLEV2) $(CLEV2) $(ZLEV2)
+
+ALEV2_DONE = $(DLEV2_DONE)
 
 #
 # CBLAS routines : level 3
@@ -306,7 +309,7 @@ ALEV3_DONE = $(SLEV3_DONE) $(DLEV3_DONE)
 #
 # Object files of all routines
 #
-NETLIB_CBLAS_OBJS = $(ALEV1_DONE) $(ALEV3_DONE) $(ERRHAND)
+NETLIB_CBLAS_OBJS = $(ALEV1_DONE) $(ALEV2_DONE) $(ALEV3_DONE) $(ERRHAND)
 ifeq ($(COMPLEMENT_WITH_NETLIB_BLAS), 1)
 NETLIB_CBLAS_OBJS += $(ALEV1) $(ALEV2) $(ALEV3)
 endif
@@ -339,6 +342,8 @@ BLASFEO_CBLAS_DEF += -Dcblas_saxpy=blasfeo_cblas_saxpy -Dsaxpy_=blasfeo_blas_sax
 # level 1 double
 BLASFEO_CBLAS_DEF += -Dcblas_daxpy=blasfeo_cblas_daxpy -Ddaxpy_=blasfeo_blas_daxpy
 BLASFEO_CBLAS_DEF += -Dcblas_dcopy=blasfeo_cblas_dcopy -Ddcopy_=blasfeo_blas_dcopy
+# level 2 double
+BLASFEO_CBLAS_DEF += -Dcblas_dgemv=blasfeo_cblas_dgemv -Ddgemv_=blasfeo_blas_dgemv
 # level 3 single
 BLASFEO_CBLAS_DEF += -Dcblas_sgemm=blasfeo_cblas_sgemm -Dsgemm_=blasfeo_blas_sgemm
 BLASFEO_CBLAS_DEF += -Dcblas_strsm=blasfeo_cblas_strsm -Dstrsm_=blasfeo_blas_strsm
