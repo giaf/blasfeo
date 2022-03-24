@@ -160,8 +160,8 @@ void blasfeo_lapack_dstedc(char *compz, int *pn, double *d, double *e, double *Z
 	double d_0 = 0.0;
 	double d_1 = 1.0;
 
-	int smlsiz, liwmin, lwmin, lgn, icompz, storez, start, finish, m, strtrw, k, p;
-	double orgnrm, eps, tiny;
+	int smlsiz, liwmin, lwmin, lgn, icompz, storez, start, finish, m, strtrw, k;
+	double orgnrm, eps, tiny, p;
 
 	int ii, jj, idx;
 	int i_t0;
@@ -351,7 +351,7 @@ void blasfeo_lapack_dstedc(char *compz, int *pn, double *d, double *e, double *Z
 	L20:
 			if (finish < n)
 				{
-				tiny = eps * sqrt(fabs(d[finish-1])) * sqrt(fabs(d[finish + 1]));
+				tiny = eps * sqrt(fabs(d[finish-1])) * sqrt(fabs(d[finish + 0]));
 				if (fabs(e[finish-1]) > tiny)
 					{
 					finish++;
