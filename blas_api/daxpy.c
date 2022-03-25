@@ -67,9 +67,12 @@ void blasfeo_blas_daxpy(int *pn, double *alpha, double *x, int *pincx, double *y
 
 	if ((incx == 1) && (incy ==1))
 		{
-//		for(ii=0; ii<n; ii++)
-//			y[ii] = y[ii] + *alpha*x[ii];
+#if defined(LA_REFERENCE)
+		for(ii=0; ii<n; ii++)
+			y[ii] = y[ii] + *alpha*x[ii];
+#else
 		kernel_daxpy_11_lib(n, alpha, x, y);
+#endif
 		}
 	else
 		{

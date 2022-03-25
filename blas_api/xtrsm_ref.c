@@ -94,6 +94,7 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 	sA.pA = A;
 	sA.m = *plda;
 	sA.dA = dA;
+	sA.use_dA = 0; // always recompute diagonal
 
 	struct MAT sB;
 	sB.pA = B;

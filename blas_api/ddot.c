@@ -65,9 +65,12 @@ double blasfeo_blas_ddot(int *pn, double *x, int *pincx, double *y, int *pincy)
 
 	if ((incx==1) & (incy==1))
 		{
+#if defined(LA_REFERENCE)
+		for(ii=0; ii<n; ii++)
+			res += x[ii]*y[ii];
+#else
 		kernel_ddot_11_lib(n, x, y, &res);
-//		for(ii=0; ii<n; ii++)
-//			res += x[ii]*y[ii];
+#endif
 		}
 	else
 		{

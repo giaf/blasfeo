@@ -473,16 +473,16 @@ void REF_TRSM_LLNN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL *dA = sA->dA;
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA<n)
+		if(sA->use_dA<m)
 			{
-			for(ii=0; ii<n; ii++)
+			for(ii=0; ii<m; ii++)
 				dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
-			sA->use_dA = n;
+			sA->use_dA = m;
 			}
 		}
 	else
 		{
-		for(ii=0; ii<n; ii++)
+		for(ii=0; ii<m; ii++)
 			dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 		sA->use_dA = 0; // nonzero offset makes diagonal dirty
 		}
@@ -1193,16 +1193,16 @@ void REF_TRSM_LUTN(int m, int n, REAL alpha, struct XMAT *sA, int ai, int aj, st
 	REAL *dA = sA->dA;
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA<n)
+		if(sA->use_dA<m)
 			{
-			for(ii=0; ii<n; ii++)
+			for(ii=0; ii<m; ii++)
 				dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
-			sA->use_dA = n;
+			sA->use_dA = m;
 			}
 		}
 	else
 		{
-		for(ii=0; ii<n; ii++)
+		for(ii=0; ii<m; ii++)
 			dA[ii] = 1.0 / XMATEL_A(aai+ii, aaj+ii);
 		sA->use_dA = 0; // nonzero offset makes diagonal dirty
 		}
