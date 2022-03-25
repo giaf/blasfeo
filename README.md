@@ -13,9 +13,9 @@ The API is non-destructive, and compared to the BLAS API it has an additional ma
 
 | API                           | Optimized (level 3) routines                       |
 | ----------------------------- | -------------------------------------------------- |
-| BLASFEO <br> (small matrices) | dgemm, dsyrk, dtrmm, dtrsm, dpotrf, dgetrf, dgeqrf, dgelqf, <br> sgemm, ssyrk, strmm, strsm, spotrf |
-| BLAS    <br> (small matrices) | dgemm, dsyrk, dtrmm, dtrsm, dpotrf, dgetrf <br> sgemm, strsm, spotrf |
-| BLAS    <br> (large matrices) | dgemm, dsyrk, dtrmm*, dtrsm*, dpotrf*, <br> sgemm |
+| BLASFEO <br> (small matrices) | dgemm, dsyrk, dsyr2k, dtrmm, dtrsm, dpotrf, dgetrf, dgeqrf, dgelqf, <br> sgemm, ssyrk, strmm, strsm, spotrf |
+| BLAS    <br> (small matrices) | dgemm, dsyrk, dsyr2k, dtrmm, dtrsm, dpotrf, dgetrf <br> sgemm, strsm, spotrf |
+| BLAS    <br> (large matrices) | dgemm, dsyrk, dsyr2k, dtrmm*, dtrsm*, dpotrf*, <br> sgemm |
 
 Note: BLASFEO is currently under active development.
 Some of the routines listed in the previous table may only be optimized for some variants, and provide reference implementations for other variants.
