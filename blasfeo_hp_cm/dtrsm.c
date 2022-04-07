@@ -3294,7 +3294,7 @@ void blasfeo_hp_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int mc0, nc0, kc0;
 	int ldc1;
 	double beta1;
-	double *pA, *pB, *C1, *dA, *dB;
+	double *pA, *pB, *pT, *C1, *dA, *dB, *dT;
 
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 	const int ps = 4; // XXX TODO fix once implemented missing kernels !!!
@@ -3319,9 +3319,9 @@ void blasfeo_hp_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int sdu_stack = K_MAX_STACK;
 	int k4 = (k0+3)/4*4;
 
-	struct blasfeo_pm_dmat tA, tB;
-	int sda, sdb;
-	int tA_size, tB_size;
+	struct blasfeo_pm_dmat tA, tB, tT;
+	int sda, sdb, sdt;
+	int tA_size, tB_size, tT_size;
 	void *mem;
 	char *mem_align;
 	int m1, n1, k1;
@@ -3551,11 +3551,13 @@ llnn_2:
 
 	tA_size = blasfeo_pm_memsize_dmat(ps, mc0, kc0);
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
+	tT_size = blasfeo_pm_memsize_dmat(ps, kc0, kc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
+	tT_size = (tT_size + 4096 - 1) / 4096 * 4096;
 	if(blasfeo_is_init()==0)
 		{
-		blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
+		blasfeo_malloc(&mem, tA_size+tB_size+tT_size+2*4096);
 		}
 	else
 		{
@@ -3566,13 +3568,17 @@ llnn_2:
 	blasfeo_pm_create_dmat(ps, mc0, kc0, &tA, (void *) mem_align);
 	mem_align += tA_size;
 
+	blasfeo_pm_create_dmat(ps, kc0, kc0, &tT, (void *) mem_align);
+	mem_align += tT_size;
+
 	mem_align += 4096-4*128;
 	blasfeo_pm_create_dmat(ps, nc0, kc0, &tB, (void *) mem_align);
 	mem_align += tB_size;
 
 	pA = tA.pA;
-	dA = tA.dA;
 	pB = tB.pA;
+	pT = tT.pA;
+	dT = tT.dA;
 
 	for(ii=0; ii<m; ii+=mleft)
 		{
@@ -3634,24 +3640,25 @@ llnn_2:
 
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
+			sdt = (kleft+4-1)/4*4; // XXX
 
 			// pack and tran A
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 #else
-			kernel_dpack_buffer_ut(kleft, A+ii+ll+(ii+ll)*lda, lda, pA, sda);
-			kernel_dpack_buffer_ft(kleft, mleft-ll-kleft, A+ii+ll+(ii+ll+kleft)*lda, lda, pA+kleft*sda, sda);
+			kernel_dpack_buffer_ut(kleft, A+ii+ll+(ii+ll)*lda, lda, pT, sdt);
+			kernel_dpack_buffer_ft(kleft, mleft-ll-kleft, A+ii+ll+(ii+ll+kleft)*lda, lda, pA, sda);
 #endif
 			// diag A
 			for(iii=0; iii<kleft; iii++)
-				dA[iii] = 1.0/A[ii+ll+iii+(ii+ll+iii)*lda];
+				dT[iii] = 1.0/A[ii+ll+iii+(ii+ll+iii)*lda];
 
 			for(jj=0; jj<n; jj+=nleft)
 				{
 
 				nleft = n-jj<nc ? n-jj : nc;
 
-				blasfeo_hp_dtrsm_llnn_m2(kleft, nleft, alpha, pA, sda, dA, C+ii+ll+jj*ldc, ldc, D+ii+ll+jj*ldd, ldd, pB, sdb);
-				blasfeo_hp_dgemm_nt_m2(mleft-ll-kleft, nleft, kleft, d_minvalpha, pA+kleft*sda, sda, pB, sdb, d_1, C+ii+ll+kleft+jj*ldc, ldc, D+ii+ll+kleft+jj*ldd, ldd);
+				blasfeo_hp_dtrsm_llnn_m2(kleft, nleft, alpha, pT, sdt, dT, C+ii+ll+jj*ldc, ldc, D+ii+ll+jj*ldd, ldd, pB, sdb);
+				blasfeo_hp_dgemm_nt_m2(mleft-ll-kleft, nleft, kleft, d_minvalpha, pA, sda, pB, sdb, d_1, C+ii+ll+kleft+jj*ldc, ldc, D+ii+ll+kleft+jj*ldd, ldd);
 
 				}
 
@@ -3686,11 +3693,13 @@ llnn_2:
 
 	tA_size = blasfeo_pm_memsize_dmat(ps, mc0, kc0);
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
+	tT_size = blasfeo_pm_memsize_dmat(ps, kc0, kc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
+	tT_size = (tT_size + 4096 - 1) / 4096 * 4096;
 	if(blasfeo_is_init()==0)
 		{
-		blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
+		blasfeo_malloc(&mem, tA_size+tB_size+tT_size+2*4096);
 		}
 	else
 		{
@@ -3701,13 +3710,17 @@ llnn_2:
 	blasfeo_pm_create_dmat(ps, mc0, kc0, &tA, (void *) mem_align);
 	mem_align += tA_size;
 
+	blasfeo_pm_create_dmat(ps, kc0, kc0, &tT, (void *) mem_align);
+	mem_align += tT_size;
+
 	mem_align += 4096-4*128;
 	blasfeo_pm_create_dmat(ps, nc0, kc0, &tB, (void *) mem_align);
 	mem_align += tB_size;
 
 	pA = tA.pA;
-	dA = tA.dA;
 	pB = tB.pA;
+	pT = tT.pA;
+	dT = tT.dA;
 
 	for(jj=0; jj<n; jj+=nleft)
 		{
@@ -3724,6 +3737,7 @@ llnn_2:
 
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
+			sdt = (kleft+4-1)/4*4; // XXX
 
 			for(ii=0; ii<kleft; ii+=mleft)
 				{
@@ -3733,15 +3747,15 @@ llnn_2:
 				// pack and tran A
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 #else
-				kernel_dpack_buffer_ut(mleft, A+ll+ii+(ll+ii)*lda, lda, pA+ii*ps, sdb);
+				kernel_dpack_buffer_ut(mleft, A+ll+ii+(ll+ii)*lda, lda, pT, sdt);
 				kernel_dpack_buffer_ft(ii, mleft, A+ll+(ll+ii)*lda, lda, pA, sda);
 #endif
 				// diag A
 				for(iii=0; iii<mleft; iii++)
-					dA[iii] = 1.0/A[ll+ii+iii+(ll+ii+iii)*lda];
+					dT[iii] = 1.0/A[ll+ii+iii+(ll+ii+iii)*lda];
 
 				blasfeo_hp_dgemm_nt_n2(mleft, nleft, ii, d_minvalpha, pA, sda, pB, sdb, d_1, C+ll+ii+jj*ldc, ldc, D+ll+ii+jj*ldd, ldd);
-				blasfeo_hp_dtrsm_llnn_m2(mleft, nleft, alpha, pA+ii*ps, sda, dA, D+ll+ii+jj*ldd, ldd, D+ll+ii+jj*ldd, ldd, pB+ii*ps, sdb);
+				blasfeo_hp_dtrsm_llnn_m2(mleft, nleft, alpha, pT, sdt, dT, D+ll+ii+jj*ldd, ldd, D+ll+ii+jj*ldd, ldd, pB+ii*ps, sdb);
 
 				}
 
@@ -4211,7 +4225,7 @@ void blasfeo_hp_dtrsm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int mc0, nc0, kc0;
 	int ldc1;
 	double beta1;
-	double *pA, *pB, *C1, *dA, *dB;
+	double *pA, *pB, *pT, *C1, *dA, *dB, *dT;
 
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 	const int ps = 4; // XXX TODO fix once implemented missing kernels !!!
@@ -4236,9 +4250,9 @@ void blasfeo_hp_dtrsm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int sdu_stack = K_MAX_STACK;
 	int k4 = (k0+3)/4*4;
 
-	struct blasfeo_pm_dmat tA, tB;
-	int sda, sdb;
-	int tA_size, tB_size;
+	struct blasfeo_pm_dmat tA, tB, tT;
+	int sda, sdb, sdt;
+	int tA_size, tB_size, tT_size;
 	void *mem;
 	char *mem_align;
 	int m1, n1, k1;
@@ -4456,11 +4470,13 @@ rutn_2:
 
 	tA_size = blasfeo_pm_memsize_dmat(ps, mc0, kc0);
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
+	tT_size = blasfeo_pm_memsize_dmat(ps, nc0, nc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
+	tT_size = (tT_size + 4096 - 1) / 4096 * 4096;
 	if(blasfeo_is_init()==0)
 		{
-		blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
+		blasfeo_malloc(&mem, tA_size+tB_size+tT_size+2*4096);
 		}
 	else
 		{
@@ -4475,9 +4491,13 @@ rutn_2:
 	blasfeo_pm_create_dmat(ps, nc0, kc0, &tB, (void *) mem_align);
 	mem_align += tB_size;
 
+	blasfeo_pm_create_dmat(ps, nc0, nc0, &tT, (void *) mem_align);
+	mem_align += tT_size;
+
 	pA = tA.pA;
 	pB = tB.pA;
-	dB = tB.dA;
+	pT = tT.pA;
+	dT = tT.dA;
 
 	for(ii=0; ii<m; ii+=mleft)
 		{
@@ -4495,6 +4515,7 @@ rutn_2:
 
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
+			sdt = (kleft+4-1)/4*4; // XXX
 
 			for(jj=0; jj<kleft; jj+=nleft)
 				{
@@ -4505,15 +4526,15 @@ rutn_2:
 				// pack and tran B
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 #else
-				kernel_dpack_buffer_lt(nleft, A+ll0+jj0+(ll0+jj0)*lda, lda, pB, sdb);
-				kernel_dpack_buffer_ft(jj, nleft, A+ll0+jj0+nleft+(ll0+jj0)*lda, lda, pB+nleft*ps, sdb);
+				kernel_dpack_buffer_lt(nleft, A+ll0+jj0+(ll0+jj0)*lda, lda, pT, sdt);
+				kernel_dpack_buffer_ft(jj, nleft, A+ll0+jj0+nleft+(ll0+jj0)*lda, lda, pB, sdb);
 #endif
 				// diag B
 				for(iii=0; iii<nleft; iii++)
-					dB[iii] = 1.0/A[ll0+jj0+iii+(ll0+jj0+iii)*lda];
+					dT[iii] = 1.0/A[ll0+jj0+iii+(ll0+jj0+iii)*lda];
 
-				blasfeo_hp_dgemm_nt_m2(mleft, nleft, jj, d_minvalpha, pA+(jj0+nleft)*ps, sda, pB+nleft*ps, sdb, d_1, C+ii+(ll0+jj0)*ldc, ldc, D+ii+(ll0+jj0)*ldd, ldd);
-				blasfeo_hp_dtrsm_rutn_m2(mleft, nleft, alpha, pB, sdb, dB, D+ii+(ll0+jj0)*ldd, ldd, D+ii+(ll0+jj0)*ldd, ldd, pA+jj0*ps, sda);
+				blasfeo_hp_dgemm_nt_m2(mleft, nleft, jj, d_minvalpha, pA+(jj0+nleft)*ps, sda, pB, sdb, d_1, C+ii+(ll0+jj0)*ldc, ldc, D+ii+(ll0+jj0)*ldd, ldd);
+				blasfeo_hp_dtrsm_rutn_m2(mleft, nleft, alpha, pT, sdt, dT, D+ii+(ll0+jj0)*ldd, ldd, D+ii+(ll0+jj0)*ldd, ldd, pA+jj0*ps, sda);
 
 				}
 
@@ -5013,7 +5034,7 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int mc0, nc0, kc0;
 	int ldc1;
 	double beta1;
-	double *pA, *pB, *C1, *dA, *dB;
+	double *pA, *pB, *pT, *C1, *dA, *dB, *dT;
 
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 	const int ps = 4; // XXX TODO fix once implemented missing kernels !!!
@@ -5038,9 +5059,9 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	int sdu_stack = K_MAX_STACK;
 	int k4 = (k0+3)/4*4;
 
-	struct blasfeo_pm_dmat tA, tB;
-	int sda, sdb;
-	int tA_size, tB_size;
+	struct blasfeo_pm_dmat tA, tB, tT;
+	int sda, sdb, sdt;
+	int tA_size, tB_size, tT_size;
 	void *mem;
 	char *mem_align;
 	int m1, n1, k1;
@@ -5230,11 +5251,13 @@ rltn_2:
 
 	tA_size = blasfeo_pm_memsize_dmat(ps, mc0, kc0);
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
+	tT_size = blasfeo_pm_memsize_dmat(ps, nc0, nc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
+	tT_size = (tT_size + 4096 - 1) / 4096 * 4096;
 	if(blasfeo_is_init()==0)
 		{
-		blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
+		blasfeo_malloc(&mem, tA_size+tB_size+tT_size+2*4096);
 		}
 	else
 		{
@@ -5249,9 +5272,13 @@ rltn_2:
 	blasfeo_pm_create_dmat(ps, nc0, kc0, &tB, (void *) mem_align);
 	mem_align += tB_size;
 
+	blasfeo_pm_create_dmat(ps, nc0, nc0, &tT, (void *) mem_align);
+	mem_align += tT_size;
+
 	pA = tA.pA;
 	pB = tB.pA;
-	dB = tB.dA;
+	pT = tT.pA;
+	dT = tT.dA;
 
 	for(ii=0; ii<m; ii+=mleft)
 		{
@@ -5268,6 +5295,7 @@ rltn_2:
 
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
+			sdt = (kleft+4-1)/4*4; // XXX
 
 			for(jj=0; jj<kleft; jj+=nleft)
 				{
@@ -5278,14 +5306,14 @@ rltn_2:
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
 #else
 				kernel_dpack_buffer_fn(nleft, jj, A+ll+jj+ll*lda, lda, pB, sdb);
-				kernel_dpack_buffer_ln(nleft, A+ll+jj+(ll+jj)*lda, lda, pB+jj*ps, sdb);
+				kernel_dpack_buffer_ln(nleft, A+ll+jj+(ll+jj)*lda, lda, pT, sdt);
 #endif
 				// diag B
 				for(iii=0; iii<nleft; iii++)
-					dB[iii] = 1.0/A[ll+jj+iii+(ll+jj+iii)*lda];
+					dT[iii] = 1.0/A[ll+jj+iii+(ll+jj+iii)*lda];
 
 				blasfeo_hp_dgemm_nt_m2(mleft, nleft, jj, d_minvalpha, pA, sda, pB, sdb, d_1, C+ii+(ll+jj)*ldc, ldc, D+ii+(ll+jj)*ldd, ldd);
-				blasfeo_hp_dtrsm_rltn_m2(mleft, nleft, alpha, pB+jj*ps, sdb, dB, D+ii+(ll+jj)*ldd, ldd, D+ii+(ll+jj)*ldd, ldd, pA+jj*ps, sda);
+				blasfeo_hp_dtrsm_rltn_m2(mleft, nleft, alpha, pT, sdt, dT, D+ii+(ll+jj)*ldd, ldd, D+ii+(ll+jj)*ldd, ldd, pA+jj*ps, sda);
 
 				}
 
