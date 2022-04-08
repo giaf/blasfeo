@@ -4515,13 +4515,14 @@ rutn_2:
 
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
-			sdt = (kleft+4-1)/4*4; // XXX
 
 			for(jj=0; jj<kleft; jj+=nleft)
 				{
 
 				nleft = kleft-jj<nc ? kleft-jj : nc;
 				jj0 = kleft-jj-nleft;
+
+				sdt = (nleft+4-1)/4*4; // XXX
 
 				// pack and tran B
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
@@ -5295,12 +5296,13 @@ rltn_2:
 
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
-			sdt = (kleft+4-1)/4*4; // XXX
 
 			for(jj=0; jj<kleft; jj+=nleft)
 				{
 
 				nleft = kleft-jj<nc ? kleft-jj : nc;
+
+				sdt = (nleft+4-1)/4*4; // XXX
 
 				// pack and tran B
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)

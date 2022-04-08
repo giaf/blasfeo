@@ -3686,7 +3686,6 @@ rutn_2:
 
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
-			sdt = (kleft+4-1)/4*4; // XXX
 
 			// pack B
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
@@ -3717,6 +3716,8 @@ rutn_2:
 				{
 
 				nleft = kleft-jj<nc ? kleft-jj : nc;
+
+				sdt = (nleft+4-1)/4*4; // XXX
 
 				// pack and tran A
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)
