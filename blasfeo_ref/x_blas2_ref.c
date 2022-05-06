@@ -241,7 +241,7 @@ void REF_GEMV_NT(int m, int n, REAL alpha_n, REAL alpha_t, struct XMAT *sA, int 
 			z_n[ii] = beta_n * y_n[ii];
 			}
 		}
-	if(beta_n==0.0)
+	if(beta_t==0.0)
 		{
 		for(ii=0; ii<n; ii++)
 			{
