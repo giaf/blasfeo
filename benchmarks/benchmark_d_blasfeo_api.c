@@ -885,7 +885,7 @@ int main()
 
 			for(rep=0; rep<nrep; rep++)
 				{
-				#if defined(EXTERNAL_BLAS_OPENBLAS) || defined(EXTERNAL_BLAS_NETLIB) || defined(EXTERNAL_BLAS_MKL)
+				#if defined(EXTERNAL_BLAS_OPENBLAS) || defined(EXTERNAL_BLAS_NETLIB) || defined(EXTERNAL_BLAS_MKL) || defined(EXTERNAL_BLAS_SYSTEM)
 //				dpotrf_(&c_l, &n, B2, &n, &info);
 				// dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, B, &n, &d_0, C, &n);
 				// dgemm_(&c_n, &c_n, &n, &n, &n, &d_1, A, &n, M, &n, &d_0, C, &n);

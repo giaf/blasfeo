@@ -51,14 +51,6 @@
 
 
 
-#if ( defined(EXTERNAL_BLAS_SYSTEM) | defined(EXTERNAL_BLAS_MKL) | defined(EXTERNAL_BLAS_OPENBLAS) | defined(EXTERNAL_BLAS_NETLIB) | defined(EXTERNAL_BLAS_BLIS) | defined(EXTERNAL_BLAS_ATLAS) )
-#define EXTERNAL_BLAS 1
-#else
-#define EXTERNAL_BLAS 0
-#endif
-
-
-
 //#define PRINT_DATA
 
 
@@ -149,7 +141,7 @@ static void d_back_ric_trf_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *
 
 
 
-#if ( EXTERNAL_BLAS!=0 | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
+#if ( !defined(EXTERNAL_BLAS_NONE) | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
 static void d_back_ric_trf(int N, int *nx, int *nu, double **hBAbt, double **hRSQrq, double **hL, double **hwork_mat)
 	{
 
@@ -276,7 +268,7 @@ static void d_back_ric_trs_libstr(int N, int *nx, int *nu, struct blasfeo_dmat *
 
 
 
-#if ( EXTERNAL_BLAS!=0 | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
+#if ( !defined(EXTERNAL_BLAS_NONE) | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
 static void d_back_ric_trs(int N, int *nx, int *nu, double **hBAbt, double **hb, double **hrq, double **hL, double **hPb, double **hux, double **hpi, double **hwork_vec)
 	{
 //	printf("\nblas api\n");
@@ -768,7 +760,7 @@ int main()
 * BLAS API
 ************************************************/
 
-#if ( EXTERNAL_BLAS!=0 | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
+#if ( !defined(EXTERNAL_BLAS_NONE) | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
 
 #ifdef PRINT_DATA
 	printf("\n*** BLAS_API ***\n\n");
@@ -936,7 +928,7 @@ int main()
 	time_trs = blasfeo_toc(&timer) / nrep;
 
 	/* BLAS API */
-#if ( EXTERNAL_BLAS!=0 | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
+#if ( !defined(EXTERNAL_BLAS_NONE) | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
 
 	// factorization
 	blasfeo_tic(&timer);
@@ -974,7 +966,7 @@ int main()
 //	for(ii=0; ii<=N; ii++)
 //		blasfeo_print_exp_dmat(nu[ii]+nx[ii]+1, nu[ii]+nx[ii], &hsL[ii], 0, 0);
 
-#if ( EXTERNAL_BLAS!=0 | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
+#if ( !defined(EXTERNAL_BLAS_NONE) | (defined(BLAS_API) & defined(FORTRAN_BLAS_API)) )
 	printf("\nBLAS API\n\n");
 	printf("\nux = \n\n");
 	for(ii=0; ii<=N; ii++)

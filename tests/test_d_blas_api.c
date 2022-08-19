@@ -54,7 +54,7 @@ int globn = 5;
 
 
 
-//double cblas_ddot(int, double*, int, double*, int);
+//double blasfeo_cblas_ddot(int, double*, int, double*, int);
 
 
 
@@ -135,8 +135,8 @@ int main()
 
 
 //	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-//	blas_dsyrk(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
-//	blas_dpotrf(&c_l, &n, D, &n, &info);
+//	blasfeo_blas_dsyrk(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
+//	blasfeo_blas_dpotrf(&c_l, &n, D, &n, &info);
 //	dsyrk_(&c_u, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
 //	dpotrf_(&c_u, &n, D, &n, &info);
 //	d_print_mat(n, n, D, n);
@@ -149,6 +149,8 @@ int main()
 	printf("\nBLAS\n");
 
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
+
+	#if defined(EXTERNAL_BLAS_OPENBLAS) || defined(EXTERNAL_BLAS_NETLIB) || defined(EXTERNAL_BLAS_MKL) || defined(EXTERNAL_BLAS_SYSTEM)
 
 #if 0
 //	dgemm_(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
@@ -210,13 +212,15 @@ int main()
 #if 0
 	C[0] = ddot_(&n, A, &i_1, A, &i_1);
 //	C[0] = ddot_(&n, A, &n, A, &n);
-//	C[0] = cblas_ddot(n, A, i_1, A, i_1);
+//	C[0] = blasfeo_cblas_ddot(n, A, i_1, A, i_1);
 #endif
 
 #if 0
 	for(ii=0; ii<n; ii++) C[ii] = A[ii];
 	daxpy_(&n, &d_1, A, &i_1, C, &i_1);
 #endif
+
+	#endif
 
 //	printf("\ninfo %d\n", info);
 //	d_print_mat(n, n, A, lda);
@@ -241,69 +245,69 @@ int main()
 	for(ii=0; ii<n*n; ii++) C2[ii] = -1;
 
 #if 0
-//	blas_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
+//	blasfeo_blas_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
 	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-	blas_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
-//	blas_dpotrf(&c_l, &m0, C, &n, &info);
-//	blas_dposv(&c_u, &m0, &n0, C, &n, D, &n, &info);
+	blasfeo_blas_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
+//	blasfeo_blas_dpotrf(&c_l, &m0, C, &n, &info);
+//	blasfeo_blas_dposv(&c_u, &m0, &n0, C, &n, D, &n, &info);
 	d_print_mat(n, n, C, ldc);
 	d_print_mat(n, n, D, ldd);
 #endif
 
 #if 0
-	blas_dgemm(&c_n, &c_n, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C2, &n);
+	blasfeo_blas_dgemm(&c_n, &c_n, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C2, &n);
 #endif
 
 #if 1
-	blas_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C2, &n);
+	blasfeo_blas_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C2, &n);
 #endif
 
 #if 0
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	blas_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+	blasfeo_blas_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
 #if 0
 	for(ii=0; ii<n*n;  ii++) C2[ii] = A[ii];
-	blas_dtrmm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+	blasfeo_blas_dtrmm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
 #endif
 
 #if 0
 	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-	blas_dgemm(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, A, &n, &d_1, C, &n);
-	blas_dgetrf(&m0, &n0, C, &n, ipiv, &info);
-//	blas_dgetrs(&c_t, &m0, &n0, C, &n, ipiv, D, &n, &info);
-//	blas_dgesv(&m0, &n0, C, &n, ipiv, D, &n, &info);
+	blasfeo_blas_dgemm(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, A, &n, &d_1, C, &n);
+	blasfeo_blas_dgetrf(&m0, &n0, C, &n, ipiv, &info);
+//	blasfeo_blas_dgetrs(&c_t, &m0, &n0, C, &n, ipiv, D, &n, &info);
+//	blasfeo_blas_dgesv(&m0, &n0, C, &n, ipiv, D, &n, &info);
 	int_print_mat(1, n, ipiv, 1);
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
 #endif
 
 #if 0
-	C2[0] = blas_ddot(&n, A, &i_1, A, &i_1);
-//	C2[0] = blas_ddot(&n, A, &n, A, &n);
+	C2[0] = blasfeo_blas_ddot(&n, A, &i_1, A, &i_1);
+//	C2[0] = blasfeo_blas_ddot(&n, A, &n, A, &n);
 #endif
 
 #if 0
 	for(ii=0; ii<n; ii++) C2[ii] = A[ii];
-	blas_daxpy(&n, &d_1, A, &i_1, C2, &i_1);
+	blasfeo_blas_daxpy(&n, &d_1, A, &i_1, C2, &i_1);
 #endif
 
 //	printf("\ninfo %d\n", info);
@@ -316,7 +320,7 @@ int main()
 	for(ii=0; ii<globm*globn; ii++)
 		C[ii] = globA[ii];
 	d_print_mat(globm, globn, C, globm);
-	blas_dgetrf(&globm, &globn, C, &globm, ipiv, &info);
+	blasfeo_blas_dgetrf(&globm, &globn, C, &globm, ipiv, &info);
 	d_print_mat(globm, globn, C, globm);
 	int_print_mat(1, n, ipiv, 1);
 #endif

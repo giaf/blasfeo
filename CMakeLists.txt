@@ -45,18 +45,18 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 # enable_language(C ASM)
 
 
-# Target architecture
-# set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")
-# set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")
-# set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")
-# set(TARGET X64_INTEL_CORE CACHE STRING "Target architecture")
-# set(TARGET X64_AMD_BULLDOZER CACHE STRING "Target architecture")
-# set(TARGET ARMV8A_ARM_CORTEX_A57 CACHE STRING "Target architecture")
-# set(TARGET ARMV8A_ARM_CORTEX_A53 CACHE STRING "Target architecture")
-# set(TARGET ARMV7A_ARM_CORTEX_A15 CACHE STRING "Target architecture")
-# set(TARGET ARMV7A_ARM_CORTEX_A9 CACHE STRING "Target architecture")
-# set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")
-set(TARGET GENERIC CACHE STRING "Target architecture")
+# Select target architecture
+# set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")    # attempts at finding the best TARGET among selected architectures
+# set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")    # x86_64 architecture with AVX2 and FMA, optimized for Intel Haswell, Skylake and AMD Zen, Zen2, Zen3
+# set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")    # x86_64 architecture with AVX, optimized for Intel Sandy-Bridge
+# set(TARGET X64_INTEL_CORE CACHE STRING "Target architecture")    # x86_64 architecture with SSE3, optimized for Intel Core
+# set(TARGET X64_AMD_BULLDOZER CACHE STRING "Target architecture")    # x86_64 architecture with AVX and FMA, optimized for AMD Bulldozer
+# set(TARGET ARMV8A_ARM_CORTEX_A57 CACHE STRING "Target architecture")    # ARMv8A architecture with NEON, optimized for ARM Cortex A57, A72
+# set(TARGET ARMV8A_ARM_CORTEX_A53 CACHE STRING "Target architecture")    # ARMv8A architecture with NEON, optimized for ARM Cortex A55
+# set(TARGET ARMV7A_ARM_CORTEX_A15 CACHE STRING "Target architecture")    # ARMv7A architecture with NEON, optimized for ARM Cortex A15
+# set(TARGET ARMV7A_ARM_CORTEX_A9 CACHE STRING "Target architecture")    # ARMv7A architecture with NEON, optimized for ARM Cortex A9
+# set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")    # ARMv7A architecture with NEON, optimized for ARM Cortex A7
+set(TARGET GENERIC CACHE STRING "Target architecture")   # generic architecture, plain C code running on virtually every target but not specialized to any. Choose one of the above optimized targets for better performance on specific architectures
 
 # Select back-end linear lagebra version (LA) to implement BLASFEO API:
 # HIGH_PERFORMANCE : target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
@@ -81,18 +81,21 @@ set(BLAS_API ON CACHE BOOL "Compile BLAS API")
 #set(BLAS_API OFF CACHE BOOL "Compile BLAS API")
 
 # Export standard FORTRAN namings for BLAS API routines
-# OFF : routines namings are in the form blasfeo_dgemm
-# ON  : routines namings are in the form dgemm_
+# OFF : routines namings are in the form blasfeo_blas_dgemm and blasfeo_lapack_dpotrf
+# ON  : routines namings are in the form dgemm_ and dpotrf_
+# and export standard C namings for CBLAS API routines
+# OFF : routines namings are in the form blasfeo_cblas_dgemm
+# ON  : routines namings are in the form cblas_dgemm
 set(FORTRAN_BLAS_API OFF CACHE BOOL "Standard fortran BLAS API")
 
-# BLAS and LAPACK version (for LA=EXTERNAL_BLAS_WRAPPER in BLASFEO or for BLASFEO_BENCHMARS=ON)
-set(EXTERNAL_BLAS 0 CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS OPENBLAS CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS NETLIB CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS MKL CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS BLIS CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS ATLAS CACHE STRING "Reference blas to use")
-# set(EXTERNAL_BLAS ARMPL CACHE STRING "Reference blas to use")
+# BLAS and LAPACK version (for LA=EXTERNAL_BLAS_WRAPPER in BLASFEO or for BLASFEO_TESTING=ON or BLASFEO_BENCHMARS=ON)
+set(EXTERNAL_BLAS 0 CACHE STRING "External blas to use")
+# set(EXTERNAL_BLAS OPENBLAS CACHE STRING "External blas to use")
+# set(EXTERNAL_BLAS NETLIB CACHE STRING "External blas to use")
+# set(EXTERNAL_BLAS MKL CACHE STRING "External blas to use")
+# set(EXTERNAL_BLAS BLIS CACHE STRING "External blas to use")
+# set(EXTERNAL_BLAS ATLAS CACHE STRING "External blas to use")
+# set(EXTERNAL_BLAS ARMPL CACHE STRING "External blas to use")
 
 # Stack buffer size (malloc for larger)
 set(K_MAX_STACK 300 CACHE STRING "Maximum k value using stack memory")
@@ -320,6 +323,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows" OR CMAKE_SYSTEM_NAME MATCHES "CYGWIN")
 endif()
 
 # External BLAS flags
+# XXX hard encode link to external blas installation
 set(C_FLAGS_BLAS_0        "-DEXTERNAL_BLAS_NONE")
 set(C_FLAGS_BLAS_OPENBLAS "-DEXTERNAL_BLAS_OPENBLAS -I/opt/openblas/include")
 set(C_FLAGS_BLAS_BLIS     "-DEXTERNAL_BLAS_BLIS -std=gnu99 -I/opt/blis/include/blis")
@@ -1199,6 +1203,29 @@ install(EXPORT blasfeoConfig DESTINATION cmake)
 
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
+
+
+# XXX hard encode link to external blas installation
+# TODO use find BLAS instead !!!
+if(${EXTERNAL_BLAS} MATCHES OPENBLAS)
+	set(EXTERNAL_BLAS_LIBRARIES /opt/openblas/lib/libopenblas.a -pthread -lgfortran -lm)
+elseif(${EXTERNAL_BLAS} MATCHES BLIS)
+	set(EXTERNAL_BLAS_LIBRARIES /opt/netlib/liblapack.a /opt/blis/lib/libblis.a -fopenmp -lgfortran -lm)
+elseif(${EXTERNAL_BLAS} MATCHES NETLIB)
+	set(EXTERNAL_BLAS_LIBRARIES /opt/netlib/liblapack.a /opt/netlib/libblas.a -lgfortran -lm)
+elseif(${EXTERNAL_BLAS} MATCHES MKL)
+	set(EXTERNAL_BLAS_LIBRARIES -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a /opt/intel/mkl/lib/intel64/libmkl_core.a /opt/intel/mkl/lib/intel64/libmkl_sequential.a -Wl,--end-group -ldl -lpthread -lm)
+elseif(${EXTERNAL_BLAS} MATCHES ATLAS)
+	set(EXTERNAL_BLAS_LIBRARIES /opt/atlas/lib/liblapack.a /opt/atlas/lib/libcblas.a /opt/atlas/lib/libf77blas.a /opt/atlas/lib/libatlas.a -lgfortran -lm)
+elseif(${EXTERNAL_BLAS} MATCHES ARMPL)
+	set(EXTERNAL_BLAS_LIBRARIES /opt/arm/armpl_20.3_gcc-7.1/lib/libarmpl.a)
+elseif(${EXTERNAL_BLAS} MATCHES 0)
+	set(EXTERNAL_BLAS_LIBRARIES )
+else()
+	message(FATAL_ERROR
+		"\nNo reference blas selected"
+		"\nUse i.e. -DEXTERNAL_BLAS=OPENBLAS or -DEXTERNAL_BLAS=0 if none is needed")
+endif()
 
 # tests
 if(BLASFEO_TESTING MATCHES ON)
