@@ -940,6 +940,7 @@ NAME:
 	mulpd			%xmm0, %xmm12
 	movhpd			%xmm12, %xmm0
 
+	// AVX instructions below are not compiled due to `#if 0` above
 	movapd			32(%r10), %ymm13
 	vblendpd		$ 0x3, %ymm14, %ymm13, %ymm13
 	vpermilpd		$ 0x3, %ymm0, %ymm12
@@ -1012,8 +1013,8 @@ NAME:
 	// beta
 	movddup	0(%r11), %xmm15
 
-	vxorpd		%xmm14, %xmm14, %xmm14 // 0.0
-	vucomisd	%xmm14, %xmm15 // beta==0.0 ?
+	xorpd		%xmm14, %xmm14 // 0.0
+	ucomisd		%xmm14, %xmm15 // beta==0.0 ?
 	je			0f // end
 
 	movupd	0(%r12), %xmm14
@@ -1077,9 +1078,9 @@ NAME:
 	// beta
 	movddup	0(%r11), %xmm15
 
-	vxorpd		%xmm14, %xmm14, %xmm14 // 0.0
-	vucomisd	%xmm14, %xmm15 // beta==0.0 ?
-	je			0f // end
+	xorpd	%xmm14, %xmm14 // 0.0
+	ucomisd	%xmm14, %xmm15 // beta==0.0 ?
+	je		0f // end
 
 	movupd	0(%r12), %xmm14
 	mulpd	%xmm15, %xmm14
