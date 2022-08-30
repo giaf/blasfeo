@@ -230,7 +230,7 @@ void blasfeo_lapack_dlatrd(char *uplo, int *pn, int *pnb, double *A, int *plda, 
 					blasfeo_blas_dgemv("Transpose", &i_t0, &i_t1, &d_1, &A[0+ii*lda], &lda, &A[0+(ii-1)*lda], &i_1, &d_0, &w[ii+(iw-1)*ldw], &i_1);
 					i_t0 = ii - 1;
 					i_t1 = n - ii;
-					blasfeo_blas_dgemv("No transpose", &i_t0, &i_t1, &d_m1, &w[0+iw*ldw+1], &ldw, &w[ii+(iw-1)*ldw], &i_1, &d_1, &w[0+(iw-1)*ldw], &i_1);
+					blasfeo_blas_dgemv("No transpose", &i_t0, &i_t1, &d_m1, &w[0+iw*ldw], &ldw, &w[ii+(iw-1)*ldw], &i_1, &d_1, &w[0+(iw-1)*ldw], &i_1);
 					}
 				i_t0 = ii - 1;
 				dscal_(&i_t0, &tau[ii-2], &w[0+(iw-1)*ldw], &i_1);
