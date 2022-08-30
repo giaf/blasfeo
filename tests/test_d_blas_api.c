@@ -55,6 +55,7 @@ int globn = 5;
 
 
 //double cblas_ddot(int, double*, int, double*, int);
+//void dsyevd_(char *jobz, char *uplo, int *n, double *A, int *lda, double *w, double *work, int *lwork, int *iwork, int *liwork, int *info);
 
 
 
@@ -78,7 +79,8 @@ int main()
 
 	double *B = malloc(n*n*sizeof(double));
 	for(ii=0; ii<n*n; ii++)
-		B[ii] = -0.0;
+//		B[ii] = -0.0;
+		B[ii] = 0.0;
 	for(ii=0; ii<n; ii++)
 		B[ii*(n+1)] = 1.0;
 	int ldb = n;
@@ -161,11 +163,11 @@ int main()
 	d_print_mat(n, n, D, ldd);
 #endif
 
-#if 0
+#if 1
 	dgemm_(&c_n, &c_n, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C, &n);
 #endif
 
-#if 1
+#if 0
 	dsyrk_(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C, &n);
 #endif
 
@@ -218,6 +220,29 @@ int main()
 	daxpy_(&n, &d_1, A, &i_1, C, &i_1);
 #endif
 
+#if 0
+	d_print_mat(n, n, B, n);
+	char c_v = 'v';
+	double *lambda = malloc(n*sizeof(double));
+	double tmp_work = 0;
+	int tmp_iwork = 0;
+	int lwork = -1;
+	int liwork = -1;
+	dsyevd_(&c_v, &c_l, &n, B, &n, lambda, &tmp_work, &lwork, &tmp_iwork, &liwork, &info);
+	lwork = tmp_work;
+	liwork = tmp_iwork;
+	printf("\ninfo %d lwork %d liwork %d\n", info, lwork, liwork);
+	double *work = malloc(lwork*sizeof(double));
+	int *iwork = malloc(liwork*sizeof(int));
+	dsyevd_(&c_v, &c_l, &n, B, &n, lambda, work, &lwork, iwork, &liwork, &info);
+	d_print_mat(1, n, lambda, 1);
+	d_print_mat(n, n, B, n);
+	free(lambda);
+	free(work);
+	free(iwork);
+	exit(1);
+#endif
+
 //	printf("\ninfo %d\n", info);
 //	d_print_mat(n, n, A, lda);
 //	d_print_mat(n, n, B, ldb);
@@ -241,69 +266,69 @@ int main()
 	for(ii=0; ii<n*n; ii++) C2[ii] = -1;
 
 #if 0
-//	blas_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
+//	blasfeo_blas_dgemm(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
 	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-	blas_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
-//	blas_dpotrf(&c_l, &m0, C, &n, &info);
-//	blas_dposv(&c_u, &m0, &n0, C, &n, D, &n, &info);
+	blasfeo_blas_dgemm(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
+//	blasfeo_lapack_dpotrf(&c_l, &m0, C, &n, &info);
+//	blasfeo_lapack_dposv(&c_u, &m0, &n0, C, &n, D, &n, &info);
 	d_print_mat(n, n, C, ldc);
 	d_print_mat(n, n, D, ldd);
 #endif
 
-#if 0
-	blas_dgemm(&c_n, &c_n, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C2, &n);
+#if 1
+	blasfeo_blas_dgemm(&c_n, &c_n, &m0, &n0, &k0, &alpha, B, &n, A, &n, &beta, C2, &n);
 #endif
 
-#if 1
-	blas_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C2, &n);
+#if 0
+	blasfeo_blas_dsyrk(&c_u, &c_t, &m0, &k0, &alpha, A, &n, &beta, C2, &n);
 #endif
 
 #if 0
 	for(ii=0; ii<n*n;  ii++) C[ii] = B[ii];
-	blas_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
+	blasfeo_blas_dtrsm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, D, &n, C, &n);
 #endif
 
 #if 0
 	for(ii=0; ii<n*n;  ii++) C2[ii] = A[ii];
-	blas_dtrmm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
-//	blas_dtrmm(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+	blasfeo_blas_dtrmm(&c_l, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_l, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_l, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_l, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_l, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_l, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_u, &c_n, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_u, &c_n, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_u, &c_t, &c_n, &m0, &n0, &alpha, A, &n, C2, &n);
+//	blasfeo_blas_dtrmm(&c_r, &c_u, &c_t, &c_u, &m0, &n0, &alpha, A, &n, C2, &n);
 #endif
 
 #if 0
 	for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-	blas_dgemm(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, A, &n, &d_1, C, &n);
-	blas_dgetrf(&m0, &n0, C, &n, ipiv, &info);
-//	blas_dgetrs(&c_t, &m0, &n0, C, &n, ipiv, D, &n, &info);
-//	blas_dgesv(&m0, &n0, C, &n, ipiv, D, &n, &info);
+	blasfeo_blas_dgemm(&c_n, &c_t, &n, &n, &n, &d_1, A, &n, A, &n, &d_1, C, &n);
+	blasfeo_lapack_dgetrf(&m0, &n0, C, &n, ipiv, &info);
+//	blasfeo_lapack_dgetrs(&c_t, &m0, &n0, C, &n, ipiv, D, &n, &info);
+//	blasfeo_lapack_dgesv(&m0, &n0, C, &n, ipiv, D, &n, &info);
 	int_print_mat(1, n, ipiv, 1);
 	d_print_mat(n, n, C, ldc);
 //	d_print_mat(n, n, D, ldd);
 #endif
 
 #if 0
-	C2[0] = blas_ddot(&n, A, &i_1, A, &i_1);
-//	C2[0] = blas_ddot(&n, A, &n, A, &n);
+	C2[0] = blasfeo_blas_ddot(&n, A, &i_1, A, &i_1);
+//	C2[0] = blasfeo_blas_ddot(&n, A, &n, A, &n);
 #endif
 
 #if 0
 	for(ii=0; ii<n; ii++) C2[ii] = A[ii];
-	blas_daxpy(&n, &d_1, A, &i_1, C2, &i_1);
+	blasfeo_blas_daxpy(&n, &d_1, A, &i_1, C2, &i_1);
 #endif
 
 //	printf("\ninfo %d\n", info);
@@ -316,7 +341,7 @@ int main()
 	for(ii=0; ii<globm*globn; ii++)
 		C[ii] = globA[ii];
 	d_print_mat(globm, globn, C, globm);
-	blas_dgetrf(&globm, &globn, C, &globm, ipiv, &info);
+	blasfeo_lapack_dgetrf(&globm, &globn, C, &globm, ipiv, &info);
 	d_print_mat(globm, globn, C, globm);
 	int_print_mat(1, n, ipiv, 1);
 #endif
