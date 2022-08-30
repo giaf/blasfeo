@@ -1221,6 +1221,21 @@ ifeq ($(FORTRAN_BLAS_API), 1)
 	echo "#define FORTRAN_BLAS_API" >> ./include/blasfeo_target.h
 	echo "#endif" >> ./include/blasfeo_target.h
 endif
+ifeq ($(OS), LINUX)
+	echo "#ifndef OS_LINUX" >> ./include/blasfeo_target.h
+	echo "#define OS_LINUX" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
+ifeq ($(OS), MAC)
+	echo "#ifndef OS_MAC" >> ./include/blasfeo_target.h
+	echo "#define OS_MAC" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
+ifeq ($(OS), WINDOWS)
+	echo "#ifndef OS_WINDOWS" >> ./include/blasfeo_target.h
+	echo "#define OS_WINDOWS" >> ./include/blasfeo_target.h
+	echo "#endif" >> ./include/blasfeo_target.h
+endif
 
 
 # install static library & headers
@@ -1242,6 +1257,9 @@ install_shared:
 	cp -f ./lib/libblasfeo.so $(PREFIX)/blasfeo/lib/
 	mkdir -p $(PREFIX)/blasfeo/include
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
+ifeq ($(CBLAS_API), 1)
+	cp -f ./netlib/cblas/include/*.h $(PREFIX)/blasfeo/include/
+endif
 
 
 # clean .o files
