@@ -56,6 +56,7 @@ int globn = 5;
 
 //double cblas_ddot(int, double*, int, double*, int);
 //void dsyevd_(char *jobz, char *uplo, int *n, double *A, int *lda, double *w, double *work, int *lwork, int *iwork, int *liwork, int *info);
+//double blasfeo_cblas_ddot(int, double*, int, double*, int);
 
 
 
@@ -137,8 +138,8 @@ int main()
 
 
 //	for(ii=0; ii<n*n; ii++) D[ii] = B[ii];
-//	blas_dsyrk(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
-//	blas_dpotrf(&c_l, &n, D, &n, &info);
+//	blasfeo_blas_dsyrk(&c_l, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
+//	blasfeo_blas_dpotrf(&c_l, &n, D, &n, &info);
 //	dsyrk_(&c_u, &c_n, &n, &n, &d_1, A, &n, &d_1, D, &n);
 //	dpotrf_(&c_u, &n, D, &n, &info);
 //	d_print_mat(n, n, D, n);
@@ -151,6 +152,8 @@ int main()
 	printf("\nBLAS\n");
 
 	for(ii=0; ii<n*n; ii++) C[ii] = -1;
+
+	#if defined(EXTERNAL_BLAS_OPENBLAS) || defined(EXTERNAL_BLAS_NETLIB) || defined(EXTERNAL_BLAS_MKL) || defined(EXTERNAL_BLAS_SYSTEM)
 
 #if 0
 //	dgemm_(&ta, &tb, &m0, &n0, &k0, &alpha, A, &n, B, &n, &beta, C, &n);
@@ -212,7 +215,7 @@ int main()
 #if 0
 	C[0] = ddot_(&n, A, &i_1, A, &i_1);
 //	C[0] = ddot_(&n, A, &n, A, &n);
-//	C[0] = cblas_ddot(n, A, i_1, A, i_1);
+//	C[0] = blasfeo_cblas_ddot(n, A, i_1, A, i_1);
 #endif
 
 #if 0
@@ -242,6 +245,8 @@ int main()
 	free(iwork);
 	exit(1);
 #endif
+
+	#endif
 
 //	printf("\ninfo %d\n", info);
 //	d_print_mat(n, n, A, lda);

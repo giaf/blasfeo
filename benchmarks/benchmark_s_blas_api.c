@@ -390,8 +390,12 @@ openblas_set_num_threads(1);
 		for(rep_in=0; rep_in<nrep_in; rep_in++)
 			{
 
+			#if defined(EXTERNAL_BLAS_OPENBLAS) || defined(EXTERNAL_BLAS_NETLIB) || defined(EXTERNAL_BLAS_MKL) || defined(EXTERNAL_BLAS_SYSTEM)
+
 //			for(ii=0; ii<n*n; ii++) C[ii] = B[ii];
 //			dgemm_(&ta, &tb, &n, &n, &n, &alpha, A, &n, A, &n, &beta, C, &n);
+
+			#endif
 
 			// BENCHMARK_BLAS
 			blasfeo_tic(&timer);
@@ -399,6 +403,10 @@ openblas_set_num_threads(1);
 			// averaged repetions
 			for(rep=0; rep<nrep; rep++)
 				{
+
+				#if defined(EXTERNAL_BLAS_OPENBLAS) || defined(EXTERNAL_BLAS_NETLIB) || defined(EXTERNAL_BLAS_MKL) || defined(EXTERNAL_BLAS_SYSTEM)
+
+				sgemm_(&c_n, &c_n, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n);
 
 //				sgemm_(&c_n, &c_n, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
 //				sgemm_(&c_n, &c_t, &fix_m, &fix_n, &fix_k, &alpha, A, &n, B, &n, &beta, C, &n);
@@ -414,6 +422,8 @@ openblas_set_num_threads(1);
 //				for(ii=0; ii<n*n; ii++) D[ii] = C[ii];
 //				dpotrf_(&uplo, &n, D, &n, &info);
 //				dpotrf_(&uplo, &n, B, &n, &info);
+
+				#endif
 
 				}
 

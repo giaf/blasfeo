@@ -1351,7 +1351,7 @@ void blasfeo_hp_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 //	if(m>=12 | n>=12 | m>K_MAX_STACK)
 #endif
 		{
-#if defined(BLASFEO_REF_API)
+#if defined( BLASFEO_REF_API) & ! ( defined(BLAS_API) & defined(MF_PANELMAJ) )
 		blasfeo_ref_dgetrf_np(m, n, sC, ci, cj, sD, di, dj);
 		return;
 #else

@@ -89,25 +89,25 @@ void blasfeo_dgemv_t(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai
 void blasfeo_dtrsv_lnn_mn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
 // z <= inv( A^T ) * x, A (m)x(n)
 void blasfeo_dtrsv_ltn_mn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
-// z <= inv( A ) * x, A (m)x(m) lower, not_transposed, not_unit
+// z <= inv( A ) * x, A (m)x(m) lower, not_transposed
 void blasfeo_dtrsv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
-// z <= inv( A ) * x, A (m)x(m) lower, not_transposed, unit
+// z <= inv( A ) * x, A (m)x(m) lower, not_transposed, assuming unit diagonal
 void blasfeo_dtrsv_lnu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
-// z <= inv( A^T ) * x, A (m)x(m) lower, transposed, not_unit
+// z <= inv( A^T ) * x, A (m)x(m) lower, transposed
 void blasfeo_dtrsv_ltn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
-// z <= inv( A^T ) * x, A (m)x(m) lower, transposed, unit
+// z <= inv( A^T ) * x, A (m)x(m) lower, transposed, assuming unit diagonal
 void blasfeo_dtrsv_ltu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
-// z <= inv( A^T ) * x, A (m)x(m) upper, not_transposed, not_unit
+// z <= inv( A^T ) * x, A (m)x(m) upper, not_transposed
 void blasfeo_dtrsv_unn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
-// z <= inv( A^T ) * x, A (m)x(m) upper, transposed, not_unit
+// z <= inv( A^T ) * x, A (m)x(m) upper, transposed
 void blasfeo_dtrsv_utn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
 // z <= A * x ; A lower triangular
 void blasfeo_dtrmv_lnn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
-// z <= A * x ; A lower triangular, unit diagonal
+// z <= A * x ; A lower triangular, assuming unit diagonal
 void blasfeo_dtrmv_lnu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
 // z <= A^T * x ; A lower triangular
 void blasfeo_dtrmv_ltn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
-// z <= A^T * x ; A lower triangular, unit diagonal
+// z <= A^T * x ; A lower triangular, assuming unit diagonal
 void blasfeo_dtrmv_ltu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
 // z <= beta * y + alpha * A * x ; A upper triangular
 void blasfeo_dtrmv_unn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi);
@@ -168,68 +168,67 @@ void blasfeo_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int 
 #endif
 // D <= alpha * A * B ; A lower triangular
 void blasfeo_dtrmm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * A * B ; A lower triangular
+// D <= alpha * A * B ; A lower triangular assuming unit diagonal
 void blasfeo_dtrmm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * A^T * B ; A lower triangular
 void blasfeo_dtrmm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * A^T * B ; A lower triangular
+// D <= alpha * A^T * B ; A lower triangular assuming unit diagonal
 void blasfeo_dtrmm_lltu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * A * B ; A upper triangular
 void blasfeo_dtrmm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * A * B ; A upper triangular
+// D <= alpha * A * B ; A upper triangular assuming unit diagonal
 void blasfeo_dtrmm_lunu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * A^T * B ; A upper triangular
 void blasfeo_dtrmm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * A^T * B ; A upper triangular
+// D <= alpha * A^T * B ; A upper triangular assuming unit diagonal
 void blasfeo_dtrmm_lutu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * B * A ; A lower triangular
 void blasfeo_dtrmm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * B * A ; A lower triangular
+// D <= alpha * B * A ; A lower triangular assuming unit diagonal
 void blasfeo_dtrmm_rlnu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * B * A^T ; A lower triangular
 void blasfeo_dtrmm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * B * A^T ; A lower triangular
+// D <= alpha * B * A^T ; A lower triangular assuming unit diagonal
 void blasfeo_dtrmm_rltu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * B * A ; A upper triangular
 void blasfeo_dtrmm_runn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * B * A ; A upper triangular
+// D <= alpha * B * A ; A upper triangular assuming unit diagonal
 void blasfeo_dtrmm_runu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * B * A^T ; A upper triangular
 void blasfeo_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * B * A^T ; A upper triangular
+// D <= alpha * B * A^T ; A upper triangular assuming unit diagonal
 void blasfeo_dtrmm_rutu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * A^{-1} * B , with A lower triangular employint explicit inverse of diagonal
 // D <= alpha * A^{-1} * B , with A lower triangular employing explicit inverse of diagonal
 void blasfeo_dtrsm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * A^{-1} * B , with A lower triangular with unit diagonal
+// D <= alpha * A^{-1} * B , with A lower triangular assuming unit diagonal
 void blasfeo_dtrsm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * A^{-T} * B , with A lower triangular employing explicit inverse of diagonal
 void blasfeo_dtrsm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * A^{-T} * B , with A lower triangular with unit diagonal
+// D <= alpha * A^{-T} * B , with A lower triangular assuming unit diagonal
 void blasfeo_dtrsm_lltu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * A^{-1} * B , with A upper triangular employing explicit inverse of diagonal
 void blasfeo_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * A^{-1} * B , with A upper triangular with unit diagonal
+// D <= alpha * A^{-1} * B , with A upper triangular assuming unit diagonal
 void blasfeo_dtrsm_lunu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * A^{-T} * B , with A upper triangular employing explicit inverse of diagonal
 void blasfeo_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * A^{-T} * B , with A upper triangular with unit diagonal
+// D <= alpha * A^{-T} * B , with A upper triangular assuming unit diagonal
 void blasfeo_dtrsm_lutu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * B * A^{-1} , with A lower triangular employing explicit inverse of diagonal
 void blasfeo_dtrsm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * B * A^{-1} , with A lower triangular with unit diagonal
+// D <= alpha * B * A^{-1} , with A lower triangular assuming unit diagonal
 void blasfeo_dtrsm_rlnu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * B * A^{-T} , with A lower triangular employing explicit inverse of diagonal
 void blasfeo_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * B * A^{-T} , with A lower triangular with unit diagonal
+// D <= alpha * B * A^{-T} , with A lower triangular assuming unit diagonal
 void blasfeo_dtrsm_rltu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * B * A^{-1} , with A upper triangular employing explicit inverse of diagonal
 void blasfeo_dtrsm_runn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * B * A^{-1} , with A upper triangular with unit diagonal
+// D <= alpha * B * A^{-1} , with A upper triangular assuming unit diagonal
 void blasfeo_dtrsm_runu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= alpha * B * A^{-T} , with A upper triangular employing explicit inverse of diagonal
 void blasfeo_dtrsm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
-// D <= alpha * B * A^{-T} , with A upper triangular with unit diagonal
+// D <= alpha * B * A^{-T} , with A upper triangular assuming unit diagonal
 void blasfeo_dtrsm_rutu(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= beta * C + alpha * A * B^T + alpha * B * A^T; C, D lower triangular
 void blasfeo_dsyr2k_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);

@@ -32,73 +32,23 @@
 # Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             #
 #                                                                                                 #
 ###################################################################################################
+add_executable(benchmark_d_blasfeo benchmark_d_blasfeo_api.c)
+add_executable(benchmark_s_blasfeo benchmark_s_blasfeo_api.c)
 add_executable(benchmark_d_blas benchmark_d_blas_api.c)
 add_executable(benchmark_s_blas benchmark_s_blas_api.c)
 
-# link blas external blas implementations
-if(${EXTERNAL_BLAS} MATCHES OPENBLAS)
-	target_link_libraries(benchmark_d_blas
-		/opt/openblas/lib/libopenblas.a
-		-pthread -lgfortran -lm)
-	target_link_libraries(benchmark_s_blas
-		/opt/openblas/lib/libopenblas.a
-		-pthread -lgfortran -lm)
+if(CMAKE_C_COMPILER_ID MATCHES MSVC) # no explicit math library and no running BLAS (for now)
 
-elseif(${EXTERNAL_BLAS} MATCHES BLIS)
-	target_link_libraries(benchmark_d_blas
-		/opt/netlib/liblapack.a
-		/opt/blis/lib/libblis.a
-		-fopenmp -lgfortran -lm)
-	target_link_libraries(benchmark_s_blas
-		/opt/netlib/liblapack.a
-		/opt/blis/lib/libblis.a
-		-fopenmp -lgfortran -lm)
+	target_link_libraries(benchmark_d_blasfeo blasfeo)
+	target_link_libraries(benchmark_s_blasfeo blasfeo)
+	target_link_libraries(benchmark_d_blas blasfeo)
+	target_link_libraries(benchmark_s_blas blasfeo)
 
-elseif(${EXTERNAL_BLAS} MATCHES NETLIB)
-	target_link_libraries(benchmark_d_blas
-		/opt/netlib/liblapack.a
-		/opt/netlib/libblas.a
-		-lgfortran -lm)
-	target_link_libraries(benchmark_s_blas
-		/opt/netlib/liblapack.a
-		/opt/netlib/libblas.a
-		-lgfortran -lm)
+else() # add explicit math library
 
-elseif(${EXTERNAL_BLAS} MATCHES MKL)
-	target_link_libraries(benchmark_d_blas
-		-Wl,--start-group
-		/opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a
-		/opt/intel/mkl/lib/intel64/libmkl_core.a
-		/opt/intel/mkl/lib/intel64/libmkl_sequential.a
-		-Wl,--end-group -ldl -lpthread -lm)
-	target_link_libraries(benchmark_s_blas
-		-Wl,--start-group
-		/opt/intel/mkl/lib/intel64/libmkl_gf_lp64.a
-		/opt/intel/mkl/lib/intel64/libmkl_core.a
-		/opt/intel/mkl/lib/intel64/libmkl_sequential.a
-		-Wl,--end-group -ldl -lpthread -lm)
-
-elseif(${EXTERNAL_BLAS} MATCHES ATLAS)
-	target_link_libraries(benchmark_d_blas
-		/opt/atlas/lib/liblapack.a
-		/opt/atlas/lib/libcblas.a
-		/opt/atlas/lib/libf77blas.a
-		/opt/atlas/lib/libatlas.a
-		-lgfortran -lm)
-	target_link_libraries(benchmark_s_blas
-		/opt/atlas/lib/liblapack.a
-		/opt/atlas/lib/libcblas.a
-		/opt/atlas/lib/libf77blas.a
-		/opt/atlas/lib/libatlas.a
-		-lgfortran -lm)
-
-elseif(${EXTERNAL_BLAS} MATCHES 0)
-	target_link_libraries(benchmark_d_blas blasfeo -lm)
-	target_link_libraries(benchmark_s_blas blasfeo -lm)
-
-else()
-	message(FATAL_ERROR
-		"\nNo reference blas selected"
-		"\nUse i.e. -DEXTERNAL_BLAS=OPENBLAS or -DEXTERNAL_BLAS=0 to disable the comparison")
+	target_link_libraries(benchmark_d_blasfeo blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+	target_link_libraries(benchmark_s_blasfeo blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+	target_link_libraries(benchmark_d_blas blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+	target_link_libraries(benchmark_s_blas blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
 
 endif()

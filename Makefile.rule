@@ -97,7 +97,8 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 # ARMV7A_ARM_CORTEX_A7 : ARMv7A architecture with NEON-VFPv4 ISA (32 bit OS)
 # Code optimized for ARM Cortex A7.
 #
-# GENERIC : generic architecture, plain C code.
+# GENERIC : generic architecture, plain C code running on virtually every target but not specialized to any.
+# Choose one of the above optimized targets for better performance on specific architectures.
 #
 #
 # TARGET = X64_INTEL_SKYLAKE_X
@@ -151,8 +152,8 @@ MF = PANELMAJ
 BLAS_API = 1
 
 # Export standard FORTRAN namings for BLAS API routines
-# 0 : routines namings are in the form blasfeo_blas_dgemm
-# 1 : routines namings are in the form dgemm_
+# 0 : routines namings are in the form blasfeo_blas_dgemm and blasfeo_lapack_dpotrf
+# 1 : routines namings are in the form dgemm_ and dpotrf_
 # and export standard C namings for CBLAS API routines
 # 0 : routines namings are in the form blasfeo_cblas_dgemm
 # 1 : routines namings are in the form cblas_dgemm
@@ -474,7 +475,7 @@ endif
 
 CFLAGS += $(INCLUDE_EXTERNAL_BLAS)
 ifeq ($(EXTERNAL_BLAS), 0)
-CFLAGS  +=
+CFLAGS  += -DEXTERNAL_BLAS_NONE
 endif
 ifeq ($(EXTERNAL_BLAS), SYSTEM)
 CFLAGS  += -DEXTERNAL_BLAS_SYSTEM
