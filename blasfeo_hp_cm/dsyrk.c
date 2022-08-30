@@ -3143,7 +3143,7 @@ void blasfeo_hp_dsyrk_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 			pD[(ii+0)+(jj+0)*ldd] = beta * pC[(ii+0)+(jj+0)*ldc] + alpha * c_00;
 			pD[(ii+1)+(jj+0)*ldd] = beta * pC[(ii+1)+(jj+0)*ldc] + alpha * c_10;
 			pD[(ii+0)+(jj+1)*ldd] = beta * pC[(ii+0)+(jj+1)*ldc] + alpha * c_01;
-			pD[(jj+1)+(jj+1)*ldd] = beta * pC[(ii+1)+(jj+1)*ldc] + alpha * c_11;
+			pD[(ii+1)+(jj+1)*ldd] = beta * pC[(ii+1)+(jj+1)*ldc] + alpha * c_11;
 			}
 		for(; ii<m; ii++)
 			{
@@ -3223,7 +3223,7 @@ void blasfeo_hp_dsyrk_un(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 			pD[(ii+0)+(jj+0)*ldd] = beta * pC[(ii+0)+(jj+0)*ldc] + alpha * c_00;
 			pD[(ii+1)+(jj+0)*ldd] = beta * pC[(ii+1)+(jj+0)*ldc] + alpha * c_10;
 			pD[(ii+0)+(jj+1)*ldd] = beta * pC[(ii+0)+(jj+1)*ldc] + alpha * c_01;
-			pD[(jj+1)+(jj+1)*ldd] = beta * pC[(ii+1)+(jj+1)*ldc] + alpha * c_11;
+			pD[(ii+1)+(jj+1)*ldd] = beta * pC[(ii+1)+(jj+1)*ldc] + alpha * c_11;
 			}
 		// diagonal
 		c_00 = 0.0;
@@ -3318,7 +3318,7 @@ void blasfeo_hp_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 			pD[(ii+0)+(jj+0)*ldd] = beta * pC[(ii+0)+(jj+0)*ldc] + alpha * c_00;
 			pD[(ii+1)+(jj+0)*ldd] = beta * pC[(ii+1)+(jj+0)*ldc] + alpha * c_10;
 			pD[(ii+0)+(jj+1)*ldd] = beta * pC[(ii+0)+(jj+1)*ldc] + alpha * c_01;
-			pD[(jj+1)+(jj+1)*ldd] = beta * pC[(ii+1)+(jj+1)*ldc] + alpha * c_11;
+			pD[(ii+1)+(jj+1)*ldd] = beta * pC[(ii+1)+(jj+1)*ldc] + alpha * c_11;
 			}
 		// diagonal
 		c_00 = 0.0;
