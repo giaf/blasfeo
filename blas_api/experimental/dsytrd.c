@@ -327,9 +327,9 @@ void blasfeo_lapack_dsytrd(char *uplo, int *pn, double *A, int *plda, double *d,
 
 /*		Use unblocked code to reduce the last or only block */
 
-	i_t0 = n-ii;
-	blasfeo_lapack_dsytd2(uplo, &i_t0, &A[ii+ii*lda], &lda, &d[ii], &e[ii], &tau[ii], &iinfo);
-	}
+		i_t0 = n-ii;
+		blasfeo_lapack_dsytd2(uplo, &i_t0, &A[ii+ii*lda], &lda, &d[ii], &e[ii], &tau[ii], &iinfo);
+		}
 
 	work[0] = (double) lwkopt;
 	return;
