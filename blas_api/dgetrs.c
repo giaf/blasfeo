@@ -83,7 +83,7 @@ void blasfeo_lapack_dgetrs(char *trans, int *pm, int *pn, double *A, int *plda, 
 //	printf("\n%c\n", *trans);
 	if(*trans=='n' | *trans=='N')
 		{
-		blasfeo_lapack_dlaswp(pm, B, pldb, &i_1, pm, ipiv, &i_1);
+		blasfeo_lapack_dlaswp(pn, B, pldb, &i_1, pm, ipiv, &i_1);
 		blasfeo_blas_dtrsm(&c_l, &c_l, &c_n, &c_u, pm, pn, &d_1, A, plda, B, pldb);
 		blasfeo_blas_dtrsm(&c_l, &c_u, &c_n, &c_n, pm, pn, &d_1, A, plda, B, pldb);
 		}
@@ -91,7 +91,7 @@ void blasfeo_lapack_dgetrs(char *trans, int *pm, int *pn, double *A, int *plda, 
 		{
 		blasfeo_blas_dtrsm(&c_l, &c_u, &c_t, &c_n, pm, pn, &d_1, A, plda, B, pldb);
 		blasfeo_blas_dtrsm(&c_l, &c_l, &c_t, &c_u, pm, pn, &d_1, A, plda, B, pldb);
-		blasfeo_lapack_dlaswp(pm, B, pldb, &i_1, pm, ipiv, &i_m1);
+		blasfeo_lapack_dlaswp(pn, B, pldb, &i_1, pm, ipiv, &i_m1);
 		}
 
 	return;
