@@ -74,22 +74,22 @@ void blasfeo_create_dmat(int m, int n, struct blasfeo_dmat *sA, void *memory);
 void blasfeo_create_dvec(int m, struct blasfeo_dvec *sA, void *memory);
 
 // --- packing
-// pack the column-major matrix A into the matrix struct B
+// pack the column-major matrix A (with leading dimension lda) into the matrix struct B (at row and col offsets bi and bj)
 void blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
-// pack the lower-triangular column-major matrix A into the matrix struct B
+// pack the lower-triangular column-major matrix A (with leading dimension lda) into the matrix struct B (at row and col offsets bi and bj)
 void blasfeo_pack_l_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
-// pack the upper-triangular column-major matrix A into the matrix struct B
+// pack the upper-triangular column-major matrix A (with leading dimension lda) into the matrix struct B (at row and col offsets bi and bj)
 void blasfeo_pack_u_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
-// transpose and pack the column-major matrix A into the matrix struct B
+// transpose and pack the column-major matrix A (with leading dimension lda) into the matrix struct B (at row and col offsets bi and bj)
 void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sB, int bi, int bj);
-// pack the vector x into the vector structure y
-void blasfeo_pack_dvec(int m, double *x, int xi, struct blasfeo_dvec *sy, int yi);
-// unpack the matrix structure A into the column-major matrix B
+// pack the vector x (using increment incx) into the vector structure y (at offset yi)
+void blasfeo_pack_dvec(int m, double *x, int incx, struct blasfeo_dvec *sy, int yi);
+// unpack the matrix structure A (at row and col offsets ai and aj) into the column-major matrix B (with leading dimension ldb)
 void blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *B, int ldb);
-// transpose and unpack the matrix structure A into the column-major matrix B
+// transpose and unpack the matrix structure A (at row and col offsets ai and aj) into the column-major matrix B (with leading dimension ldb)
 void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, double *B, int ldb);
-// pack the vector structure x into the vector y
-void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *y,  int yi);
+// unpack the vector structure x (at offset xi) into the vector y (using increment incy)
+void blasfeo_unpack_dvec(int m, struct blasfeo_dvec *sx, int xi, double *y, int incy);
 
 // --- cast
 //
