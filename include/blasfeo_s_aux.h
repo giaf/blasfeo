@@ -54,6 +54,7 @@ extern "C" {
 * d_aux_lib.c
 ************************************************/
 
+// memory
 // returns the memory size (in bytes) needed for a smat
 size_t blasfeo_memsize_smat(int m, int n);
 size_t blasfeo_memsize_smat_ps(int ps, int m, int n);
@@ -61,19 +62,33 @@ size_t blasfeo_memsize_smat_ps(int ps, int m, int n);
 size_t blasfeo_memsize_diag_smat(int m, int n);
 // returns the memory size (in bytes) needed for a svec
 size_t blasfeo_memsize_svec(int m);
+
+// creation
 // create a strmat for a matrix of size m*n by using memory passed by a pointer (pointer is not updated)
 void blasfeo_create_smat(int m, int n, struct blasfeo_smat *sA, void *memory);
 void blasfeo_create_smat_ps(int ps, int m, int n, struct blasfeo_smat *sA, void *memory);
 // create a strvec for a vector of size m by using memory passed by a pointer (pointer is not updated)
 void blasfeo_create_svec(int m, struct blasfeo_svec *sA, void *memory);
+
+// packing
+// pack the column-major matrix A (with leading dimension lda) into the matrix struct B (at row and col offsets bi and bj)
 void blasfeo_pack_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
+// pack the lower-triangular column-major matrix A (with leading dimension lda) into the matrix struct B (at row and col offsets bi and bj)
 void blasfeo_pack_l_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
+// pack the upper-triangular column-major matrix A (with leading dimension lda) into the matrix struct B (at row and col offsets bi and bj)
 void blasfeo_pack_u_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
+// transpose and pack the column-major matrix A (with leading dimension lda) into the matrix struct B (at row and col offsets bi and bj)
 void blasfeo_pack_tran_smat(int m, int n, float *A, int lda, struct blasfeo_smat *sA, int ai, int aj);
+// pack the vector x (using increment incx) into the vector structure y (at offset yi)
 void blasfeo_pack_svec(int m, float *x, int xi, struct blasfeo_svec *sa, int ai);
+// unpack the matrix structure A (at row and col offsets ai and aj) into the column-major matrix B (with leading dimension ldb)
 void blasfeo_unpack_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
+// transpose and unpack the matrix structure A (at row and col offsets ai and aj) into the column-major matrix B (with leading dimension ldb)
 void blasfeo_unpack_tran_smat(int m, int n, struct blasfeo_smat *sA, int ai, int aj, float *A, int lda);
+// unpack the vector structure x (at offset xi) into the vector y (using increment incy)
 void blasfeo_unpack_svec(int m, struct blasfeo_svec *sa, int ai, float *x, int xi);
+
+// cast
 //void s_cast_mat2strmat(float *A, struct blasfeo_smat *sA);
 //void s_cast_diag_mat2strmat(float *dA, struct blasfeo_smat *sA);
 //void s_cast_vec2vecmat(float *a, struct blasfeo_svec *sa);
