@@ -1315,7 +1315,7 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 			}
 		// factorize diagonal
 		d_00 = XMATEL_D(ddi+(ii+0), ddj+(jj+0));
-		d_00_inv = d_00>0.0 ? 1.0/d_00 : 0.0;
+		d_00_inv = d_00!=0.0 ? 1.0/d_00 : 0.0;
 		XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = d_00;
 		dD[ii] = d_00_inv;
 		ii += 1;
@@ -1378,7 +1378,7 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 			}
 		// factorize diagonal
 		d_00 = XMATEL_D(ddi+ii, ddj+(jj+1));
-		d_00_inv = d_00>0.0 ? 1.0/d_00 : 0.0;
+		d_00_inv = d_00!=0.0 ? 1.0/d_00 : 0.0;
 		XMATEL_D(ddi+ii, ddj+(jj+1)) = d_00;
 		dD[ii] = d_00_inv;
 		ii += 1;
@@ -1477,7 +1477,7 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 			}
 		// factorize diagonal
 		d_00 = XMATEL_D(ddi+ii, ddj+jj);
-		d_00_inv = d_00>0.0 ? 1.0/d_00 : 0.0;
+		d_00_inv = d_00!=0.0 ? 1.0/d_00 : 0.0;
 		XMATEL_D(ddi+ii, ddj+jj) = d_00;
 		dD[ii] = d_00_inv;
 		ii += 1;
