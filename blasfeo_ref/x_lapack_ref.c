@@ -1272,7 +1272,7 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 		// look for pivot & solve
 		// left column
 		ii = i0;
-		dmax = 0;
+		dmax = 0.0;
 		ip = ii;
 		for(; ii<m-1; ii+=2)
 			{
@@ -1315,12 +1315,12 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 			}
 		// factorize diagonal
 		d_00 = XMATEL_D(ddi+(ii+0), ddj+(jj+0));
-		d_00_inv = 1.0/d_00;
+		d_00_inv = d_00>0.0 ? 1.0/d_00 : 0.0;
 		XMATEL_D(ddi+(ii+0), ddj+(jj+0)) = d_00;
 		dD[ii] = d_00_inv;
 		ii += 1;
 		// solve & compute next pivot
-		dmax = 0;
+		dmax = 0.0;
 		ip = ii;
 		for(; ii<m-1; ii+=2)
 			{
@@ -1378,7 +1378,7 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 			}
 		// factorize diagonal
 		d_00 = XMATEL_D(ddi+ii, ddj+(jj+1));
-		d_00_inv = 1.0/d_00;
+		d_00_inv = d_00>0.0 ? 1.0/d_00 : 0.0;
 		XMATEL_D(ddi+ii, ddj+(jj+1)) = d_00;
 		dD[ii] = d_00_inv;
 		ii += 1;
@@ -1422,7 +1422,7 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 		i0 = ii;
 		ii = jj;
 		// correct diagonal and lower and look for pivot
-		dmax = 0;
+		dmax = 0.0;
 		ip = ii;
 		for(; ii<m-1; ii+=2)
 			{
@@ -1477,7 +1477,7 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 			}
 		// factorize diagonal
 		d_00 = XMATEL_D(ddi+ii, ddj+jj);
-		d_00_inv = 1.0/d_00;
+		d_00_inv = d_00>0.0 ? 1.0/d_00 : 0.0;
 		XMATEL_D(ddi+ii, ddj+jj) = d_00;
 		dD[ii] = d_00_inv;
 		ii += 1;
