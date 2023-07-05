@@ -52,7 +52,7 @@ void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x0, int *p
 	int ii;
 
 	REAL *x, *y;
-	int kx, ky;
+	int kx, ky=0;
 
 	REAL x_stack[K_MAX_STACK];
 	REAL y_stack[K_MAX_STACK];

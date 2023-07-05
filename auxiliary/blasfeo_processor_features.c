@@ -150,9 +150,12 @@ int blasfeo_processor_cpu_features( int* features )
 // GCC and clang provide the __get_cpuid function
 #if defined(__GNUC__) || defined(__clang__)
     unsigned int reg_eax, reg_ebx, reg_ecx, reg_edx;
+	int valid;
 
     // Test for normal features first in leaf 1
-    __get_cpuid( 1, &reg_eax, &reg_ebx, &reg_ecx, &reg_edx );
+    valid = __get_cpuid( 1, &reg_eax, &reg_ebx, &reg_ecx, &reg_edx );
+	if(valid==0)
+		return 0;
 
     // AVX is in the ECX register of leaf 1
     if( reg_ecx & bit_AVX )
@@ -168,7 +171,9 @@ int blasfeo_processor_cpu_features( int* features )
 
     // Test for extended features next in leaf 7 (subleaf 0)
 #if __GNUC__>5
-    __get_cpuid_count( 7, 0, &reg_eax, &reg_ebx, &reg_ecx, &reg_edx );
+    valid = __get_cpuid_count( 7, 0, &reg_eax, &reg_ebx, &reg_ecx, &reg_edx );
+	if(valid==0)
+		return 0;
 #else
 	reg_eax = 7;
 	reg_ecx = 0;

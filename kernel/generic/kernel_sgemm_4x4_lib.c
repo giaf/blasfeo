@@ -3153,10 +3153,12 @@ void kernel_strmm_nn_rl_4x4_tran_lib4c4c(int kmax, float *alpha, float *A, float
 	B += 1;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nn_4x4_lib4ccc(kmax-k, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+	}
 
 	store:
 
@@ -3322,10 +3324,12 @@ void kernel_strmm_nn_rl_4x4_tran_vs_lib4c4c(int kmax, float *alpha, float *A, fl
 	B += 1;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nn_4x4_lib4ccc(kmax-k, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+	}
 
 	store:
 
@@ -4023,10 +4027,12 @@ void kernel_strmm_nn_rl_one_4x4_tran_lib4c4c(int kmax, float *alpha, float *A, f
 	B += 1;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nn_4x4_lib4ccc(kmax-k, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+	}
 
 	store:
 
@@ -4188,10 +4194,12 @@ void kernel_strmm_nn_rl_one_4x4_tran_vs_lib4c4c(int kmax, float *alpha, float *A
 	B += 1;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nn_4x4_lib4ccc(kmax-k, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+	}
 
 	store:
 
@@ -12066,10 +12074,12 @@ void kernel_strmm_nt_ru_4x4_tran_lib444c(int kmax, float *alpha, float *A, float
 	B += bs;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nt_4x4_lib4(kmax-k, &alpha1, A, B, &beta1, CC, CC);
+	}
 
 	store:
 
@@ -12235,10 +12245,12 @@ void kernel_strmm_nt_ru_4x4_tran_vs_lib444c(int kmax, float *alpha, float *A, fl
 	B += bs;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nt_4x4_lib4(kmax-k, &alpha1, A, B, &beta1, CC, CC);
+	}
 
 	store:
 
@@ -12948,10 +12960,12 @@ void kernel_strmm_nt_ru_4x4_tran_lib4c4c(int kmax, float *alpha, float *A, float
 	B += ldb;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nt_4x4_lib4ccc(kmax-k, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+	}
 
 	store:
 
@@ -13117,10 +13131,12 @@ void kernel_strmm_nt_ru_4x4_tran_vs_lib4c4c(int kmax, float *alpha, float *A, fl
 	B += ldb;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nt_4x4_lib4ccc(kmax-k, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+	}
 
 	store:
 
@@ -13838,10 +13854,12 @@ void kernel_strmm_nt_ru_one_4x4_tran_lib444c(int kmax, float *alpha, float *A, f
 	B += bs;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nt_4x4_lib4(kmax-k, &alpha1, A, B, &beta1, CC, CC);
+	}
 
 	store:
 
@@ -14003,10 +14021,12 @@ void kernel_strmm_nt_ru_one_4x4_tran_vs_lib444c(int kmax, float *alpha, float *A
 	B += bs;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nt_4x4_lib4(kmax-k, &alpha1, A, B, &beta1, CC, CC);
+	}
 
 	store:
 
@@ -14704,10 +14724,12 @@ void kernel_strmm_nt_ru_one_4x4_tran_lib4c4c(int kmax, float *alpha, float *A, f
 	B += ldb;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nt_4x4_lib4ccc(kmax-k, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+	}
 
 	store:
 
@@ -14869,10 +14891,12 @@ void kernel_strmm_nt_ru_one_4x4_tran_vs_lib4c4c(int kmax, float *alpha, float *A
 	B += ldb;
 	k += 1;
 
+	{
 	float alpha1 = 1.0;
 	float beta1 = 1.0;
 
 	kernel_sgemm_nt_4x4_lib4ccc(kmax-k, &alpha1, A, B, ldb, &beta1, CC, bs, CC, bs);
+	}
 
 	store:
 

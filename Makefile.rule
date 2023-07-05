@@ -304,6 +304,8 @@ LDFLAGS =
 #
 CFLAGS ?= -O2
 CFLAGS += -fPIC
+#CFLAGS += -Wuninitialized
+#CFLAGS += -Wjump-misses-init
 
 # Debugging flags
 #

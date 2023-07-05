@@ -883,7 +883,7 @@ void REF_GETRF_NOPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMA
 //	int i1 = 1;
 //	REAL d1 = 1.0;
 	REAL
-		d_00_inv, d_11_inv,
+		d_00_inv=0.0, d_11_inv=0.0,
 		d_00, d_01,
 		d_10, d_11;
 #if defined(MF_COLMAJ)
