@@ -42,8 +42,16 @@
 
 
 
+//#define PRINT_NAME
+
+
+
 void TRMM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, REAL *alpha, REAL *A, int *plda, REAL *B, int *pldb)
 	{
+
+#if defined(PRINT_NAME)
+	printf("\nblasfeo_dtrmm %c %c %c %c %d %d %f %p %d %p %d\n", *side, *uplo, *transa, *diag, *pm, *pn, *alpha, A, *plda, B, *pldb);
+#endif
 
 #ifdef TIME_INT
     blasfeo_timer timer;

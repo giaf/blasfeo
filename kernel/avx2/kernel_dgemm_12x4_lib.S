@@ -16974,7 +16974,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 
 	vmovupd		%ymm0, 0(%r10)
 	vmovupd		%ymm4, 32(%r10)
-	vmovupd		64(%r10), %ymm15
+	//vmovupd		64(%r10), %ymm15
+	vmaskmovpd	64(%r10), %ymm13, %ymm15
 	vblendpd	$ 0x1, %ymm8, %ymm15, %ymm8
 	vmaskmovpd	%ymm8, %ymm13, 64(%r10)
 	addq		%r11, %r10
@@ -16982,7 +16983,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	jl			0f // end
 	vmovupd		%ymm1, 0(%r10)
 	vmovupd		%ymm5, 32(%r10)
-	vmovupd		64(%r10), %ymm15
+	//vmovupd		64(%r10), %ymm15
+	vmaskmovpd	64(%r10), %ymm13, %ymm15
 	vblendpd	$ 0x3, %ymm9, %ymm15, %ymm9
 	vmaskmovpd	%ymm9, %ymm13, 64(%r10)
 	addq		%r11, %r10
@@ -16990,7 +16992,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_pl_lib4)
 	jl			0f // end
 	vmovupd		%ymm2, 0(%r10)
 	vmovupd		%ymm6, 32(%r10)
-	vmovupd		64(%r10), %ymm15
+	//vmovupd		64(%r10), %ymm15
+	vmaskmovpd	64(%r10), %ymm13, %ymm15
 	vblendpd	$ 0x7, %ymm10, %ymm15, %ymm10
 	vmaskmovpd	%ymm10, %ymm13, 64(%r10)
 	addq		%r11, %r10

@@ -6072,19 +6072,22 @@
 	addq		%r11, %r10
 	cmpl		$ 2, %r13d
 	jl			0f // end
-	vmovupd		0(%r10), %ymm15
+	//vmovupd		0(%r10), %ymm15
+	vmaskmovpd	0(%r10), %ymm14, %ymm15
 	vblendpd	$ 0x1, %ymm15, %ymm1, %ymm1
 	vmaskmovpd	%ymm1, %ymm14, 0(%r10)
 	addq		%r11, %r10
 	cmpl		$ 3, %r13d
 	jl			0f // end
-	vmovupd		0(%r10), %ymm15
+	//vmovupd		0(%r10), %ymm15
+	vmaskmovpd	0(%r10), %ymm14, %ymm15
 	vblendpd	$ 0x3, %ymm15, %ymm2, %ymm2
 	vmaskmovpd	%ymm2, %ymm14, 0(%r10)
 	addq		%r11, %r10
 	cmpl		$ 3, %r13d
 	je			0f // end
-	vmovupd		0(%r10), %ymm15
+	//vmovupd		0(%r10), %ymm15
+	vmaskmovpd	0(%r10), %ymm14, %ymm15
 	vblendpd	$ 0x7, %ymm15, %ymm3, %ymm3
 	vmaskmovpd	%ymm3, %ymm14, 0(%r10)
 //	addq	%r11, %r10
@@ -6136,19 +6139,22 @@
 	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
 	vsubpd		%ymm15, %ymm14, %ymm14
 
-	vmovupd		0(%r10), %ymm15
+	//vmovupd		0(%r10), %ymm15
+	vmaskmovpd	0(%r10), %ymm14, %ymm15
 	vblendpd	$ 0x1, %ymm0, %ymm15, %ymm0
 	vmaskmovpd	%ymm0, %ymm14, 0(%r10)
 	addq		%r11, %r10
 	cmpl		$ 2, %r13d
 	jl			0f // end
-	vmovupd		0(%r10), %ymm15
+	//vmovupd		0(%r10), %ymm15
+	vmaskmovpd	0(%r10), %ymm14, %ymm15
 	vblendpd	$ 0x3, %ymm1, %ymm15, %ymm1
 	vmaskmovpd	%ymm1, %ymm14, 0(%r10)
 	addq		%r11, %r10
 	cmpl		$ 3, %r13d
 	jl			0f // end
-	vmovupd		0(%r10), %ymm15
+	//vmovupd		0(%r10), %ymm15
+	vmaskmovpd	0(%r10), %ymm14, %ymm15
 	vblendpd	$ 0x7, %ymm2, %ymm15, %ymm2
 	vmaskmovpd	%ymm2, %ymm14, 0(%r10)
 	addq		%r11, %r10

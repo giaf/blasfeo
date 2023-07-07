@@ -7574,21 +7574,24 @@
 	vsubpd		%ymm15, %ymm14, %ymm13
 
 	vmovupd		%ymm0, 0(%r10)
-	vmovupd		32(%r10), %ymm15
+	//vmovupd		32(%r10), %ymm15
+	vmaskmovpd	32(%r10), %ymm13, %ymm15
 	vblendpd	$ 0x1, %ymm4, %ymm15, %ymm4
 	vmaskmovpd	%ymm4, %ymm13, 32(%r10)
 	addq		%r11, %r10
 	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmovupd		%ymm1, 0(%r10)
-	vmovupd		32(%r10), %ymm15
+	//vmovupd		32(%r10), %ymm15
+	vmaskmovpd	32(%r10), %ymm13, %ymm15
 	vblendpd	$ 0x3, %ymm5, %ymm15, %ymm5
 	vmaskmovpd	%ymm5, %ymm13, 32(%r10)
 	addq		%r11, %r10
 	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmovupd		%ymm2, 0(%r10)
-	vmovupd		32(%r10), %ymm15
+	//vmovupd		32(%r10), %ymm15
+	vmaskmovpd	32(%r10), %ymm13, %ymm15
 	vblendpd	$ 0x7, %ymm6, %ymm15, %ymm6
 	vmaskmovpd	%ymm6, %ymm13, 32(%r10)
 	addq		%r11, %r10
