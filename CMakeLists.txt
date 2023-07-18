@@ -47,7 +47,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Select target architecture
 # set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")    # attempts at finding the best TARGET among selected architectures
-# set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")    # x86_64 architecture with AVX2 and FMA, optimized for Intel Haswell, Skylake and AMD Zen, Zen2, Zen3
+set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")    # x86_64 architecture with AVX2 and FMA, optimized for Intel Haswell, Skylake and AMD Zen, Zen2, Zen3
 # set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")    # x86_64 architecture with AVX, optimized for Intel Sandy-Bridge
 # set(TARGET X64_INTEL_CORE CACHE STRING "Target architecture")    # x86_64 architecture with SSE3, optimized for Intel Core
 # set(TARGET X64_AMD_BULLDOZER CACHE STRING "Target architecture")    # x86_64 architecture with AVX and FMA, optimized for AMD Bulldozer
@@ -56,7 +56,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 # set(TARGET ARMV7A_ARM_CORTEX_A15 CACHE STRING "Target architecture")    # ARMv7A architecture with NEON, optimized for ARM Cortex A15
 # set(TARGET ARMV7A_ARM_CORTEX_A9 CACHE STRING "Target architecture")    # ARMv7A architecture with NEON, optimized for ARM Cortex A9
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")    # ARMv7A architecture with NEON, optimized for ARM Cortex A7
-set(TARGET GENERIC CACHE STRING "Target architecture")   # generic architecture, plain C code running on virtually every target but not specialized to any. Choose one of the above optimized targets for better performance on specific architectures
+# set(TARGET GENERIC CACHE STRING "Target architecture")   # generic architecture, plain C code running on virtually every target but not specialized to any. Choose one of the above optimized targets for better performance on specific architectures
 
 # Select back-end linear lagebra version (LA) to implement BLASFEO API:
 # HIGH_PERFORMANCE : target-tailored; performance-optimized for cache resident matrices; panel-major matrix format
