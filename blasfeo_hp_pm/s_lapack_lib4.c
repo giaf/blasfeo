@@ -730,6 +730,10 @@ void blasfeo_hp_spotrf_u(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 // dsyrk dpotrf
 void blasfeo_hp_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+	if(m<=0)
+		return;
+
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
 #if defined(BLASFEO_REF_API)
@@ -740,7 +744,9 @@ void blasfeo_hp_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, i
 		exit(1);
 #endif
 		}
+
 	const int ps = 4;
+
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdc = sC->cn;
@@ -749,10 +755,7 @@ void blasfeo_hp_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, i
 	float *pB = sB->pA + bj*ps;
 	float *pC = sC->pA + cj*ps;
 	float *pD = sD->pA + dj*ps;
-	float *inv_diag_D = sD->dA; // XXX what to do if di and dj are not zero
-
-	if(m<=0 || k<=0)
-		return;
+	float *dD = sD->dA; // XXX what to do if di and dj are not zero
 
 	if(di==0 && dj==0)
 		sD->use_dA = 1;
@@ -762,32 +765,14 @@ void blasfeo_hp_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, i
 	int i, j, l;
 
 	i = 0;
-
 	for(; i<m-3; i+=4)
 		{
 		j = 0;
-		for(; j<i && j<k-3; j+=4)
+		for(; j<i; j+=4)
 			{
-			kernel_sgemm_strsm_nt_rl_inv_4x4_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &inv_diag_D[j]);
+			kernel_sgemm_strsm_nt_rl_inv_4x4_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j]);
 			}
-		if(j<k)
-			{
-			if(j<i) // dgemm
-				{
-				kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &inv_diag_D[j], m-i, k-j);
-				}
-			else // dsyrk
-				{
-				if(j<k-3)
-					{
-					kernel_ssyrk_spotrf_nt_l_4x4_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &inv_diag_D[j]);
-					}
-				else
-					{
-					kernel_ssyrk_spotrf_nt_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &inv_diag_D[j], m-i, k-j);
-					}
-				}
-			}
+		kernel_ssyrk_spotrf_nt_l_4x4_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j]);
 		}
 	if(m>i)
 		{
@@ -801,21 +786,11 @@ void blasfeo_hp_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, i
 
 	left_4:
 	j = 0;
-	for(; j<i && j<k-3; j+=4)
+	for(; j<i; j+=4)
 		{
-		kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &inv_diag_D[j], m-i, k-j);
+		kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
 		}
-	if(j<k)
-		{
-		if(j<i) // dgemm
-			{
-			kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &inv_diag_D[j], m-i, k-j);
-			}
-		else // dsyrk
-			{
-			kernel_ssyrk_spotrf_nt_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &inv_diag_D[j], m-i, k-j);
-			}
-		}
+	kernel_ssyrk_spotrf_nt_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j], m-i, m-j);
 
 	return;
 	}
@@ -824,6 +799,10 @@ void blasfeo_hp_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, i
 
 void blasfeo_hp_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+	if(m<=0 || n<=0)
+		return;
+
 	if(ai!=0 | bi!=0 | ci!=0 | di!=0)
 		{
 #if defined(BLASFEO_REF_API)
@@ -834,7 +813,9 @@ void blasfeo_hp_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA,
 		exit(1);
 #endif
 		}
+
 	const int ps = 4;
+
 	int sda = sA->cn;
 	int sdb = sB->cn;
 	int sdc = sC->cn;
@@ -843,10 +824,7 @@ void blasfeo_hp_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA,
 	float *pB = sB->pA + bj*ps;
 	float *pC = sC->pA + cj*ps;
 	float *pD = sD->pA + dj*ps;
-	float *inv_diag_D = sD->dA; // XXX what to do if di and dj are not zero
-
-	if(m<=0 || k<=0)
-		return;
+	float *dD = sD->dA; // XXX what to do if di and dj are not zero
 
 	if(di==0 && dj==0)
 		sD->use_dA = 1;
@@ -860,25 +838,25 @@ void blasfeo_hp_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA,
 	for(; i<m-3; i+=4)
 		{
 		j = 0;
-		for(; j<i && j<k-3; j+=4)
+		for(; j<i & j<n-3; j+=4)
 			{
-			kernel_sgemm_strsm_nt_rl_inv_4x4_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &inv_diag_D[j]);
+			kernel_sgemm_strsm_nt_rl_inv_4x4_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j]);
 			}
-		if(j<k)
+		if(j<n)
 			{
 			if(j<i) // dgemm
 				{
-				kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &inv_diag_D[j], m-i, k-j);
+				kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j], m-i, n-j);
 				}
 			else // dsyrk
 				{
-				if(j<k-3)
+				if(j<n-3)
 					{
-					kernel_ssyrk_spotrf_nt_l_4x4_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &inv_diag_D[j]);
+					kernel_ssyrk_spotrf_nt_l_4x4_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j]);
 					}
 				else
 					{
-					kernel_ssyrk_spotrf_nt_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &inv_diag_D[j], m-i, k-j);
+					kernel_ssyrk_spotrf_nt_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j], m-i, n-j);
 					}
 				}
 			}
@@ -895,20 +873,13 @@ void blasfeo_hp_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA,
 
 	left_4:
 	j = 0;
-	for(; j<i && j<k-3; j+=4)
+	for(; j<i & j<n; j+=4)
 		{
-		kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &inv_diag_D[j], m-i, k-j);
+		kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &dD[j], m-i, n-j);
 		}
-	if(j<k)
+	if(j<n)
 		{
-		if(j<i) // dgemm
-			{
-			kernel_sgemm_strsm_nt_rl_inv_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+i*sdc], &pD[j*ps+i*sdd], &pD[j*ps+j*sdd], &inv_diag_D[j], m-i, k-j);
-			}
-		else // dsyrk
-			{
-			kernel_ssyrk_spotrf_nt_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &inv_diag_D[j], m-i, k-j);
-			}
+		kernel_ssyrk_spotrf_nt_l_4x4_vs_lib4(k, &pA[i*sda], &pB[j*sdb], j, &pD[i*sdd], &pD[j*sdd], &pC[j*ps+j*sdc], &pD[j*ps+j*sdd], &dD[j], m-i, n-j);
 		}
 
 	return;
