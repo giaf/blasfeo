@@ -4415,6 +4415,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 	addq			%r14, %r13
 	subq			$ 24, %r13 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
 
+	cmpl			$ 0, %r10d
+	jle				3f // end
+
 	vmovapd			0(%r11), %ymm13
 	vmovapd			0(%r11, %r12), %ymm14
 	vmovapd			0(%r11, %r12, 2), %ymm15

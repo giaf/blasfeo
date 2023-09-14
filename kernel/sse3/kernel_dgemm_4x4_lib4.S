@@ -2028,6 +2028,9 @@ NAME:
 	addq			%r13, %r12
 	subq			$ 24, %r12 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
 
+	cmpl			$ 0, %r10d
+	jle				3f // end
+
 	movapd 		0(%r11), %xmm8 // A[0]
 	movapd 		16(%r11), %xmm9 // A[2]
 

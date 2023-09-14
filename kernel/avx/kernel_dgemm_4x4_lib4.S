@@ -1509,6 +1509,9 @@ NAME:
 	addq			%r13, %r12
 	subq			$ 24, %r12 // B+bs*sdb*sizeof(double)-(bs-1)*sizeof(double)
 
+	cmpl			$ 0, %r10d
+	jle				3f // end
+
 	vmovapd			0(%r11), %ymm8
 	vbroadcastsd	0(%r12), %ymm12
 	vmulpd			%ymm8, %ymm12, %ymm15
