@@ -306,7 +306,215 @@ void blasfeo_hp_strsm_rutu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 
 
 
-// dtrmm_right_upper_transposed_notunit (B, i.e. the first matrix, is triangular !!!)
+// strmm_llnn
+void blasfeo_hp_strmm_llnn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_llnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_llnn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_llnu
+void blasfeo_hp_strmm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_llnu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_llnu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_lltn
+void blasfeo_hp_strmm_lltn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_lltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_lltn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_lltu
+void blasfeo_hp_strmm_lltu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_lltu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_lltu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_lunn
+void blasfeo_hp_strmm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_lunn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_lunn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_lunu
+void blasfeo_hp_strmm_lunu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_lunu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_lunu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_lutn
+void blasfeo_hp_strmm_lutn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_lutn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_lutn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_lutu
+void blasfeo_hp_strmm_lutu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_lutu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_lutu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_right_lower_nottransposed_notunit (B, i.e. the first matrix, is triangular !!!)
+void blasfeo_hp_strmm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_rlnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#else
+	printf("\nblasfeo_strmm_rlnn: feature not implemented yet\n");
+	exit(1);
+#endif
+	}
+
+
+
+// strmm_rlnu
+void blasfeo_hp_strmm_rlnu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_rlnu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_rlnu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_rltn
+void blasfeo_hp_strmm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_rltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_rltn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_rltu
+void blasfeo_hp_strmm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_rltu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_rltu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_runn
+void blasfeo_hp_strmm_runn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_runn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_runn: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_runu
+void blasfeo_hp_strmm_runu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_strmm_runu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
+#else
+	printf("\nblasfeo_strmm_runu: feature not implemented yet\n");
+	exit(1);
+#endif
+	return;
+	}
+
+
+
+// strmm_right_upper_transposed_notunit (B, i.e. the first matrix, is triangular !!!)
 void blasfeo_hp_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
 	{
 #if defined(BLASFEO_REF_API)
@@ -319,15 +527,17 @@ void blasfeo_hp_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, i
 
 
 
-// dtrmm_right_lower_nottransposed_notunit (B, i.e. the first matrix, is triangular !!!)
-void blasfeo_hp_strmm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+// strmm_rutu
+void blasfeo_hp_strmm_rutu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
 	{
 #if defined(BLASFEO_REF_API)
-	blasfeo_ref_strmm_rlnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	blasfeo_ref_strmm_rutu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	return;
 #else
-	printf("\nblasfeo_strmm_rlnn: feature not implemented yet\n");
+	printf("\nblasfeo_strmm_rutu: feature not implemented yet\n");
 	exit(1);
 #endif
+	return;
 	}
 
 
@@ -576,9 +786,58 @@ void blasfeo_strsm_rutu(int m, int n, float alpha, struct blasfeo_smat *sA, int 
 
 
 
-void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+void blasfeo_strmm_llnn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
 	{
-	blasfeo_hp_strmm_rutn(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	blasfeo_hp_strmm_llnn(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_llnu(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_llnu(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_lltn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_lltn(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_lltu(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_lltu(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_lunn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_lunn(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_lunu(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_lunu(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_lutn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_lutn(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_lutu(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_lutu(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
 	}
 
 
@@ -586,6 +845,55 @@ void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int 
 void blasfeo_strmm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
 	{
 	blasfeo_hp_strmm_rlnn(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_rlnu(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_rlnu(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_rltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_rltu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_runn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_runn(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_runu(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_runu(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_rutn(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_rutn(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
+	}
+
+
+
+void blasfeo_strmm_rutu(int m, int n, float alpha, struct blasfeo_smat *sB, int bi, int bj, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sD, int di, int dj)
+	{
+	blasfeo_hp_strmm_rutu(m, n, alpha, sB, bi, bj, sA, ai, aj, sD, di, dj);
 	}
 
 
