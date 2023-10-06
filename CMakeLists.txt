@@ -51,8 +51,12 @@ set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")    # x86_64 arc
 # set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")    # x86_64 architecture with AVX, optimized for Intel Sandy-Bridge
 # set(TARGET X64_INTEL_CORE CACHE STRING "Target architecture")    # x86_64 architecture with SSE3, optimized for Intel Core
 # set(TARGET X64_AMD_BULLDOZER CACHE STRING "Target architecture")    # x86_64 architecture with AVX and FMA, optimized for AMD Bulldozer
+# set(TARGET ARMV8A_APPLE_M1 CACHE STRING "Target architecture")    # ARMv8A architecture with NEON, optimized for Apple M1, M2
+# set(TARGET ARMV8A_ARM_CORTEX_A76 CACHE STRING "Target architecture")    # ARMv8A architecture with NEON, optimized for ARM Cortex A76
+# set(TARGET ARMV8A_ARM_CORTEX_A73 CACHE STRING "Target architecture")    # ARMv8A architecture with NEON, optimized for ARM Cortex A73
 # set(TARGET ARMV8A_ARM_CORTEX_A57 CACHE STRING "Target architecture")    # ARMv8A architecture with NEON, optimized for ARM Cortex A57, A72
-# set(TARGET ARMV8A_ARM_CORTEX_A53 CACHE STRING "Target architecture")    # ARMv8A architecture with NEON, optimized for ARM Cortex A55
+# set(TARGET ARMV8A_ARM_CORTEX_A55 CACHE STRING "Target architecture")    # ARMv8A architecture with NEON, optimized for ARM Cortex A55
+# set(TARGET ARMV8A_ARM_CORTEX_A53 CACHE STRING "Target architecture")    # ARMv8A architecture with NEON, optimized for ARM Cortex A53
 # set(TARGET ARMV7A_ARM_CORTEX_A15 CACHE STRING "Target architecture")    # ARMv7A architecture with NEON, optimized for ARM Cortex A15
 # set(TARGET ARMV7A_ARM_CORTEX_A9 CACHE STRING "Target architecture")    # ARMv7A architecture with NEON, optimized for ARM Cortex A9
 # set(TARGET ARMV7A_ARM_CORTEX_A7 CACHE STRING "Target architecture")    # ARMv7A architecture with NEON, optimized for ARM Cortex A7
@@ -139,7 +143,11 @@ set(ALLOWED_TARGETS
 		X64_INTEL_SANDY_BRIDGE
 		X64_INTEL_CORE
 		X64_AMD_BULLDOZER
+		ARMV8A_APPLE_M1
+		ARMV8A_ARM_CORTEX_A76
+		ARMV8A_ARM_CORTEX_A73
 		ARMV8A_ARM_CORTEX_A57
+		ARMV8A_ARM_CORTEX_A55
 		ARMV8A_ARM_CORTEX_A53
 		ARMV7A_ARM_CORTEX_A15
 		ARMV7A_ARM_CORTEX_A9
@@ -345,16 +353,29 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
 endif()
 
 
+# secondary target (grouping similar architecture together)
+if(${TARGET} MATCHES ARMV8A_APPLE_M1 OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A76 OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A73)
+	set(TARGET2 ARMV8A_ARM_CORTEX_A57)
+elseif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A55)
+	set(TARGET2 ARMV8A_ARM_CORTEX_A53)
+else()
+	set(TARGET2 PHANTOM)
+endif()
+
 # architecture-specific C flags
 set(C_FLAGS_TARGET_X64_INTEL_HASWELL      "-m64 -mavx -mavx2 -mfma")
 set(C_FLAGS_TARGET_X64_INTEL_SANDY_BRIDGE "-m64 -mavx")
 set(C_FLAGS_TARGET_X64_INTEL_CORE         "-m64 -msse3")
 set(C_FLAGS_TARGET_X64_AMD_BULLDOZER      "-m64 -mavx -mfma")
-set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "-march=armv8-a+crc+crypto+simd -mcpu=cortex-a57")
-set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "-march=armv8-a+crc+crypto+simd -mcpu=cortex-a53")
-set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15")
-set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-marm -mfloat-abi=hard -mfpu=neon -mcpu=cortex-a9")
-set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7")
+set(C_FLAGS_TARGET_ARMV8A_APPLE_M1  "-march=armv8-a+crc+crypto+simd")
+set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A76  "-march=armv8-a+crc+crypto+simd")
+set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A73  "-march=armv8-a+crc+crypto+simd")
+set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "-march=armv8-a+crc+crypto+simd") # -mcpu=cortex-a57")
+set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A55  "-march=armv8-a+crc+crypto+simd")
+set(C_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "-march=armv8-a+crc+crypto+simd") # -mcpu=cortex-a53")
+set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-marm -mfloat-abi=hard -mfpu=neon-vfpv4") # -mcpu=cortex-a15")
+set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-marm -mfloat-abi=hard -mfpu=neon") # -mcpu=cortex-a9")
+set(C_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-marm -mfloat-abi=hard -mfpu=neon-vfpv4") # -mcpu=cortex-a7")
 set(C_FLAGS_TARGET_GENERIC                "")
 
 # architecture-specific assembly flags
@@ -362,11 +383,15 @@ set(ASM_FLAGS_TARGET_X64_INTEL_HASWELL      "")
 set(ASM_FLAGS_TARGET_X64_INTEL_SANDY_BRIDGE "")
 set(ASM_FLAGS_TARGET_X64_INTEL_CORE         "")
 set(ASM_FLAGS_TARGET_X64_AMD_BULLDOZER      "")
+set(ASM_FLAGS_TARGET_ARMV8A_APPLE_M1  "")
+set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A76  "")
+set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A73  "")
 set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A57  "")
+set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A55  "")
 set(ASM_FLAGS_TARGET_ARMV8A_ARM_CORTEX_A53  "")
-set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-mfpu=neon-vfpv4 -mcpu=cortex-a15")
-set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-mfpu=neon -mcpu=cortex-a9")
-set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-mfpu=neon-vfpv4 -mcpu=cortex-a7")
+set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A15  "-mfpu=neon-vfpv4")
+set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A9   "-mfpu=neon")
+set(ASM_FLAGS_TARGET_ARMV7A_ARM_CORTEX_A7   "-mfpu=neon-vfpv4")
 set(ASM_FLAGS_TARGET_GENERIC                "")
 
 
@@ -400,30 +425,16 @@ if(${TARGET} MATCHES X64_AMD_BULLDOZER)
   set(TARGET_NEED_FEATURE_FMA 1)
 endif()
 
-if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A53)
   set(TARGET_NEED_FEATURE_VFPv4 1)
   set(TARGET_NEED_FEATURE_NEONv2 1)
 endif()
 
-if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
-  set(TARGET_NEED_FEATURE_VFPv4 1)
-  set(TARGET_NEED_FEATURE_NEONv2 1)
-endif()
-
-if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
+if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
   set(TARGET_NEED_FEATURE_VFPv3 1)
   set(TARGET_NEED_FEATURE_NEON 1)
 endif()
 
-if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
-  set(TARGET_NEED_FEATURE_VFPv3 1)
-  set(TARGET_NEED_FEATURE_NEON 1)
-endif()
-
-if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
-  set(TARGET_NEED_FEATURE_VFPv3 1)
-  set(TARGET_NEED_FEATURE_NEON 1)
-endif()
 
 
 # Create the target.h file with the proper target definition
@@ -434,6 +445,9 @@ configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
 # Append the appropriate flags based on the architecture and compiler
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_${TARGET}")
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DTARGET_${TARGET}")
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_${TARGET2}")
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DTARGET_${TARGET2}")
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_FLAGS_TARGET_${TARGET}}")
@@ -611,7 +625,7 @@ file(GLOB AUX_HP_PM_SRC
 	)
 
 endif()
-if(${TARGET} MATCHES X64_INTEL_CORE OR ${TARGET} MATCHES X64_AMD_BULLDOZER OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9 OR ${TARGET} MATCHES GENERIC)
+if(${TARGET} MATCHES X64_INTEL_CORE OR ${TARGET} MATCHES X64_AMD_BULLDOZER OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9 OR ${TARGET} MATCHES GENERIC)
 
 file(GLOB BLASFEO_HP_PM_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
@@ -809,7 +823,7 @@ file(GLOB KERNEL_SRC
 	)
 
 endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
-if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
+if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A57)
 
 file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
@@ -857,8 +871,8 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_d_aux_lib.S
 	)
 
-endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57)
-if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
+endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A57)
+if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A53)
 
 file(GLOB KERNEL_SRC
 
@@ -908,7 +922,7 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_d_aux_lib.S
 	)
 
-endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53)
+endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A53)
 if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
 
 file(GLOB KERNEL_SRC

@@ -2,6 +2,10 @@
 #define TARGET_@TARGET@
 #endif
 
+#ifndef TARGET_@TARGET2@
+#define TARGET_@TARGET2@
+#endif
+
 #ifndef TARGET_NEED_FEATURE_AVX2
 #cmakedefine TARGET_NEED_FEATURE_AVX2 @TARGET_NEED_FEATURE_AVX2@
 #endif

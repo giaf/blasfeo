@@ -71,7 +71,7 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 # Code optimized for AMD Barcelona.
 #
 # ARMV8A_APPLE_M1 : ARMv8A architecture with NEON (64 bit OS)
-# Code optimized for Apple M1.
+# Code optimized for Apple M1, M2.
 #
 # ARMV8A_ARM_CORTEX_A76 : ARMv8A architecture with NEON (64 bit OS)
 # Code optimized for ARM Cortex A76.
@@ -555,15 +555,15 @@ CFLAGS  += -march=armv8-a+crc+crypto+simd -DTARGET_ARMV8A_ARM_CORTEX_A53
 ASFLAGS += -DTARGET_ARMV8A_ARM_CORTEX_A53
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a15 -DTARGET_ARMV7A_ARM_CORTEX_A15
+CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -DTARGET_ARMV7A_ARM_CORTEX_A15 # -mcpu=cortex-a15
 ASFLAGS += -mfpu=neon-vfpv4 -DTARGET_ARMV7A_ARM_CORTEX_A15
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A9)
-CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon -mcpu=cortex-a9 -DTARGET_ARMV7A_ARM_CORTEX_A9
+CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon -DTARGET_ARMV7A_ARM_CORTEX_A9 # -mcpu=cortex-a9
 ASFLAGS += -mfpu=neon -DTARGET_ARMV7A_ARM_CORTEX_A9
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A7)
-CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7 -DTARGET_ARMV7A_ARM_CORTEX_A7
+CFLAGS  += -marm -mfloat-abi=hard -mfpu=neon-vfpv4 -DTARGET_ARMV7A_ARM_CORTEX_A7 # -mcpu=cortex-a7
 ASFLAGS += -mfpu=neon-vfpv4 -DTARGET_ARMV7A_ARM_CORTEX_A7
 endif
 ifeq ($(TARGET), GENERIC)
