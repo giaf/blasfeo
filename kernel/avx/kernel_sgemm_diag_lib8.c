@@ -55,7 +55,6 @@ void kernel_sgemm_diag_right_4_a0_lib4(int kmax, float *alpha, float *A, int sda
 
 	__m256
 		alpha0,
-		mask_f,
 		sign,
 		a_00,
 		b_00, b_11, b_22, b_33,
@@ -137,7 +136,6 @@ void kernel_sgemm_diag_right_4_lib4(int kmax, float *alpha, float *A, int sda, f
 
 	__m256
 		alpha0, beta0,
-		mask_f,
 		sign,
 		a_00,
 		b_00, b_11, b_22, b_33,
@@ -248,7 +246,6 @@ void kernel_sgemm_diag_right_3_lib4(int kmax, float *alpha, float *A, int sda, f
 
 	__m256
 		alpha0, beta0,
-		mask_f,
 		sign,
 		a_00,
 		b_00, b_11, b_22,
@@ -345,7 +342,6 @@ void kernel_sgemm_diag_right_2_lib4(int kmax, float *alpha, float *A, int sda, f
 
 	__m256
 		alpha0, beta0,
-		mask_f,
 		sign,
 		a_00,
 		b_00, b_11,
@@ -428,7 +424,6 @@ void kernel_sgemm_diag_right_1_lib4(int kmax, float *alpha, float *A, int sda, f
 
 	__m256
 		alpha0, beta0,
-		mask_f,
 		sign,
 		a_00,
 		b_00,

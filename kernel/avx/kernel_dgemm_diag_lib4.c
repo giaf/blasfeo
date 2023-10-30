@@ -56,7 +56,6 @@ void kernel_dgemm_diag_right_4_a0_lib4(int kmax, double *alpha, double *A, int s
 
 	__m256d
 		alpha0,
-		mask_f,
 		sign,
 		a_00,
 		b_00, b_11, b_22, b_33,
@@ -138,7 +137,6 @@ void kernel_dgemm_diag_right_4_lib4(int kmax, double *alpha, double *A, int sda,
 
 	__m256d
 		alpha0, beta0,
-		mask_f,
 		sign,
 		a_00,
 		b_00, b_11, b_22, b_33,
@@ -249,7 +247,6 @@ void kernel_dgemm_diag_right_3_lib4(int kmax, double *alpha, double *A, int sda,
 
 	__m256d
 		alpha0, beta0,
-		mask_f,
 		sign,
 		a_00,
 		b_00, b_11, b_22,
@@ -346,7 +343,6 @@ void kernel_dgemm_diag_right_2_lib4(int kmax, double *alpha, double *A, int sda,
 
 	__m256d
 		alpha0, beta0,
-		mask_f,
 		sign,
 		a_00,
 		b_00, b_11,
@@ -429,7 +425,6 @@ void kernel_dgemm_diag_right_1_lib4(int kmax, double *alpha, double *A, int sda,
 
 	__m256d
 		alpha0, beta0,
-		mask_f,
 		sign,
 		a_00,
 		b_00,
