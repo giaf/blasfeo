@@ -963,7 +963,7 @@ NAME:
 	vbroadcastss	220(%r12), %ymm13 // B[6]
 	vfmadd231ps		%ymm12, %ymm13, %ymm6
 	vbroadcastss	252(%r12), %ymm13 // B[7]
-	addq	%r12, %r13
+	addq	%r13, %r12
 	vfmadd231ps		%ymm12, %ymm13, %ymm7
 
 	cmpl	$ 7, %r10d

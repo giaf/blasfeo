@@ -1033,7 +1033,7 @@ NAME:
 	vfmadd231ps		%ymm12, %ymm13, %ymm6
 	vbroadcastss	124(%r12), %ymm13 // B[3]
 	vfmadd231ps		%ymm12, %ymm13, %ymm7
-	addq	%r12, %r13
+	addq	%r13, %r12
 
 	cmpl	$ 7, %r10d
 	jg		1b // main loop 
@@ -4984,8 +4984,8 @@ NAME:
 
 
 
-//                               1      2             3         4            5         6        7            8         9         10      11
-// void kernel_sgemm_nn_8x4_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, float *C, float *D, int km, int kn);
+//                                  1      2             3         4            5         6        7            8         9         10      11
+// void kernel_sgemm_nn_8x4_vs_lib8(int k, float *alpha, float *A, int offsetB, float *B, int sdb, float *beta, float *C, float *D, int km, int kn);
 
 	GLOB_FUN_START(kernel_sgemm_nn_8x4_vs_lib8)
 	
@@ -5002,7 +5002,7 @@ NAME:
 	movq	ARG3, %r11  // A
 	movq	ARG5, %r12  // B
 	movq	ARG6, %r13 // sdb
-	sall	$ 5, %r13d // 4*sdb*sizeof(double)
+	sall	$ 5, %r13d // 8*sdb*sizeof(float)
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1

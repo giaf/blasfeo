@@ -4024,10 +4024,10 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sdb
-	sall	$ 5, %r12d // 4*sdb*sizeof(double)
+	sall	$ 5, %r12d // 8*sdb*sizeof(float)
 	movq	ARG6, %r13  // B
 	movq	ARG7, %r14 // sdb
-	sall	$ 5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 8*sdb*sizeof(float)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
