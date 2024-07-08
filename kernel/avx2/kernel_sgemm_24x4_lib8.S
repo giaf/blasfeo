@@ -1376,8 +1376,8 @@ NAME:
 	vbroadcastss	88(%r13), %ymm15 // B[2]
 	vfmadd231ps		%ymm12, %ymm15, %ymm2
 	vfmadd231ps		%ymm13, %ymm15, %ymm6
-	vbroadcastss	120(%r13), %ymm15 // B[3]
 	vfmadd231ps		%ymm14, %ymm15, %ymm10
+	vbroadcastss	120(%r13), %ymm15 // B[3]
 	vfmadd231ps		%ymm12, %ymm15, %ymm3
 	vfmadd231ps		%ymm13, %ymm15, %ymm7
 	vfmadd231ps		%ymm14, %ymm15, %ymm11

@@ -1237,7 +1237,7 @@ NAME:
 	vfnmadd231ps	%ymm12, %ymm13, %ymm6
 	vbroadcastss	124(%r12), %ymm13 // B[3]
 	vfnmadd231ps	%ymm12, %ymm13, %ymm7
-	addq	%r12, %r13
+	addq	%r13, %r12
 
 	cmpl	$ 7, %r10d
 	jg		1b // main loop 
