@@ -42,7 +42,7 @@
 // input arguments:
 // r10d   <- k
 // r11   <- A
-// r12   <- 4*sda*sizeof(double)
+// r12   <- 8*sda*sizeof(float)
 // r13   <- B
 // r14   <- A_p
 // r15   <- B_p
@@ -53,9 +53,9 @@
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- 4*sda*sizeof(double)
-// r13   <- B+4*k*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- 8*sda*sizeof(float)
+// r13   <- B+8*k*sizeof(float)
 // r14   <- A_p
 // r15   <- B_p
 // ymm0  <- ...
@@ -3407,7 +3407,7 @@
 //
 // input arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
+// r11  <- 8*sdd*sizeof(float)
 // r12  <- km
 // r13  <- kn
 // ymm0 <- []
@@ -3416,7 +3416,7 @@
 //
 // output arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
+// r11  <- 8*sdd*sizeof(float)
 // r12  <- km
 // r13  <- kn
 // ymm0 <- []
@@ -4488,7 +4488,7 @@
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG6, %r13  // B
 
 	movq	ARG4, %r14  // A_p
@@ -4496,7 +4496,7 @@
 //	cmoveq	ARG13, %r14  // A_p
 
 //	movq	ARG7, %r15 // sdb
-//	sall	$ 5, %r15d // 4*sdb*sizeof(double)
+//	sall	$ 5, %r15d // 8*sdb*sizeof(float)
 //	addq	ARG6, %r15 // B_p
 //	cmpq	$ 4, ARG1
 //	cmoveq	ARG14, %r15  // B_p
@@ -4632,7 +4632,7 @@
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG6, %r13  // B
 	addq	$ 16, %r13 // B+4
 
@@ -4641,7 +4641,7 @@
 	cmoveq	ARG13, %r14  // A_p
 
 	movq	ARG7, %r15 // sdb
-	sall	$ 5, %r15d // 4*sdb*sizeof(double)
+	sall	$ 5, %r15d // 8*sdb*sizeof(float)
 	addq	ARG6, %r15 // B_p
 //	addq	$ 16, %r15 // B_p+4
 	cmpq	$ 4, ARG1
@@ -4788,7 +4788,7 @@
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG6, %r13  // B
 
 	movq	ARG4, %r14  // A_p
@@ -4885,7 +4885,7 @@
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG6, %r13  // B
 	addq	$ 16, %r13 // B+4
 
@@ -4997,7 +4997,7 @@
 	movq	ARG2, %r10 // k
 	movq	ARG4, %r11  // A
 	movq	ARG5, %r12 // sda
-	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG6, %r13  // B
 	movq	ARG4, %r14  // A_p
 	addq	ARG6, %r15 // B_p

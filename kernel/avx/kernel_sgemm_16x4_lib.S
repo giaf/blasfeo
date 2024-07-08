@@ -2254,7 +2254,7 @@
 //
 // input arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
+// r11  <- 8*sdd*sizeof(float)
 // r12  <- km
 // r13  <- kn
 // ymm0 <- []
@@ -2263,7 +2263,7 @@
 //
 // output arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
+// r11  <- 8*sdd*sizeof(float)
 // r12  <- km
 // r13  <- kn
 // ymm0 <- []

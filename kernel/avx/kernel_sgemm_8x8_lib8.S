@@ -269,8 +269,8 @@ NAME:
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- B+4*k*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- B+8*k*sizeof(float)
 // ymm0  <- [d00 d11 d22 d33 d40 d51 d62 d73]
 // ymm1  <- [d01 d10 d23 d32 d41 d50 d63 d72]
 // ymm2  <- [d03 d12 d21 d30 d43 d52 d61 d70]
@@ -710,8 +710,8 @@ inner_kernel_gemm_add_nt_8x8_lib8:
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- B+4*k*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- B+8*k*sizeof(float)
 // ymm0  <- [d00 d11 d22 d33 d40 d51 d62 d73]
 // ymm1  <- [d01 d10 d23 d32 d41 d50 d63 d72]
 // ymm2  <- [d03 d12 d21 d30 d43 d52 d61 d70]
@@ -1131,7 +1131,7 @@ inner_kernel_gemm_sub_nt_8x8_lib8:
 // r10d  <- k
 // r11   <- A
 // r12   <- B
-// r13   <- 4*sdb*sizeof(double)
+// r13   <- 8*sdb*sizeof(float)
 // r14   <= dirty
 // ymm0  <- []
 // ymm1  <- []
@@ -1149,9 +1149,9 @@ inner_kernel_gemm_sub_nt_8x8_lib8:
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- B+(k/4)*sdb*sizeof(double)+(k%4)
-// r13   <- 4*sdb*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- B+((k/8)*sdb**8+(k%8))*sizeof(float)
+// r13   <- 8*sdb*sizeof(float)
 // r14   <= dirty
 // ymm0  <- []
 // ymm1  <- []
@@ -1185,7 +1185,7 @@ inner_kernel_gemm_add_nn_8x8_lib8:
 	jle		2f // return
 
 	movq	%r12, %r14 // B_next <- B
-	addq	%r13, %r14 // B_next <- B + 4*sda*sizeof(double)
+	addq	%r13, %r14 // B_next <- B + 8*sda*sizeof(float)
 
 	cmpl	$ 8, %r10d
 	jl		0f // consider clean-up loop
@@ -1498,7 +1498,7 @@ inner_kernel_gemm_add_nn_8x8_lib8:
 // r10   <- k
 // r11   <- A
 // r12   <- B
-// r13   <- bs*sdb*sizeof(double)
+// r13   <- bs*sdb*sizeof(float)
 // r14   <- offB
 // ymm0  <- []
 // ymm1  <- []
@@ -1511,9 +1511,9 @@ inner_kernel_gemm_add_nn_8x8_lib8:
 //
 // output arguments:
 // r10   <- k-(4-offB)
-// r11   <- A+(4-offB)*bs*sizeof(double)
-// r12   <- B-offB+bs*sdb*sizeof(double)
-// r13   <- bs*sdb*sizeof(double)
+// r11   <- A+(4-offB)*bs*sizeof(float)
+// r12   <- B-offB+bs*sdb*sizeof(float)
+// r13   <- bs*sdb*sizeof(float)
 // r14   <- offB
 // ymm0  <- []
 // ymm1  <- []
@@ -2237,7 +2237,7 @@ inner_scale_ab_8x8_lib8:
 // r11   <- beta
 // r12  <- offset
 // r13   <- C
-// r14  <- 4*sdc*sizeof(double)
+// r14  <- 8*sdc*sizeof(float)
 // ymm0 <- []
 // ymm1 <- []
 // ymm2 <- []
@@ -2257,7 +2257,7 @@ inner_scale_ab_8x8_lib8:
 // r11   <- beta
 // r12  <- offset
 // r13   <- C
-// r14  <- 4*sdc*sizeof(double)
+// r14  <- 8*sdc*sizeof(float)
 // r15  <- n0 // col index: start from (inc)
 // ymm0 <- []
 // ymm1 <- []
@@ -2347,7 +2347,7 @@ inner_scale_ab_8x8_gen_lib8:
 	// 1 2 3 4 5 6 7
 	
 	movq	%r13, %r15 // C0
-	addq	%r14, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
+	addq	%r14, %r15 // C1 <- C0 + 8*sdc*sizeof(float)
 
 	cmpl	$ 4, %r10d
 	jl		1f
@@ -2563,7 +2563,7 @@ inner_blend_scale_ab_8x8_lib8:
 // r11   <- beta
 // r12  <- offset
 // r13   <- C
-// r14  <- 4*sdc*sizeof(double)
+// r14  <- 8*sdc*sizeof(float)
 // ymm0 <- []
 // ymm1 <- []
 // ymm2 <- []
@@ -2583,7 +2583,7 @@ inner_blend_scale_ab_8x8_lib8:
 // r11   <- beta
 // r12  <- offset
 // r13   <- C
-// r14  <- 4*sdc*sizeof(double)
+// r14  <- 8*sdc*sizeof(float)
 // r15  <- n0 // col index: start from (inc)
 // ymm0 <- []
 // ymm1 <- []
@@ -2693,7 +2693,7 @@ inner_blend_scale_ab_8x8_gen_lib8:
 	// 1 2 3 4 5 6 7
 	
 	movq	%r13, %r15 // C0
-	addq	%r14, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
+	addq	%r14, %r15 // C1 <- C0 + 8*sdc*sizeof(float)
 
 	cmpl	$ 4, %r10d
 	jl		1f
@@ -2872,7 +2872,7 @@ inner_blend_scale_11_8x8_lib8:
 // input arguments:
 // r10  <- offset
 // r11   <- C
-// r12  <- 4*sdc*sizeof(double)
+// r12  <- 8*sdc*sizeof(float)
 // ymm0 <- []
 // ymm1 <- []
 // ymm2 <- []
@@ -2890,7 +2890,7 @@ inner_blend_scale_11_8x8_lib8:
 // output arguments:
 // r10  <- offset
 // r11   <- C
-// r12  <- 4*sdc*sizeof(double)
+// r12  <- 8*sdc*sizeof(float)
 // ymm0 <- []
 // ymm1 <- []
 // ymm2 <- []
@@ -2970,7 +2970,7 @@ inner_blend_scale_11_8x8_gen_lib8:
 	// 1 2 3 4 5 6 7
 	
 	movq	%r13, %r15 // C0
-	addq	%r14, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
+	addq	%r14, %r15 // C1 <- C0 + 8*sdc*sizeof(float)
 
 	cmpl	$ 4, %r10d
 	jl		1f
@@ -3189,7 +3189,7 @@ inner_store_8x8_vs_lib8:
 // input arguments:
 // r10  <- offset
 // r11  <- D
-// r12  <- 4*sdd*sizeof(double)
+// r12  <- 8*sdd*sizeof(float)
 // r13  <- m0 // row index: start from (inc)
 // r14  <- m1 // row index: up to (exc)
 // r15  <- n0 // col index: start from (inc)
@@ -3207,7 +3207,7 @@ inner_store_8x8_vs_lib8:
 // output arguments:
 // r10  <- offset
 // r11  <- D
-// r12  <- 4*sdd*sizeof(double)
+// r12  <- 8*sdd*sizeof(float)
 // r13  <- m0 // row index: start from (inc)
 // r14  <- m1 // row index: up to (exc)
 // r15  <- n1-n0
@@ -3321,7 +3321,7 @@ inner_store_8x8_gen_lib8:
 	// 1 2 3 4 5 6 7
 	
 	movq	%r11, %rbx // D0
-	addq	%r12, %rbx // D1 <- D0 + 4*sdd*sizeof(double)
+	addq	%r12, %rbx // D1 <- D0 + 8*sdd*sizeof(float)
 
 	cmpl	$ 4, %r10d
 	jl		1f
@@ -3568,7 +3568,7 @@ inner_store_l_8x8_vs_lib8:
 // input arguments:
 // r10  <- offset
 // r11  <- D
-// r12  <- 4*sdd*sizeof(double)
+// r12  <- 8*sdd*sizeof(float)
 // r13  <- m0 // row index: start from (inc)
 // r14  <- m1 // row index: up to (exc)
 // r15  <- n0 // col index: start from (inc)
@@ -3586,7 +3586,7 @@ inner_store_l_8x8_vs_lib8:
 // output arguments:
 // r10  <- offset
 // r11  <- D
-// r12  <- 4*sdd*sizeof(double)
+// r12  <- 8*sdd*sizeof(float)
 // r13  <- m0 // row index: start from (inc)
 // r14  <- m1 // row index: up to (exc)
 // r15  <- n1-n0
@@ -3714,7 +3714,7 @@ inner_store_l_8x8_gen_lib8:
 	// 1 2 3 4 5 6 7
 	
 	movq	%r11, %rbx // D0
-	addq	%r12, %rbx // D1 <- D0 + 4*sdd*sizeof(double)
+	addq	%r12, %rbx // D1 <- D0 + 8*sdd*sizeof(float)
 
 	cmpl	$ 4, %r10d
 	jl		1f
@@ -4108,7 +4108,7 @@ kernel_sgemm_nn_8x8_lib8:
 	movq	ARG3, %r11  // A
 	movq	ARG5, %r12  // B
 	movq	ARG6, %r13 // sdb
-	sall	$ 5, %r13d // 4*sdb*sizeof(double)
+	sall	$ 5, %r13d // 8*sdb*sizeof(float)
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -4213,7 +4213,7 @@ kernel_sgemm_nn_8x8_vs_lib8:
 	movq	ARG3, %r11  // A
 	movq	ARG5, %r12  // B
 	movq	ARG6, %r13 // sdb
-	sall	$ 5, %r13d // 4*sdb*sizeof(double)
+	sall	$ 5, %r13d // 8*sdb*sizeof(float)
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -4320,7 +4320,7 @@ kernel_sgemm_nn_8x8_gen_lib8:
 	movq	ARG3, %r11  // A
 	movq	ARG5, %r12  // B
 	movq	ARG6, %r13 // sdb
-	sall	$ 5, %r13d // 4*sdb*sizeof(double)
+	sall	$ 5, %r13d // 8*sdb*sizeof(float)
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -4351,7 +4351,7 @@ kernel_sgemm_nn_8x8_gen_lib8:
 	movq	ARG8, %r12 // offsetC
 	movq	ARG9, %r13 // C
 	movq	ARG10, %r14 // sdc
-	sall	$ 5, %r14d // 4*sdc*sizeof(double)
+	sall	$ 5, %r14d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X8_GEN_LIB8
@@ -4369,7 +4369,7 @@ kernel_sgemm_nn_8x8_gen_lib8:
 	movq	ARG11, %r10 // offsetD
 	movq	ARG12, %r11 // D
 	movq	ARG13, %r12 // sdd
-	sall	$ 5, %r12d // 4*sdb*sizeof(double)
+	sall	$ 5, %r12d // 8*sdb*sizeof(float)
 	movq	ARG14, %r13 // m0
 	movq	ARG15, %r14 // m1
 	movq	ARG16, %r15 // n0

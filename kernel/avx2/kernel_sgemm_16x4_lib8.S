@@ -242,7 +242,7 @@ NAME:
 // input arguments:
 // r10d   <- k
 // r11   <- A
-// r12   <- 4*sda*sizeof(double)
+// r12   <- 8*sda*sizeof(float)
 // r13   <- B
 // ymm0  <- [d00 d10 d20 d30 d40 d50 d60 d70]
 // ymm1  <- [d01 d11 d21 d31 d41 d51 d61 d71]
@@ -264,9 +264,9 @@ NAME:
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- 4*sda*sizeof(double)
-// r13   <- B+4*k*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- 8*sda*sizeof(float)
+// r13   <- B+8*k*sizeof(float)
 // ymm0  <- [d00 d10 d20 d30 d40 d50 d60 d70]
 // ymm1  <- [d01 d11 d21 d31 d41 d51 d61 d71]
 // ymm2  <- [d02 d12 d22 d32 d42 d52 d62 d72]
@@ -764,7 +764,7 @@ NAME:
 // input arguments:
 // r10d   <- k
 // r11   <- A
-// r12   <- 4*sda*sizeof(double)
+// r12   <- 8*sda*sizeof(float)
 // r13   <- B
 // ymm0  <- [d00 d10 d20 d30 d40 d50 d60 d70]
 // ymm1  <- [d01 d11 d21 d31 d41 d51 d61 d71]
@@ -786,9 +786,9 @@ NAME:
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- 4*sda*sizeof(double)
-// r13   <- B+4*k*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- 8*sda*sizeof(float)
+// r13   <- B+8*k*sizeof(float)
 // ymm0  <- [d00 d10 d20 d30 d40 d50 d60 d70]
 // ymm1  <- [d01 d11 d21 d31 d41 d51 d61 d71]
 // ymm2  <- [d02 d12 d22 d32 d42 d52 d62 d72]
@@ -1024,9 +1024,9 @@ NAME:
 // input arguments:
 // r10d  <- k
 // r11   <- A
-// r12   <- 4*sda*sizeof(double)
+// r12   <- 8*sda*sizeof(float)
 // r13   <- B
-// r14   <- 4*sdb*sizeof(double)
+// r14   <- 8*sdb*sizeof(float)
 // r15   <= dirty
 // ymm0  <- []
 // ymm1  <- []
@@ -1044,10 +1044,10 @@ NAME:
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- 4*sda*sizeof(double)
-// r13   <- B+(k/4)*sdb*sizeof(double)+(k%4)
-// r14   <- 4*sdb*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- 8*sda*sizeof(float)
+// r13   <- B+((k/8)*sdb*8+(k%8))*sizeof(float)
+// r14   <- 8*sdb*sizeof(float)
 // r15   <= dirty
 // ymm0  <- []
 // ymm1  <- []
@@ -1153,19 +1153,19 @@ NAME:
 
 	// unroll 4
 	vbroadcastss	16(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm0
-	vfmadd231ps		%ymm11, %ymm12, %ymm4
-	vmovapd			160(%r11), %ymm13 // A
+	vfmadd231ps		%ymm13, %ymm12, %ymm0
+	vfmadd231ps		%ymm14, %ymm12, %ymm4
+	vmovaps			160(%r11), %ymm10 // A
 	vbroadcastss	48(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm1
-	vfmadd231ps		%ymm11, %ymm12, %ymm5
-	vmovapd			160(%r11, %r12, 1), %ymm14 // A
+	vfmadd231ps		%ymm13, %ymm12, %ymm1
+	vfmadd231ps		%ymm14, %ymm12, %ymm5
+	vmovaps			160(%r11, %r12, 1), %ymm11 // A
 	vbroadcastss	80(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm2
-	vfmadd231ps		%ymm11, %ymm12, %ymm6
+	vfmadd231ps		%ymm13, %ymm12, %ymm2
+	vfmadd231ps		%ymm14, %ymm12, %ymm6
 	vbroadcastss	112(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm3
-	vfmadd231ps		%ymm11, %ymm12, %ymm7
+	vfmadd231ps		%ymm13, %ymm12, %ymm3
+	vfmadd231ps		%ymm14, %ymm12, %ymm7
 
 	// unroll 5
 	vbroadcastss	20(%r13), %ymm12 // B
@@ -1185,19 +1185,19 @@ NAME:
 
 	// unroll 6
 	vbroadcastss	24(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm0
-	vfmadd231ps		%ymm11, %ymm12, %ymm4
-	vmovapd			224(%r11), %ymm13 // A
+	vfmadd231ps		%ymm13, %ymm12, %ymm0
+	vfmadd231ps		%ymm14, %ymm12, %ymm4
+	vmovaps			224(%r11), %ymm10 // A
 	vbroadcastss	56(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm1
-	vfmadd231ps		%ymm11, %ymm12, %ymm5
-	vmovapd			224(%r11, %r12, 1), %ymm14 // A
+	vfmadd231ps		%ymm13, %ymm12, %ymm1
+	vfmadd231ps		%ymm14, %ymm12, %ymm5
+	vmovaps			224(%r11, %r12, 1), %ymm11 // A
 	vbroadcastss	88(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm2
-	vfmadd231ps		%ymm11, %ymm12, %ymm6
+	vfmadd231ps		%ymm13, %ymm12, %ymm2
+	vfmadd231ps		%ymm14, %ymm12, %ymm6
 	vbroadcastss	120(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm3
-	vfmadd231ps		%ymm11, %ymm12, %ymm7
+	vfmadd231ps		%ymm13, %ymm12, %ymm3
+	vfmadd231ps		%ymm14, %ymm12, %ymm7
 	addq	$ 256, %r11
 
 	// unroll 7
@@ -1212,7 +1212,7 @@ NAME:
 	vbroadcastss	92(%r13), %ymm12 // B
 	vfmadd231ps		%ymm10, %ymm12, %ymm2
 	vfmadd231ps		%ymm11, %ymm12, %ymm6
-	vbroadcastss	-4(%r13), %ymm12 // B
+	vbroadcastss	124(%r13), %ymm12 // B
 	vfmadd231ps		%ymm10, %ymm12, %ymm3
 	vfmadd231ps		%ymm11, %ymm12, %ymm7
 	addq	%r14, %r13
@@ -1294,19 +1294,19 @@ NAME:
 
 	// unroll 4
 	vbroadcastss	16(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm0
-	vfmadd231ps		%ymm11, %ymm12, %ymm4
-	vmovapd			160(%r11), %ymm13 // A
+	vfmadd231ps		%ymm13, %ymm12, %ymm0
+	vfmadd231ps		%ymm14, %ymm12, %ymm4
+	vmovaps			160(%r11), %ymm10 // A
 	vbroadcastss	48(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm1
-	vfmadd231ps		%ymm11, %ymm12, %ymm5
-	vmovapd			160(%r11, %r12, 1), %ymm14 // A
+	vfmadd231ps		%ymm13, %ymm12, %ymm1
+	vfmadd231ps		%ymm14, %ymm12, %ymm5
+	vmovaps			160(%r11, %r12, 1), %ymm11 // A
 	vbroadcastss	80(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm2
-	vfmadd231ps		%ymm11, %ymm12, %ymm6
+	vfmadd231ps		%ymm13, %ymm12, %ymm2
+	vfmadd231ps		%ymm14, %ymm12, %ymm6
 	vbroadcastss	112(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm3
-	vfmadd231ps		%ymm11, %ymm12, %ymm7
+	vfmadd231ps		%ymm13, %ymm12, %ymm3
+	vfmadd231ps		%ymm14, %ymm12, %ymm7
 
 	// unroll 5
 	vbroadcastss	20(%r13), %ymm12 // B
@@ -1326,19 +1326,19 @@ NAME:
 
 	// unroll 6
 	vbroadcastss	24(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm0
-	vfmadd231ps		%ymm11, %ymm12, %ymm4
-	vmovapd			224(%r11), %ymm13 // A
+	vfmadd231ps		%ymm13, %ymm12, %ymm0
+	vfmadd231ps		%ymm14, %ymm12, %ymm4
+	vmovaps			224(%r11), %ymm10 // A
 	vbroadcastss	56(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm1
-	vfmadd231ps		%ymm11, %ymm12, %ymm5
-	vmovapd			224(%r11, %r12, 1), %ymm14 // A
+	vfmadd231ps		%ymm13, %ymm12, %ymm1
+	vfmadd231ps		%ymm14, %ymm12, %ymm5
+	vmovaps			224(%r11, %r12, 1), %ymm11 // A
 	vbroadcastss	88(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm2
-	vfmadd231ps		%ymm11, %ymm12, %ymm6
+	vfmadd231ps		%ymm13, %ymm12, %ymm2
+	vfmadd231ps		%ymm14, %ymm12, %ymm6
 	vbroadcastss	120(%r13), %ymm12 // B
-	vfmadd231ps		%ymm10, %ymm12, %ymm3
-	vfmadd231ps		%ymm11, %ymm12, %ymm7
+	vfmadd231ps		%ymm13, %ymm12, %ymm3
+	vfmadd231ps		%ymm14, %ymm12, %ymm7
 	addq	$ 256, %r11
 
 	// unroll 7
@@ -1414,9 +1414,9 @@ NAME:
 // input arguments:
 // r10   <- k
 // r11   <- A
-// r12   <- bs*sda*sizeof(double)
+// r12   <- bs*sda*sizeof(float)
 // r13   <- B
-// r14   <- bs*sdb*sizeof(double)
+// r14   <- bs*sdb*sizeof(float)
 // r15   <- offB
 // ymm0  <- []
 // ymm1  <- []
@@ -1429,10 +1429,10 @@ NAME:
 //
 // output arguments:
 // r10   <- k-(4-offB)
-// r11   <- A+(4-offB)*bs*sizeof(double)
-// r12   <- bs*sda*sizeof(double)
-// r13   <- B-offB+bs*sdb*sizeof(double)
-// r14   <- bs*sdb*sizeof(double)
+// r11   <- A+(4-offB)*bs*sizeof(float)
+// r12   <- bs*sda*sizeof(float)
+// r13   <- B-offB+bs*sdb*sizeof(float)
+// r14   <- bs*sdb*sizeof(float)
 // r15   <- offB
 // ymm0  <- []
 // ymm1  <- []
@@ -1520,9 +1520,9 @@ NAME:
 // input arguments:
 // r10   <- k
 // r11   <- A
-// r12   <- bs*sda*sizeof(double)
+// r12   <- bs*sda*sizeof(float)
 // r13   <- B
-// r14   <- bs*sdb*sizeof(double)
+// r14   <- bs*sdb*sizeof(float)
 // r15   <- offB
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
@@ -1535,10 +1535,10 @@ NAME:
 //
 // output arguments:
 // r10   <- k-(4-offB)
-// r11   <- A+(4-offB)*bs*sizeof(double)
-// r12   <- bs*sda*sizeof(double)
-// r13   <- B-offB+bs*sdb*sizeof(double)
-// r14   <- bs*sdb*sizeof(double)
+// r11   <- A+(4-offB)*bs*sizeof(float)
+// r12   <- bs*sda*sizeof(float)
+// r13   <- B-offB+bs*sdb*sizeof(float)
+// r14   <- bs*sdb*sizeof(float)
 // r15   <- offB
 // ymm0  <- [d00 d10 d20 d30]
 // ymm1  <- [d01 d11 d21 d31]
@@ -2284,7 +2284,7 @@ NAME:
 	je			0f // end
 
 	movq	%r12, %r15 // C1 <- C0
-	addq	%r13, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
+	addq	%r13, %r15 // C1 <- C0 + 8*sdc*sizeof(float)
 
 	vmovaps		0(%r12), %ymm15
 	vfmadd231ps	%ymm15, %ymm14, %ymm0
@@ -2327,7 +2327,7 @@ NAME:
 // r11   <- beta
 // r12  <- offset
 // r13   <- C
-// r14  <- 4*sdc*sizeof(double)
+// r14  <- 8*sdc*sizeof(float)
 // ymm0 <- [d00 d11 d22 d33]
 // ymm1 <- [d01 d10 d23 d32]
 // ymm2 <- [d03 d12 d21 d30]
@@ -2343,7 +2343,7 @@ NAME:
 // r11   <- beta
 // r12  <- offset
 // r13   <- C
-// r14  <- 4*sdc*sizeof(double)
+// r14  <- 8*sdc*sizeof(float)
 // r15  <- n0 // col index: start from (inc)
 // ymm0 <- [d00 d10 d20 d30]
 // ymm1 <- [d01 d11 d21 d31]
@@ -2384,7 +2384,7 @@ NAME:
 	je			3f // end
 
 	movq	%r13, %rax // C1 <- C0
-	addq	%r14, %rax // C1 <- C0 + 4*sdc*sizeof(double)
+	addq	%r14, %rax // C1 <- C0 + 8*sdc*sizeof(float)
 
 	cmpl	$ 0, %r12d
 	jg		0f
@@ -2417,7 +2417,7 @@ NAME:
 	// 1 2 3 4 5 6 7
 	
 	movq	%rax, %rbx // C1
-	addq	%r14, %rbx // C2 <- C1 + 4*sdc*sizeof(double)
+	addq	%r14, %rbx // C2 <- C1 + 8*sdc*sizeof(float)
 
 	cmpl	$ 4, %r10d
 	jl		1f
@@ -2583,7 +2583,7 @@ NAME:
 #endif
 	
 	movq	%r10, %r15 // C1 <- C0
-	addq	%r11, %r15 // C1 <- C0 + 4*sdc*sizeof(double)
+	addq	%r11, %r15 // C1 <- C0 + 8*sdc*sizeof(float)
 
 	vmovaps		0(%r10), %ymm15
 	vaddps		%ymm0, %ymm15, %ymm0
@@ -2622,7 +2622,7 @@ NAME:
 // input arguments:
 // r10  <- offset
 // r11   <- C
-// r12  <- 4*sdc*sizeof(double)
+// r12  <- 8*sdc*sizeof(float)
 // ymm0 <- [d00 d11 d22 d33]
 // ymm1 <- [d01 d10 d23 d32]
 // ymm2 <- [d03 d12 d21 d30]
@@ -2636,7 +2636,7 @@ NAME:
 // output arguments:
 // r10  <- offset
 // r11   <- C
-// r12  <- 4*sdc*sizeof(double)
+// r12  <- 8*sdc*sizeof(float)
 // ymm0 <- [d00 d10 d20 d30]
 // ymm1 <- [d01 d11 d21 d31]
 // ymm2 <- [d02 d12 d22 d32]
@@ -2655,7 +2655,7 @@ NAME:
 #endif
 	
 	movq	%r11, %rax // C1 <- C0
-	addq	%r12, %rax // C1 <- C0 + 4*sdc*sizeof(double)
+	addq	%r12, %rax // C1 <- C0 + 8*sdc*sizeof(float)
 
 	cmpl	$ 0, %r10d
 	jg		0f
@@ -2688,7 +2688,7 @@ NAME:
 	// 1 2 3 4 5 6 7
 	
 	movq	%rax, %rbx // C1
-	addq	%r12, %rbx // C2 <- C1 + 4*sdc*sizeof(double)
+	addq	%r12, %rbx // C2 <- C1 + 8*sdc*sizeof(float)
 
 	cmpl	$ 4, %r10d
 	jl		1f
@@ -2784,7 +2784,7 @@ NAME:
 #endif
 	
 	movq	%r10, %r15 // D1 <- D0
-	addq	%r11, %r15 // D1 <- D0 + 4*sdd*sizeof(double)
+	addq	%r11, %r15 // D1 <- D0 + 8*sdd*sizeof(float)
 
 	vmovaps 	%ymm0,  0(%r10)
 	vmovaps 	%ymm1, 32(%r10)
@@ -2815,7 +2815,7 @@ NAME:
 //
 // input arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
+// r11  <- 8*sdd*sizeof(float)
 // r12  <- km
 // r13  <- kn
 // ymm0 <- []
@@ -2825,7 +2825,7 @@ NAME:
 //
 // output arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
+// r11  <- 8*sdd*sizeof(float)
 // r12  <- km
 // r13  <- kn
 // ymm0 <- []
@@ -2888,7 +2888,7 @@ NAME:
 // input arguments:
 // r10  <- offset
 // r11  <- D
-// r12  <- 4*sdd*sizeof(double)
+// r12  <- 8*sdd*sizeof(float)
 // r13  <- m0 // row index: start from (inc)
 // r14  <- m1 // row index: up to (exc)
 // r15  <- n0 // col index: start from (inc)
@@ -2902,7 +2902,7 @@ NAME:
 // output arguments:
 // r10  <- offset
 // r11  <- D
-// r12  <- 4*sdd*sizeof(double)
+// r12  <- 8*sdd*sizeof(float)
 // r13  <- m0 // row index: start from (inc)
 // r14  <- m1 // row index: up to (exc)
 // r15  <- n1-n0
@@ -3135,7 +3135,7 @@ NAME:
 //
 // input arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
+// r11  <- 8*sdd*sizeof(float)
 // r12  <- km
 // r13  <- kn
 // ymm0 <- []
@@ -3145,7 +3145,7 @@ NAME:
 //
 // output arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
+// r11  <- 8*sdd*sizeof(float)
 // r12  <- km
 // r13  <- kn
 // ymm0 <- []
@@ -3213,7 +3213,7 @@ NAME:
 // input arguments:
 // r10  <- offset
 // r11  <- D
-// r12  <- 4*sdd*sizeof(double)
+// r12  <- 8*sdd*sizeof(float)
 // r13  <- m0 // row index: start from (inc)
 // r14  <- m1 // row index: up to (exc)
 // r15  <- n0 // col index: start from (inc)
@@ -3227,7 +3227,7 @@ NAME:
 // output arguments:
 // r10  <- offset
 // r11  <- D
-// r12  <- 4*sdd*sizeof(double)
+// r12  <- 8*sdd*sizeof(float)
 // r13  <- m0 // row index: start from (inc)
 // r14  <- m1 // row index: up to (exc)
 // r15  <- n1-n0
@@ -3461,7 +3461,7 @@ NAME:
 //
 // input arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
+// r11  <- 8*sdd*sizeof(float)
 // r12  <- km
 // r13  <- kn
 // ymm0 <- []
@@ -3471,7 +3471,7 @@ NAME:
 //
 // output arguments:
 // r10  <- D
-// r11  <- 4*sdd*sizeof(double)
+// r11  <- 8*sdd*sizeof(float)
 // r12  <- km
 // r13  <- kn
 // ymm0 <- []
@@ -3541,7 +3541,7 @@ NAME:
 // input arguments:
 // r10  <- offset
 // r11  <- D
-// r12  <- 4*sdd*sizeof(double)
+// r12  <- 8*sdd*sizeof(float)
 // r13  <- m0 // row index: start from (inc)
 // r14  <- m1 // row index: up to (exc)
 // r15  <- n0 // col index: start from (inc)
@@ -3555,7 +3555,7 @@ NAME:
 // output arguments:
 // r10  <- offset
 // r11  <- D
-// r12  <- 4*sdd*sizeof(double)
+// r12  <- 8*sdd*sizeof(float)
 // r13  <- m0 // row index: start from (inc)
 // r14  <- m1 // row index: up to (exc)
 // r15  <- n1-n0
@@ -3948,11 +3948,11 @@ NAME:
 
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
-	movq	ARG4, %r12 // sdb
-	sall	$ 5, %r12d // 4*sdb*sizeof(double)
+	movq	ARG4, %r12 // sda
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG6, %r13  // B
 	movq	ARG7, %r14 // sdb
-	sall	$ 5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 8*sdb*sizeof(float)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -3974,7 +3974,7 @@ NAME:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12   // C
 	movq	ARG10, %r13   // sdc
-	sall	$ 5, %r13d // 4*sdb*sizeof(double)
+	sall	$ 5, %r13d // 8*sdb*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_16X4_LIB8
@@ -3987,7 +3987,7 @@ NAME:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_16X4_LIB8
@@ -4023,8 +4023,8 @@ NAME:
 
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
-	movq	ARG4, %r12 // sdb
-	sall	$ 5, %r12d // 8*sdb*sizeof(float)
+	movq	ARG4, %r12 // sda
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG6, %r13  // B
 	movq	ARG7, %r14 // sdb
 	sall	$ 5, %r14d // 8*sdb*sizeof(float)
@@ -4049,7 +4049,7 @@ NAME:
 	movq	ARG8, %r11 // beta
 	movq	ARG9, %r12   // C
 	movq	ARG10, %r13   // sdc
-	sall	$ 5, %r13d // 4*sdb*sizeof(double)
+	sall	$ 5, %r13d // 8*sdb*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_16X4_LIB8
@@ -4062,7 +4062,7 @@ NAME:
 
 	movq	ARG11, %r10 // D
 	movq	ARG12, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 	movq	ARG13, %r12 // km
 	movq	ARG14, %r13 // kn
 
@@ -4101,10 +4101,10 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12 // sda
-	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG6, %r13  // B
 	movq	ARG7, %r14 // sdb
-	sall	$ 5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 8*sdb*sizeof(float)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -4127,7 +4127,7 @@ NAME:
 	movq	ARG9, %r12 // offsetC
 	movq	ARG10, %r13 // C
 	movq	ARG11, %r14 // sdc
-	sall	$ 5, %r14d // 4*sdc*sizeof(double)
+	sall	$ 5, %r14d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_16X4_GEN_LIB8
@@ -4141,7 +4141,7 @@ NAME:
 	movq	ARG12, %r10 // offsetD
 	movq	ARG13, %r11 // D
 	movq	ARG14, %r12 // sdd
-	sall	$ 5, %r12d // 4*sdb*sizeof(double)
+	sall	$ 5, %r12d // 8*sdb*sizeof(float)
 	movq	ARG15, %r13 // m0
 	movq	ARG16, %r14 // m1
 	movq	ARG17, %r15 // n0
@@ -4196,7 +4196,7 @@ NAME:
 
 	movq	ARG5, %r10 // C
 	movq	ARG6, %r11 // sdc
-	sall	$ 5, %r11d // 4*sdc*sizeof(double)
+	sall	$ 5, %r11d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_16X4_LIB8
@@ -4222,7 +4222,7 @@ NAME:
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_16X4_LIB8
@@ -4259,7 +4259,7 @@ NAME:
 	movq	ARG1, %r10
 	movq	ARG2, %r11
 	movq	ARG3, %r12
-	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG4, %r13
 
 #if MACRO_LEVEL>=2
@@ -4299,7 +4299,7 @@ NAME:
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 	movq	ARG11, %r12 // m1 
 	movq	ARG12, %r13 // n1 
 
@@ -4345,7 +4345,7 @@ NAME:
 	movq	ARG1, %r10 // kp
 	movq	ARG2, %r11  // Ap
 	movq	ARG3, %r12 // sdap
-	sall	$ 5, %r12d   // 4*sdap*sizeof(double)
+	sall	$ 5, %r12d   // 8*sdap*sizeof(float)
 	movq	ARG4, %r13  // Bp
 
 #if MACRO_LEVEL>=2
@@ -4360,7 +4360,7 @@ NAME:
 	movq	ARG5, %r10                 // km
 	movq	ARG6, %r11                   // Am
 	movq	ARG7, %r12 // sdam
-	sall	$ 5, %r12d                   // 4*sda*sizeof(double)
+	sall	$ 5, %r12d                   // 8*sda*sizeof(float)
 	movq	ARG8, %r13  // Bm
 
 #if MACRO_LEVEL>=2
@@ -4374,7 +4374,7 @@ NAME:
 
 	movq	ARG9, %r10  // C
 	movq	ARG10, %r11 // sdc
-	sall	$ 5, %r11d // 4*sdc*sizeof(double)
+	sall	$ 5, %r11d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_16X4_LIB8
@@ -4400,7 +4400,7 @@ NAME:
 
 	movq	ARG11, %r10 // store address D
 	movq	ARG12, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_16X4_LIB8
@@ -4444,7 +4444,7 @@ NAME:
 	movq	ARG1, %r10 // kp
 	movq	ARG2, %r11  // Ap
 	movq	ARG3, %r12 // sdap
-	sall	$ 5, %r12d   // 4*sdap*sizeof(double)
+	sall	$ 5, %r12d   // 8*sdap*sizeof(float)
 	movq	ARG4, %r13  // Bp
 
 #if MACRO_LEVEL>=2
@@ -4459,7 +4459,7 @@ NAME:
 	movq	ARG5, %r10                 // km
 	movq	ARG6, %r11                   // Am
 	movq	ARG7, %r12 // sdam
-	sall	$ 5, %r12d                   // 4*sda*sizeof(double)
+	sall	$ 5, %r12d                   // 8*sda*sizeof(float)
 	movq	ARG8, %r13  // Bm
 
 #if MACRO_LEVEL>=2
@@ -4473,7 +4473,7 @@ NAME:
 
 	movq	ARG9, %r10  // C
 	movq	ARG10, %r11 // sdc
-	sall	$ 5, %r11d // 4*sdc*sizeof(double)
+	sall	$ 5, %r11d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_16X4_LIB8
@@ -4499,7 +4499,7 @@ NAME:
 
 	movq	ARG11, %r10 // store address D
 	movq	ARG12, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 	movq	ARG15, %r12 // km 
 	movq	ARG16, %r13 // kn 
 
@@ -4559,7 +4559,7 @@ NAME:
 
 	movq	ARG5, %r10 // C
 	movq	ARG6, %r11 // sdc
-	sall	$ 5, %r11d // 4*sdc*sizeof(double)
+	sall	$ 5, %r11d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_16X4_LIB8
@@ -4584,7 +4584,7 @@ NAME:
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB8
@@ -4667,7 +4667,7 @@ NAME:
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 	movq	ARG10, %r12 // m1 
 	movq	ARG11, %r13 // n1 
 
@@ -4727,7 +4727,7 @@ NAME:
 
 	movq	ARG5, %r10 // C
 	movq	ARG6, %r11 // sdc
-	sall	$ 5, %r11d // 4*sdc*sizeof(double)
+	sall	$ 5, %r11d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_16X4_LIB8
@@ -4752,7 +4752,7 @@ NAME:
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_16X4_LIB8
@@ -4835,7 +4835,7 @@ NAME:
 
 	movq	ARG7, %r10 // D
 	movq	ARG8, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 	movq	ARG10, %r12 // m1 
 	movq	ARG11, %r13 // n1 
 
@@ -4881,7 +4881,7 @@ NAME:
 	movq	ARG1, %r10 // kp
 	movq	ARG2, %r11  // Ap
 	movq	ARG3, %r12 // sdap
-	sall	$ 5, %r12d   // 4*sdap*sizeof(double)
+	sall	$ 5, %r12d   // 8*sdap*sizeof(float)
 	movq	ARG4, %r13  // Bp
 
 #if MACRO_LEVEL>=2
@@ -4896,7 +4896,7 @@ NAME:
 	movq	ARG5, %r10                 // km
 	movq	ARG6, %r11                   // Am
 	movq	ARG7, %r12 // sdam
-	sall	$ 5, %r12d                   // 4*sdam*sizeof(double)
+	sall	$ 5, %r12d                   // 8*sdam*sizeof(float)
 	movq	ARG8, %r13  // Bm
 
 #if MACRO_LEVEL>=2
@@ -4910,7 +4910,7 @@ NAME:
 
 	movq	ARG9, %r10 // C
 	movq	ARG10, %r11 // sdc
-	sall	$ 5, %r11d // 4*sdc*sizeof(double)
+	sall	$ 5, %r11d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_16X4_LIB8
@@ -4935,7 +4935,7 @@ NAME:
 
 	movq	ARG11, %r10 // store address D
 	movq	ARG12, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_12X4_LIB8
@@ -4979,7 +4979,7 @@ NAME:
 	movq	ARG1, %r10 // kp
 	movq	ARG2, %r11  // Ap
 	movq	ARG3, %r12 // sdap
-	sall	$ 5, %r12d   // 4*sdap*sizeof(double)
+	sall	$ 5, %r12d   // 8*sdap*sizeof(float)
 	movq	ARG4, %r13  // Bp
 
 #if MACRO_LEVEL>=2
@@ -4994,7 +4994,7 @@ NAME:
 	movq	ARG5, %r10                 // km
 	movq	ARG6, %r11                   // Am
 	movq	ARG7, %r12 // sdam
-	sall	$ 5, %r12d                   // 4*sdam*sizeof(double)
+	sall	$ 5, %r12d                   // 8*sdam*sizeof(float)
 	movq	ARG8, %r13  // Bm
 
 #if MACRO_LEVEL>=2
@@ -5008,7 +5008,7 @@ NAME:
 
 	movq	ARG9, %r10 // C
 	movq	ARG10, %r11 // sdc
-	sall	$ 5, %r11d // 4*sdc*sizeof(double)
+	sall	$ 5, %r11d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_16X4_LIB8
@@ -5033,7 +5033,7 @@ NAME:
 
 	movq	ARG11, %r10 // store address D
 	movq	ARG12, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 
 	movq	ARG14, %r12 // km 
 	movq	ARG15, %r13 // kn 
@@ -5080,7 +5080,7 @@ NAME:
 	movq	ARG1, %r10 // kp
 	movq	ARG2, %r11  // Ap
 	movq	ARG3, %r12 // sdap
-	sall	$ 5, %r12d   // 4*sdap*sizeof(double)
+	sall	$ 5, %r12d   // 8*sdap*sizeof(float)
 	movq	ARG4, %r13  // Bp
 
 #if MACRO_LEVEL>=2
@@ -5095,7 +5095,7 @@ NAME:
 	movq	ARG5, %r10                 // km
 	movq	ARG6, %r11                   // Am
 	movq	ARG7, %r12 // sdam
-	sall	$ 5, %r12d                   // 4*sdam*sizeof(double)
+	sall	$ 5, %r12d                   // 8*sdam*sizeof(float)
 	movq	ARG8, %r13  // Bm
 
 #if MACRO_LEVEL>=2
@@ -5109,7 +5109,7 @@ NAME:
 
 	movq	ARG9, %r10 // C
 	movq	ARG10, %r11 // sdc
-	sall	$ 5, %r11d // 4*sdc*sizeof(double)
+	sall	$ 5, %r11d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_16X4_LIB8
@@ -5134,7 +5134,7 @@ NAME:
 
 	movq	ARG11, %r10 // store address D
 	movq	ARG12, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_16X4_LIB8
@@ -5178,7 +5178,7 @@ NAME:
 	movq	ARG1, %r10 // kp
 	movq	ARG2, %r11  // Ap
 	movq	ARG3, %r12 // sdap
-	sall	$ 5, %r12d   // 4*sdap*sizeof(double)
+	sall	$ 5, %r12d   // 8*sdap*sizeof(float)
 	movq	ARG4, %r13  // Bp
 
 #if MACRO_LEVEL>=2
@@ -5193,7 +5193,7 @@ NAME:
 	movq	ARG5, %r10                 // km
 	movq	ARG6, %r11                   // Am
 	movq	ARG7, %r12 // sdam
-	sall	$ 5, %r12d                   // 4*sdam*sizeof(double)
+	sall	$ 5, %r12d                   // 8*sdam*sizeof(float)
 	movq	ARG8, %r13  // Bm
 
 #if MACRO_LEVEL>=2
@@ -5207,7 +5207,7 @@ NAME:
 
 	movq	ARG9, %r10 // C
 	movq	ARG10, %r11 // sdc
-	sall	$ 5, %r11d // 4*sdc*sizeof(double)
+	sall	$ 5, %r11d // 8*sdc*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_SCALE_11_16X4_LIB8
@@ -5232,7 +5232,7 @@ NAME:
 
 	movq	ARG11, %r10 // store address D
 	movq	ARG12, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 
 	movq	ARG14, %r12 // km 
 	movq	ARG15, %r13 // kn 
@@ -5540,10 +5540,10 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sdb
-	sall	$ 5, %r12d // 4*sdb*sizeof(double)
+	sall	$ 5, %r12d // 8*sdb*sizeof(float)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$ 5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 8*sdb*sizeof(float)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -5582,7 +5582,7 @@ NAME:
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_16X4_LIB8
@@ -5619,10 +5619,10 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sdb
-	sall	$ 5, %r12d // 4*sdb*sizeof(double)
+	sall	$ 5, %r12d // 8*sdb*sizeof(float)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$ 5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 8*sdb*sizeof(float)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -5661,7 +5661,7 @@ NAME:
 
 	movq	ARG8, %r10 // D
 	movq	ARG9, %r11 // sdd
-	sall	$ 5, %r11d // 4*sdd*sizeof(double)
+	sall	$ 5, %r11d // 8*sdd*sizeof(float)
 	movq	ARG10, %r12 // km
 	movq	ARG11, %r13 // kn
 
@@ -5700,10 +5700,10 @@ NAME:
 	movq	ARG1, %r10 // k
 	movq	ARG3, %r11 // A
 	movq	ARG4, %r12 // sda
-	sall	$ 5, %r12d // 4*sda*sizeof(double)
+	sall	$ 5, %r12d // 8*sda*sizeof(float)
 	movq	ARG6, %r13 // B
 	movq	ARG7, %r14 // sdb
-	sall	$ 5, %r14d // 4*sdb*sizeof(double)
+	sall	$ 5, %r14d // 8*sdb*sizeof(float)
 	movq	ARG5, %r15 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -5743,7 +5743,7 @@ NAME:
 	movq	ARG8, %r10 // offsetD
 	movq	ARG9, %r11 // D
 	movq	ARG10, %r12 // sdd
-	sall	$ 5, %r12d // 4*sdd*sizeof(double)
+	sall	$ 5, %r12d // 8*sdd*sizeof(float)
 	movq	ARG11, %r13 // m0
 	movq	ARG12, %r14 // m1
 	movq	ARG13, %r15 // n0
