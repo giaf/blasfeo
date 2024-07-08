@@ -232,7 +232,7 @@ NAME:
 // input arguments:
 // r10d  <- k
 // r11   <- A
-// r12   <- bs*sda*sizeof(double) = 32*sda
+// r12   <- bs*sda*sizeof(float) = 32*sda
 // r13   <- x
 // ymm0  <- [z0a z0b z0c z0d]
 // ymm1  <- [z1a z1b z1c z1d]
@@ -250,9 +250,9 @@ NAME:
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- bs*sda*sizeof(double) = 32*sda
-// r13   <- x+k*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- bs*sda*sizeof(float) = 32*sda
+// r13   <- x+k*sizeof(float)
 // ymm0  <- [z0a z0b z0c z0d]
 // ymm1  <- [z1a z1b z1c z1d]
 // ymm2  <- [z2a z2b z2c z2d]
@@ -370,7 +370,7 @@ NAME:
 // input arguments:
 // r10d  <- k
 // r11   <- A
-// r12   <- bs*sda*sizeof(double) = 32*sda
+// r12   <- bs*sda*sizeof(float) = 32*sda
 // r13   <- x_t
 // r14   <- z_n
 // ymm0  <- [z_t_0a z_t_0b z_t_0c z_t_0d]
@@ -391,10 +391,10 @@ NAME:
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- bs*sda*sizeof(double) = 32*sda
-// r13   <- x_t+k*sizeof(double)
-// r14   <- z_n+k*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- bs*sda*sizeof(float) = 32*sda
+// r13   <- x_t+k*sizeof(float)
+// r14   <- z_n+k*sizeof(float)
 // ymm0  <- [z_t_0a z_t_0b z_t_0c z_t_0d]
 // ymm1  <- [z_t_1a z_t_1b z_t_1c z_t_1d]
 // ymm2  <- [z_t_2a z_t_2b z_t_2c z_t_2d]
@@ -546,7 +546,7 @@ NAME:
 // input arguments:
 // r10d  <- k
 // r11   <- A
-// r12   <- bs*sda*sizeof(double) = 32*sda
+// r12   <- bs*sda*sizeof(float) = 32*sda
 // r13   <- x
 // r14d  <- offA
 // ymm0  <- [z0a z0b z0c z0d]
@@ -1061,7 +1061,7 @@ NAME:
 // input arguments:
 // r10   <- kmax
 // r11   <- A
-// r12   <- bs*sda*sizeof(double) = 32*sda
+// r12   <- bs*sda*sizeof(float) = 32*sda
 // r13   <- x_t
 // r14   <- z_n
 // r15   <- offA
@@ -1083,10 +1083,10 @@ NAME:
 //
 // output arguments:
 // r10   <- kmax-4
-// r11   <- A+4*k*sizeof(double)
-// r12   <- bs*sda*sizeof(double) = 32*sda
-// r13   <- x_t+k*sizeof(double)
-// r14   <- z_n+k*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- bs*sda*sizeof(float) = 32*sda
+// r13   <- x_t+k*sizeof(float)
+// r14   <- z_n+k*sizeof(float)
 // r15   <- offA
 // ymm0  <- [z_t_0a z_t_0b z_t_0c z_t_0d]
 // ymm1  <- [z_t_1a z_t_1b z_t_1c z_t_1d]
@@ -1627,7 +1627,7 @@ NAME:
 
 
 //                            1      2              3          4        5          6             7         8          9
-// void kernel_sgemv_t_4_lib8(int k, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z);
+// void kernel_sgemv_t_4_lib8(int k, float *alpha, int offA, float *A, int sda, float *x, float *beta, float *y, float *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_t_4_lib8)
@@ -1699,7 +1699,7 @@ NAME:
 
 
 //                               1      2              3          4        5          6             7         8           9         10
-// void kernel_sgemv_t_4_vs_lib8(int k, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int k1);
+// void kernel_sgemv_t_4_vs_lib8(int k, float *alpha, int offA, float *A, int sda, float *x, float *beta, float *y, float *z, int k1);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_t_4_vs_lib8)
@@ -1775,7 +1775,7 @@ NAME:
 // TODO
 
 //                                 1      2          3        4                   5          6          7
-// void kernel_strsv_lt_inv_8_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
+// void kernel_strsv_lt_inv_8_lib8(int k, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_strsv_lt_inv_8_lib8)
@@ -1857,7 +1857,7 @@ NAME:
 
 
 //                                    1      2          3        4                   5          6          7          8      9
-// void kernel_strsv_lt_inv_8_vs_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z, int km, int kn);
+// void kernel_strsv_lt_inv_8_vs_lib8(int k, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z, int km, int kn);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_strsv_lt_inv_8_vs_lib8)
@@ -1944,7 +1944,7 @@ NAME:
 
 
 //                             1      2                3                4          5        6            7            8               9            10           11
-// void kernel_sgemv_nt_4_lib8(int k, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t);
+// void kernel_sgemv_nt_4_lib8(int k, float *alpha_n, float *alpha_t, float *A, int sda, float *x_n, float *x_t, float *beta_t, float *y_t, float *z_n, float *z_t);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_nt_4_lib8)
@@ -2026,7 +2026,7 @@ NAME:
 
 
 //                                1      2                3                4          5        6            7            8               9            10           11           12
-// void kernel_sgemv_nt_4_vs_lib8(int k, double *alpha_n, double *alpha_t, double *A, int sda, double *x_n, double *x_t, double *beta_t, double *y_t, double *z_n, double *z_t, int km);
+// void kernel_sgemv_nt_4_vs_lib8(int k, float *alpha_n, float *alpha_t, float *A, int sda, float *x_n, float *x_t, float *beta_t, float *y_t, float *z_n, float *z_t, int km);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_nt_4_vs_lib8)
@@ -2120,7 +2120,7 @@ NAME:
 
 
 //                             1      2              3          4        5          6
-// void kernel_dsymv_l_4l_lib8(int k, double *alpha, double *A, int sda, double *x, double *z);
+// void kernel_dsymv_l_4l_lib8(int k, float *alpha, float *A, int sda, float *x, float *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_ssymv_l_4l_lib8)
@@ -2207,7 +2207,7 @@ NAME:
 
 
 //                             1      2              3          4        5          6
-// void kernel_dsymv_l_4r_lib8(int k, double *alpha, double *A, int sda, double *x, double *z);
+// void kernel_dsymv_l_4r_lib8(int k, float *alpha, float *A, int sda, float *x, float *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_ssymv_l_4r_lib8)
@@ -2294,7 +2294,7 @@ NAME:
 
 
 //                                1      2              3          4          5        6          7          8
-// void kernel_dsymv_l_4l_gen_lib8(int k, double *alpha, int offA, double *A, int sda, double *x, double *z, int km);
+// void kernel_dsymv_l_4l_gen_lib8(int k, float *alpha, int offA, float *A, int sda, float *x, float *z, int km);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_ssymv_l_4l_gen_lib8)
@@ -2393,7 +2393,7 @@ NAME:
 
 
 //                                1      2              3          4          5        6          7          8
-// void kernel_dsymv_l_4r_gen_lib8(int k, double *alpha, int offA, double *A, int sda, double *x, double *z, int km);
+// void kernel_dsymv_l_4r_gen_lib8(int k, float *alpha, int offA, float *A, int sda, float *x, float *z, int km);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_ssymv_l_4r_gen_lib8)

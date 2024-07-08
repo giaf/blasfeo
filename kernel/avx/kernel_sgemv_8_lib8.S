@@ -249,8 +249,8 @@ NAME:
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- x+k*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- x+k*sizeof(float)
 // ymm0  <- [z0 z1 z2 z3]_a
 // ymm1  <- [z0 z1 z2 z3]_b
 // ymm2  <- [z0 z1 z2 z3]_c
@@ -349,7 +349,7 @@ NAME:
 // input arguments:
 // r10d  <- k
 // r11   <- A
-// r12   <- bs*sda*sizeof(double) = 32*sda
+// r12   <- bs*sda*sizeof(float) = 32*sda
 // r13   <- x
 // ymm0  <- [z0a z0b z0c z0d]
 // ymm1  <- [z1a z1b z1c z1d]
@@ -367,9 +367,9 @@ NAME:
 //
 // output arguments:
 // r10d  <- 0
-// r11   <- A+4*k*sizeof(double)
-// r12   <- bs*sda*sizeof(double) = 32*sda
-// r13   <- x+k*sizeof(double)
+// r11   <- A+8*k*sizeof(float)
+// r12   <- bs*sda*sizeof(float) = 32*sda
+// r13   <- x+k*sizeof(float)
 // ymm0  <- [z0a z0b z0c z0d]
 // ymm1  <- [z1a z1b z1c z1d]
 // ymm2  <- [z2a z2b z2c z2d]
@@ -519,7 +519,7 @@ NAME:
 // input arguments:
 // r10d  <- k
 // r11   <- A
-// r12   <- bs*sda*sizeof(double) = 32*sda
+// r12   <- bs*sda*sizeof(float) = 32*sda
 // r13   <- x
 // r14d  <- offA
 // ymm0  <- [z0a z0b z0c z0d]
@@ -1748,7 +1748,7 @@ NAME:
 
 
 //                            1      2              3          4          5             6          7
-// void kernel_sgemv_n_8_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z);
+// void kernel_sgemv_n_8_lib8(int k, float *alpha, float *A, float *x, float *beta, float *y, float *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_n_8_lib8)
@@ -1811,7 +1811,7 @@ NAME:
 
 
 //                               1      2              3          4          5             6          7          8
-// void kernel_sgemv_n_8_vs_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k1);
+// void kernel_sgemv_n_8_vs_lib8(int k, float *alpha, float *A, float *x, float *beta, float *y, float *z, int k1);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_n_8_vs_lib8)
@@ -1875,7 +1875,7 @@ NAME:
 
 
 //                                1      2              3          4          5             6          7          8       9
-// void kernel_sgemv_n_8_gen_lib8(int k, double *alpha, double *A, double *x, double *beta, double *y, double *z, int k0, int kq);
+// void kernel_sgemv_n_8_gen_lib8(int k, float *alpha, float *A, float *x, float *beta, float *y, float *z, int k0, int kq);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_n_8_gen_lib8)
@@ -1940,7 +1940,7 @@ NAME:
 
 
 //                            1      2              3          4        5          6             7         8      9
-// void kernel_sgemv_t_8_lib8(int k, double *alpha, offA, double *A, int sda, double *x, double *beta, double *y, double *z);
+// void kernel_sgemv_t_8_lib8(int k, float *alpha, offA, float *A, int sda, float *x, float *beta, float *y, float *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_t_8_lib8)
@@ -2016,7 +2016,7 @@ NAME:
 
 
 //                               1      2              3          4        5          6             7         8           9     10
-// void kernel_sgemv_t_8_vs_lib8(int k, double *alpha, offA, double *A, int sda, double *x, double *beta, double *y, double *z, int k1);
+// void kernel_sgemv_t_8_vs_lib8(int k, float *alpha, offA, float *A, int sda, float *x, float *beta, float *y, float *z, int k1);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemv_t_8_vs_lib8)
@@ -2093,7 +2093,7 @@ NAME:
 
 
 //                                 1      2          3                   4          5          6
-// void kernel_strsv_ln_inv_8_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z);
+// void kernel_strsv_ln_inv_8_lib8(int k, float *A, float *inv_diag_A, float *x, float *y, float *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_strsv_ln_inv_8_lib8)
@@ -2124,7 +2124,7 @@ NAME:
 	CALL(inner_kernel_gemv_add_n_8_lib8)
 #endif
 
-	movq	%r11, %r13 // A+k*sizeof(double)
+	movq	%r11, %r13 // A+k*sizeof(float)
 
 
 	// call inner blender n
@@ -2140,7 +2140,7 @@ NAME:
 
 	// solution
 
-	movq	%r13, %r10 // A+k*sizeof(double)
+	movq	%r13, %r10 // A+k*sizeof(float)
 	movq	ARG3, %r11 // inv_diag_A
 
 #if MACRO_LEVEL>=1
@@ -2172,7 +2172,7 @@ NAME:
 
 
 //                                    1      2          3                   4          5          6          7       8
-// void kernel_strsv_ln_inv_8_vs_lib8(int k, double *A, double *inv_diag_A, double *x, double *y, double *z, int km, int kn);
+// void kernel_strsv_ln_inv_8_vs_lib8(int k, float *A, float *inv_diag_A, float *x, float *y, float *z, int km, int kn);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_strsv_ln_inv_8_vs_lib8)
@@ -2203,7 +2203,7 @@ NAME:
 	CALL(inner_kernel_gemv_add_n_8_lib8)
 #endif
 
-	movq	%r11, %r13 // A+k*sizeof(double)
+	movq	%r11, %r13 // A+k*sizeof(float)
 
 
 	// call inner blender n
@@ -2219,7 +2219,7 @@ NAME:
 
 	// solution
 
-	movq	%r13, %r10 // A+k*sizeof(double)
+	movq	%r13, %r10 // A+k*sizeof(float)
 	movq	ARG3, %r11 // inv_diag_A
 	movq	ARG8, %r12 // kn
 
@@ -2253,7 +2253,7 @@ NAME:
 
 
 //                                 1      2          3        4                   5          6          7
-// void kernel_strsv_lt_inv_8_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z);
+// void kernel_strsv_lt_inv_8_lib8(int k, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_strsv_lt_inv_8_lib8)
@@ -2335,7 +2335,7 @@ NAME:
 
 
 //                                    1      2          3        4                   5          6          7          8      9
-// void kernel_strsv_lt_inv_8_vs_lib8(int k, double *A, int sda, double *inv_diag_A, double *x, double *y, double *z, int km, int kn);
+// void kernel_strsv_lt_inv_8_vs_lib8(int k, float *A, int sda, float *inv_diag_A, float *x, float *y, float *z, int km, int kn);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_strsv_lt_inv_8_vs_lib8)
