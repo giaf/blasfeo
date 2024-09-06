@@ -35,6 +35,7 @@
 
 
 
+#ifdef EXT_DEP
 /* creates a zero matrix */
 void ZEROS(REAL **pA, int row, int col)
 	{
@@ -43,9 +44,11 @@ void ZEROS(REAL **pA, int row, int col)
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 /* creates a zero matrix aligned to a cache line */
 void ZEROS_ALIGN(REAL **pA, int row, int col)
 	{
@@ -54,28 +57,34 @@ void ZEROS_ALIGN(REAL **pA, int row, int col)
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 /* frees matrix */
 void FREE(REAL *pA)
 	{
 	blasfeo_free( pA );
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 /* frees aligned matrix */
 void FREE_ALIGN(REAL *pA)
 	{
 	blasfeo_free_align(pA);
 	}
+#endif
 
 
 
 /* prints a matrix in column-major format */
 void PRINT_MAT(int m, int n, REAL *A, int lda)
 	{
+#ifdef EXT_DEP
 	int i, j;
 	for(i=0; i<m; i++)
 		{
@@ -86,6 +95,7 @@ void PRINT_MAT(int m, int n, REAL *A, int lda)
 		printf("\n");
 		}
 	printf("\n");
+#endif
 	return;
 	}
 
@@ -94,6 +104,7 @@ void PRINT_MAT(int m, int n, REAL *A, int lda)
 /* prints the transposed of a matrix in column-major format */
 void PRINT_TRAN_MAT(int row, int col, REAL *A, int lda)
 	{
+#ifdef EXT_DEP
 	int i, j;
 	for(j=0; j<col; j++)
 		{
@@ -104,10 +115,12 @@ void PRINT_TRAN_MAT(int row, int col, REAL *A, int lda)
 		printf("\n");
 		}
 	printf("\n");
+#endif
 	}
 
 
 
+#ifdef EXT_DEP
 /* prints a matrix in column-major format */
 void PRINT_TO_FILE_MAT(FILE *file, int row, int col, REAL *A, int lda)
 	{
@@ -122,7 +135,9 @@ void PRINT_TO_FILE_MAT(FILE *file, int row, int col, REAL *A, int lda)
 		}
 	fprintf(file, "\n");
 	}
+#endif
 
+#ifdef EXT_DEP
 /* prints a matrix in column-major format */
 void PRINT_TO_FILE_EXP_MAT(FILE *file, int row, int col, REAL *A, int lda)
 	{
@@ -137,8 +152,10 @@ void PRINT_TO_FILE_EXP_MAT(FILE *file, int row, int col, REAL *A, int lda)
 		}
 	fprintf(file, "\n");
 	}
+#endif
 
 
+#ifdef EXT_DEP
 /* prints a matrix in column-major format */
 void PRINT_TO_STRING_MAT(char **buf_out, int row, int col, REAL *A, int lda)
 	{
@@ -154,9 +171,11 @@ void PRINT_TO_STRING_MAT(char **buf_out, int row, int col, REAL *A, int lda)
 	*buf_out += sprintf(*buf_out, "\n");
 	return;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 /* prints the transposed of a matrix in column-major format */
 void PRINT_TO_FILE_TRAN_MAT(FILE *file, int row, int col, REAL *A, int lda)
 	{
@@ -171,12 +190,14 @@ void PRINT_TO_FILE_TRAN_MAT(FILE *file, int row, int col, REAL *A, int lda)
 		}
 	fprintf(file, "\n");
 	}
+#endif
 
 
 
 /* prints a matrix in column-major format (exponential notation) */
 void PRINT_EXP_MAT(int m, int n, REAL *A, int lda)
 	{
+#ifdef EXT_DEP
 	int i, j;
 	for(i=0; i<m; i++)
 		{
@@ -187,6 +208,7 @@ void PRINT_EXP_MAT(int m, int n, REAL *A, int lda)
 		printf("\n");
 		}
 	printf("\n");
+#endif
 	}
 
 
@@ -194,6 +216,7 @@ void PRINT_EXP_MAT(int m, int n, REAL *A, int lda)
 /* prints the transposed of a matrix in column-major format (exponential notation) */
 void PRINT_EXP_TRAN_MAT(int row, int col, REAL *A, int lda)
 	{
+#ifdef EXT_DEP
 	int i, j;
 	for(j=0; j<col; j++)
 		{
@@ -204,4 +227,5 @@ void PRINT_EXP_TRAN_MAT(int row, int col, REAL *A, int lda)
 		printf("\n");
 		}
 	printf("\n");
+#endif
 	}

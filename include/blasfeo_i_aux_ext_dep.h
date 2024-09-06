@@ -49,16 +49,16 @@ extern "C" {
 
 
 #ifdef EXT_DEP
-
 // i_aux_extern_depend_lib
 void int_zeros(int **pA, int row, int col);
 void int_zeros_align(int **pA, int row, int col);
 void int_free(int *pA);
 void int_free_align(int *pA);
+#endif
 void int_print_mat(int row, int col, int *A, int lda);
+#ifdef EXT_DEP
 int int_print_to_string_mat(char **buf_out, int row, int col, int *A, int lda);
-
-#endif // EXT_DEP
+#endif
 
 
 

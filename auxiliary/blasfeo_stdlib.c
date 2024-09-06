@@ -42,14 +42,18 @@
 
 
 
+//#ifdef EXT_DEP
+// needed in hp cm routines !!!
 void blasfeo_malloc(void **ptr, size_t size)
 	{
 	*ptr = malloc(size);
 	return;
 	}
+//#endif
 
 
 
+#ifdef EXT_DEP
 // allocate memory aligned to typical cache line size (64 bytes)
 void blasfeo_malloc_align(void **ptr, size_t size)
 	{
@@ -81,17 +85,22 @@ void blasfeo_malloc_align(void **ptr, size_t size)
 	return;
 
 	}
+#endif
 
 
 
+//#ifdef EXT_DEP
+// needed in hp cm routines !!!
 void blasfeo_free(void *ptr)
 	{
 	free(ptr);
 	return;
 	}
+//#endif
 
 
 
+#ifdef EXT_DEP
 void blasfeo_free_align(void *ptr)
 	{
 
@@ -108,3 +117,4 @@ void blasfeo_free_align(void *ptr)
 	return;
 
 	}
+#endif

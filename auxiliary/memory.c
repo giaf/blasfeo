@@ -59,6 +59,7 @@ int blasfeo_is_init()
 
 void blasfeo_init()
 	{
+#ifdef EXT_DEP
 	size_t tmp0, tmp1;
 	// compute max needed memory
 	size_t size_A_double = blasfeo_pm_memsize_dmat(D_PS, D_MC, D_KC); 
@@ -88,13 +89,19 @@ void blasfeo_init()
 	// call malloc
 	mem = malloc(size);
 	initialized = 1;
+#else
+	mem = NULL;
+	initialized = 0;
+#endif
 	}
 
 
 
 void blasfeo_quit()
 	{
+#ifdef EXT_DEP
 	free(mem);
+#endif
 	initialized = 0;
 	}
 

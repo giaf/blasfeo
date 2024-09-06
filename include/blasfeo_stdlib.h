@@ -45,13 +45,19 @@ extern "C" {
 #include <stdlib.h>
 
 //
+// needed in hp cm routines !!!
 void blasfeo_malloc(void **ptr, size_t size);
 //
+#ifdef EXT_DEP
 void blasfeo_malloc_align(void **ptr, size_t size);
+#endif
 //
+// needed in hp cm routines !!!
 void blasfeo_free(void *ptr);
 //
+#ifdef EXT_DEP
 void blasfeo_free_align(void *ptr);
+#endif
 
 
 

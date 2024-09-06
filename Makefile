@@ -861,10 +861,10 @@ OBJS += $(BLASFEO_WR_OBJS)
 endif # LA EXTERNAL_BLAS_WAPPER
 
 
-ifeq ($(EXT_DEP), 1)
+#ifeq ($(EXT_DEP), 1)
 # ext dep
 OBJS += $(AUX_EXT_DEP_OBJS)
-endif
+#endif
 
 
 

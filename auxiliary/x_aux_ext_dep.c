@@ -35,6 +35,7 @@
 
 
 
+#ifdef EXT_DEP
 // create a matrix structure for a matrix of size m*n by dynamically allocating the memory
 void ALLOCATE_MAT(int m, int n, struct MAT *sA)
 	{
@@ -44,18 +45,22 @@ void ALLOCATE_MAT(int m, int n, struct MAT *sA)
 	CREATE_MAT(m, n, sA, mem);
 	return;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 // free memory of a matrix structure
 void FREE_MAT(struct MAT *sA)
 	{
 	blasfeo_free_align(sA->mem);
 	return;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 // create a vector structure for a vector of size m by dynamically allocating the memory
 void ALLOCATE_VEC(int m, struct VEC *sa)
 	{
@@ -65,21 +70,25 @@ void ALLOCATE_VEC(int m, struct VEC *sa)
 	CREATE_VEC(m, sa, mem);
 	return;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 // free memory of a matrix structure
 void FREE_VEC(struct VEC *sa)
 	{
 	blasfeo_free_align(sa->mem);
 	return;
 	}
+#endif
 
 
 
 // print a matrix structure
 void PRINT_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 	{
+#ifdef EXT_DEP
 	int ii, jj;
 	for(ii=0; ii<m; ii++)
 		{
@@ -90,6 +99,7 @@ void PRINT_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 		printf("\n");
 		}
 	printf("\n");
+#endif
 	return;
 	}
 
@@ -98,6 +108,7 @@ void PRINT_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 // print the transposed of a matrix structure
 void PRINT_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 	{
+#ifdef EXT_DEP
 	int ii, jj;
 	for(jj=0; jj<n; jj++)
 		{
@@ -108,6 +119,7 @@ void PRINT_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 		printf("\n");
 		}
 	printf("\n");
+#endif
 	return;
 	}
 
@@ -116,12 +128,14 @@ void PRINT_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 // print a vector structure
 void PRINT_VEC(int m, struct VEC *sa, int ai)
 	{
+#ifdef EXT_DEP
 	int ii;
 	for(ii=0; ii<m; ii++)
 		{
 		printf("%9.5f\n", VECEL(sa, ai+ii));
 		}
 	printf("\n");
+#endif
 	return;
 	}
 
@@ -130,16 +144,19 @@ void PRINT_VEC(int m, struct VEC *sa, int ai)
 // print the transposed of a vector structure
 void PRINT_TRAN_VEC(int m, struct VEC *sa, int ai)
 	{
+#ifdef EXT_DEP
 	int ii;
 	for(ii=0; ii<m; ii++)
 		{
 		printf("%9.5f ", VECEL(sa, ai+ii));
 		}
 	printf("\n\n");
+#endif
 	return;
 	}
 
 
+#ifdef EXT_DEP
 // print a matrix structure
 void PRINT_TO_FILE_MAT(FILE * file, int m, int n, struct MAT *sA, int ai, int aj)
 	{
@@ -155,9 +172,11 @@ void PRINT_TO_FILE_MAT(FILE * file, int m, int n, struct MAT *sA, int ai, int aj
 	fprintf(file, "\n");
 	return;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 // print a matrix structure
 void PRINT_TO_FILE_EXP_MAT(FILE * file, int m, int n, struct MAT *sA, int ai, int aj)
 	{
@@ -173,8 +192,10 @@ void PRINT_TO_FILE_EXP_MAT(FILE * file, int m, int n, struct MAT *sA, int ai, in
 	fprintf(file, "\n");
 	return;
 	}
+#endif
 
 
+#ifdef EXT_DEP
 // print a matrix structure
 void PRINT_TO_STRING_MAT(char **buf_out, int m, int n, struct MAT *sA, int ai, int aj)
 	{
@@ -190,8 +211,10 @@ void PRINT_TO_STRING_MAT(char **buf_out, int m, int n, struct MAT *sA, int ai, i
 	*buf_out += sprintf(*buf_out, "\n");
 	return;
 	}
+#endif
 
 
+#ifdef EXT_DEP
 // print a vector structure
 void PRINT_TO_FILE_VEC(FILE * file, int m, struct VEC *sa, int ai)
 	{
@@ -203,9 +226,11 @@ void PRINT_TO_FILE_VEC(FILE * file, int m, struct VEC *sa, int ai)
 	fprintf(file, "\n");
 	return;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 // print a vector structure
 void PRINT_TO_STRING_VEC(char **buf_out, int m, struct VEC *sa, int ai)
 	{
@@ -217,8 +242,10 @@ void PRINT_TO_STRING_VEC(char **buf_out, int m, struct VEC *sa, int ai)
 	*buf_out += sprintf(*buf_out, "\n");
 	return;
 	}
+#endif
 
 
+#ifdef EXT_DEP
 // print the transposed of a vector structure
 void PRINT_TO_FILE_TRAN_VEC(FILE * file, int m, struct VEC *sa, int ai)
 	{
@@ -230,9 +257,11 @@ void PRINT_TO_FILE_TRAN_VEC(FILE * file, int m, struct VEC *sa, int ai)
 	fprintf(file, "\n\n");
 	return;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 // print the transposed of a vector structure
 void PRINT_TO_STRING_TRAN_VEC(char **buf_out, int m, struct VEC *sa, int ai)
 	{
@@ -244,11 +273,13 @@ void PRINT_TO_STRING_TRAN_VEC(char **buf_out, int m, struct VEC *sa, int ai)
 	*buf_out += sprintf(*buf_out, "\n\n");
 	return;
 	}
+#endif
 
 
 // print a matrix structure
 void PRINT_EXP_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 	{
+#ifdef EXT_DEP
 	int ii, jj;
 	for(ii=0; ii<m; ii++)
 		{
@@ -259,6 +290,7 @@ void PRINT_EXP_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 		printf("\n");
 		}
 	printf("\n");
+#endif
 	return;
 	}
 
@@ -267,6 +299,7 @@ void PRINT_EXP_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 // print the transposed of a matrix structure
 void PRINT_EXP_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 	{
+#ifdef EXT_DEP
 	int ii, jj;
 	for(jj=0; jj<n; jj++)
 		{
@@ -277,6 +310,7 @@ void PRINT_EXP_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 		printf("\n");
 		}
 	printf("\n");
+#endif
 	return;
 	}
 
@@ -285,12 +319,14 @@ void PRINT_EXP_TRAN_MAT(int m, int n, struct MAT *sA, int ai, int aj)
 // print a vector structure
 void PRINT_EXP_VEC(int m, struct VEC *sa, int ai)
 	{
+#ifdef EXT_DEP
 	int ii;
 	for(ii=0; ii<m; ii++)
 		{
 		printf("%9.5e\n", VECEL(sa, ai+ii));
 		}
 	printf("\n");
+#endif
 	return;
 	}
 
@@ -299,12 +335,14 @@ void PRINT_EXP_VEC(int m, struct VEC *sa, int ai)
 // print the transposed of a vector structure
 void PRINT_EXP_TRAN_VEC(int m, struct VEC *sa, int ai)
 	{
+#ifdef EXT_DEP
 	int ii;
 	for(ii=0; ii<m; ii++)
 		{
 		printf("%9.5e ", VECEL(sa, ai+ii));
 		}
 	printf("\n\n");
+#endif
 	return;
 	}
 

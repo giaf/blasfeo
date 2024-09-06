@@ -86,9 +86,9 @@ void blasfeo_pm_create_dmat(int ps, int m, int n, struct blasfeo_pm_dmat *sA, vo
 
 
 // print a matrix structure
-#if defined(EXT_DEP)
 void blasfeo_pm_print_dmat(int m, int n, struct blasfeo_pm_dmat *sA, int ai, int aj)
 	{
+#if defined(EXT_DEP)
 	int ii, jj;
 	for(ii=0; ii<m; ii++)
 		{
@@ -99,9 +99,9 @@ void blasfeo_pm_print_dmat(int m, int n, struct blasfeo_pm_dmat *sA, int ai, int
 		printf("\n");
 		}
 	printf("\n");
+#endif
 	return;
 	}
-#endif
 
 
 

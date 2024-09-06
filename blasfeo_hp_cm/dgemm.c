@@ -2763,6 +2763,7 @@ nn_m1:
 
 	// k-blocking alg
 
+	// TODO clip KC to K_MAX_STACK and avoid malloc in case of no EXT_DEP !!!
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);

@@ -40,6 +40,7 @@
 
 
 
+#ifdef EXT_DEP
 /* creates a zero matrix aligned */
 void int_zeros(int **pA, int row, int col)
 	{
@@ -49,9 +50,11 @@ void int_zeros(int **pA, int row, int col)
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 /* creates a zero matrix aligned to a cache line */
 void int_zeros_align(int **pA, int row, int col)
 	{
@@ -60,28 +63,34 @@ void int_zeros_align(int **pA, int row, int col)
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0.0;
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 /* frees matrix */
 void int_free(int *pA)
 	{
 	free( pA );
 	}
+#endif
 
 
 
+#ifdef EXT_DEP
 /* frees aligned matrix */
 void int_free_align(int *pA)
 	{
 	blasfeo_free_align(pA);
 	}
+#endif
 
 
 
 /* prints a matrix in column-major format */
 void int_print_mat(int row, int col, int *A, int lda)
 	{
+#ifdef EXT_DEP
 	int i, j;
 	for(i=0; i<row; i++)
 		{
@@ -92,10 +101,12 @@ void int_print_mat(int row, int col, int *A, int lda)
 		printf("\n");
 		}
 	printf("\n");
+#endif
 	}	
 
 
 
+#ifdef EXT_DEP
 /* prints a matrix in column-major format */
 void int_print_to_string_mat(char **buf_out, int row, int col, int *A, int lda)
 	{
@@ -111,3 +122,4 @@ void int_print_to_string_mat(char **buf_out, int row, int col, int *A, int lda)
 	*buf_out += sprintf(*buf_out, "\n");
 	return;
 	}	
+#endif

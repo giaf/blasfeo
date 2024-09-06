@@ -44,6 +44,7 @@
 #endif
 
 
+#ifdef EXT_DEP
 /* creates a zero matrix given the size in bytes */
 void v_zeros(void **ptrA, int size)
 	{
@@ -58,8 +59,10 @@ void v_zeros(void **ptrA, int size)
 	for(; i<size; i++) cA[i] = 0;
 	return;
 	}
+#endif
 
 
+#ifdef EXT_DEP
 /* creates a zero matrix aligned to a cache line given the size in bytes */
 void v_zeros_align(void **ptrA, int size)
 	{
@@ -74,22 +77,28 @@ void v_zeros_align(void **ptrA, int size)
 	for(; i<size; i++) cA[i] = 0;
 	return;
 	}
+#endif
 
 
+#ifdef EXT_DEP
 /* frees matrix */
 void v_free(void *pA)
 	{
 	free( pA );
 	}
+#endif
 
 
+#ifdef EXT_DEP
 /* frees aligned matrix */
 void v_free_align(void *pA)
 	{
 	blasfeo_free_align(pA);
 	}
+#endif
 
 
+#ifdef EXT_DEP
 /* creates a zero matrix given the size in bytes */
 void c_zeros(char **ptrA, int size)
 	{
@@ -104,8 +113,10 @@ void c_zeros(char **ptrA, int size)
 	for(; i<size; i++) cA[i] = 0;
 	return;
 	}
+#endif
 
 
+#ifdef EXT_DEP
 /* creates a zero matrix aligned to a cache line given the size in bytes */
 void c_zeros_align(char **ptrA, int size)
 	{
@@ -120,17 +131,22 @@ void c_zeros_align(char **ptrA, int size)
 	for(; i<size; i++) cA[i] = 0;
 	return;
 	}
+#endif
 
 
+#ifdef EXT_DEP
 /* frees matrix */
 void c_free(char *pA)
 	{
 	free( pA );
 	}
+#endif
 
 
+#ifdef EXT_DEP
 /* frees aligned matrix */
 void c_free_align(char *pA)
 	{
 	blasfeo_free_align(pA);
 	}
+#endif

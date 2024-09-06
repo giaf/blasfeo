@@ -88,7 +88,7 @@ endif # LA choice
 
 
 #ext dep
-ifeq ($(EXT_DEP), 1)
+#ifeq ($(EXT_DEP), 1)
 
 OBJS += d_aux_ext_dep_common.o
 OBJS += s_aux_ext_dep_common.o
@@ -98,7 +98,7 @@ OBJS += v_aux_ext_dep_lib.o
 OBJS += i_aux_ext_dep_lib.o
 OBJS += timing.o
 
-endif
+#endif
 
 
 obj: $(OBJS)

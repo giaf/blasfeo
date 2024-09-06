@@ -1156,11 +1156,11 @@ endif()
 
 # TODO WR
 
-if(${EXT_DEP})
+#if(${EXT_DEP})
 	
 	list(APPEND BLASFEO_SRC ${AUX_EXT_DEP_SRC})
 
-endif()
+#endif()
 
 
 
