@@ -139,6 +139,7 @@ set(BLASFEO_HEADERS_INSTALLATION_DIRECTORY "include" CACHE STRING "Headers local
 # Populate a list of allowable targets and link it to the option
 set(ALLOWED_TARGETS
 		X64_AUTOMATIC
+		X64_INTEL_SKYLAKE_X
 		X64_INTEL_HASWELL
 		X64_INTEL_SANDY_BRIDGE
 		X64_INTEL_CORE
@@ -363,6 +364,7 @@ else()
 endif()
 
 # architecture-specific C flags
+set(C_FLAGS_TARGET_X64_INTEL_SKYLAKE_X    "-m64 -mavx512f -mavx512vl -mfma")
 set(C_FLAGS_TARGET_X64_INTEL_HASWELL      "-m64 -mavx -mavx2 -mfma")
 set(C_FLAGS_TARGET_X64_INTEL_SANDY_BRIDGE "-m64 -mavx")
 set(C_FLAGS_TARGET_X64_INTEL_CORE         "-m64 -msse3")
@@ -600,6 +602,31 @@ file(GLOB BLAS_CM_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c
 	)
 
+if(${TARGET} MATCHES X64_INTEL_SKYLAKE_X)
+
+file(GLOB BLASFEO_HP_PM_SRC
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib8.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib8.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib8.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib8.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib8.c
+
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib16.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib16.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_lib16.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas3_diag_lib16.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib16.c
+	)
+
+file(GLOB AUX_HP_PM_SRC
+	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib8.c
+	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib16.c
+	#${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
+	)
+
+endif()
 if(${TARGET} MATCHES X64_INTEL_HASWELL OR ${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
 
 file(GLOB BLASFEO_HP_PM_SRC
@@ -650,6 +677,26 @@ file(GLOB AUX_HP_PM_SRC
 	)
 
 endif()
+
+if(${TARGET} MATCHES X64_INTEL_SKYLAKE_X)
+
+file(GLOB KERNEL_SRC
+	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgemm_24x8_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgemm_16x8_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgemm_8x8_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgemv_8_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgemv_16_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dpack_lib8.S
+	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgeqrf_8_lib8.c
+	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgelqf_lib8.S
+
+	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
+
+	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_4x4_lib4.S
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
+	)
+
+endif(${TARGET} MATCHES X64_INTEL_SKYLAKE_X)
 
 if(${TARGET} MATCHES X64_INTEL_HASWELL)
 
