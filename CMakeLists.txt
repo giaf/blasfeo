@@ -47,7 +47,8 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Select target architecture
 # set(TARGET X64_AUTOMATIC CACHE STRING "Target architecture")    # attempts at finding the best TARGET among selected architectures
-set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")    # x86_64 architecture with AVX2 and FMA, optimized for Intel Haswell, Skylake and AMD Zen, Zen2, Zen3
+# set(TARGET X64_INTEL_SKYLAKE_X CACHE STRING "Target architecture")    # x86_64 architecture with AVX512 (F+VL) ISA, optimized for Intel Skylake-Z and following, and AMD Zen5 architectures with 2 512-bit FMA pipes.
+set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")    # x86_64 architecture with AVX2 and FMA, optimized for Intel Haswell, Skylake and following, and AMD Zen, Zen2, Zen3, Zen4
 # set(TARGET X64_INTEL_SANDY_BRIDGE CACHE STRING "Target architecture")    # x86_64 architecture with AVX, optimized for Intel Sandy-Bridge
 # set(TARGET X64_INTEL_CORE CACHE STRING "Target architecture")    # x86_64 architecture with SSE3, optimized for Intel Core
 # set(TARGET X64_AMD_BULLDOZER CACHE STRING "Target architecture")    # x86_64 architecture with AVX and FMA, optimized for AMD Bulldozer

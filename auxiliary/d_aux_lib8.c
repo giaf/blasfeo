@@ -478,6 +478,42 @@ void blasfeo_drowsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 
 
 
+// permute the rows of a matrix struct
+void blasfeo_drowpe(int kmax, int *ipiv, struct blasfeo_dmat *sA)
+	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			blasfeo_drowsw(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		}
+	return;
+	}
+
+
+
+// inverse permute the rows of a matrix struct
+void blasfeo_drowpei(int kmax, int *ipiv, struct blasfeo_dmat *sA)
+	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	int ii;
+	for(ii=kmax-1; ii>=0; ii--)
+		{
+		if(ipiv[ii]!=ii)
+			blasfeo_drowsw(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+		}
+	return;
+	}
+
+
+
 // extract a row int a vector
 void blasfeo_drowex(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi)
 	{

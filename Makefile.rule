@@ -50,10 +50,10 @@ CURRENT_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 # Select target architecture (TARGET)
 #
 # X64_INTEL_SKYLAKE_X: x86_64 architecture with AVX512 (F+VL) ISA (64 bit OS)
-# Code optimized for Intel Skylake-X architecture with 2 512-bit FMA pipes.
+# Code optimized for Intel Skylake-X and following, AMD Zen 5 architectures with 2 512-bit FMA pipes.
 #
 # X64_INTEL_HASWELL: x86_64 architecture with AVX2 and FMA ISAs (64 bit OS)
-# Code optimized for Intel Haswell, Intel Skylake, AMD Zen, AMD Zen2 and AMD Zen3 architectures.
+# Code optimized for Intel Haswell, Intel Skylake and following, AMD Zen, AMD Zen2, AMD Zen3 and AMD Zen4 architectures.
 #
 # X64_INTEL_SANDY_BRIDGE : x86_64 architecture with AVX ISA (64 bit OS)
 # Code optimized for Intel Sandy-Bridge architecture.
