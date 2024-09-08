@@ -762,7 +762,9 @@ l_1_return:
 
 
 l_2:
-	
+
+#ifdef EXT_DEP
+
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
 	// cache blocking alg
@@ -839,7 +841,11 @@ l_2:
 
 		}
 
-	free(mem);
+	if(blasfeo_is_init()==0)
+		{
+		free(mem);
+		}
+
 	return;
 
 #else
@@ -985,6 +991,11 @@ l_2_return:
 	return;
 
 #endif
+
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -1285,7 +1296,9 @@ u_1_return:
 
 
 u_2:
-	
+
+#ifdef EXT_DEP
+
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
 //	tA_size = blasfeo_memsize_dmat(m, m);
@@ -1475,6 +1488,10 @@ u_2_return:
 	free(mem);
 	return;
 
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -1540,8 +1557,8 @@ void blasfeo_hp_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 	int kend;
 
 
-//	goto l_0;
 //	goto l_1;
+//	goto l_2;
 #if defined(TARGET_X64_INTEL_HASWELL)
 	if(m>=200 | m>K_MAX_STACK)
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -1550,18 +1567,18 @@ void blasfeo_hp_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 	if(m>=12 | m>K_MAX_STACK)
 #endif
 		{
-		goto l_1;
+		goto l_2;
 		}
 	else
 		{
-		goto l_0;
+		goto l_1;
 		}
 
 	// never to get here
 	return;
 
 
-l_0:
+l_1:
 
 	ii = 0;
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -1631,15 +1648,15 @@ l_0:
 		{
 		if(m-ii<=4)
 			{
-			goto l_0_left_4;
+			goto l_1_left_4;
 			}
 		if(m-ii<=8)
 			{
-			goto l_0_left_8;
+			goto l_1_left_8;
 			}
 		else
 			{
-			goto l_0_left_12;
+			goto l_1_left_12;
 			}
 		}
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
@@ -1683,11 +1700,11 @@ l_0:
 		{
 		if(m-ii<=4)
 			{
-			goto l_0_left_4;
+			goto l_1_left_4;
 			}
 		else
 			{
-			goto l_0_left_8;
+			goto l_1_left_8;
 			}
 		}
 #else
@@ -1721,13 +1738,13 @@ l_0:
 		}
 	if(ii<m)
 		{
-		goto l_0_left_4;
+		goto l_1_left_4;
 		}
 #endif
-	goto l_0_return;
+	goto l_1_return;
 
 #if defined(TARGET_X64_INTEL_HASWELL)
-l_0_left_12:
+l_1_left_12:
 	for(jj=0; jj<ii & jj<n; jj+=4)
 		{
 		kernel_dtrsm_nt_rl_inv_12x4_vs_lib4cccc(jj, pU, sdu, D+jj, ldd, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dU+jj, m-ii, n-jj);
@@ -1745,7 +1762,7 @@ l_0_left_12:
 			// XXX not needed before return
 //			kend = n-jj-4<4 ? n-jj-4 : 4;
 //			kernel_dpack_nn_4_vs_lib4(kend, D+ii+8+(jj+4)*ldd, ldd, pU+8*sdu+(jj+4)*ps, m-ii-8);
-			goto l_0_return;
+			goto l_1_return;
 			}
 #endif
 		if(jj<n-4)
@@ -1759,11 +1776,11 @@ l_0_left_12:
 				}
 			}
 		}
-	goto l_0_return;
+	goto l_1_return;
 #endif
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
-l_0_left_8:
+l_1_left_8:
 	for(jj=0; jj<ii & jj<n; jj+=4)
 		{
 		kernel_dtrsm_nt_rl_inv_8x4_vs_lib4cccc(jj, pU, sdu, D+jj, ldd, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dU+jj, m-ii, n-jj);
@@ -1779,7 +1796,7 @@ l_0_left_8:
 			// XXX not needed before return
 //			kend = n-jj<4 ? n-jj : 4;
 //			kernel_dpack_nn_4_vs_lib4(kend, D+ii+4+jj*ldd, ldd, pU+4*sdu+jj*ps, m-ii-4);
-			goto l_0_return;
+			goto l_1_return;
 			}
 #endif
 		kernel_dpotrf_nt_l_8x4_vs_lib44cc(jj, pU, sdu, pU, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dU+jj, m-ii, n-jj);
@@ -1790,10 +1807,10 @@ l_0_left_8:
 			kernel_dpotrf_nt_l_4x4_vs_lib44cc(jj+4, pU+4*sdu, pU+4*sdu, C+ii+4+(jj+4)*ldc, ldc, D+ii+4+(jj+4)*ldd, ldd, dU+jj+4, m-ii-4, n-jj-4);
 			}
 		}
-	goto l_0_return;
+	goto l_1_return;
 #endif
 
-l_0_left_4:
+l_1_left_4:
 	for(jj=0; jj<ii & jj<n; jj+=4)
 		{
 		kernel_dtrsm_nt_rl_inv_4x4_vs_lib4cccc(jj, pU, D+jj, ldd, &d_1, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, D+jj+jj*ldd, ldd, dU+jj, m-ii, n-jj);
@@ -1804,18 +1821,20 @@ l_0_left_4:
 		{
 		kernel_dpotrf_nt_l_4x4_vs_lib44cc(jj, pU, pU, C+ii+jj*ldc, ldc, D+ii+jj*ldd, ldd, dU+jj, m-ii, n-jj);
 		}
-	goto l_0_return;
+	goto l_1_return;
 
-l_0_return:
+l_1_return:
 	return;
 
 
-l_1:
-	
+l_2:
+
+#ifdef EXT_DEP
+
 	m1 = (m+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m1, n1);
-	mem = malloc(tA_size+64);
+	blasfeo_malloc(&mem, tA_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m, n, &tA, (void *) mem_align);
 
@@ -1824,9 +1843,13 @@ l_1:
 
 	blasfeo_hp_dpotrf_l_mn_m2(m, n, C, ldc, D, ldd, tA.pA, dA, sda);
 
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;

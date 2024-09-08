@@ -2789,8 +2789,10 @@ nn_m1:
 //	kc = 4;
 	kc = KC;
 #else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
 	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
-//	kc = 4;
 #endif
 
 	if(k<kc)
@@ -2833,10 +2835,12 @@ nn_m1:
 
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
@@ -2875,8 +2879,10 @@ nn_n1:
 //	kc = 4;
 	kc = KC;
 #else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
 	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
-//	kc = 4;
 #endif
 
 	if(k<kc)
@@ -2899,10 +2905,12 @@ nn_n1:
 			}
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
@@ -3866,8 +3874,10 @@ nt_m1:
 //	kc = 4;
 	kc = KC;
 #else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
 	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
-//	kc = 4;
 #endif
 
 	if(k<kc)
@@ -3890,10 +3900,12 @@ nt_m1:
 			}
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
@@ -3932,8 +3944,10 @@ nt_n1:
 //	kc = 4;
 	kc = KC;
 #else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
 	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
-//	kc = 4;
 #endif
 
 	if(k<kc)
@@ -3956,10 +3970,12 @@ nt_n1:
 			}
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
@@ -4532,7 +4548,7 @@ tn_m1:
 //		goto tn_2;
 #else
 	if(K_MAX_STACK<=0)
-	//	goto tn_0;
+		//goto tn_0;
 		// TODO not implemented !!!!!
 		exit(1);
 #endif
@@ -4560,8 +4576,10 @@ tn_m1:
 //	kc = 4;
 	kc = KC;
 #else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
 	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
-//	kc = 4;
 #endif
 
 	if(k<kc)
@@ -4585,10 +4603,12 @@ tn_m1:
 
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
@@ -4630,8 +4650,10 @@ tn_n1:
 //	kc = 4;
 	kc = KC;
 #else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
 	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
-//	kc = 4;
 #endif
 
 	if(k<kc)
@@ -4654,11 +4676,13 @@ tn_n1:
 			}
 		}
 
+#ifdef EXT_DEP
 //	if(k>KC)
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
@@ -5185,8 +5209,10 @@ tt_m1:
 //	kc = 4;
 	kc = KC;
 #else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
 	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
-//	kc = 4;
 #endif
 
 	if(k<kc)
@@ -5209,10 +5235,12 @@ tt_m1:
 			}
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
@@ -5251,8 +5279,10 @@ tt_n1:
 //	kc = 4;
 	kc = KC;
 #else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
 	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
-//	kc = 4;
 #endif
 
 	if(k<kc)
@@ -5275,10 +5305,12 @@ tt_n1:
 			}
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 

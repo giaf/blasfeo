@@ -1007,10 +1007,13 @@ llnn_1_return:
 
 
 llnn_2:
+
+#ifdef EXT_DEP
+
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, m, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, m, m, &tB, (void *) (mem_align+tA_size));
@@ -1154,10 +1157,13 @@ llnn_2_left_4:
 goto llnn_2_return;
 
 llnn_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
-
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -1386,10 +1392,13 @@ llnu_1_return:
 
 
 llnu_2:
+
+#ifdef EXT_DEP
+
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, m, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, m, m, &tB, (void *) (mem_align+tA_size));
@@ -1530,9 +1539,13 @@ llnu_2_left_4:
 goto llnu_2_return;
 
 llnu_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -1793,11 +1806,14 @@ lltn_1_return:
 
 
 lunn_2:
+
+#ifdef EXT_DEP
+
 	// XXX limits of ii and jj swapped !!!
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, m, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, m, m, &tB, (void *) (mem_align+tA_size));
@@ -1968,10 +1984,13 @@ lunn_2_left_4:
 	goto lunn_2_return;
 
 lunn_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
-
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -2225,11 +2244,14 @@ lltu_1_return:
 
 
 lunu_2:
+
+#ifdef EXT_DEP
+
 	// XXX limits of ii and jj swapped !!!
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, m, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, m, m, &tB, (void *) (mem_align+tA_size));
@@ -2397,9 +2419,13 @@ lunu_2_left_4:
 	goto lunu_2_return;
 
 lunu_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -2656,11 +2682,14 @@ lunn_1_return:
 
 
 lunn_2:
+
+#ifdef EXT_DEP
+
 	// XXX limits of ii and jj swapped !!!
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, m, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, m, m, &tB, (void *) (mem_align+tA_size));
@@ -2831,10 +2860,13 @@ lunn_2_left_4:
 	goto lunn_2_return;
 
 lunn_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
-
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -3084,11 +3116,14 @@ lunu_1_return:
 
 
 lunu_2:
+
+#ifdef EXT_DEP
+
 	// XXX limits of ii and jj swapped !!!
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, m, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, m, m, &tB, (void *) (mem_align+tA_size));
@@ -3256,9 +3291,13 @@ lunu_2_left_4:
 	goto lunu_2_return;
 
 lunu_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -3529,6 +3568,9 @@ lutn_n1_return:
 
 
 llnn_2:
+
+#ifdef EXT_DEP
+
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
 #if 1
@@ -3670,7 +3712,11 @@ llnn_2:
 
 		}
 	
-	free(mem);
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_free(mem);
+		}
+
 	return;
 
 #else
@@ -3781,7 +3827,11 @@ llnn_2:
 
 		}
 
-	free(mem);
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_free(mem);
+		}
+
 	return;
 
 #endif
@@ -3792,7 +3842,7 @@ llnn_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, n1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m, m, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, m, n, &tB, (void *) (mem_align+tA_size));
@@ -3812,10 +3862,15 @@ llnn_2:
 
 	blasfeo_hp_dtrsm_llnn_m2(m, n, alpha, pA, sda, dA, B, ldb, D, ldd, pB, sdb);
 
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
 #endif
+
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -4042,10 +4097,13 @@ lutu_1_return:
 
 
 llnu_2:
+
+#ifdef EXT_DEP
+
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, m, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, m, m, &tB, (void *) (mem_align+tA_size));
@@ -4186,9 +4244,13 @@ llnu_2_left_4:
 goto llnu_2_return;
 
 llnu_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -4450,6 +4512,9 @@ rlnn_1_return:
 
 
 rutn_2:
+
+#ifdef EXT_DEP
+
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
 	// cache blocking alg
@@ -4562,7 +4627,11 @@ rutn_2:
 
 		}
 	
-	free(mem);
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_free(mem);
+		}
+
 	return;
 
 #else
@@ -4571,7 +4640,7 @@ rutn_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, n1, n1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, n1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, n, n, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, m, n, &tB, (void *) (mem_align+tA_size));
@@ -4591,10 +4660,15 @@ rutn_2:
 
 	blasfeo_hp_dtrsm_rutn_m2(m, n, alpha, pA, sda, dA, B, ldb, D, ldd, pB, sdb);
 
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
 #endif
+
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -4838,10 +4912,13 @@ rlnu_1_return:
 
 
 rutu_2:
+
+#ifdef EXT_DEP
+
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, n1, n1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, n, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, n, n, &tB, (void *) (mem_align+tA_size));
@@ -4997,9 +5074,13 @@ rutu_2_left_4:
 	goto rutu_2_return;
 
 rutu_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -5232,6 +5313,9 @@ rltn_1_return:
 
 
 rltn_2:
+
+#ifdef EXT_DEP
+
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
 	// cache blocking alg
@@ -5341,7 +5425,11 @@ rltn_2:
 
 		}
 	
-	free(mem);
+	if(blasfeo_is_init()==0)
+		{
+		blasfeo_free(mem);
+		}
+
 	return;
 
 #else
@@ -5350,7 +5438,7 @@ rltn_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, n1, n1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, n1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, n, n, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, m, n, &tB, (void *) (mem_align+tA_size));
@@ -5370,10 +5458,15 @@ rltn_2:
 
 	blasfeo_hp_dtrsm_rltn_m2(m, n, alpha, pA, sda, dA, B, ldb, D, ldd, pB, sdb);
 
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
 #endif
+
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -5588,10 +5681,13 @@ rltu_1_return:
 
 
 rltu_2:
+
+#ifdef EXT_DEP
+
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, n1, n1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, n, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, n, n, &tB, (void *) (mem_align+tA_size));
@@ -5752,8 +5848,13 @@ rltu_2_left_4:
 goto rltu_2_return;
 
 rltu_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
+
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -5971,10 +6072,13 @@ runn_1_return:
 
 
 rltn_2:
+
+#ifdef EXT_DEP
+
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, n1, n1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, n, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, n, n, &tB, (void *) (mem_align+tA_size));
@@ -6116,9 +6220,13 @@ rltn_2_left_4:
 goto rltn_2_return;
 
 rltn_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -6331,10 +6439,13 @@ runu_1_return:
 
 
 rltu_2:
+
+#ifdef EXT_DEP
+
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, n1, n1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, n, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, n, n, &tB, (void *) (mem_align+tA_size));
@@ -6473,8 +6584,13 @@ rltu_2_left_4:
 goto rltu_2_return;
 
 rltu_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
+
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -6720,10 +6836,13 @@ rutn_1_return:
 
 
 rutn_2:
+
+#ifdef EXT_DEP
+
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, n1, n1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, n, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, n, n, &tB, (void *) (mem_align+tA_size));
@@ -6893,8 +7012,13 @@ rutn_2_left_4:
 	goto rutn_2_return;
 
 rutn_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
+
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -7138,10 +7262,13 @@ rutu_1_return:
 
 
 rutu_2:
+
+#ifdef EXT_DEP
+
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, n1, n1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, n, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, n, n, &tB, (void *) (mem_align+tA_size));
@@ -7307,8 +7434,13 @@ rutu_2_left_4:
 	goto rutu_2_return;
 
 rutu_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
+
+#else // EXT_DEP
+	// TODO not implemented !!!!!
+	exit(1);
+#endif // EXT_DEP
 
 	// never to get here
 	return;

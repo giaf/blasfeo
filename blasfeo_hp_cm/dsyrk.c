@@ -938,8 +938,18 @@ void blasfeo_hp_dsyrk3_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 
 ln_1:
+
+#ifdef EXT_DEP
+#else
+	if(K_MAX_STACK<=0)
+		//goto ln_0;
+		// TODO not implemented !!!!!
+		exit(1);
+#endif
+
 	// k-blocking alg
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -958,6 +968,12 @@ ln_1:
 
 //	kc = 4;
 	kc = KC;
+#else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
+	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+#endif
 
 	if(k<kc)
 		{
@@ -999,16 +1015,21 @@ ln_1:
 
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
 
 
 ln_2:
+
+#ifdef EXT_DEP
+
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
 	// cache blocking alg
@@ -1170,6 +1191,12 @@ ln_2:
 
 #endif
 
+#else // EXT_DEP
+
+	goto ln_1;
+
+#endif // EXT_DEP
+
 	// never to get here
 	return;
 
@@ -1282,8 +1309,18 @@ void blasfeo_hp_dsyrk3_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 
 lt_1:
+
+#ifdef EXT_DEP
+#else
+	if(K_MAX_STACK<=0)
+		//goto lt_0;
+		// TODO not implemented !!!!!
+		exit(1);
+#endif
+
 	// k-blocking alg
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -1302,6 +1339,12 @@ lt_1:
 
 //	kc = 4;
 	kc = KC;
+#else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
+	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+#endif
 
 	if(k<kc)
 		{
@@ -1343,16 +1386,21 @@ lt_1:
 
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
 
 
 lt_2:
+
+#ifdef EXT_DEP
+
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
 	// cache blocking alg
@@ -1519,6 +1567,12 @@ lt_2:
 
 #endif
 
+#else // EXT_DEP
+
+	goto lt_1;
+
+#endif // EXT_DEP
+
 	// never to get here
 	return;
 
@@ -1634,8 +1688,18 @@ void blasfeo_hp_dsyrk3_un(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 
 un_1:
+
+#ifdef EXT_DEP
+#else
+	if(K_MAX_STACK<=0)
+		//goto un_0;
+		// TODO not implemented !!!!!
+		exit(1);
+#endif
+
 	// k-blocking alg
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -1654,6 +1718,12 @@ un_1:
 
 //	kc = 4;
 	kc = KC;
+#else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
+	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+#endif
 
 	if(k<kc)
 		{
@@ -1695,16 +1765,21 @@ un_1:
 
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
 
 
 un_2:
+
+#ifdef EXT_DEP
+
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
 	// cache blocking alg
@@ -1869,6 +1944,12 @@ un_2:
 
 #endif
 
+#else // EXT_DEP
+
+	goto un_1;
+
+#endif // EXT_DEP
+
 	// never to get here
 	return;
 
@@ -1976,8 +2057,18 @@ void blasfeo_hp_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 		}
 
 ut_1:
+
+#ifdef EXT_DEP
+#else
+	if(K_MAX_STACK<=0)
+		//goto ut_0;
+		// TODO not implemented !!!!!
+		exit(1);
+#endif
+
 	// k-blocking alg
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -1996,6 +2087,12 @@ ut_1:
 
 //	kc = 4;
 	kc = KC;
+#else
+	pU = pU_stack;
+	sdu = sdu_stack;
+	sdu = k4<sdu ? k4 : sdu;
+	kc = K_MAX_STACK<KC ? K_MAX_STACK : KC;
+#endif
 
 	if(k<kc)
 		{
@@ -2037,16 +2134,21 @@ ut_1:
 
 		}
 
+#ifdef EXT_DEP
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
 		}
+#endif
 
 	return;
 
 
 
 ut_2:
+
+#ifdef EXT_DEP
+
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
 	// cache blocking alg
@@ -2211,6 +2313,12 @@ ut_2:
 	return;
 
 #endif
+
+#else // EXT_DEP
+
+	goto ut_1;
+
+#endif // EXT_DEP
 
 	// never to get here
 	return;
