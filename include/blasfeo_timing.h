@@ -48,39 +48,47 @@
 		#include <Windows.h>
 
 		/** A structure for keeping internal timer data. */
-		typedef struct blasfeo_timer_ {
+		typedef struct blasfeo_timer_
+			{
 			LARGE_INTEGER tic;
 			LARGE_INTEGER toc;
 			LARGE_INTEGER freq;
-		} blasfeo_timer;
+			}
+		blasfeo_timer;
 
 	#elif(defined __APPLE__)
 
 		#include <mach/mach_time.h>
 
 		/** A structure for keeping internal timer data. */
-		typedef struct blasfeo_timer_ {
+		typedef struct blasfeo_timer_
+			{
 			uint64_t tic;
 			uint64_t toc;
 			mach_timebase_info_data_t tinfo;
-		} blasfeo_timer;
+			}
+		blasfeo_timer;
 
 	#elif(defined __DSPACE__)
 
 		#include <brtenv.h>
 
-		typedef struct blasfeo_timer_ {
+		typedef struct blasfeo_timer_
+			{
 			double time;
-		} blasfeo_timer;
+			}
+		blasfeo_timer;
 
 	#elif(defined __XILINX_NONE_ELF__ || defined __XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE__)
 
 		#include "xtime_l.h"
 
-		typedef struct blasfeo_timer_ {
+		typedef struct blasfeo_timer_
+			{
 			uint64_t tic;
 			uint64_t toc;
-		} blasfeo_timer;
+			}
+		blasfeo_timer;
 
 	#else
 
@@ -92,18 +100,22 @@
 			#include <sys/stat.h>
 			#include <sys/time.h>
 
-			typedef struct blasfeo_timer_ {
+			typedef struct blasfeo_timer_
+				{
 				struct timeval tic;
 				struct timeval toc;
-			} blasfeo_timer;
+				}
+			blasfeo_timer;
 
 		#else  // ANSI C Mode
 
 			/** A structure for keeping internal timer data. */
-			typedef struct blasfeo_timer_ {
+			typedef struct blasfeo_timer_
+				{
 				struct timespec tic;
 				struct timespec toc;
-			} blasfeo_timer;
+				}
+			blasfeo_timer;
 
 		#endif  // __STDC_VERSION__ >= 199901L
 
