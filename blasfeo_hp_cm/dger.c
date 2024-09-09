@@ -61,7 +61,9 @@ void blasfeo_hp_dger(int m, int n, double alpha, struct blasfeo_dvec *sx, int xi
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dger (cm) %d %d %f %p %d %p %d %p %d %d %p %d %d\n", m, n, alpha, sx, xi, sy, yi, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)

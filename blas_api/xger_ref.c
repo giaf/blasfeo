@@ -39,7 +39,9 @@ void BLAS_GER(int *pm, int *pn, REAL *alpha, REAL *x0, int *pincx, REAL *y0, int
 #if defined(DIM_CHECK)
 	if(*pincx==0 | *pincy==0)
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: ger: wrong value for incx or incy: %d %d\n", *pincx, *pincy);
+#endif
 		return;
 		}
 #endif

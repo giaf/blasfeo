@@ -53,12 +53,16 @@ void SYRK(char *uplo, char *trans, int *pm, int *pk, REAL *palpha, REAL *A, int 
 #if defined(DIM_CHECK)
 	if( !(*uplo=='l' | *uplo=='L' | *uplo=='u' | *uplo=='U') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: syrk: wrong value for uplo\n");
+#endif
 		return;
 		}
 	if( !(*trans=='c' | *trans=='C' | *trans=='n' | *trans=='N' | *trans=='t' | *trans=='T') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: syrk: wrong value for trans\n");
+#endif
 		return;
 		}
 #endif
@@ -123,7 +127,9 @@ void SYRK(char *uplo, char *trans, int *pm, int *pk, REAL *palpha, REAL *A, int 
 	double time = blasfeo_toc(&timer);
 	double Gflops = 1e-9 * flops / time;
 	double Gflops_max = 3.4 * 16;
+#ifdef EXT_DEP
     printf("\nblasfeo syrk\t%c\t%c\t%d\t%d\t%f\t%f\n", *uplo, *trans, *pm, *pk, Gflops, 100.0*Gflops/Gflops_max);
+#endif
 #endif
 
 	return;

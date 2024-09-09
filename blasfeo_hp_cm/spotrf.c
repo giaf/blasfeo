@@ -84,7 +84,9 @@ void blasfeo_hp_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_spotrf_l (cm) %d %p %d %d %p %d %d\n", m, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0)
@@ -504,7 +506,9 @@ void blasfeo_hp_spotrf_u(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_spotrf_u (cm) %d %p %d %d %p %d %d\n", m, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0)
@@ -994,7 +998,9 @@ void blasfeo_hp_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int c
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_spotrf_l_mn (cm) %d %d %p %d %d %p %d %d\n", m, n, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0)

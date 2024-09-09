@@ -39,12 +39,16 @@ void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x0, int *p
 #if defined(DIM_CHECK)
 	if( !(*uplo=='l' | *uplo=='l' | *uplo=='U' | *uplo=='U') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: symv: wrong value for uplo: %c\n", uplo);
+#endif
 		return;
 		}
 	if(*pincx==0 | *pincy==0)
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: symv: wrong value for incx or incy: %d %d\n", *pincx, *pincy);
+#endif
 		return;
 		}
 #endif

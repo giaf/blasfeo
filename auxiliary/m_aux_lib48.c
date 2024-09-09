@@ -79,7 +79,9 @@ void blasfeo_cvt_d2s_mat(int m, int n, struct blasfeo_dmat *Md, int mid, int nid
 	if(mid!=0 | mis!=0)
 		{
 #if defined(EXT_DEP)
+#ifdef EXT_DEP
 		printf("\nblasfeo_cvt_d2s_mat: feature not implmeneted yet: mid=%d, mis=%d\n\n", mid, mis);
+#endif	
 #endif
 		exit(1);
 		}
@@ -145,7 +147,9 @@ void blasfeo_cvt_d2s_mat(int m, int n, struct blasfeo_dmat *Md, int mid, int nid
 void blasfeo_cvt_s2d_mat(int m, int n, struct blasfeo_smat *Ms, int mis, int nis, struct blasfeo_dmat *Md, int mid, int nid)
 	{
 #if defined(EXT_DEP)
+#ifdef EXT_DEP
 	printf("\nblasfeo_cvt_s2d_mat: feature not implmeneted yet\n\n");
+#endif	
 #endif
 	exit(1);
 	return;

@@ -1841,7 +1841,9 @@ tt_n1_return:
 //	{
 //
 //#if defined(PRINT_NAME)
+#ifdef EXT_DEP
 //	printf("\nblas_hp_sgemm_nn %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+#endif
 //#endif
 //
 //	if(m<=0 | n<=0)
@@ -1856,7 +1858,9 @@ void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_sgemm_nn (cm) %d %d %d %f %p %d %d %p %d %d %f %p %d %d %p %d %d\n", m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -2645,7 +2649,9 @@ nn_0_return:
 //	{
 //
 //#if defined(PRINT_NAME)
+#ifdef EXT_DEP
 //	printf("\nblas_hp_sgemm_nt %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+#endif
 //#endif
 //
 //	if(m<=0 | n<=0)
@@ -2660,7 +2666,9 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_sgemm_nt (cm) %d %d %d %f %p %d %d %p %d %d %f %p %d %d %p %d %d\n", m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -3410,7 +3418,9 @@ nt_0_return:
 //	{
 //
 //#if defined(PRINT_NAME)
+#ifdef EXT_DEP
 //	printf("\nblas_hp_sgemm_tn %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+#endif
 //#endif
 //
 //	if(m<=0 | n<=0)
@@ -3425,7 +3435,9 @@ void blasfeo_hp_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_sgemm_tn (cm) %d %d %d %f %p %d %d %p %d %d %f %p %d %d %p %d %d\n", m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -4128,7 +4140,9 @@ free(mem);
 //	{
 //
 //#if defined(PRINT_NAME)
+#ifdef EXT_DEP
 //	printf("\nblas_hp_sgemm_tt %d %d %d %f %p %d %p %d %f %p %d\n", m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
+#endif
 //#endif
 //
 //	if(m<=0 | n<=0)
@@ -4143,7 +4157,9 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_sgemm_tt (cm) %d %d %d %f %p %d %d %p %d %d %f %p %d %d %p %d %d\n", m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)

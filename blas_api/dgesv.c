@@ -57,7 +57,9 @@ void blasfeo_lapack_dgesv(int *pm, int *pn, double *A, int *plda, int *ipiv, dou
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_blas_dgesv %d %d %p %d %p %p %d %d\n", *pm, *pn, A, *plda, ipiv, B, *pldb, *info);
+#endif
 #endif
 
 	char c_n = 'n';

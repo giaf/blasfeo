@@ -1942,6 +1942,7 @@ void blasfeo_sgesc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, i
 	sA->use_dA = 0;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_sgesc : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** blasfeo_sgesc : n<0 : %d<0 *****\n", n);
@@ -1952,6 +1953,7 @@ void blasfeo_sgesc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, i
 	// A: m x n
 	if(ai+m > sA->m) printf("\n***** blasfeo_sgesc : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
 	if(aj+n > sA->n) printf("\n***** blasfeo_sgesc : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+#endif
 #endif
 
 	const int bs = 8;
@@ -2003,6 +2005,7 @@ void blasfeo_sgecp(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 	sB->use_dA = 0;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_sgecp : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** blasfeo_sgecp : n<0 : %d<0 *****\n", n);
@@ -2018,6 +2021,7 @@ void blasfeo_sgecp(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 	// B: m x n
 	if(bi+m > sB->m) printf("\n***** blasfeo_sgecp : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
 	if(bj+n > sB->n) printf("\n***** blasfeo_sgecp : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+#endif
 #endif
 
 	const int bs = 8;
@@ -2265,6 +2269,7 @@ void blasfeo_sgecpsc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 	sB->use_dA = 0;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_sgecpsc : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** blasfeo_sgecpsc : n<0 : %d<0 *****\n", n);
@@ -2280,6 +2285,7 @@ void blasfeo_sgecpsc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 	// B: m x n
 	if(bi+m > sB->m) printf("\n***** blasfeo_sgecpsc : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
 	if(bj+n > sB->n) printf("\n***** blasfeo_sgecpsc : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+#endif
 #endif
 
 	const int bs = 8;
@@ -2591,7 +2597,9 @@ void blasfeo_strcp_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blas
 	blasfeo_ref_strcp_l(m, sA, ai, aj, sC, ci, cj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_strcp_l: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	return;
@@ -2611,6 +2619,7 @@ void blasfeo_sgead(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, i
 	sB->use_dA = 0;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_sgead : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** blasfeo_sgead : n<0 : %d<0 *****\n", n);
@@ -2626,6 +2635,7 @@ void blasfeo_sgead(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, i
 	// B: m x n
 	if(bi+m > sB->m) printf("\n***** blasfeo_sgead : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
 	if(bj+n > sB->n) printf("\n***** blasfeo_sgead : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+#endif
 #endif
 
 	const int bs = 8;
@@ -2876,6 +2886,7 @@ void blasfeo_sgetr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 	sB->use_dA = 0;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_sgetr : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** blasfeo_sgetr : n<0 : %d<0 *****\n", n);
@@ -2891,6 +2902,7 @@ void blasfeo_sgetr(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 	// B: n x m
 	if(bi+n > sB->m) printf("\n***** blasfeo_sgetr : bi+n > row(B) : %d+%d > %d *****\n", bi, n, sB->m);
 	if(bj+m > sB->n) printf("\n***** blasfeo_sgetr : bj+m > col(B) : %d+%d > %d *****\n", bj, m, sB->n);
+#endif
 #endif
 
 	const int bs = 8;
@@ -3087,7 +3099,9 @@ void blasfeo_strtr_l(int m, struct blasfeo_smat *sA, int ai, int aj, struct blas
 	blasfeo_ref_strtr_l(m, sA, ai, aj, sC, ci, cj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_strtr_l: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	return;
@@ -3104,7 +3118,9 @@ void blasfeo_strtr_u(int m, struct blasfeo_smat *sA, int ai, int aj, struct blas
 	blasfeo_ref_strtr_u(m, sA, ai, aj, sC, ci, cj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_strtr_u: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	return;

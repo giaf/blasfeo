@@ -39,12 +39,16 @@ void GEMV(char *trans, int *pm, int *pn, REAL *alpha, REAL *A, int *plda, REAL *
 #if defined(DIM_CHECK)
 	if( !(*trans=='n' | *trans=='t' | *trans=='c' | *trans=='N' | *trans=='T' | *trans=='C') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: gemv: wrong value for trans: %c\n", trans);
+#endif
 		return;
 		}
 	if(*pincx==0 | *pincy==0)
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: gemv: wrong value for incx or incy: %d %d\n", *pincx, *pincy);
+#endif
 		return;
 		}
 #endif

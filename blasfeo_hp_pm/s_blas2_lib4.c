@@ -130,7 +130,9 @@ void blasfeo_hp_sgemv_nt(int m, int n, float alpha_n, float alpha_t, struct blas
 		blasfeo_ref_sgemv_nt(m, n, alpha_n, alpha_t, sA, ai, aj, sx_n, xi_n, sx_t, xi_t, beta_n, beta_t, sy_n, yi_n, sy_t, yi_t, sz_n, zi_n, sz_t, zi_t);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_sgemv_nt: feature not implemented yet: ai=%d\n", ai);
+#endif	
 		exit(1);
 #endif
 		}
@@ -360,7 +362,9 @@ void blasfeo_hp_ssymv_u(int m, float alpha, struct blasfeo_smat *sA, int ai, int
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_ssymv_u(m, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_ssymv_u: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -621,7 +625,9 @@ void blasfeo_hp_strmv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 		blasfeo_ref_strmv_unn(m, sA, ai, aj, sx, xi, sz, zi);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_strmv_unn: feature not implemented yet: ai=%d\n", ai);
+#endif	
 		exit(1);
 #endif
 		}
@@ -680,7 +686,9 @@ void blasfeo_hp_strmv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 		blasfeo_ref_strmv_utn(m, sA, ai, aj, sx, xi, sz, zi);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_strmv_utn: feature not implemented yet: ai=%d\n", ai);
+#endif	
 		exit(1);
 #endif
 		}
@@ -723,6 +731,7 @@ void blasfeo_hp_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 		return;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_strsv_lnn : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -739,6 +748,7 @@ void blasfeo_hp_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_lnn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
+#endif
 
 	if(ai!=0)
 		{
@@ -746,7 +756,9 @@ void blasfeo_hp_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 		blasfeo_ref_strsv_lnn(m, sA, ai, aj, sx, xi, sz, zi);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_strsv_lnn: feature not implemented yet: ai=%d\n", ai);
+#endif	
 		exit(1);
 #endif
 		}
@@ -811,6 +823,7 @@ void blasfeo_hp_strsv_lnn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int 
 		return;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_strsv_lnn_mn : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** blasfeo_strsv_lnn_mn : n<0 : %d<0 *****\n", n);
@@ -828,6 +841,7 @@ void blasfeo_hp_strsv_lnn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int 
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_lnn_mn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
+#endif
 
 	if(ai!=0)
 		{
@@ -835,7 +849,9 @@ void blasfeo_hp_strsv_lnn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int 
 		blasfeo_ref_strsv_lnn_mn(m, n, sA, ai, aj, sx, xi, sz, zi);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_strsv_lnn_mn: feature not implemented yet: ai=%d\n", ai);
+#endif	
 		exit(1);
 #endif
 		}
@@ -915,6 +931,7 @@ void blasfeo_hp_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 		return;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_strsv_ltn : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -931,6 +948,7 @@ void blasfeo_hp_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_ltn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
+#endif
 
 	if(ai!=0)
 		{
@@ -938,7 +956,9 @@ void blasfeo_hp_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 		blasfeo_ref_strsv_ltn(m, sA, ai, aj, sx, xi, sz, zi);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_strsv_ltn: feature not implemented yet: ai=%d\n", ai);
+#endif	
 		exit(1);
 #endif
 		}
@@ -1011,6 +1031,7 @@ void blasfeo_hp_strsv_ltn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int 
 		return;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_strsv_ltn_mn : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** blasfeo_strsv_ltn_mn : n<0 : %d<0 *****\n", n);
@@ -1028,6 +1049,7 @@ void blasfeo_hp_strsv_ltn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int 
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_ltn_mn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
+#endif
 
 	if(ai!=0)
 		{
@@ -1035,7 +1057,9 @@ void blasfeo_hp_strsv_ltn_mn(int m, int n, struct blasfeo_smat *sA, int ai, int 
 		blasfeo_ref_strsv_ltn_mn(m, n, sA, ai, aj, sx, xi, sz, zi);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_strsv_ltn_mn: feature not implemented yet: ai=%d\n", ai);
+#endif	
 		exit(1);
 #endif
 		}
@@ -1109,6 +1133,7 @@ void blasfeo_hp_strsv_lnu(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_strsv_lnu : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -1125,11 +1150,14 @@ void blasfeo_hp_strsv_lnu(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_lnu : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
+#endif
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_strsv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_strsv_lnu: feature not implemented yet: ai=%d\n", ai);
+#endif	
 	exit(1);
 #endif
 	}
@@ -1141,6 +1169,7 @@ void blasfeo_hp_strsv_ltu(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_strsv_ltu : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -1157,11 +1186,14 @@ void blasfeo_hp_strsv_ltu(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_ltu : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
+#endif
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_strsv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_strsv_ltu : feature not implemented yet *****\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -1173,6 +1205,7 @@ void blasfeo_hp_strsv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_strsv_unn : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -1189,11 +1222,14 @@ void blasfeo_hp_strsv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_unn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
+#endif
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_strsv_unn(m, sA, ai, aj, sx, xi, sz, zi);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_strsv_unn : feature not implemented yet *****\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -1205,6 +1241,7 @@ void blasfeo_hp_strsv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_strsv_utn : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -1221,11 +1258,14 @@ void blasfeo_hp_strsv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	// z: m
 	if(zi+m > sz->m) printf("\n***** blasfeo_strsv_utn : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
 #endif
+#endif
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_strsv_utn(m, sA, ai, aj, sx, xi, sz, zi);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\n***** blasfeo_strsv_utn : feature not implemented yet *****\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -1238,7 +1278,9 @@ void blasfeo_hp_sger(int m, int n, float alpha, struct blasfeo_svec *sx, int xi,
 	blasfeo_ref_sger(m, n, alpha, sx, xi, sy, yi, sC, ci, cj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_sger: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	return;

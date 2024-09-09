@@ -56,7 +56,9 @@ void blasfeo_lapack_dpotrs(char *uplo, int *pm, int *pn, double *A, int *plda, d
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_lapack_dpotrs %c %d %d %p %d %p %d %d\n", *uplo, *pm, *pn, A, *plda, B, *pldb, *info);
+#endif
 #endif
 
 	int m = *pm;

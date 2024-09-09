@@ -53,12 +53,16 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 #if defined(DIM_CHECK)
 	if( !(*ta=='c' | *ta=='C' | *ta=='n' | *ta=='N' | *ta=='t' | *ta=='T') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: gemm: wrong value for ta\n");
+#endif
 		return;
 		}
 	if( !(*tb=='c' | *tb=='C' | *tb=='n' | *tb=='N' | *tb=='t' | *tb=='T') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: gemm: wrong value for tb\n");
+#endif
 		return;
 		}
 #endif
@@ -137,7 +141,9 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 	double time = blasfeo_toc(&timer);
 	double Gflops = 1e-9 * flops / time;
 	double Gflops_max = 3.4 * 16;
+#ifdef EXT_DEP
     printf("\nblasfeo gemm\t%c\t%c\t\t%d\t%d\t%d\t%f\t%f\n", *ta, *tb, *pm, *pn, *pk, Gflops, 100.0*Gflops/Gflops_max);
+#endif
 #endif
 
 	return;

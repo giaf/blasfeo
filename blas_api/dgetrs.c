@@ -57,7 +57,9 @@ void blasfeo_lapack_dgetrs(char *trans, int *pm, int *pn, double *A, int *plda, 
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_lapack_dgetrs %c %d %d %p %d %p %p %d %d\n", *trans, *pm, *pn, A, *plda, ipiv, B, *pldb, *info);
+#endif
 #endif
 
 	int m = *pm;

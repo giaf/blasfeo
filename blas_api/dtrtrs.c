@@ -56,7 +56,9 @@ void blasfeo_lapack_dtrtrs(char *uplo, char *trans, char *diag, int *pm, int *pn
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_lapack_dtrtrs %c %c %c %d %d %p %d %p %d %d\n", *uplo, *trans, *diag, *pm, *pn, A, *plda, B, *pldb, *info);
+#endif
 #endif
 
 

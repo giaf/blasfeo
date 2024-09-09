@@ -50,7 +50,9 @@ void blasfeo_hp_dgemm_dn(int m, int n, double alpha, struct blasfeo_dvec *sA, in
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dgemm_dn(m, n, alpha, sA, ai, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dgemm_dn: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -63,7 +65,9 @@ void blasfeo_hp_dgemm_nd(int m, int n, double alpha, struct blasfeo_dmat *sA, in
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dgemm_nd(m, n, alpha, sA, ai, aj, sB, bi, beta, sC, ci, cj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dgemm_nd: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}

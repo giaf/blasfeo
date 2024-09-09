@@ -59,7 +59,9 @@ void blasfeo_hp_spotrf_l(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 		blasfeo_ref_spotrf_l(m, sC, ci, cj, sD, di, dj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_spotrf_l: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+#endif	
 		exit(1);
 #endif
 		}
@@ -400,7 +402,9 @@ void blasfeo_hp_spotrf_l_mn(int m, int n, struct blasfeo_smat *sC, int ci, int c
 		blasfeo_ref_spotrf_l_mn(m, n, sC, ci, cj, sD, di, dj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_spotrf_l: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+#endif	
 		exit(1);
 #endif
 		}
@@ -719,7 +723,9 @@ void blasfeo_hp_spotrf_u(int m, struct blasfeo_smat *sC, int ci, int cj, struct 
 	blasfeo_ref_spotrf_u(m, sC, ci, cj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_spotrf_u: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	
@@ -740,7 +746,9 @@ void blasfeo_hp_ssyrk_spotrf_ln(int m, int k, struct blasfeo_smat *sA, int ai, i
 		blasfeo_ref_ssyrk_spotrf_ln(m, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_ssyrk_spotrf_ln: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
+#endif	
 		exit(1);
 #endif
 		}
@@ -809,7 +817,9 @@ void blasfeo_hp_ssyrk_spotrf_ln_mn(int m, int n, int k, struct blasfeo_smat *sA,
 		blasfeo_ref_ssyrk_spotrf_ln_mn(m, n, k, sA, ai, aj, sB, bi, bj, sC, ci, cj, sD, di, dj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_ssyrk_spotrf_ln: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
+#endif	
 		exit(1);
 #endif
 		}
@@ -896,7 +906,9 @@ void blasfeo_hp_sgetrf_np(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 		blasfeo_ref_sgetrf_np(m, n, sC, ci, cj, sD, di, dj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_sgetf_np: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+#endif	
 		exit(1);
 #endif
 		}
@@ -999,7 +1011,9 @@ void blasfeo_hp_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 		blasfeo_ref_sgetrf_rp(m, n, sC, ci, cj, sD, di, dj, ipiv);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_sgetrf_rp: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+#endif	
 		exit(1);
 #endif
 		}
@@ -1233,7 +1247,9 @@ void blasfeo_hp_sgeqrf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 	blasfeo_ref_sgeqrf(m, n, sC, ci, cj, sD, di, dj, work);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_sgeqrf: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	return;
@@ -1256,7 +1272,9 @@ void blasfeo_hp_sgelqf(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 	blasfeo_ref_sgelqf(m, n, sC, ci, cj, sD, di, dj, work);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_sgelqf: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	return;
@@ -1279,7 +1297,9 @@ void blasfeo_hp_sorglq(int m, int n, int k, struct blasfeo_smat *sC, int ci, int
 	blasfeo_ref_sorglq(m, n, k, sC, ci, cj, sD, di, dj, work);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_sorglq: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	return;
@@ -1296,7 +1316,9 @@ void blasfeo_hp_sgelqf_pd(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 	blasfeo_ref_sgelqf_pd(m, n, sC, ci, cj, sD, di, dj, work);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_sgelqf_pd: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	return;
@@ -1316,7 +1338,9 @@ void blasfeo_hp_sgelqf_pd_la(int m, int n1, struct blasfeo_smat *sD, int di, int
 	blasfeo_ref_sgelqf_pd_la(m, n1, sD, di, dj, sA, ai, aj, work);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_sgelqf_pd_la: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	return;
@@ -1336,7 +1360,9 @@ void blasfeo_hp_sgelqf_pd_lla(int m, int n1, struct blasfeo_smat *sD, int di, in
 	blasfeo_ref_sgelqf_pd_lla(m, n1, sD, di, dj, sL, li, lj, sA, ai, aj, work);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_sgelqf_pd_lla: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}

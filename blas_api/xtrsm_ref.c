@@ -53,22 +53,30 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 #if defined(DIM_CHECK)
 	if( !(*side=='l' | *side=='L' | *side=='r' | *side=='R') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: dtrsm: wrong value for side\n");
+#endif
 		return;
 		}
 	if( !(*uplo=='l' | *uplo=='L' | *uplo=='u' | *uplo=='U') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: dtrsm: wrong value for uplo\n");
+#endif
 		return;
 		}
 	if( !(*transa=='c' | *transa=='C' | *transa=='n' | *transa=='N' | *transa=='t' | *transa=='T') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: dtrsm: wrong value for transa\n");
+#endif
 		return;
 		}
 	if( !(*diag=='n' | *diag=='N' | *diag=='u' | *diag=='U') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: dtrsm: wrong value for diag\n");
+#endif
 		return;
 		}
 #endif
@@ -225,7 +233,9 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 	double time = blasfeo_toc(&timer);
 	double Gflops = 1e-9 * flops / time;
 	double Gflops_max = 3.4 * 16;
+#ifdef EXT_DEP
     printf("\nblasfeo trsm\t%c\t%c\t%c\t%c\t%d\t%d\t%f\t%f\n", *side, *uplo, *transa, *diag, *pm, *pn, Gflops, 100.0*Gflops/Gflops_max);
+#endif
 #endif
 
 	return;

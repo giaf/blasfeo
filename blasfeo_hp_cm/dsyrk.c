@@ -832,7 +832,9 @@ void blasfeo_hp_dsyrk3_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dsyrk3_ln (cm) %d %d %f %p %d %d %f %p %d %d %p %d %d\n", m, k, alpha, sA, ai, aj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0)
@@ -1208,7 +1210,9 @@ void blasfeo_hp_dsyrk3_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dsyrk3_lt (cm) %d %d %f %p %d %d %f %p %d %d %p %d %d\n", m, k, alpha, sA, ai, aj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0)
@@ -1584,7 +1588,9 @@ void blasfeo_hp_dsyrk3_un(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dsyrk3_un (cm) %d %d %f %p %d %d %f %p %d %d %p %d %d\n", m, k, alpha, sA, ai, aj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0)
@@ -1961,7 +1967,9 @@ void blasfeo_hp_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dsyrk3_ut (cm) %d %d %f %p %d %d %f %p %d %d %p %d %d\n", m, k, alpha, sA, ai, aj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0)
@@ -2331,7 +2339,9 @@ void blasfeo_hp_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dsyrk_ln (cm) %d %d %f %p %d %d %p %d %d %f %p %d %d %p %d %d\n", m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0)
@@ -2686,7 +2696,9 @@ void blasfeo_hp_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dm
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dsyrk_ln_mn (cm) %d %d %d %f %p %d %d %p %d %d %f %p %d %d %p %d %d\n", m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0)

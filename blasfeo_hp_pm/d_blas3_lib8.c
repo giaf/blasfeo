@@ -1184,7 +1184,9 @@ void blasfeo_hp_dtrsm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_llnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_llnn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1197,7 +1199,9 @@ void blasfeo_hp_dtrsm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_llnu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_llnu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1210,7 +1214,9 @@ void blasfeo_hp_dtrsm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_lltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_lltn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1223,7 +1229,9 @@ void blasfeo_hp_dtrsm_lltu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_lltu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_lltu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1236,7 +1244,9 @@ void blasfeo_hp_dtrsm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_lunn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_lunn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1249,7 +1259,9 @@ void blasfeo_hp_dtrsm_lunu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_lunu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_lunu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1262,7 +1274,9 @@ void blasfeo_hp_dtrsm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_lutn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_lutn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1275,7 +1289,9 @@ void blasfeo_hp_dtrsm_lutu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_lutu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_lutu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1288,7 +1304,9 @@ void blasfeo_hp_dtrsm_rlnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_rlnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_rlnn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1301,7 +1319,9 @@ void blasfeo_hp_dtrsm_rlnu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_rlnu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_rlnu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1336,7 +1356,9 @@ void blasfeo_hp_dtrsm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 		blasfeo_ref_dtrsm_rltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_dtrsm_rltn: feature not implemented yet: ai=%d, bi=%d, di=%d\n", ai, bi, di);
+#endif
 		exit(1);
 #endif
 		}
@@ -1498,7 +1520,9 @@ void blasfeo_hp_dtrsm_rltu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_rltu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_rltu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1511,7 +1535,9 @@ void blasfeo_hp_dtrsm_runn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_runn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_runn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1524,7 +1550,9 @@ void blasfeo_hp_dtrsm_runu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_runu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_runu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1537,7 +1565,9 @@ void blasfeo_hp_dtrsm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_rutn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_rutn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1550,7 +1580,9 @@ void blasfeo_hp_dtrsm_rutu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsm_rutu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsm_rutu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1564,7 +1596,9 @@ void blasfeo_hp_dtrmm_llnn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_llnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_llnn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1579,7 +1613,9 @@ void blasfeo_hp_dtrmm_llnu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_llnu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_llnu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1594,7 +1630,9 @@ void blasfeo_hp_dtrmm_lltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_lltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_lltn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1609,7 +1647,9 @@ void blasfeo_hp_dtrmm_lltu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_lltu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_lltu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1624,7 +1664,9 @@ void blasfeo_hp_dtrmm_lunn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_lunn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_lunn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1639,7 +1681,9 @@ void blasfeo_hp_dtrmm_lunu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_lunu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_lunu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1654,7 +1698,9 @@ void blasfeo_hp_dtrmm_lutn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_lutn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_lutn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1669,7 +1715,9 @@ void blasfeo_hp_dtrmm_lutu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_lutu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_lutu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1866,7 +1914,9 @@ void blasfeo_hp_dtrmm_rlnu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_rlnu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_rlnu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1881,7 +1931,9 @@ void blasfeo_hp_dtrmm_rltn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_rltn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_rltn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1896,7 +1948,9 @@ void blasfeo_hp_dtrmm_rltu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_rltu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_rltu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1911,7 +1965,9 @@ void blasfeo_hp_dtrmm_runn(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_runn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_runn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1926,7 +1982,9 @@ void blasfeo_hp_dtrmm_runu(int m, int n, double alpha, struct blasfeo_dmat *sA, 
 	blasfeo_ref_dtrmm_runu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_runu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	return;
@@ -1940,7 +1998,9 @@ void blasfeo_hp_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sB, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrmm_rutn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_rutn: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1953,7 +2013,9 @@ void blasfeo_hp_dtrmm_rutu(int m, int n, double alpha, struct blasfeo_dmat *sB, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrmm_rutu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm_rutu: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -1974,7 +2036,9 @@ void blasfeo_hp_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 		blasfeo_ref_dsyrk_ln(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_dsyrk_ln: feature not implemented yet: bi=%d\n", bi);
+#endif
 		exit(1);
 #endif
 		}
@@ -2327,7 +2391,9 @@ void blasfeo_hp_dsyrk_ln_mn(int m, int n, int k, double alpha, struct blasfeo_dm
 		blasfeo_ref_dsyrk_ln_mn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_dsyrk_ln_mn: feature not implemented yet: ai=%d, bi=%d\n", ai, bi);
+#endif
 		exit(1);
 #endif
 		}
@@ -2562,7 +2628,9 @@ void blasfeo_hp_dsyrk_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dsyrk_lt(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dsyrk_lt: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -2574,7 +2642,9 @@ void blasfeo_hp_dsyrk_un(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dsyrk_un(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dsyrk_un: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}
@@ -2586,7 +2656,9 @@ void blasfeo_hp_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dsyrk_ut(m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dsyrk_ut: feature not implemented yet\n");
+#endif
 	exit(1);
 #endif
 	}

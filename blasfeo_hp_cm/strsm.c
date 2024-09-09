@@ -107,7 +107,9 @@ void blasfeo_hp_strsm_llnn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_llnn (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -308,7 +310,9 @@ void blasfeo_hp_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_llnu (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -502,7 +506,9 @@ void blasfeo_hp_strsm_lltn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_lltn (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -728,7 +734,9 @@ void blasfeo_hp_strsm_lltu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_lltu (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -947,7 +955,9 @@ void blasfeo_hp_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_lunn (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -1173,7 +1183,9 @@ void blasfeo_hp_strsm_lunu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_lunu (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -1392,7 +1404,9 @@ void blasfeo_hp_strsm_lutn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_lutn (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -1594,7 +1608,9 @@ void blasfeo_hp_strsm_lutu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_lutu (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -1792,7 +1808,9 @@ void blasfeo_hp_strsm_rlnn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_rlnn (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -2019,7 +2037,9 @@ void blasfeo_hp_strsm_rlnu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_rlnu (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -2239,7 +2259,9 @@ void blasfeo_hp_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_rltn (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -2440,7 +2462,9 @@ void blasfeo_hp_strsm_rltu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_rltu (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -2634,7 +2658,9 @@ void blasfeo_hp_strsm_runn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_runn (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -2835,7 +2861,9 @@ void blasfeo_hp_strsm_runu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_runu (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -3029,7 +3057,9 @@ void blasfeo_hp_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_rutn (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -3256,7 +3286,9 @@ void blasfeo_hp_strsm_rutu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_strsm_rutu (cm) %d %d %f %p %d %d %p %d %d %p %d %d\n", m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)

@@ -50,7 +50,9 @@ void TRMM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrmm %c %c %c %c %d %d %f %p %d %p %d\n", *side, *uplo, *transa, *diag, *pm, *pn, *alpha, A, *plda, B, *pldb);
+#endif
 #endif
 
 #ifdef TIME_INT
@@ -61,22 +63,30 @@ void TRMM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 #if defined(DIM_CHECK)
 	if( !(*side=='l' | *side=='L' | *side=='r' | *side=='R') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: dtrmm: wrong value for side\n");
+#endif
 		return;
 		}
 	if( !(*uplo=='l' | *uplo=='L' | *uplo=='u' | *uplo=='U') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: dtrmm: wrong value for uplo\n");
+#endif
 		return;
 		}
 	if( !(*transa=='c' | *transa=='C' | *transa=='n' | *transa=='N' | *transa=='t' | *transa=='T') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: dtrmm: wrong value for transa\n");
+#endif
 		return;
 		}
 	if( !(*diag=='n' | *diag=='N' | *diag=='u' | *diag=='U') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: dtrmm: wrong value for diag\n");
+#endif
 		return;
 		}
 #endif
@@ -209,7 +219,9 @@ void TRMM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 	double time = blasfeo_toc(&timer);
 	double Gflops = 1e-9 * flops / time;
 	double Gflops_max = 3.4 * 16;
+#ifdef EXT_DEP
     printf("\nblasfeo trmm\t%c\t%c\t%c\t%c\t%d\t%d\t%f\t%f\n", *side, *uplo, *transa, *diag, *pm, *pn, Gflops, 100.0*Gflops/Gflops_max);
+#endif
 #endif
 
 	return;

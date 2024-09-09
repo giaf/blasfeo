@@ -57,7 +57,9 @@ void blasfeo_lapack_dposv(char *uplo, int *pm, int *pn, double *A, int *plda, do
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_lapack_dposv %c %d %d %p %d %p %d %d\n", *uplo, *pm, *pn, A, *plda, B, *pldb, *info);
+#endif
 #endif
 
 	*info = 0;

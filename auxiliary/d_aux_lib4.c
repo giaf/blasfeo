@@ -1794,7 +1794,9 @@ void blasfeo_pack_l_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *
 		blasfeo_ref_pack_l_dmat(m, n, A, lda, sA, ai, aj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_pack_l_dmat: feature not implemented yet: ai!=0\n");
+#endif	
 		exit(1);
 #endif
 		}

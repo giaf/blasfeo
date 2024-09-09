@@ -290,6 +290,7 @@ void TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx,
 	if(m==0 | n==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** trsv_lnn_mn_libstr : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** trsv_lnn_mn_libstr : n<0 : %d<0 *****\n", n);
@@ -306,6 +307,7 @@ void TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx,
 	if(xi+m > sx->m) printf("\n***** trsv_lnn_mn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_lnn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 #endif
 	char cl = 'l';
 	char cn = 'n';
@@ -333,6 +335,7 @@ void TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx,
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** trsv_ltn_mn_libstr : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** trsv_ltn_mn_libstr : n<0 : %d<0 *****\n", n);
@@ -349,6 +352,7 @@ void TRSV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx,
 	if(xi+m > sx->m) printf("\n***** trsv_ltn_mn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_ltn_mn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 #endif
 	char cl = 'l';
 	char cn = 'n';
@@ -376,6 +380,7 @@ void TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** trsv_lnn_libstr : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -391,6 +396,7 @@ void TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(xi+m > sx->m) printf("\n***** trsv_lnn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_lnn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 #endif
 	char cl = 'l';
 	char cn = 'n';
@@ -416,6 +422,7 @@ void TRSV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** trsv_lnu_libstr : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -431,6 +438,7 @@ void TRSV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(xi+m > sx->m) printf("\n***** trsv_lnu_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_lnu_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 #endif
 	char cl = 'l';
 	char cn = 'n';
@@ -456,6 +464,7 @@ void TRSV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** trsv_ltn_libstr : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -471,6 +480,7 @@ void TRSV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(xi+m > sx->m) printf("\n***** trsv_ltn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_ltn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 #endif
 	char cl = 'l';
 	char cn = 'n';
@@ -496,6 +506,7 @@ void TRSV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** trsv_ltu_libstr : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -511,6 +522,7 @@ void TRSV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(xi+m > sx->m) printf("\n***** trsv_ltu_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_ltu_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 #endif
 	char cl = 'l';
 	char cn = 'n';
@@ -536,6 +548,7 @@ void TRSV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** trsv_unn_libstr : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -551,6 +564,7 @@ void TRSV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(xi+m > sx->m) printf("\n***** trsv_unn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_unn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 #endif
 	char cl = 'l';
 	char cn = 'n';
@@ -576,6 +590,7 @@ void TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(m==0)
 		return;
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** trsv_utn_libstr : m<0 : %d<0 *****\n", m);
 	// non-negative offset
@@ -591,6 +606,7 @@ void TRSV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	if(xi+m > sx->m) printf("\n***** trsv_utn_libstr : xi+m > size(x) : %d+%d > %d *****\n", xi, m, sx->m);
 	// z: m
 	if(zi+m > sz->m) printf("\n***** trsv_utn_libstr : zi+m > size(z) : %d+%d > %d *****\n", zi, m, sz->m);
+#endif
 #endif
 	char cl = 'l';
 	char cn = 'n';

@@ -85,7 +85,9 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dgetrf_rp (cm) %d %d %p %d %d %p %d %d %p\n", m, n, sC, ci, cj, sD, di, dj, ipiv);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -1278,7 +1280,9 @@ void blasfeo_hp_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dgetrf_np (cm) %d %d %p %d %d %p %d %d\n", m, n, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0 | n<=0)
@@ -1355,7 +1359,9 @@ void blasfeo_hp_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		blasfeo_ref_dgetrf_np(m, n, sC, ci, cj, sD, di, dj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblas_dgetrf_np: not implemented yet for m>K_MAX_STACK\n");
+#endif
 		exit(1);
 //		goto alg2;
 #endif

@@ -48,7 +48,9 @@ void blasfeo_lapack_dlaswp(int *pn, double *A, int *plda, int *pk1, int *pk2, in
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_lapack_dlaswp %d %p %d %d %d %p %d\n", *pn, A, *plda, *pk1, *pk2, ipiv, *pincx);
+#endif
 #endif
 
 	int n = *pn;

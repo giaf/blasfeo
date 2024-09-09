@@ -54,7 +54,9 @@ void blasfeo_hp_sgemm_dn(int m, int n, double alpha, struct blasfeo_svec *sA, in
 	blasfeo_ref_sgemm_dn(m, n, alpha, sA, ai, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
 	return;
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dgemm_dn: feature not implemented yet: bi=%d, ci=%d, di=%d\n", bi, ci, di);
+#endif	
 	exit(1);
 #endif
 	return;
@@ -75,7 +77,9 @@ void blasfeo_hp_sgemm_nd(int m, int n, float alpha, struct blasfeo_smat *sA, int
 		blasfeo_ref_sgemm_nd(m, n, alpha, sA, ai, aj, sB, bi, beta, sC, ci, cj, sD, di, dj);
 		return;
 #else
+#ifdef EXT_DEP
 		printf("\nblasfeo_sgemm_nd: feature not implemented yet: ai=%d, ci=%d, di=%d\n", ai, ci, di);
+#endif	
 		exit(1);
 #endif
 		}

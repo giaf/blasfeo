@@ -460,7 +460,9 @@ void blasfeo_hp_dsyr2k_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 //	return;
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dsyr2k_ln (cm) %d %d %f %p %d %d %p %d %d %f %p %d %d %p %d %d\n", m, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+#endif
 #endif
 
 	if(m<=0)
@@ -681,7 +683,9 @@ ln_2:
 #if defined(DIM_CHECK)
 	if(kc0%2!=0)
 		{
+#ifdef EXT_DEP
 		printf("\nblasfeo_dsyr2k_ln: kc%2!=0\n");
+#endif
 		}
 #endif
 

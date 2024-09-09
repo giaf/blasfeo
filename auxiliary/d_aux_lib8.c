@@ -145,7 +145,9 @@ void blasfeo_pack_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *sA
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_pack_dmat(m, n, A, lda, sA, ai, aj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_pack_dmat: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -158,7 +160,9 @@ void blasfeo_pack_l_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_pack_l_dmat(m, n, A, lda, sA, ai, aj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_pack_l_dmat: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -171,7 +175,9 @@ void blasfeo_pack_u_dmat(int m, int n, double *A, int lda, struct blasfeo_dmat *
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_pack_u_dmat(m, n, A, lda, sA, ai, aj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_pack_u_dmat: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -184,7 +190,9 @@ void blasfeo_pack_tran_dmat(int m, int n, double *A, int lda, struct blasfeo_dma
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_pack_tran_dmat(m, n, A, lda, sA, ai, aj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_pack_tran_dmat: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -217,7 +225,9 @@ void blasfeo_unpack_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_unpack_dmat(m, n, sA, ai, aj, A, lda);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_unpack_dmat: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -230,7 +240,9 @@ void blasfeo_unpack_tran_dmat(int m, int n, struct blasfeo_dmat *sA, int ai, int
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_unpack_tran_dmat(m, n, sA, ai, aj, A, lda);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_unpack_tran_dmat: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -471,7 +483,9 @@ void blasfeo_drowsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_drowsw(kmax, sA, ai, aj, sC, ci, cj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_drowsw: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -520,7 +534,9 @@ void blasfeo_drowex(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_drowex(kmax, alpha, sA, ai, aj, sx, xi);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_drowex: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -533,7 +549,9 @@ void blasfeo_drowin(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, str
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_drowin(kmax, alpha, sx, xi, sA, ai, aj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_drowin: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -546,7 +564,9 @@ void blasfeo_drowad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, str
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_drowad(kmax, alpha, sx, xi, sA, ai, aj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_drowad: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -559,7 +579,9 @@ void blasfeo_dcolex(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dcolex(kmax, sA, ai, aj, sx, xi);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dcolex: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -572,7 +594,9 @@ void blasfeo_dcolin(int kmax, struct blasfeo_dvec *sx, int xi, struct blasfeo_dm
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dcolin(kmax, sx, xi, sA, ai, aj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dcolin: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -585,7 +609,9 @@ void blasfeo_dcolad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, str
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dcolad(kmax, alpha, sx, xi, sA, ai, aj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dcolad: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -645,7 +671,9 @@ void blasfeo_dcolsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dcolsw(kmax, sA, ai, aj, sC, ci, cj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dcolsw: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -804,7 +832,9 @@ void blasfeo_dgecpsc(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dgecpsc(m, n, alpha, sA, ai, aj, sB, bi, bj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dgecpsc: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -818,7 +848,9 @@ void blasfeo_dtrcpsc_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrcpsc_l(m, alpha, sA, ai, aj, sB, bi, bj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrcpsc_l: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -832,7 +864,9 @@ void blasfeo_dgesc(int m, int n, double alpha, struct blasfeo_dmat *sA, int ai, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dgesc(m, n, alpha, sA, ai, aj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dgesc: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -846,7 +880,9 @@ void blasfeo_dtrsc_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, int a
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrsc_l(m, alpha, sA, ai, aj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrsc_l: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -1106,7 +1142,9 @@ void blasfeo_dtrtr_u(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blas
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dtrtr_u(m, sA, ai, aj, sC, ci, cj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dtrtr_u: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -1295,7 +1333,9 @@ void blasfeo_drowad_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_drowad_sp(kmax, alpha, sx, xi, idx, sD, di, dj);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_drowad_sp: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -1360,7 +1400,9 @@ void blasfeo_dveccl(int m, struct blasfeo_dvec *sxm, int xim, struct blasfeo_dve
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dveccl(m, sxm, xim, sx, xi, sxp, xip, sz, zi);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dveccl: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -1373,7 +1415,9 @@ void blasfeo_dveccl_mask(int m, struct blasfeo_dvec *sxm, int xim, struct blasfe
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dveccl_mask(m, sxm, xim, sx, xi, sxp, xip, sz, zi, sm, mi);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dveccl_mask: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}
@@ -1386,7 +1430,9 @@ void blasfeo_dvecze(int m, struct blasfeo_dvec *sm, int mi, struct blasfeo_dvec 
 #if defined(BLASFEO_REF_API)
 	blasfeo_ref_dvecze(m, sm, mi, sv, vi, se, ei);
 #else
+#ifdef EXT_DEP
 	printf("\nblasfeo_dvecze: feature not implemented yet\n");
+#endif	
 	exit(1);
 #endif
 	}

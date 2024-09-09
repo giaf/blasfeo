@@ -1209,7 +1209,9 @@ void scolsw_lib(int kmax, int offsetA, float *pA, int sda, int offsetC, float *p
 		}
 	else
 		{
+#ifdef EXT_DEP
 		printf("\nscolsw: feature not implemented yet: offsetA!=offsetC\n\n");
+#endif	
 		exit(1);
 		}
 
@@ -2313,6 +2315,7 @@ void blasfeo_sgesc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, i
 	sA->use_dA = 0;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_sgesc : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** blasfeo_sgesc : n<0 : %d<0 *****\n", n);
@@ -2323,6 +2326,7 @@ void blasfeo_sgesc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai, i
 	// A: m x n
 	if(ai+m > sA->m) printf("\n***** blasfeo_sgesc : ai+m > row(A) : %d+%d > %d *****\n", ai, m, sA->m);
 	if(aj+n > sA->n) printf("\n***** blasfeo_sgesc : aj+n > col(A) : %d+%d > %d *****\n", aj, n, sA->n);
+#endif
 #endif
 
 	const int bs = 4;
@@ -2405,6 +2409,7 @@ void blasfeo_sgecpsc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 	sB->use_dA = 0;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_sgecpsc : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** blasfeo_sgecpsc : n<0 : %d<0 *****\n", n);
@@ -2420,6 +2425,7 @@ void blasfeo_sgecpsc(int m, int n, float alpha, struct blasfeo_smat *sA, int ai,
 	// B: m x n
 	if(bi+m > sB->m) printf("\n***** blasfeo_sgecpsc : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
 	if(bj+n > sB->n) printf("\n***** blasfeo_sgecpsc : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+#endif
 #endif
 
 	const int bs = 4;
@@ -2702,6 +2708,7 @@ void blasfeo_sgecp(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 	sB->use_dA = 0;
 
 #if defined(DIM_CHECK)
+#ifdef EXT_DEP
 	// non-negative size
 	if(m<0) printf("\n****** blasfeo_sgecp : m<0 : %d<0 *****\n", m);
 	if(n<0) printf("\n****** blasfeo_sgecp : n<0 : %d<0 *****\n", n);
@@ -2717,6 +2724,7 @@ void blasfeo_sgecp(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct
 	// B: m x n
 	if(bi+m > sB->m) printf("\n***** blasfeo_sgecp : bi+m > row(B) : %d+%d > %d *****\n", bi, m, sB->m);
 	if(bj+n > sB->n) printf("\n***** blasfeo_sgecp : bj+n > col(B) : %d+%d > %d *****\n", bj, n, sB->n);
+#endif
 #endif
 
 	const int bs = 4;

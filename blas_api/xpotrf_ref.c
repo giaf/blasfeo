@@ -53,7 +53,9 @@ void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 #if defined(DIM_CHECK)
 	if( !(*uplo=='l' | *uplo=='l' | *uplo=='U' | *uplo=='U') )
 		{
+#ifdef EXT_DEP
 		printf("\nBLASFEO: potrf: wrong value for uplo\n");
+#endif
 		return;
 		}
 #endif
@@ -107,7 +109,9 @@ void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 	double time = blasfeo_toc(&timer);
 	double Gflops = 1e-9 * flops / time;
 	double Gflops_max = 3.4 * 16;
+#ifdef EXT_DEP
     printf("\nblasfeo potrf\t%c\t%d\t%f\t%f\n", *uplo, *pm, Gflops, 100.0*Gflops/Gflops_max);
+#endif
 #endif
 
 end_label:

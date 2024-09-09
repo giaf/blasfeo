@@ -63,7 +63,9 @@ void blasfeo_hp_dgemv_n(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dgemv_n (cm) %d %d %f %p %d %d %p %d %f %p %d %p %d\n", m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+#endif
 #endif
 
 	if(m<=0 | n<=0 | (alpha==0 & beta==0))
@@ -131,7 +133,9 @@ void blasfeo_hp_dgemv_t(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	{
 
 #if defined(PRINT_NAME)
+#ifdef EXT_DEP
 	printf("\nblasfeo_hp_dgemv_t (cm) %d %d %f %p %d %d %p %d %f %p %d %p %d\n", m, n, alpha, sA, ai, aj, sx, xi, beta, sy, yi, sz, zi);
+#endif
 #endif
 
 	if(m<=0 | n<=0 | (alpha==0 & beta==0))

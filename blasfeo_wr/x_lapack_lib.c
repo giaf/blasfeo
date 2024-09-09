@@ -74,12 +74,16 @@ void POTRF_L(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, in
 		{
 		if(info>0)
 			{
+#ifdef EXT_DEP
 			printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+#endif	
 			exit(1);
 			}
 		else
 			{
+#ifdef EXT_DEP
 			printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+#endif	
 			exit(1);
 			}
 		}
@@ -124,12 +128,16 @@ void POTRF_L_MN(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, 
 		{
 		if(info>0)
 			{
+#ifdef EXT_DEP
 			printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+#endif	
 			exit(1);
 			}
 		else
 			{
+#ifdef EXT_DEP
 			printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+#endif	
 			exit(1);
 			}
 		}
@@ -175,12 +183,16 @@ void POTRF_U(int m, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, in
 		{
 		if(info>0)
 			{
+#ifdef EXT_DEP
 			printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+#endif	
 			exit(1);
 			}
 		else
 			{
+#ifdef EXT_DEP
 			printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+#endif	
 			exit(1);
 			}
 		}
@@ -234,12 +246,16 @@ void SYRK_POTRF_LN(int m, int k, struct XMAT *sA, int ai, int aj, struct XMAT *s
 		{
 		if(info>0)
 			{
+#ifdef EXT_DEP
 			printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+#endif	
 			exit(1);
 			}
 		else
 			{
+#ifdef EXT_DEP
 			printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+#endif	
 			exit(1);
 			}
 		}
@@ -289,12 +305,16 @@ void SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, stru
 			{
 			if(info>0)
 				{
+#ifdef EXT_DEP
 				printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+#endif	
 				exit(1);
 				}
 			else
 				{
+#ifdef EXT_DEP
 				printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+#endif	
 				exit(1);
 				}
 			}
@@ -308,12 +328,16 @@ void SYRK_POTRF_LN_MN(int m, int n, int k, struct XMAT *sA, int ai, int aj, stru
 			{
 			if(info>0)
 				{
+#ifdef EXT_DEP
 				printf("\nxpotrf: leading minor of order %d is not positive definite, the factorization could not be completed.\n", info);
+#endif	
 				exit(1);
 				}
 			else
 				{
+#ifdef EXT_DEP
 				printf("\nxpotrf: the %d-th argument had an illegal value\n", -info);
+#endif	
 				exit(1);
 				}
 			}
@@ -503,7 +527,9 @@ void GELQF(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int d
 // generate Q matrix
 int ORGLQ_WORK_SIZE(int m, int n, int k)
 	{
+#ifdef EXT_DEP
 //	printf("\nblasfeo_orglq_worksize: feature not implemented yet\n");
+#endif
 //	exit(1);
 	REAL dwork;
 	REAL *pD, *dD;
@@ -523,7 +549,9 @@ void ORGLQ(int m, int n, int k, struct XMAT *sC, int ci, int cj, struct XMAT *sD
 	if(m<=0 | n<=0)
 		return;
 
+#ifdef EXT_DEP
 //	printf("\nblasfeo_orglq: feature not implemented yet\n");
+#endif
 //	exit(1);
 
 	// invalidate stored inverse diagonal of result matrix
@@ -562,7 +590,9 @@ void GELQF_PD(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, in
 	{
 //	if(m<=0 | n<=0)
 //		return;
+#ifdef EXT_DEP
 //	printf("\nblasfeo_gelqf_pd: feature not implemented yet\n");
+#endif
 //	exit(1);
 	GELQF(m, n, sC, ci, cj, sD, di, dj, work);
 	int ldd = sD->m;
@@ -593,7 +623,9 @@ void GELQF_PD_LA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *sA
 	{
 	if(m<=0)
 		return;
+#ifdef EXT_DEP
 	printf("\nblasfeo_gelqf_pd_la: feature not implemented yet\n");
+#endif	
 	exit(1);
 	}
 
@@ -608,7 +640,9 @@ void GELQF_PD_LLA(int m, int n1, struct XMAT *sD, int di, int dj, struct XMAT *s
 	{
 	if(m<=0)
 		return;
+#ifdef EXT_DEP
 	printf("\nblasfeo_gelqf_pd_lla: feature not implemented yet\n");
+#endif	
 	exit(1);
 	}
 
