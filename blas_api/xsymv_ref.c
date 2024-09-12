@@ -72,9 +72,18 @@ void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x0, int *p
 	else
 		{
 		if(n>K_MAX_STACK)
+			{
+#ifdef EXT_DEP
 			x = malloc(n*sizeof(REAL));
+#else
+			// not enough static memory, can't allocate dynamic memory
+			exit(1);
+#endif
+			}
 		else
+			{
 			x = x_stack;
+			}
 
 		if(incx>0)
 			kx = 0;
@@ -92,9 +101,18 @@ void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x0, int *p
 	else
 		{
 		if(n>K_MAX_STACK)
+			{
+#ifdef EXT_DEP
 			y = malloc(n*sizeof(REAL));
+#else
+			// not enough static memory, can't allocate dynamic memory
+			exit(1);
+#endif
+			}
 		else
+			{
 			y = y_stack;
+			}
 
 		if(incy>0)
 			ky = 0;
@@ -127,7 +145,12 @@ void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x0, int *p
 	if(incx!=1)
 		{
 		if(n>K_MAX_STACK)
+			{
+#ifdef EXT_DEP
 			free(x);
+#else
+#endif
+			}
 		}
 
 	if(incy!=1)
@@ -136,7 +159,12 @@ void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x0, int *p
 			y0[ky + ii*incy] = y[ii];
 
 		if(n>K_MAX_STACK)
+			{
+#ifdef EXT_DEP
 			free(y);
+#else
+#endif
+			}
 		}
 
 	return;

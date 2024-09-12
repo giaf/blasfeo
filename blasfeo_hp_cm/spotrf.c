@@ -281,9 +281,11 @@ l_1_return:
 
 l_2:
 
+#ifdef EXT_DEP
+
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
-	mem = malloc(tA_size+64);
+	blasfeo_malloc(&mem, tA_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_smat(ps0, m, m, &tA, (void *) mem_align);
 
@@ -491,9 +493,14 @@ l_2_left_4:
 #endif
 
 l_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
+#else // EXT_DEP
+
+	exit(1);
+
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -797,10 +804,12 @@ u_0_return:
 
 u_1:
 	
+#ifdef EXT_DEP
+
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps, m1, m1);
 //	tA_size = blasfeo_memsize_smat(m, m);
-	mem = malloc(tA_size+64);
+	blasfeo_malloc(&mem, tA_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_smat(ps, m, m, &tA, (void *) mem_align);
 
@@ -983,9 +992,14 @@ u_1_left_4:
 	goto u_1_return;
 
 u_1_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
+#else // EXT_DEP
+
+	exit(1);
+
+#endif // EXT_DEP
 
 	// never to get here
 	return;
@@ -1325,10 +1339,12 @@ l_1_return:
 
 l_2:
 	
+#ifdef EXT_DEP
+
 	m1 = (m+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps, m1, n1);
-	mem = malloc(tA_size+64);
+	blasfeo_malloc(&mem, tA_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_smat(ps, m, n, &tA, (void *) mem_align);
 
@@ -1589,6 +1605,11 @@ l_2_return:
 	free(mem);
 	return;
 
+#else // EXT_DEP
+
+	exit(1);
+
+#endif // EXT_DEP
 
 	// never to get here
 	return;

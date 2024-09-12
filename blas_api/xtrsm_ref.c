@@ -91,7 +91,12 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 	REAL *dA;
 	if(p>K_MAX_STACK)
 		{
+#ifdef EXT_DEP
 		dA = (REAL *) malloc(p*sizeof(REAL));
+#else
+		// not enough static memory, can't allocate dynamic memory
+		exit(1);
+#endif
 		}
 	else
 		{
@@ -217,7 +222,10 @@ void TRSM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 
 	if(p>K_MAX_STACK)
 		{
+#ifdef EXT_DEP
 		free(dA);
+#else
+#endif
 		}
 
 #ifdef TIME_INT

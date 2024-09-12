@@ -646,11 +646,13 @@ end_1:
 
 alg2:
 
+#ifdef EXT_DEP
+
 	m1 = (m+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, m1, n1);
-	mem = malloc(tA_size+tB_size+64);
+	blasfeo_malloc(&mem, tA_size+tB_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 
 	blasfeo_pm_create_dmat(ps, m_kernel, m, &tA, mem_align);
@@ -1261,13 +1263,18 @@ end_2:
 	// TODO clean loops
 
 end_m_2:
-	free(mem);
+	blasfeo_free(mem);
 	// from 0-index to 1-index
 	// TODO move to BLAS_API !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //	for(ii=0; ii<p; ii++)
 //		ipiv[ii] += 1;
 	return;
 
+#else // EXT_DEP
+
+	exit(1);
+
+#endif // EXT_DEP
 
 	// never to get here
 	return;

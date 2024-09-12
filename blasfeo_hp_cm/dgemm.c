@@ -3152,7 +3152,7 @@ if (thp_count.pages_available) {
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
 	if(blasfeo_is_init()==0)
 		{
-		mem = malloc(tA_size+tB_size+2*4096);
+		blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
 		}
 	else
 		{
@@ -3246,7 +3246,7 @@ if (thp_count.pages_available) {
 		}
 
 //	printf("\ntime: pack_A %e, pack_B %e, kernel %e, kernel2 %e, kernel3 %e\n", time_pack_A, time_pack_B, time_kernel, time_kernel2, time_kernel3); 
-	free(mem);
+	blasfeo_free(mem);
 
 	return;
 
@@ -3277,7 +3277,7 @@ if (thp_count.pages_available) {
 	tB_size = blasfeo_pm_memsize_dmat(ps, nc0, kc0);
 	tA_size = (tA_size + 4096 - 1) / 4096 * 4096;
 	tB_size = (tB_size + 4096 - 1) / 4096 * 4096;
-	mem = malloc(tA_size+tB_size+2*4096);
+	blasfeo_malloc(&mem, tA_size+tB_size+2*4096);
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 
 	blasfeo_pm_create_dmat(ps, mc0, oc0, &tA, (void *) mem_align);
@@ -3362,7 +3362,7 @@ if (thp_count.pages_available) {
 		}
 
 //	printf("\ntime: pack_A %e, pack_B %e, kernel %e, kernel2 %e, kernel3 %e\n", time_pack_A, time_pack_B, time_kernel, time_kernel2, time_kernel3); 
-	free(mem);
+	blasfeo_free(mem);
 
 	return;
 
@@ -3376,9 +3376,9 @@ if (thp_count.pages_available) {
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, k1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, n1, k1);
-//	mem = malloc(tA_size+tB_size+64);
+//	blasfeo_malloc(&mem, tA_size+tB_size+64);
 //	blasfeo_align_64_byte(mem, (void **) &mem_align);
-	mem = malloc(tA_size+tB_size+4096);
+	blasfeo_malloc(&mem, tA_size+tB_size+4096);
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, k, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, n, k, &tB, (void *) (mem_align+tA_size));
@@ -3512,7 +3512,7 @@ nn_2_left_4:
 	goto nn_2_return;
 
 nn_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
 #endif
@@ -4131,9 +4131,9 @@ nt_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, k1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, n1, k1);
-//	mem = malloc(tA_size+tB_size+64);
+//	blasfeo_malloc(&mem, tA_size+tB_size+64);
 //	blasfeo_align_64_byte(mem, (void **) &mem_align);
-	mem = malloc(tA_size+tB_size+4096);
+	blasfeo_malloc(&mem, tA_size+tB_size+4096);
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, k, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, n, k, &tB, (void *) (mem_align+tA_size));
@@ -4246,7 +4246,7 @@ nt_2_left_4:
 	goto nt_2_return;
 
 nt_2_return:
-	free(mem);
+	blasfeo_free(mem);
 	return;
 
 #endif
@@ -4836,9 +4836,9 @@ tn_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, k1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, n1, k1);
-//	mem = malloc(tA_size+tB_size+64);
+//	blasfeo_malloc(&mem, tA_size+tB_size+64);
 //	blasfeo_align_64_byte(mem, (void **) &mem_align);
-	mem = malloc(tA_size+tB_size+4096);
+	blasfeo_malloc(&mem, tA_size+tB_size+4096);
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, k, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, n, k, &tB, (void *) (mem_align+tA_size));
@@ -4978,7 +4978,7 @@ tn_2_left_4:
 	goto tn_2_return;
 
 tn_2_return:
-free(mem);
+blasfeo_free(mem);
 	return;
 
 #endif
@@ -5473,9 +5473,9 @@ tt_2:
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, k1);
 	tB_size = blasfeo_pm_memsize_dmat(ps, n1, k1);
-//	mem = malloc(tA_size+tB_size+64);
+//	blasfeo_malloc(&mem, tA_size+tB_size+64);
 //	blasfeo_align_64_byte(mem, (void **) &mem_align);
-	mem = malloc(tA_size+tB_size+4096);
+	blasfeo_malloc(&mem, tA_size+tB_size+4096);
 	blasfeo_align_4096_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m_kernel, k, &tA, (void *) mem_align);
 	blasfeo_pm_create_dmat(ps, n, k, &tB, (void *) (mem_align+tA_size));

@@ -2115,16 +2115,21 @@ void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* i
 	const int ps = 4;
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
+	//ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
+	ALIGNED( double pU0[2*4*4], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
+	//ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
+	ALIGNED( double pU0[2*4*4], 64 );
 #elif defined(TARGET_GENERIC)
-	double pU0[1*4*K_MAX_STACK];
+	//double pU0[1*4*K_MAX_STACK];
+	double pU0[2*4*4];
 #else
-	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
+	//ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
+	ALIGNED( double pU0[2*4*4], 64 );
 #endif
-	int sdu0 = (m+3)/4*4;
-	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
+	//int sdu0 = (m+3)/4*4;
+	int sdu0 = 8;
+	//sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
 
 	double *pU;
 	int sdu;
@@ -2132,18 +2137,18 @@ void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* i
 	double *tmp_pU;
 	int m4;
 
-	if(m>K_MAX_STACK)
-		{
-		m4 = (m+3)/4*4;
-		tmp_pU = malloc(3*4*m4*sizeof(double)+64);
-		blasfeo_align_64_byte(tmp_pU, (void **) &pU);
-		sdu = m4;
-		}
-	else
-		{
+//	if(m>K_MAX_STACK)
+//		{
+//		m4 = (m+3)/4*4;
+//		tmp_pU = malloc(3*4*m4*sizeof(double)+64);
+//		blasfeo_align_64_byte(tmp_pU, (void **) &pU);
+//		sdu = m4;
+//		}
+//	else
+//		{
 		pU = pU0;
 		sdu = sdu0;
-		}
+//		}
 
 	int ii;
 
@@ -2174,14 +2179,18 @@ void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* i
 		}
 
 	// pack
-	kernel_dpack_tn_4_vs_lib4(8, C+8*ldc, ldc, pU+8*sdu, n-8);
+	//kernel_dpack_tn_4_vs_lib4(8, C+8*ldc, ldc, pU+8*sdu, n-8);
+	kernel_dpack_tn_4_vs_lib4(8, C+8*ldc, ldc, pU, n-8);
 
 	// solve top right block
-	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(0, pU+8*sdu, C, ldc, &d1, pU+8*sdu, pU+8*sdu, C, ldc, n-8, m);
-	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(4, pU+8*sdu, C+4, ldc, &d1, pU+8*sdu+4*ps, pU+8*sdu+4*ps, C+4+4*ldc, ldc, n-8, m-4);
+	//kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(0, pU+8*sdu, C, ldc, &d1, pU+8*sdu, pU+8*sdu, C, ldc, n-8, m);
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(0, pU, C, ldc, &d1, pU, pU, C, ldc, n-8, m);
+	//kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(4, pU+8*sdu, C+4, ldc, &d1, pU+8*sdu+4*ps, pU+8*sdu+4*ps, C+4+4*ldc, ldc, n-8, m-4);
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(4, pU, C+4, ldc, &d1, pU+4*ps, pU+4*ps, C+4+4*ldc, ldc, n-8, m-4);
 
 	// unpack
-	kernel_dunpack_nt_4_vs_lib4(8, pU+8*sdu, C+8*ldc, ldc, n-8);
+	//kernel_dunpack_nt_4_vs_lib4(8, pU+8*sdu, C+8*ldc, ldc, n-8);
+	kernel_dunpack_nt_4_vs_lib4(8, pU, C+8*ldc, ldc, n-8);
 
 	if(m>8)
 		{
@@ -2191,7 +2200,8 @@ void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* i
 		// TODO larger kernels ???
 		for(; ii<m; ii+=4)
 			{
-			kernel_dgemm_nt_4x4_vs_libc4cc(8, &dm1, C+ii, ldc, pU+8*sdu, &d1, C+ii+8*ldc, ldc, C+ii+8*ldc, ldc, m-ii, n-8);
+			//kernel_dgemm_nt_4x4_vs_libc4cc(8, &dm1, C+ii, ldc, pU+8*sdu, &d1, C+ii+8*ldc, ldc, C+ii+8*ldc, ldc, m-ii, n-8);
+			kernel_dgemm_nt_4x4_vs_libc4cc(8, &dm1, C+ii, ldc, pU, &d1, C+ii+8*ldc, ldc, C+ii+8*ldc, ldc, m-ii, n-8);
 			}
 
 		// fact right column
@@ -2214,10 +2224,10 @@ void kernel_dgetrf_pivot_12_vs_lib(int m, double *C, int ldc, double *pd, int* i
 		}
 
 	end:
-	if(m>K_MAX_STACK)
-		{
-		free(tmp_pU);
-		}
+//	if(m>K_MAX_STACK)
+//		{
+//		free(tmp_pU);
+//		}
 
 	return;
 
@@ -3387,16 +3397,21 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 	{
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-	ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
+	//ALIGNED( double pU0[3*4*K_MAX_STACK], 64 );
+	ALIGNED( double pU0[4*4], 64 );
 #elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57)
-	ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
+	//ALIGNED( double pU0[2*4*K_MAX_STACK], 64 );
+	ALIGNED( double pU0[4*4], 64 );
 #elif defined(TARGET_GENERIC)
-	double pU0[1*4*K_MAX_STACK];
+	//double pU0[1*4*K_MAX_STACK];
+	double pU0[4*4];
 #else
-	ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
+	//ALIGNED( double pU0[1*4*K_MAX_STACK], 64 );
+	ALIGNED( double pU0[4*4], 64 );
 #endif
-	int sdu0 = (m+3)/4*4;
-	sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
+	//int sdu0 = (m+3)/4*4;
+	int sdu0 = 4;
+	//sdu0 = sdu0<K_MAX_STACK ? sdu0 : K_MAX_STACK;
 
 	double *pU;
 	int sdu;
@@ -3404,18 +3419,18 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 	double *tmp_pU;
 	int m4;
 
-	if(m>K_MAX_STACK)
-		{
-		m4 = (m+3)/4*4;
-		tmp_pU = malloc(3*4*m4*sizeof(double)+64);
-		blasfeo_align_64_byte(tmp_pU, (void **) &pU);
-		sdu = m4;
-		}
-	else
-		{
+//	if(m>K_MAX_STACK)
+//		{
+//		m4 = (m+3)/4*4;
+//		tmp_pU = malloc(3*4*m4*sizeof(double)+64);
+//		blasfeo_align_64_byte(tmp_pU, (void **) &pU);
+//		sdu = m4;
+//		}
+//	else
+//		{
 		pU = pU0;
 		sdu = sdu0;
-		}
+//		}
 
 	int ii;
 
@@ -3446,13 +3461,16 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 		}
 
 	// pack
-	kernel_dpack_tn_4_vs_lib4(4, C+4*ldc, ldc, pU+4*sdu, n-4);
+	//kernel_dpack_tn_4_vs_lib4(4, C+4*ldc, ldc, pU+4*sdu, n-4);
+	kernel_dpack_tn_4_vs_lib4(4, C+4*ldc, ldc, pU, n-4);
 
 	// solve top right block
-	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(0, dummy, dummy, 0, &d1, pU+4*sdu, pU+4*sdu, C, ldc, n-4, m);
+	//kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(0, dummy, dummy, 0, &d1, pU+4*sdu, pU+4*sdu, C, ldc, n-4, m);
+	kernel_dtrsm_nt_rl_one_4x4_vs_lib4c44c(0, dummy, dummy, 0, &d1, pU, pU, C, ldc, n-4, m);
 
 	// unpack
-	kernel_dunpack_nt_4_vs_lib4(4, pU+4*sdu, C+4*ldc, ldc, n-4);
+	//kernel_dunpack_nt_4_vs_lib4(4, pU+4*sdu, C+4*ldc, ldc, n-4);
+	kernel_dunpack_nt_4_vs_lib4(4, pU, C+4*ldc, ldc, n-4);
 
 	if(m>4)
 		{
@@ -3462,7 +3480,8 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 		// TODO larger kernels ???
 		for(; ii<m; ii+=4)
 			{
-			kernel_dgemm_nt_4x4_vs_libc4cc(4, &dm1, C+ii, ldc, pU+4*sdu, &d1, C+ii+4*ldc, ldc, C+ii+4*ldc, ldc, m-ii, n-4);
+			//kernel_dgemm_nt_4x4_vs_libc4cc(4, &dm1, C+ii, ldc, pU+4*sdu, &d1, C+ii+4*ldc, ldc, C+ii+4*ldc, ldc, m-ii, n-4);
+			kernel_dgemm_nt_4x4_vs_libc4cc(4, &dm1, C+ii, ldc, pU, &d1, C+ii+4*ldc, ldc, C+ii+4*ldc, ldc, m-ii, n-4);
 			}
 
 		// fact right column
@@ -3485,10 +3504,10 @@ void kernel_dgetrf_pivot_8_vs_lib(int m, double *C, int ldc, double *pd, int* ip
 		}
 
 	end:
-	if(m>K_MAX_STACK)
-		{
-		free(tmp_pU);
-		}
+//	if(m>K_MAX_STACK)
+//		{
+//		free(tmp_pU);
+//		}
 
 	return;
 

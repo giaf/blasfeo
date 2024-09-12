@@ -64,7 +64,12 @@ void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 	REAL *dC;
 	if(*pm>K_MAX_STACK)
 		{
+#ifdef EXT_DEP
 		dC = (REAL *) malloc(*pm*sizeof(REAL));
+#else
+		// not enough static memory, can't allocate dynamic memory
+		exit(1);
+#endif
 		}
 	else
 		{
@@ -91,7 +96,10 @@ void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 
 	if(*pm>K_MAX_STACK)
 		{
+#ifdef EXT_DEP
 		free(dC);
+#else
+#endif
 		}
 
 	*info = 0;

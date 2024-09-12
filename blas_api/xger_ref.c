@@ -70,9 +70,18 @@ void BLAS_GER(int *pm, int *pn, REAL *alpha, REAL *x0, int *pincx, REAL *y0, int
 	else
 		{
 		if(lx>K_MAX_STACK)
+			{
+#ifdef EXT_DEP
 			x = malloc(lx*sizeof(REAL));
+#else
+			// not enough static memory, can't allocate dynamic memory
+			exit(1);
+#endif
+			}
 		else
+			{
 			x = x_stack;
+			}
 
 		if(incx>0)
 			kx = 0;
@@ -90,9 +99,18 @@ void BLAS_GER(int *pm, int *pn, REAL *alpha, REAL *x0, int *pincx, REAL *y0, int
 	else
 		{
 		if(ly>K_MAX_STACK)
+			{
+#ifdef EXT_DEP
 			y = malloc(ly*sizeof(REAL));
+#else
+			// not enough static memory, can't allocate dynamic memory
+			exit(1);
+#endif
+			}
 		else
+			{
 			y = y_stack;
+			}
 
 		if(incy>0)
 			ky = 0;
@@ -118,13 +136,23 @@ void BLAS_GER(int *pm, int *pn, REAL *alpha, REAL *x0, int *pincx, REAL *y0, int
 	if(incx!=1)
 		{
 		if(lx>K_MAX_STACK)
+			{
+#ifdef EXT_DEP
 			free(x);
+#else
+#endif
+			}
 		}
 
 	if(incy!=1)
 		{
 		if(ly>K_MAX_STACK)
+			{
+#ifdef EXT_DEP
 			free(y);
+#else
+#endif
+			}
 		}
 
 	return;

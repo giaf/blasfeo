@@ -52,7 +52,12 @@ void GETRF(int *pm, int *pn, REAL *C, int *pldc, int *ipiv, int *info)
 	REAL *dC;
 	if(p>K_MAX_STACK)
 		{
+#ifdef EXT_DEP
 		dC = (REAL *) malloc(p*sizeof(REAL));
+#else
+		// not enough static memory, can't allocate dynamic memory
+		exit(1);
+#endif
 		}
 	else
 		{
@@ -72,7 +77,10 @@ void GETRF(int *pm, int *pn, REAL *C, int *pldc, int *ipiv, int *info)
 
 	if(p>K_MAX_STACK)
 		{
+#ifdef EXT_DEP
 		free(dC);
+#else
+#endif
 		}
 
 	// from 0-based to 1-based
