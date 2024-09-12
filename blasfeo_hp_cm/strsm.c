@@ -41,6 +41,7 @@
 #include <blasfeo_common.h>
 #include <blasfeo_s_aux.h>
 #include <blasfeo_s_kernel.h>
+#include <blasfeo_stdlib.h>
 
 
 

@@ -44,6 +44,7 @@
 #if defined(BLASFEO_REF_API)
 #include <blasfeo_d_blasfeo_ref_api.h>
 #endif
+#include <blasfeo_stdlib.h>
 
 
 
