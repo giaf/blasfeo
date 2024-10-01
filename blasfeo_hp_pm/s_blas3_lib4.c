@@ -743,7 +743,7 @@ void blasfeo_hp_strsm_llnu(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	if(ai!=0 | bi!=0 | di!=0 | alpha!=1.0)
 		{
 #if defined(BLASFEO_REF_API)
-		blasfeo_ref_strsm_llnn(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
+		blasfeo_ref_strsm_llnu(m, n, alpha, sA, ai, aj, sB, bi, bj, sD, di, dj);
 		return;
 #else
 #ifdef EXT_DEP
@@ -870,18 +870,18 @@ void blasfeo_hp_strsm_lunn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	int ii;
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		if(sA->use_dA < m)
 			{
-			sdiaex_lib(n, 1.0, ai, pA, sda, dA);
-			for(ii=0; ii<n; ii++)
+			sdiaex_lib(m, 1.0, ai, pA, sda, dA);
+			for(ii=0; ii<m; ii++)
 				dA[ii] = 1.0 / dA[ii];
-			sA->use_dA = 1;
+			sA->use_dA = m;
 			}
 		}
 	else
 		{
-		sdiaex_lib(n, 1.0, ai, pA, sda, dA);
-		for(ii=0; ii<n; ii++)
+		sdiaex_lib(m, 1.0, ai, pA, sda, dA);
+		for(ii=0; ii<m; ii++)
 			dA[ii] = 1.0 / dA[ii];
 		sA->use_dA = 0;
 		}
@@ -1045,12 +1045,12 @@ void blasfeo_hp_strsm_rltn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		if(sA->use_dA < n)
 			{
 			sdiaex_lib(n, 1.0, ai, pA, sda, dA);
 			for(i=0; i<n; i++)
 				dA[i] = 1.0 / dA[i];
-			sA->use_dA = 1;
+			sA->use_dA = n;
 			}
 		}
 	else
@@ -1350,12 +1350,12 @@ void blasfeo_hp_strsm_rutn(int m, int n, float alpha, struct blasfeo_smat *sA, i
 	int ii;
 	if(ai==0 & aj==0)
 		{
-		if(sA->use_dA!=1)
+		if(sA->use_dA < n)
 			{
 			sdiaex_lib(n, 1.0, ai, pA, sda, dA);
 			for(ii=0; ii<n; ii++)
 				dA[ii] = 1.0 / dA[ii];
-			sA->use_dA = 1;
+			sA->use_dA = n;
 			}
 		}
 	else
