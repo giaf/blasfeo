@@ -1174,7 +1174,7 @@ ln_2:
 	k1 = (k+128-1)/128*128;
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m1, k1);
-	blasfeo_malloc(&tA_size+64);
+	blasfeo_malloc(&mem, &tA_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m, k, &tA, (void *) mem_align);
 
@@ -1547,7 +1547,7 @@ lt_2:
 	k1 = (k+128-1)/128*128;
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m1, k1);
-	blasfeo_malloc(&tA_size+64);
+	blasfeo_malloc(&mem, &tA_size+64);
 	blasfeo_align_64_byte(mem, (void **) &mem_align);
 	blasfeo_pm_create_dmat(ps, m, k, &tA, (void *) mem_align);
 
