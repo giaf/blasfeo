@@ -33,130 +33,25 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-
-#include <stdlib.h>
-#include <stdio.h>
-
-#ifdef __MABX2__
-// dSPACE MicroAutoBox II (32-bit) does not provide stdint
-typedef unsigned int uintptr_t;
-#else
-#include <stdint.h>
-#endif
-
-#include <blasfeo_stdlib.h>
-#include <blasfeo_block_size.h>
-#include <blasfeo_align.h>
+#ifndef BLASFEO_ALIGN_H_
+#define BLASFEO_ALIGN_H_
 
 
 
-#ifdef EXT_DEP
-// needed in hp cm routines !!!
-void blasfeo_malloc(void **ptr, size_t size)
-	{
-	*ptr = malloc(size);
-	if(*ptr==NULL)
-		{
-		printf("Memory allocation error");
-		exit(1);
-		}
-	return;
-	}
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 
 
-#ifdef EXT_DEP
-// allocate memory aligned to typical cache line size (64 bytes)
-void blasfeo_malloc_align(void **ptr, size_t size)
-	{
+void blasfeo_align_2MB(void *ptr, void **ptr_align);
+void blasfeo_align_4096_byte(void *ptr, void **ptr_align);
+void blasfeo_align_64_byte(void *ptr, void **ptr_align);
 
-#if 1
 
-	void *ptr_raw = NULL;
-	blasfeo_malloc(&ptr_raw, size+64);
-	uintptr_t ptr_tmp0 = (uintptr_t) ptr_raw;
-	uintptr_t ptr_tmp1 = ptr_tmp0 + 1; // make space for at least 1 byte, to store the offset as a char, that is more than enough to cover 64 bytes of alignment
-	void *ptr_tmp = (void *) ptr_tmp1;
-	blasfeo_align_64_byte(ptr_tmp, ptr);
-	ptr_tmp1 = (uintptr_t) *ptr;
-	char offset = (char) (ptr_tmp1-ptr_tmp0);
-	char *offset_ptr = (char *) ptr_tmp1;
-	offset_ptr[-1] = offset;
 
-#else
-
-#if defined(OS_WINDOWS)
-
-	*ptr = _aligned_malloc( size, CACHE_LINE_SIZE );
-
-#elif defined(__DSPACE__)
-
-	// XXX fix this hack !!! (Andrea?)
-	*ptr = malloc( size );
-
-#elif(defined __XILINX_NONE_ELF__ || defined __XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE__)
-
-	*ptr = memalign( CACHE_LINE_SIZE, size );
-
-#else
-
-	int err = posix_memalign( ptr, CACHE_LINE_SIZE, size );
-	if(err!=0)
-		{
-		printf("Memory allocation error");
-		exit(1);
-		}
-
+#ifdef __cplusplus
+}
 #endif
 
-#endif
-
-	return;
-
-	}
-#endif
-
-
-
-#ifdef EXT_DEP
-// needed in hp cm routines !!!
-void blasfeo_free(void *ptr)
-	{
-	free(ptr);
-	return;
-	}
-#endif
-
-
-
-#ifdef EXT_DEP
-void blasfeo_free_align(void *ptr)
-	{
-
-#if 1
-
-	char *offset_ptr = ptr;
-	char offset = offset_ptr[-1];
-	uintptr_t ptr_tmp0 = (uintptr_t) ptr;
-	ptr_tmp0 -= offset;
-	free( (void *) ptr_tmp0 );
-
-#else
-
-#if defined(OS_WINDOWS)
-
-	_aligned_free( ptr );
-
-#else
-
-	free( ptr );
-
-#endif
-
-#endif
-
-	return;
-
-	}
-#endif
+#endif  // BLASFEO_ALIGN_H_

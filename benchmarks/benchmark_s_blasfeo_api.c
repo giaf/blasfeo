@@ -268,7 +268,7 @@ int main()
 		for(i=0; i<n*n; i++)
 			M[i] = 1;
 
-		float *B2; s_zeros(&B2, n, n);
+		float *B2; s_zeros_align(&B2, n, n);
 		for(i=0; i<n*n; i++)
 			B2[i] = 1e-15;
 		for(i=0; i<n; i++)
@@ -497,14 +497,16 @@ int main()
 			Gmemops_blas, 100.0*Gmemops_blas/Gmemops_max);
 		#endif
 
-		free(A);
-		free(B);
-		free(B2);
-		free(M);
+		s_free_align(A);
+		s_free_align(B);
+		s_free_align(C);
+		s_free_align(B2);
+		s_free_align(M);
 		free(x);
 		free(y);
 		free(x2);
 		free(y2);
+		free(diag);
 		free(ipiv);
 
 		blasfeo_free_smat(&sA);

@@ -38,16 +38,13 @@
 
 
 
+#include "blasfeo_align.h"
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-
-// utils
-void blasfeo_align_2MB(void *ptr, void **ptr_align);
-void blasfeo_align_4096_byte(void *ptr, void **ptr_align);
-void blasfeo_align_64_byte(void *ptr, void **ptr_align);
 
 
 
