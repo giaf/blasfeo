@@ -5963,12 +5963,6 @@ void kernel_dger2k_nt_4x4_vs_lib4ccc(int kmax, double *alpha, double *A0, double
 void kernel_dger2k_nt_4x4_lib44cc(int kmax, double *alpha, double *A0, double *B0, double *A1, double *B1, double *beta, double *C, int ldc, double *D, int ldd)
 	{
 
-#if defined(TARGET_X86_AMD_BARCELONA)
-	kernel_dgemm_nt_4x2_lib44cc(kmax, alpha, A, B+0, beta, C+0*ldc, ldc, D+0*ldd, ldd);
-	kernel_dgemm_nt_4x2_lib44cc(kmax, alpha, A, B+2, beta, C+2*ldc, ldc, D+2*ldd, ldd);
-	return;
-#endif
-
 	const int bs = 4;
 
 #if defined(TARGET_GENERIC)
