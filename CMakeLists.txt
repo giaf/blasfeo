@@ -691,10 +691,12 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgeqrf_8_lib8.c
 	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgelqf_lib8.S
 
-	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
-
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
 	)
 
 endif(${TARGET} MATCHES X64_INTEL_SKYLAKE_X)
@@ -743,9 +745,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
-	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
-
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_d_aux_lib.S
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
 	)
 
 endif(${TARGET} MATCHES X64_INTEL_HASWELL)
@@ -791,9 +795,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
-	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
-
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_d_aux_lib.S
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
 	)
 
 endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
@@ -829,9 +835,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
-	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
-
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
 	)
 
 endif(${TARGET} MATCHES X64_INTEL_CORE)
@@ -865,9 +873,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
-	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
-
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_align_x64.S
 	)
 
 endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
@@ -914,9 +924,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
-
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_d_aux_lib.S
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
 	)
 
 endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A57)
@@ -965,9 +977,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
-
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_d_aux_lib.S
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
 	)
 
 endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A53)
@@ -1004,9 +1018,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
-
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
 	)
 
 endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
@@ -1042,9 +1058,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
-
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
 	)
 
 endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
@@ -1080,9 +1098,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
-
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
 	)
 
 endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
@@ -1115,9 +1135,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
 
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
-
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
+
+file(GLOB KERNEL_ALIGN_SRC
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_align_generic.c
 	)
 
 endif(${TARGET} MATCHES GENERIC)
@@ -1129,6 +1151,7 @@ set(BLASFEO_SRC ${AUX_COMMON_SRC})
 if(${LA} MATCHES HIGH_PERFORMANCE)
 
 	list(APPEND BLASFEO_SRC ${KERNEL_SRC})
+	list(APPEND BLASFEO_SRC ${KERNEL_ALIGN_SRC})
 
 	if(${MF} MATCHES PANELMAJ)
 
@@ -1168,6 +1191,7 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 endif()
 if(${LA} MATCHES REFERENCE)
 
+	list(APPEND BLASFEO_SRC ${KERNEL_ALIGN_SRC})
 	list(APPEND BLASFEO_SRC ${AUX_REF_SRC})
 	list(APPEND BLASFEO_SRC ${BLASFEO_REF_SRC})
 

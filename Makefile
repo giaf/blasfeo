@@ -253,13 +253,12 @@ KERNEL_OBJS = \
 		kernel/avx512/kernel_dpack_lib8.o \
 		kernel/avx512/kernel_dgeqrf_8_lib8.o \
 		kernel/avx512/kernel_dgelqf_lib8.o \
-		\
-		kernel/sse3/kernel_align_x64.o \
-		\
-		\
-		\
 		kernel/avx2/kernel_dgemm_4x4_lib4.o \
 		kernel/avx/kernel_dpack_lib4.o \
+		\
+
+KERNEL_ALIGN_OBJS = \
+		kernel/sse3/kernel_align_x64.o \
 
 endif
 ifeq ($(TARGET), X64_INTEL_HASWELL)
@@ -307,11 +306,12 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/sse3/kernel_align_x64.o \
-		\
 		kernel/avx/kernel_d_aux_lib.o \
 		\
 #		kernel/avx2/kernel_sgemm_16x8_lib8.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/sse3/kernel_align_x64.o \
 
 endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
@@ -357,11 +357,12 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/sse3/kernel_align_x64.o \
-		\
 		kernel/avx/kernel_d_aux_lib.o \
 		\
 #		kernel/avx/kernel_sgemm_16x8_lib8.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/sse3/kernel_align_x64.o \
 
 endif
 ifeq ($(TARGET), X64_INTEL_CORE)
@@ -397,9 +398,10 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/sse3/kernel_align_x64.o \
-		\
 		kernel/generic/kernel_d_aux_lib.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/sse3/kernel_align_x64.o \
 
 endif
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
@@ -433,9 +435,10 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/sse3/kernel_align_x64.o \
-		\
 		kernel/generic/kernel_d_aux_lib.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/sse3/kernel_align_x64.o \
 
 endif
 ifeq ($(TARGET), X86_AMD_JAGUAR)
@@ -472,9 +475,10 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/sse3_x86/kernel_align_x86.o \
-		\
 		kernel/generic/kernel_d_aux_lib.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/sse3_x86/kernel_align_x86.o \
 
 endif
 ifeq ($(TARGET), X86_AMD_BARCELONA)
@@ -510,9 +514,10 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/sse3_x86/kernel_align_x86.o \
-		\
 		kernel/generic/kernel_d_aux_lib.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/sse3_x86/kernel_align_x86.o \
 
 endif
 ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_APPLE_M1 ARMV8A_ARM_CORTEX_A76 ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57))
@@ -559,9 +564,10 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/generic/kernel_align_generic.o \
-		\
 		kernel/armv8a/kernel_d_aux_lib.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/generic/kernel_align_generic.o \
 
 endif
 ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53))
@@ -609,9 +615,10 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/generic/kernel_align_generic.o \
-		\
 		kernel/armv8a/kernel_d_aux_lib.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/generic/kernel_align_generic.o \
 
 endif
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
@@ -648,9 +655,10 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/generic/kernel_align_generic.o \
-		\
 		kernel/generic/kernel_d_aux_lib.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/generic/kernel_align_generic.o \
 
 endif
 ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
@@ -686,9 +694,10 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/generic/kernel_align_generic.o \
-		\
 		kernel/generic/kernel_d_aux_lib.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/generic/kernel_align_generic.o \
 
 endif
 ifeq ($(TARGET), GENERIC)
@@ -721,9 +730,10 @@ KERNEL_OBJS = \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
 		\
-		kernel/generic/kernel_align_generic.o \
-		\
 		kernel/generic/kernel_d_aux_lib.o \
+
+KERNEL_ALIGN_OBJS = \
+		kernel/generic/kernel_align_generic.o \
 
 endif # GENERIC
 
@@ -740,6 +750,7 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 # kernel
 OBJS += $(KERNEL_OBJS)
+OBJS += $(KERNEL_ALIGN_OBJS)
 ifeq ($(MF), PANELMAJ)
 # aux
 OBJS += $(AUX_HP_PM_OBJS)
@@ -751,7 +762,7 @@ OBJS += $(AUX_HP_CM_OBJS)
 # blas
 OBJS += $(BLASFEO_HP_CM_OBJS)
 OBJS += $(BLASFEO_HP_CM_REF_OBJS)
-endif
+endif # PANELMAJ
 
 # blasfeo_ref
 ifeq ($(BLASFEO_REF_API), 1)
@@ -797,6 +808,8 @@ endif # LA HIGH_PERFORMANCE
 ### LA REFERENCE ###
 ifeq ($(LA), REFERENCE)
 
+# kernel
+OBJS += $(KERNEL_ALIGN_OBJS)
 # aux
 OBJS += $(AUX_REF_OBJS)
 # blas
@@ -853,6 +866,8 @@ endif # LA REFERENCE
 ### LA EXTERNAL BLAS WRAPPER ###
 ifeq ($(LA), EXTERNAL_BLAS_WRAPPER)
 
+# kernel
+OBJS += $(KERNEL_ALIGN_OBJS)
 # aux
 OBJS += $(AUX_REF_OBJS)
 # blas

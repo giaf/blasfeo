@@ -42,13 +42,11 @@ KERNEL_OBJS = \
 		kernel_dgemv_4_lib4.o \
 		\
 		kernel_sgemm_4x4_lib4.o \
-		\
-		kernel_align_x64.o \
 
 endif
 
-ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE X64_AMD_BULLDOZER X64_INTEL_SKYLAKE_X))
-KERNEL_OBJS = \
+ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE X64_INTEL_CORE X64_AMD_BULLDOZER X64_INTEL_SKYLAKE_X))
+KERNEL_ALIGN_OBJS = \
 		kernel_align_x64.o \
 
 endif
@@ -62,8 +60,9 @@ endif # LA choice
 
 ifeq ($(BLASFEO_HP_API), 1)
 OBJS += $(KERNEL_OBJS)
-endif # LA choice
+endif
 
+OBJS += $(KERNEL_ALIGN_OBJS)
 
 obj: $(OBJS)
 

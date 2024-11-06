@@ -233,8 +233,6 @@ KERNEL_OBJS = \
 		kernel_spack_lib4.o \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
-		\
-		kernel_align_generic.o \
 
 endif
 
@@ -265,8 +263,6 @@ KERNEL_OBJS = \
 		kernel_spack_lib4.o \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
-		\
-		kernel_align_generic.o \
 
 endif
 
@@ -297,8 +293,6 @@ KERNEL_OBJS = \
 		kernel_spack_lib4.o \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
-		\
-		kernel_align_generic.o \
 		\
 		kernel_d_aux_lib.o \
 
@@ -332,8 +326,6 @@ KERNEL_OBJS = \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
 		\
-		kernel_align_generic.o \
-		\
 		kernel_d_aux_lib.o \
 
 endif
@@ -366,13 +358,15 @@ KERNEL_OBJS = \
 		kernel_sdot_lib.o \
 		kernel_saxpy_lib.o \
 		\
-		kernel_align_generic.o \
-		\
 		kernel_d_aux_lib.o \
 
 endif
 
+ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_APPLE_M1 ARMV8A_ARM_CORTEX_A76 ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
+KERNEL_ALIGN_OBJS = \
+		kernel_align_generic.o \
 
+endif
 
 OBJS =
 
@@ -383,6 +377,8 @@ endif # LA choice
 ifeq ($(BLASFEO_HP_API), 1)
 OBJS += $(KERNEL_OBJS)
 endif # LA choice
+
+OBJS += $(KERNEL_ALIGN_OBJS)
 
 
 obj: $(OBJS)

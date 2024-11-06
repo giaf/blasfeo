@@ -41,16 +41,14 @@ KERNEL_OBJS = \
 		kernel_dgemm_4x2_lib4.o \
 		kernel_dgemm_2x2_lib4.o \
 		kernel_dgemv_4_lib4.o \
-		\
-		kernel_align_x86.o \
 #		\
 		kernel_sgemm_4x4_lib4.o \
 		kernel_sgemv_4_lib4.o \
 
 endif
 
-ifeq ($(TARGET), X86_AMD_JAGUAR)
-KERNEL_OBJS = \
+ifeq ($(TARGET), $(filter $(TARGET), X86_AMD_JAGUAR X86_AMD_BARCELONA))
+KERNEL_ALIGN_OBJS = \
 		kernel_align_x86.o \
 
 endif
@@ -65,6 +63,8 @@ endif # LA choice
 ifeq ($(BLASFEO_HP_API), 1)
 OBJS += $(KERNEL_OBJS)
 endif # LA choice
+
+OBJS += $(KERNEL_ALIGN_OBJS)
 
 
 obj: $(OBJS)
