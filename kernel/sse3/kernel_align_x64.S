@@ -269,3 +269,12 @@ blasfeo_align_64_byte:
 #endif
 
 
+
+
+
+#if defined(OS_LINUX)
+	.section	.note.GNU-stack,"",@progbits
+#elif defined(OS_MAC)
+	.subsections_via_symbols
+#endif
+

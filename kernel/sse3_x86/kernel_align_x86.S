@@ -170,3 +170,11 @@ blasfeo_align_64_byte:
 
 
 
+
+
+#if defined(OS_LINUX)
+	.section	.note.GNU-stack,"",@progbits
+#elif defined(OS_MAC)
+	.subsections_via_symbols
+#endif
+
