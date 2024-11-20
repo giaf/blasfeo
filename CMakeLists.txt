@@ -38,6 +38,13 @@ cmake_minimum_required(VERSION 2.8.11)
 # installation directory ( has to be before `project()` )
 set(CMAKE_INSTALL_PREFIX "/opt/blasfeo" CACHE STRING "Installation path")
 
+# C Compiler (before project definition for correct cross compiler check)
+# set(CMAKE_C_COMPILER gcc CACHE STRING "compiler")
+# set(CMAKE_C_COMPILER clang)
+# set(CMAKE_C_COMPILER x86_64-w64-mingw32-gcc)
+# set(CMAKE_C_COMPILER arm-linux-gnueabihf-gcc)
+#set(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
+
 project(blasfeo C ASM)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -70,6 +77,13 @@ set(TARGET X64_INTEL_HASWELL CACHE STRING "Target architecture")    # x86_64 arc
 set(LA HIGH_PERFORMANCE CACHE STRING "Linear algebra backend")
 # set(LA REFERENCE CACHE STRING "Linear algebra backend")
 # set(LA EXTERNAL_BLAS_WRAPPER CACHE STRING "Linear algebra backend")
+
+# check supported compiler for target
+if(CMAKE_C_COMPILER_ID MATCHES MSVC)
+	if(NOT ${TARGET} MATCHES GENERIC)
+		message( FATAL_ERROR "MSVC compiler only supported for TARGET=GENERIC")
+	endif()
+endif()
 
 # Export additional back-ends with different naming
 set(BLASFEO_REF_API ON)
@@ -245,17 +259,6 @@ if(CMAKE_SYSTEM MATCHES "dSpace") # OR CMAKE_BUILD_TYPE MATCHES "Release")
 	set(BLASFEO_TESTING OFF CACHE BOOL "Examples disabled" FORCE)
 	set(BLASFEO_BENCHMARKS OFF CACHE BOOL "Benchmarks disabled" FORCE)
 	set(BLASFEO_EXAMPLES OFF CACHE BOOL "Examples disabled" FORCE)
-endif()
-
-# C Compiler
-# set(CC_COMPILER gcc CACHE STRING "compiler")
-# set(CC_COMPILER clang)
-# set(CC_COMPILER x86_64-w64-mingw32-gcc)
-# set(CMAKE_C_COMPILER clang)
-if(CMAKE_C_COMPILER_ID MATCHES MSVC)
-	if(NOT ${TARGET} MATCHES GENERIC)
-		message( FATAL_ERROR "MSVC compiler only supported for TARGET=GENERIC")
-	endif()
 endif()
 
 # testing
