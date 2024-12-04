@@ -4080,7 +4080,7 @@ _ ## NAME:
 
 
 
-//                                  w0        x1             x2         x3         x4            x5         x6         w7      sp+0
+//                                    w0        x1             x2         x3         x4            x5         x6         w7      sp+0
 // void kernel_dsyrk_nt_u_4x4_vs_lib4(int kmax, double *alpha, double *A, double *B, double *beta, double *C, double *D, int m1, int n1)
 
 	.align	4
