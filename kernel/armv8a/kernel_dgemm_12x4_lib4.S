@@ -99,7 +99,7 @@ NAME:
 
 #else // defined(OS_MAC)
 
-#error kernels 12x4 not supported for OS_MAC
+#error kernels 12x4 not supported for OS_MAC (only LINUX ABI supported)
 
 #define STACKSIZE 11*16
 .macro PROLOGUE

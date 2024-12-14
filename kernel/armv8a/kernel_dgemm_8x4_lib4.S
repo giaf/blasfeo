@@ -179,6 +179,10 @@ _ ## NAME:
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
+#if defined(OS_MAC)
+#error Cortex A53 kernel version not supported for OS_MAC (register x18 used)
+#endif
+
 
 
 	// early return
@@ -1197,6 +1201,10 @@ _ ## NAME:
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
+#if defined(OS_MAC)
+#error Cortex A53 kernel version not supported for OS_MAC (register x18 used)
+#endif
+
 
 
 #if 1
@@ -2206,6 +2214,10 @@ _ ## NAME:
 
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+
+#if defined(OS_MAC)
+#error Cortex A53 kernel version not supported for OS_MAC (register x18 used)
+#endif
 
 
 

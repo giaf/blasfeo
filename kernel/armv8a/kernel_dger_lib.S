@@ -67,8 +67,8 @@
 	add		x16, x14, x11, lsl #1
 
 	add		x17, x12, x13
-	add		x18, x12, x13, lsl #1
-	add		x19, x17, x13, lsl #1
+	add		x19, x12, x13, lsl #1
+	add		x20, x17, x13, lsl #1
 
 	cmp		w8, #4
 	ble		0f // consider clean up loop
@@ -98,8 +98,8 @@
 
 	stp		q16, q17, [x12], #32
 	stp		q18, q19, [x17], #32
-	stp		q20, q21, [x18], #32
-	stp		q22, q23, [x19], #32
+	stp		q20, q21, [x19], #32
+	stp		q22, q23, [x20], #32
 
 	cmp		w8, #4
 	bgt		1b
@@ -130,8 +130,8 @@
 
 	str		d16, [x12], #8
 	str		d18, [x17], #8
-	str		d20, [x18], #8
-	str		d22, [x19], #8
+	str		d20, [x19], #8
+	str		d22, [x20], #8
 
 	cmp		w8, #0
 	bgt		3b
