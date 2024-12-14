@@ -99,6 +99,8 @@ NAME:
 
 #else // defined(OS_MAC)
 
+#error kernels 12x4 not supported for OS_MAC
+
 #define STACKSIZE 11*16
 .macro PROLOGUE
 	sub sp, sp, #(11 * 16)
