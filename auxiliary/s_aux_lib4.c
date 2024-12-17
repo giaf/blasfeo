@@ -47,9 +47,8 @@
 
 
 // scales and adds a strvec into a strvec
-void blasfeo_svecad(int m, float *alphap, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
+void blasfeo_svecad(int m, float alpha, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci)
 	{
-	float alpha = alphap[0];
 	float *pa = sa->pa + ai;
 	float *pc = sc->pa + ci;
 	int ii;
