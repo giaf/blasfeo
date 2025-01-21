@@ -1840,7 +1840,7 @@
 #if MACRO_LEVEL>=1
 	.macro INNER_SCALE_AB_4X8_LIB
 #else
-	FUN_START(inner_scale_ab_8x4_lib)
+	FUN_START(inner_scale_ab_4x8_lib)
 #endif
 	
 	// alpha

@@ -1060,10 +1060,10 @@ NAME:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLEND_N_LIB4
+	.macro INNER_BLEND_N_4_LIB4
 #else
 	.p2align 4,,15
-	FUN_START(inner_blend_n_lib4)
+	FUN_START(inner_blend_n_4_lib4)
 #endif
 
 	// reduction
@@ -1076,7 +1076,7 @@ NAME:
 #else
 	ret
 	
-	FUN_END(inner_blend_n_lib4)
+	FUN_END(inner_blend_n_4_lib4)
 #endif
 
 
@@ -1110,10 +1110,10 @@ NAME:
 // ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLEND_T_LIB4
+	.macro INNER_BLEND_T_4_LIB4
 #else
 	.p2align 4,,15
-	FUN_START(inner_blend_t_lib4)
+	FUN_START(inner_blend_t_4_lib4)
 #endif
 
 	// reduction
@@ -1128,7 +1128,7 @@ NAME:
 #else
 	ret
 	
-	FUN_END(inner_blend_t_lib4)
+	FUN_END(inner_blend_t_4_lib4)
 #endif
 
 
@@ -1189,61 +1189,52 @@ NAME:
 
 // common inner routine with file scope
 //
-// blend for ta==n, scale for generic alpha and beta
+// blend for ta==t, scale for generic alpha and beta
 //
 // input arguments:
 // r10  <- alpha
 // r11  <- beta
 // r12  <- y
-// ymm0 <- [z0 z1 z2 z3]_a
-// ymm1 <- [z0 z1 z2 z3]_b
-// ymm2 <- [z0 z1 z2 z3]_c
-// ymm3 <- [z0 z1 z2 z3]_d
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
+// r13d <- km
+// ymm0 <- [z0 z1 z2 z3]
 //
 // output arguments:
 // r10  <- alpha
 // r11  <- beta
 // r12  <- y
+// r13d <- km
 // ymm0 <- [z0 z1 z2 z3]
-// ymm1 <- dirty
-// ymm2 <- dirty
-// ymm3 <- dirty
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLEND_N_SCALE_AB_4_LIB4
+	.macro INNER_SCALE_AB_4_VS_LIB4
 #else
 	.p2align 4,,15
-	FUN_START(inner_blend_n_scale_ab_4_lib4)
+	FUN_START(inner_scale_ab_4_vs_lib4)
 #endif
 
-	// reduction
-	vaddpd	%ymm0, %ymm1, %ymm0
-	vaddpd	%ymm2, %ymm3, %ymm2
-	vaddpd	%ymm0, %ymm2, %ymm0
-
 	// alpha
-	vbroadcastsd	0(%r10), %ymm15
-	vmulpd	%ymm0, %ymm15, %ymm0
+	vbroadcastsd	0(%r10), %ymm13
+	vmulpd	%ymm0, %ymm13, %ymm0
 
 	// beta
-	vbroadcastsd	0(%r11), %ymm15
+	vbroadcastsd	0(%r11), %ymm13
 
 	vxorpd		%ymm14, %ymm14, %ymm14 // 0.0
-	vucomisd	%xmm14, %xmm15 // beta==0.0 ?
+	vucomisd	%xmm14, %xmm13 // beta==0.0 ?
 	je			0f // end
 
-	vmovupd		0(%r12), %ymm14
-	vmulpd		%ymm15, %ymm14, %ymm14
+	vcvtsi2sd	%r13d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	vmaskmovpd	0(%r12), %ymm15, %ymm14
+	vmulpd		%ymm13, %ymm14, %ymm14
 	vaddpd		%ymm0, %ymm14, %ymm0
 
 0:
@@ -1253,63 +1244,7 @@ NAME:
 #else
 	ret
 	
-	FUN_END(inner_blend_n_scale_ab_4_lib4)
-#endif
-
-
-
-
-
-// common inner routine with file scope
-//
-// blend for ta==n, scale for alpha=-1.0 and beta=1.0
-//
-// input arguments:
-// r10  <- y
-// ymm0 <- [z0 z1 z2 z3]_a
-// ymm1 <- [z0 z1 z2 z3]_b
-// ymm2 <- [z0 z1 z2 z3]_c
-// ymm3 <- [z0 z1 z2 z3]_d
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
-//
-// output arguments:
-// r10  <- y
-// ymm0 <- [z0 z1 z2 z3]
-// ymm1 <- dirty
-// ymm2 <- dirty
-// ymm3 <- dirty
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
-
-#if MACRO_LEVEL>=1
-	.macro INNER_BLEND_N_SCALE_M11_4_LIB4
-#else
-	.p2align 4,,15
-	FUN_START(inner_blend_n_scale_m11_4_lib4)
-#endif
-
-	// reduction
-	vaddpd	%ymm0, %ymm1, %ymm0
-	vaddpd	%ymm2, %ymm3, %ymm2
-	vaddpd	%ymm0, %ymm2, %ymm0
-
-	// beta
-	vmovupd		0(%r10), %ymm14
-	vsubpd		%ymm0, %ymm14, %ymm0
-
-#if MACRO_LEVEL>=1
-	.endm
-#else
-	ret
-	
-	FUN_END(inner_blend_n_scale_m11_4_lib4)
+	FUN_END(inner_scale_ab_4_vs_lib4)
 #endif
 
 
@@ -1324,57 +1259,53 @@ NAME:
 // r10  <- alpha
 // r11  <- beta
 // r12  <- y
-// ymm0 <- [z0a z0b z0c z0d]
-// ymm1 <- [z1a z1b z1c z1d]
-// ymm2 <- [z2a z2b z2c z2d]
-// ymm3 <- [z3a z3b z3c z3d]
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
+// r13d <- k0 : start form (inc)
+// r14d <- k1 : up to (exc)
+// ymm0 <- [z0 z1 z2 z3]
 //
 // output arguments:
 // r10  <- alpha
 // r11  <- beta
 // r12  <- y
+// r13d <- k0 : start form (inc)
+// r14d <- k1 : up to (exc)
 // ymm0 <- [z0 z1 z2 z3]
-// ymm1 <- dirty
-// ymm2 <- dirty
-// ymm3 <- dirty
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLEND_T_SCALE_AB_4_LIB4
+	.macro INNER_SCALE_AB_4_GEN_LIB4
 #else
 	.p2align 4,,15
-	FUN_START(inner_blend_t_scale_ab_4_lib4)
+	FUN_START(inner_scale_ab_4_gen_lib4)
 #endif
 
-	// reduction
-	vhaddpd	%ymm1, %ymm0, %ymm0
-	vhaddpd	%ymm3, %ymm2, %ymm2
-	vperm2f128	$ 0x2, %ymm0, %ymm2, %ymm1
-	vperm2f128	$ 0x13, %ymm0, %ymm2, %ymm0
-	vaddpd	%ymm0, %ymm1, %ymm0
-
 	// alpha
-	vbroadcastsd	0(%r10), %ymm15
-	vmulpd	%ymm0, %ymm15, %ymm0
+	vbroadcastsd	0(%r10), %ymm13
+	vmulpd	%ymm0, %ymm13, %ymm0
 
 	// beta
-	vbroadcastsd	0(%r11), %ymm15
+	vbroadcastsd	0(%r11), %ymm13
 
 	vxorpd		%ymm14, %ymm14, %ymm14 // 0.0
-	vucomisd	%xmm14, %xmm15 // beta==0.0 ?
+	vucomisd	%xmm14, %xmm13 // beta==0.0 ?
 	je			0f // end
 
-	vmovupd		0(%r12), %ymm14
-	vmulpd		%ymm15, %ymm14, %ymm14
+	vcvtsi2sd	%r13d, %xmm14, %xmm14
+	vcvtsi2sd	%r14d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm12
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm12
+#endif
+	vmovddup	%xmm14, %xmm14
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$ 1, %xmm14, %ymm14, %ymm14
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm12, %ymm14, %ymm14
+	vsubpd		%ymm15, %ymm12, %ymm15
+	vandpd		%ymm14, %ymm15, %ymm15
+
+	vmaskmovpd	0(%r12), %ymm15, %ymm14
+	vmulpd		%ymm13, %ymm14, %ymm14
 	vaddpd		%ymm0, %ymm14, %ymm0
 
 0:
@@ -1384,7 +1315,7 @@ NAME:
 #else
 	ret
 	
-	FUN_END(inner_blend_t_scale_ab_4_lib4)
+	FUN_END(inner_scale_ab_4_gen_lib4)
 #endif
 
 
@@ -1393,62 +1324,33 @@ NAME:
 
 // common inner routine with file scope
 //
-// blend for ta==t, scale for generic alpha and beta=1.0
+// scale for alpha=-1.0 and beta=1.0
 //
 // input arguments:
-// r10  <- alpha
-// r11  <- y
-// ymm0 <- [z0a z0b z0c z0d]
-// ymm1 <- [z1a z1b z1c z1d]
-// ymm2 <- [z2a z2b z2c z2d]
-// ymm3 <- [z3a z3b z3c z3d]
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
+// r10  <- y
+// ymm0 <- [z0 z1 z2 z3]
 //
 // output arguments:
-// r10  <- alpha
-// r11  <- y
+// r10  <- y
 // ymm0 <- [z0 z1 z2 z3]
-// ymm1 <- dirty
-// ymm2 <- dirty
-// ymm3 <- dirty
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLEND_T_SCALE_A1_4_LIB4
+	.macro INNER_SCALE_M11_4_LIB4
 #else
 	.p2align 4,,15
-	FUN_START(inner_blend_t_scale_a1_4_lib4)
+	FUN_START(inner_scale_m11_4_lib4)
 #endif
-
-	// reduction
-	vhaddpd	%ymm1, %ymm0, %ymm0
-	vhaddpd	%ymm3, %ymm2, %ymm2
-	vperm2f128	$ 0x2, %ymm0, %ymm2, %ymm1
-	vperm2f128	$ 0x13, %ymm0, %ymm2, %ymm0
-	vaddpd	%ymm0, %ymm1, %ymm0
-
-	// alpha
-	vbroadcastsd	0(%r10), %ymm15
-	vmulpd	%ymm0, %ymm15, %ymm0
 
 	// beta
-	vmovupd		0(%r11), %ymm14
-	vaddpd		%ymm0, %ymm14, %ymm0
-	
+	vmovupd		0(%r10), %ymm14
+	vsubpd		%ymm0, %ymm14, %ymm0
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
 	
-	FUN_END(inner_blend_t_scale_a1_4_lib4)
+	FUN_END(inner_scale_m11_4_lib4)
 #endif
 
 
@@ -1457,57 +1359,45 @@ NAME:
 
 // common inner routine with file scope
 //
-// blend for ta==t, scale for alpha=-1.0 and beta=1.0
+// scale for alpha=-1.0 and beta=1.0
 //
 // input arguments:
-// r10  <- alpha
-// r11  <- y
-// ymm0 <- [z0a z0b z0c z0d]
-// ymm1 <- [z1a z1b z1c z1d]
-// ymm2 <- [z2a z2b z2c z2d]
-// ymm3 <- [z3a z3b z3c z3d]
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
+// r10  <- y
+// r11  <- km
+// ymm0 <- [z0 z1 z2 z3]
 //
 // output arguments:
-// r10  <- alpha
-// r11  <- y
+// r10  <- y
+// r11  <- km
 // ymm0 <- [z0 z1 z2 z3]
-// ymm1 <- dirty
-// ymm2 <- dirty
-// ymm3 <- dirty
-// ymm8  <- dirty
-// ymm9  <- dirty
-// ymm10 <- dirty
-// ymm11 <- dirty
-// ymm15 <- dirty
 
 #if MACRO_LEVEL>=1
-	.macro INNER_BLEND_T_SCALE_M11_4_LIB4
+	.macro INNER_SCALE_M11_4_VS_LIB4
 #else
 	.p2align 4,,15
-	FUN_START(inner_blend_t_scale_m11_4_lib4)
+	FUN_START(inner_scale_m11_4_vs_lib4)
 #endif
 
-	// reduction
-	vhaddpd	%ymm1, %ymm0, %ymm0
-	vhaddpd	%ymm3, %ymm2, %ymm2
-	vperm2f128	$ 0x2, %ymm0, %ymm2, %ymm1
-	vperm2f128	$ 0x13, %ymm0, %ymm2, %ymm0
-	vaddpd	%ymm0, %ymm1, %ymm0
+	// beta
+	vcvtsi2sd	%r11d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
 
-	vmovupd		0(%r10), %ymm14
+	vmaskmovpd	0(%r10), %ymm15, %ymm14
 	vsubpd		%ymm0, %ymm14, %ymm0
-	
+
 #if MACRO_LEVEL>=1
 	.endm
 #else
 	ret
 	
-	FUN_END(inner_blend_t_scale_m11_4_lib4)
+	FUN_END(inner_scale_m11_4_vs_lib4)
 #endif
 
 
@@ -1549,6 +1439,59 @@ NAME:
 	ret
 	
 	FUN_END(inner_scale_a1_4_lib4)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// scale for generic alpha and beta=1.0
+//
+// input arguments:
+// r10  <- alpha
+// r11  <- y
+// r12d <- km
+// ymm0 <- [z0 z1 z2 z3]
+//
+// output arguments:
+// r10  <- alpha
+// r11  <- y
+// r12d <- km
+// ymm0 <- [z0 z1 z2 z3]
+
+#if MACRO_LEVEL>=1
+	.macro INNER_SCALE_A1_4_VS_LIB4
+#else
+	.p2align 4,,15
+	FUN_START(inner_scale_a1_4_vs_lib4)
+#endif
+
+	// alpha
+	vbroadcastsd	0(%r10), %ymm15
+	vmulpd			%ymm0, %ymm15, %ymm0
+
+	// beta
+	vcvtsi2sd	%r12d, %xmm15, %xmm15
+#if defined(OS_LINUX) | defined(OS_WINDOWS)
+	vmovupd		.LC02(%rip), %ymm14
+#elif defined(OS_MAC)
+	vmovupd		LC02(%rip), %ymm14
+#endif
+	vmovddup	%xmm15, %xmm15
+	vinsertf128	$ 1, %xmm15, %ymm15, %ymm15
+	vsubpd		%ymm15, %ymm14, %ymm15
+
+	vmaskmovpd	0(%r11), %ymm15, %ymm14
+	vaddpd		%ymm0, %ymm14, %ymm0
+	
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+	
+	FUN_END(inner_scale_a1_4_vs_lib4)
 #endif
 
 
@@ -2663,9 +2606,11 @@ NAME:
 	movq	ARG6, %r12   // y
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_N_SCALE_AB_4_LIB4
+	INNER_BLEND_N_4_LIB4
+	INNER_SCALE_AB_4_LIB4
 #else
-	CALL(inner_blend_n_scale_ab_4_lib4)
+	CALL(inner_blend_n_4_lib4)
+	CALL(inner_scale_ab_4_lib4)
 #endif
 
 
@@ -2724,11 +2669,14 @@ NAME:
 	movq	ARG2, %r10 // alpha
 	movq	ARG5, %r11   // beta
 	movq	ARG6, %r12   // y
+	movq	ARG8, %r13 // k1
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_N_SCALE_AB_4_LIB4
+	INNER_BLEND_N_4_LIB4
+	INNER_SCALE_AB_4_VS_LIB4
 #else
-	CALL(inner_blend_n_scale_ab_4_lib4)
+	CALL(inner_blend_n_4_lib4)
+	CALL(inner_scale_ab_4_vs_lib4)
 #endif
 
 
@@ -2788,19 +2736,23 @@ NAME:
 	movq	ARG2, %r10 // alpha
 	movq	ARG5, %r11   // beta
 	movq	ARG6, %r12   // y
+	movq	ARG8, %r13 // k0
+	movq	ARG9, %r14 // k1
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_N_SCALE_AB_4_LIB4
+	INNER_BLEND_N_4_LIB4
+	INNER_SCALE_AB_4_GEN_LIB4
 #else
-	CALL(inner_blend_n_scale_ab_4_lib4)
+	CALL(inner_blend_n_4_lib4)
+	CALL(inner_scale_ab_4_gen_lib4)
 #endif
 
 
 	// store
 
 	movq	ARG7, %r10 // z 
-	movq	ARG8, %r11 // k0 
-	movq	ARG9, %r12 // k1 
+	movq	ARG8, %r11 // k0
+	movq	ARG9, %r12 // k1
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_GEN_LIB4
@@ -2865,9 +2817,11 @@ NAME:
 	movq	ARG8, %r12 // y 
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_AB_4_LIB4
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_AB_4_LIB4
 #else
-	CALL(inner_blend_t_scale_ab_4_lib4)
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_ab_4_lib4)
 #endif
 
 
@@ -2936,18 +2890,21 @@ NAME:
 	movq	ARG2, %r10 // alpha
 	movq	ARG7, %r11   // beta
 	movq	ARG8, %r12 // y 
+	movq	ARG10, %r13 // km
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_AB_4_LIB4
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_AB_4_VS_LIB4
 #else
-	CALL(inner_blend_t_scale_ab_4_lib4)
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_ab_4_vs_lib4)
 #endif
 
 
 	// store
 
 	movq	ARG9, %r10 // z 
-	movq	ARG10, %r11 // km 
+	movq	ARG10, %r11 // km
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
@@ -3002,9 +2959,11 @@ NAME:
 	movq	ARG5, %r10   // y
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_N_SCALE_M11_4_LIB4
+	INNER_BLEND_N_4_LIB4
+	INNER_SCALE_M11_4_LIB4
 #else
-	CALL(inner_blend_n_scale_m11_4_lib4)
+	CALL(inner_blend_n_4_lib4)
+	CALL(inner_scale_m11_4_lib4)
 #endif
 
 
@@ -3075,11 +3034,14 @@ NAME:
 	// call inner blender n
 
 	movq	ARG5, %r10   // y
+	movq	ARG7, %r11 // km
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_N_SCALE_M11_4_LIB4
+	INNER_BLEND_N_4_LIB4
+	INNER_SCALE_M11_4_VS_LIB4
 #else
-	CALL(inner_blend_n_scale_m11_4_lib4)
+	CALL(inner_blend_n_4_lib4)
+	CALL(inner_scale_m11_4_vs_lib4)
 #endif
 
 
@@ -3087,7 +3049,7 @@ NAME:
 
 	movq	%r13, %r10 // A+k*sizeof(double)
 	movq	ARG3, %r11 // inv_diag_A
-	movq	ARG8, %r12 // kn 
+	movq	ARG8, %r12 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSV_LN_INV_4_VS_LIB4
@@ -3099,7 +3061,7 @@ NAME:
 	// store vs
 
 	movq	ARG6, %r10 // z 
-	movq	ARG7, %r11 // km 
+	movq	ARG7, %r11 // km
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
@@ -3154,9 +3116,11 @@ NAME:
 	movq	ARG4, %r10   // y
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_N_SCALE_M11_4_LIB4
+	INNER_BLEND_N_4_LIB4
+	INNER_SCALE_M11_4_LIB4
 #else
-	CALL(inner_blend_n_scale_m11_4_lib4)
+	CALL(inner_blend_n_4_lib4)
+	CALL(inner_scale_m11_4_lib4)
 #endif
 
 
@@ -3226,18 +3190,21 @@ NAME:
 	// call inner blender n
 
 	movq	ARG4, %r10   // y
+	movq	ARG6, %r11 // km
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_N_SCALE_M11_4_LIB4
+	INNER_BLEND_N_4_LIB4
+	INNER_SCALE_M11_4_VS_LIB4
 #else
-	CALL(inner_blend_n_scale_m11_4_lib4)
+	CALL(inner_blend_n_4_lib4)
+	CALL(inner_scale_m11_4_vs_lib4)
 #endif
 
 
 	// solution
 
 	movq	%r13, %r10 // A+k*sizeof(double)
-	movq	ARG7, %r11 // kn 
+	movq	ARG7, %r11 // kn
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_DTRSV_LN_ONE_4_VS_LIB4
@@ -3249,7 +3216,7 @@ NAME:
 	// store vs
 
 	movq	ARG5, %r10 // z 
-	movq	ARG6, %r11 // km 
+	movq	ARG6, %r11 // km
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
@@ -3307,9 +3274,11 @@ NAME:
 	movq	ARG6, %r10 // y 
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_M11_4_LIB4
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_M11_4_LIB4
 #else
-	CALL(inner_blend_t_scale_m11_4_lib4)
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_m11_4_lib4)
 #endif
 
 
@@ -3383,11 +3352,14 @@ NAME:
 	// call inner blender t
 
 	movq	ARG6, %r10 // y 
+	movq	$ 3, %r11
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_M11_4_LIB4
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_M11_4_VS_LIB4
 #else
-	CALL(inner_blend_t_scale_m11_4_lib4)
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_m11_4_vs_lib4)
 #endif
 
 
@@ -3465,11 +3437,14 @@ NAME:
 	// call inner blender t
 
 	movq	ARG6, %r10 // y 
+	movq	$ 2, %r11
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_M11_4_LIB4
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_M11_4_VS_LIB4
 #else
-	CALL(inner_blend_t_scale_m11_4_lib4)
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_m11_4_vs_lib4)
 #endif
 
 
@@ -3547,11 +3522,14 @@ NAME:
 	// call inner blender t
 
 	movq	ARG6, %r10 // y 
+	movq	$ 1, %r11
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_M11_4_LIB4
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_M11_4_VS_LIB4
 #else
-	CALL(inner_blend_t_scale_m11_4_lib4)
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_m11_4_vs_lib4)
 #endif
 
 
@@ -3628,9 +3606,11 @@ NAME:
 	movq	ARG5, %r10 // y 
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_N_SCALE_M11_4_LIB4
+	INNER_BLEND_N_4_LIB4
+	INNER_SCALE_M11_4_LIB4
 #else
-	CALL(inner_blend_n_scale_m11_4_lib4)
+	CALL(inner_blend_n_4_lib4)
+	CALL(inner_scale_m11_4_lib4)
 #endif
 
 
@@ -3705,9 +3685,9 @@ NAME:
 	// call inner blend n
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_N_LIB4
+	INNER_BLEND_N_4_LIB4
 #else
-	CALL(inner_blend_n_lib4)
+	CALL(inner_blend_n_4_lib4)
 #endif
 
 
@@ -3767,9 +3747,9 @@ NAME:
 	// call inner blend t
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_LIB4
+	INNER_BLEND_T_4_LIB4
 #else
-	CALL(inner_blend_t_lib4)
+	CALL(inner_blend_t_4_lib4)
 #endif
 
 
@@ -3829,16 +3809,16 @@ NAME:
 	// call inner blend t
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_LIB4
+	INNER_BLEND_T_4_LIB4
 #else
-	CALL(inner_blend_t_lib4)
+	CALL(inner_blend_t_4_lib4)
 #endif
 
 
 	// store
 
 	movq	ARG5, %r10 // z 
-	movq	ARG6, %r11 // km 
+	movq	ARG6, %r11 // km
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
@@ -3912,9 +3892,11 @@ NAME:
 	movq	ARG9, %r12   // y_t
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_AB_4_LIB4
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_AB_4_LIB4
 #else
-	CALL(inner_blend_t_scale_ab_4_lib4)
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_ab_4_lib4)
 #endif
 
 
@@ -4003,18 +3985,21 @@ NAME:
 	movq	ARG3, %r10 // alpha_t
 	movq	ARG8, %r11   // beta_t
 	movq	ARG9, %r12   // y_t
+	movq	ARG12, %r13 // km
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_AB_4_LIB4
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_AB_4_VS_LIB4
 #else
-	CALL(inner_blend_t_scale_ab_4_lib4)
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_ab_4_vs_lib4)
 #endif
 
 
 	// store
 
 	movq	ARG11, %r10 // z_t 
-	movq	ARG12, %r11 // km 
+	movq	ARG12, %r11 // km
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4_VS_LIB4
@@ -4092,9 +4077,11 @@ NAME:
 	movq	ARG6, %r11   // z_t
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_A1_4_LIB4
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_A1_4_LIB4
 #else
-	CALL(inner_blend_t_scale_a1_4_lib4)
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_a1_4_lib4)
 #endif
 
 
@@ -4177,11 +4164,14 @@ NAME:
 
 	movq	ARG2, %r10 // alpha
 	movq	ARG7, %r11   // z_t
+	movq	ARG8, %r12 // km
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_SCALE_A1_4_LIB4
+	INNER_BLEND_T_4_LIB4
+	INNER_SCALE_A1_4_VS_LIB4
 #else
-	CALL(inner_blend_t_scale_a1_4_lib4)
+	CALL(inner_blend_t_4_lib4)
+	CALL(inner_scale_a1_4_vs_lib4)
 #endif
 
 

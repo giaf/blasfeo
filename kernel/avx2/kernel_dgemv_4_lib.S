@@ -701,14 +701,10 @@
 	movq	ARG7, %r12 // y 
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_LIB4
-#else
-	CALL(inner_blend_t_lib4)
-#endif
-
-#if MACRO_LEVEL>=1
+	INNER_BLEND_T_4_LIB4
 	INNER_SCALE_AB_4_LIB4
 #else
+	CALL(inner_blend_t_4_lib4)
 	CALL(inner_scale_ab_4_lib4)
 #endif
 
@@ -795,14 +791,10 @@
 	movq	ARG6, %r11   // z_t
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_LIB4
-#else
-	CALL(inner_blend_t_lib4)
-#endif
-
-#if MACRO_LEVEL>=1
+	INNER_BLEND_T_4_LIB4
 	INNER_SCALE_A1_4_LIB4
 #else
+	CALL(inner_blend_t_4_lib4)
 	CALL(inner_scale_a1_4_lib4)
 #endif
 
@@ -891,14 +883,10 @@
 	leaq	0(%r11, ARG1, 8), %r11 // z_t + k
 
 #if MACRO_LEVEL>=1
-	INNER_BLEND_T_LIB4
-#else
-	CALL(inner_blend_t_lib4)
-#endif
-
-#if MACRO_LEVEL>=1
+	INNER_BLEND_T_4_LIB4
 	INNER_SCALE_A1_4_LIB4
 #else
+	CALL(inner_blend_t_4_lib4)
 	CALL(inner_scale_a1_4_lib4)
 #endif
 
