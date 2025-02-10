@@ -158,7 +158,7 @@ void initialize_args(struct RoutineArgs * args)
 
 /* prints a matrix in column-major format */
 // TODO remove !!!!!!!!!!!!!!!!!!!!
-void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int err_i, int err_j, int ERR)
+void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int err_i, int err_j, int ERR, char *label)
 	{
 
 	/* REAL *pA = sA->pA + ai + aj*lda; */
@@ -203,7 +203,7 @@ void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int e
 		je = aj+n;
 	}
 
-	printf("%s\t", "REF");
+	printf("%s\t", label);
 	for(j=j0; j<je; j++) printf("%7d\t", j);
 	printf("\n");
 	for(j=j0; j<je+1; j++) printf("-------\t");
@@ -364,9 +364,9 @@ int GECMP_BLASAPI(int m, int n, int bi, int bj, struct STRMAT_REF *sD, struct ST
 			{
 
 			// strtucture mat
-			REAL sbi = MATEL_REF(sD, ii, jj);
+			REAL sbi = sD->pA[ii+sD->m*jj];
 			// reference mat
-			REAL rbi = MATEL_REF(rD, ii, jj);
+			REAL rbi = rD->pA[ii+rD->m*jj];
 
 			if ( (sbi != rbi) & ( fabs(sbi-rbi) > REL_TOL*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > REL_TOL))
 				{
@@ -385,8 +385,8 @@ int GECMP_BLASAPI(int m, int n, int bi, int bj, struct STRMAT_REF *sD, struct ST
 					printf("\n");
 
 					printf("\nResult matrix:\n");
-					print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1);
-					print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1);
+					print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1, "HP");
+					print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1, "REF");
 
 					return 1;
 				}

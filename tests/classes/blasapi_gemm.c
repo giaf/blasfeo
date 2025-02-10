@@ -32,20 +32,20 @@ void print_routine_matrices(struct RoutineArgs *args)
 	{
 	// TODO fixed based on transA & transB
 	printf("\nPrint A:\n");
-	print_xmat_debug(args->m, args->n, args->cA, args->ai, args->aj, 0, 0, 0);
-	print_xmat_debug(args->m, args->n, args->rA, args->ai, args->aj, 0, 0, 0);
+	print_xmat_debug(args->m, args->n, args->cA, args->ai, args->aj, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->n, args->rA, args->ai, args->aj, 0, 0, 0, "REF");
 
 	printf("\nPrint B:\n");
-	print_xmat_debug(args->m, args->n, args->cB, args->ai, args->aj, 0, 0, 0);
-	print_xmat_debug(args->m, args->n, args->rB, args->ai, args->aj, 0, 0, 0);
+	print_xmat_debug(args->m, args->n, args->cB, args->ai, args->aj, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->n, args->rB, args->ai, args->aj, 0, 0, 0, "REF");
 
 	printf("\nPrint C:\n");
-	print_xmat_debug(args->m, args->n, args->cC, args->ai, args->aj, 0, 0, 0);
-	print_xmat_debug(args->m, args->n, args->rC, args->ai, args->aj, 0, 0, 0);
+	print_xmat_debug(args->m, args->n, args->cC, args->ai, args->aj, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->n, args->rC, args->ai, args->aj, 0, 0, 0, "REF");
 
 	printf("\nPrint D:\n");
-	print_xmat_debug(args->m, args->n, args->cD, args->ai, args->aj, 0, 0, 0);
-	print_xmat_debug(args->m, args->n, args->rD, args->ai, args->aj, 0, 0, 0);
+	print_xmat_debug(args->m, args->n, args->cD, args->ai, args->aj, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->n, args->rD, args->ai, args->aj, 0, 0, 0, "REF");
 	}
 
 

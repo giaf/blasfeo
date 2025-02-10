@@ -37,7 +37,7 @@ void call_routines(struct RoutineArgs *args)
 
 void print_routine(struct RoutineArgs *args)
 	{
-	printf("blas_%s(%s, %s, %d, %d, %f, A, %d, C, %d);\n", string(ROUTINE), string(UPLO), string(TRANS), args->m, args->n, args->alpha, args->cA->m, args->cB->m, args->cD->m);
+	printf("blas_%s(%s, %s, %d, %d, %f, A, %d, %f, C, %d);\n", string(ROUTINE), string(UPLO), string(TRANS), args->m, args->n, args->alpha, args->cA->m, args->beta, args->cC->m);
 	}
 
 
@@ -47,16 +47,16 @@ void print_routine_matrices(struct RoutineArgs *args)
 	int maxn = (args->m > args->n)? args->m : args->n;
 
 	printf("\nPrint A:\n");
-	print_xmat_debug(maxn, maxn, args->cA, 0, 0, 0, 0, 0);
-	print_xmat_debug(maxn, maxn, args->rA, 0, 0, 0, 0, 0);
+	print_xmat_debug(maxn, maxn, args->cA, 0, 0, 0, 0, 0, "HP");
+	print_xmat_debug(maxn, maxn, args->rA, 0, 0, 0, 0, 0, "REF");
 
 	printf("\nPrint B:\n");
-	print_xmat_debug(args->m, args->m, args->cB, 0, 0, 0, 0, 0);
-	print_xmat_debug(args->m, args->m, args->rB, 0, 0, 0, 0, 0);
+	print_xmat_debug(args->m, args->m, args->cB, 0, 0, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->m, args->rB, 0, 0, 0, 0, 0, "REF");
 
 	printf("\nPrint D:\n");
-	print_xmat_debug(args->m, args->m, args->cD, 0, 0, 0, 0, 0);
-	print_xmat_debug(args->m, args->m, args->rD, 0, 0, 0, 0, 0);
+	print_xmat_debug(args->m, args->m, args->cD, 0, 0, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->m, args->rD, 0, 0, 0, 0, 0, "REF");
 	}
 
 

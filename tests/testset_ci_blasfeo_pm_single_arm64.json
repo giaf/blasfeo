@@ -1,7 +1,7 @@
 {
   "options":{
     "rebuild": 1,
-    "silent": 1,
+    "silent": 0,
     "continue": 0
   },
   "test_macros":
@@ -9,7 +9,7 @@
     "VERBOSE": 3
   },
   "env_flags":{
-    "CC":"gcc",
+    "CC": "gcc",
     "CFLAGS": "-Wuninitialized"
   },
   "blasfeo_flags":{
@@ -18,28 +18,24 @@
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
-    "double"
+    "single"
   ],
   "apis": [
     "blasfeo"
   ],
   "K_MAX_STACK":[
-    1000
+    0, 500
   ],
   "PACKING_ALG":[
-    "ALG_0",
-    "ALG_M1",
-    "ALG_N1",
-    "ALG_2"
+    "AUTO"
   ],
   "MF": [
-    "COLMAJ"
+    "PANELMAJ"
   ],
   "TARGET": [
     "GENERIC",
-    "X64_INTEL_CORE",
-    "X64_INTEL_HASWELL",
-    "X64_INTEL_SANDY_BRIDGE"
+    "ARMV8A_ARM_CORTEX_A57",
+    "ARMV8A_ARM_CORTEX_A53",
   ],
   "LA": [
     "HIGH_PERFORMANCE"
@@ -47,8 +43,8 @@
   "routines": [
     "gemm_nn",
     "gemm_nt",
-    "gemm_tn",
-    "gemm_tt"
+    "potrf_l"
   ]
 }
+
 

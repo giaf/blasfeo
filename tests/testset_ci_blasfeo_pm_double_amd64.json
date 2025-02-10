@@ -1,12 +1,12 @@
 {
   "options":{
     "rebuild": 1,
-    "silent": 1,
+    "silent": 0,
     "continue": 0
   },
   "test_macros":
   {
-    "VERBOSE":2
+    "VERBOSE": 3
   },
   "env_flags":{
     "CC":"gcc",
@@ -18,7 +18,7 @@
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
-    "single"
+    "double"
   ],
   "apis": [
     "blasfeo"
@@ -44,7 +44,9 @@
   "routines": [
     "gemm_nn",
     "gemm_nt",
-    "potrf_l"
+    "gemm_tn",
+    "gemm_tt",
+    "potrf_l",
+    "potrf_l_mn"
   ]
 }
-

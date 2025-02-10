@@ -1,19 +1,19 @@
 {
   "options":{
     "rebuild": 1,
-    "silent": 1,
+    "silent": 0,
     "continue": 0
   },
   "test_macros":
   {
-    "VERBOSE":3
+    "VERBOSE": 3
   },
   "env_flags":{
     "CC":"gcc",
     "CFLAGS": "-Wuninitialized"
   },
   "blasfeo_flags":{
-    "BLASFEO_REF_API": 0,
+    "BLASFEO_REF_API": 1,
     "BLAS_API": 1,
     "EXTERNAL_BLAS": "SYSTEM"
   },
@@ -34,9 +34,8 @@
   ],
   "TARGET": [
     "GENERIC",
-    "X64_INTEL_CORE",
-    "X64_INTEL_HASWELL",
-    "X64_INTEL_SANDY_BRIDGE"
+    "ARMV8A_ARM_CORTEX_A57",
+    "ARMV8A_ARM_CORTEX_A53"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
@@ -66,5 +65,6 @@
     "potrf_u"
   ]
 }
+
 
 

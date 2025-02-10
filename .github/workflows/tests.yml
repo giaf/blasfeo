@@ -1,0 +1,59 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - github_ci
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, ubuntu-24.04-arm, macos-13, macos-14 ]
+        api: [ blas, blasfeo ]
+        mf: [ cm, pm ]
+        precision: [ single, double ]
+        include:
+          - os: ubuntu-latest
+            arch: amd64
+          - os: ubuntu-24.04-arm
+            arch: arm64
+          - os: macos-13
+            arch: amd64
+          - os: macos-14
+            arch: arm64
+          - api: blasfeo
+            mf: cm
+            packalg: _packalg
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest
+          channels: conda-forge
+          python-version: "3.10"
+          activate-environment: blasfeo
+
+      - name: Install dependencies
+        shell: bash -l {0}
+        run: |
+          # Compiler infrastructure
+          conda install cmake compilers make pkg-config
+          # Dependencies
+          conda install libopenblas
+          # Python packages
+          pip3 install jinja2
+
+      - name: Setup working directories
+        shell: bash -l {0}
+        working-directory: tests
+        run: python3 tester.py testset_ci_${{ matrix.api }}_${{ matrix.mf }}_${{ matrix.precision }}_${{ matrix.arch }}_${{ matrix.packalg }}.json

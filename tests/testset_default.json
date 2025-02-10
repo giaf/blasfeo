@@ -15,7 +15,7 @@
     "CC": "gcc",
     "BLASFEO_REF_API": 1,
     "BLAS_API": 1,
-    "EXTERNAL_BLAS": "OPENBLAS"
+    "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
     "double"

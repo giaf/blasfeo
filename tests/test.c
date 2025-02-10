@@ -71,7 +71,7 @@ int main()
 	{
 	printf("\n\n Recompile BLASFEO with BLASFEO_REF_API=1 in Makefile.rule to run this test.\n");
 	printf("On CMake use -DBLASFEO_REF_API=ON .\n\n");
-	return 0;
+	return 1;
 	}
 
 #endif

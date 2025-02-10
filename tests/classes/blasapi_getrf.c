@@ -9,7 +9,7 @@ void call_routines(struct RoutineArgs *args)
 
 	// routine call
 	//
-	BLASFEO_BLAS(ROUTINE)(
+	BLASFEO_LAPACK(ROUTINE)(
 		&(args->m), &(args->n),
 		args->cC->pA, &(args->cC->m),
 		args->cipiv, &(args->info));
@@ -39,8 +39,8 @@ void print_routine(struct RoutineArgs *args)
 void print_routine_matrices(struct RoutineArgs *args)
 	{
 	printf("\nInput matrix:\n");
-	print_xmat_debug(args->m, args->n, args->cA, 0, 0, 0, 0, 0);
-	print_xmat_debug(args->m, args->n, args->rA, 0, 0, 0, 0, 0);
+	print_xmat_debug(args->m, args->n, args->cA, 0, 0, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->n, args->rA, 0, 0, 0, 0, 0, "REF");
 
 	printf("\nRow pivot vector:\n");
 	int size = args->m < args->n ? args->m : args->n;

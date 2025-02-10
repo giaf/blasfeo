@@ -37,12 +37,12 @@ void print_routine_matrices(struct RoutineArgs *args)
 	{
 	// TODO fixed based on side
 	printf("\nPrint A:\n");
-	print_xmat_debug(args->m, args->n, args->cA, 0, 0, 0, 0, 0);
-	print_xmat_debug(args->m, args->n, args->rA, 0, 0, 0, 0, 0);
+	print_xmat_debug(args->m, args->n, args->cA, 0, 0, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->n, args->rA, 0, 0, 0, 0, 0, "REF");
 
 	printf("\nPrint B:\n");
-	print_xmat_debug(args->m, args->n, args->cB, 0, 0, 0, 0, 0);
-	print_xmat_debug(args->m, args->n, args->rB, 0, 0, 0, 0, 0);
+	print_xmat_debug(args->m, args->n, args->cB, 0, 0, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->n, args->rB, 0, 0, 0, 0, 0, "REF");
 	}
 
 

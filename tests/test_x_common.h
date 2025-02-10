@@ -73,7 +73,8 @@
 //#define REF(fun) concatenate(fun, _ref)
 #define REF(fun) concatenate(ref_, fun)
 #define BLASFEO(fun) concatenate(blasfeo_, fun)
-#define BLASFEO_BLAS(fun) concatenate(blas_, fun)
+#define BLASFEO_BLAS(fun) concatenate(blasfeo_blas_, fun)
+#define BLASFEO_LAPACK(fun) concatenate(blasfeo_lapack_, fun)
 #define BLAS(fun) concatenate(fun, _)
 #define WORKSIZE(fun) concatenate(fun, _worksize)
 
@@ -252,7 +253,7 @@ void print_routine_matrices(struct RoutineArgs *args);
 
 void print_xmat_debug(
 	int m, int n, struct STRMAT_REF *sA,
-	int ai, int aj, int err_i, int err_j, int ERR);
+	int ai, int aj, int err_i, int err_j, int ERR, char *label);
 
 void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, int err_i, int err_j, int ERR, char *label);
 

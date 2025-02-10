@@ -1,12 +1,12 @@
 {
   "options":{
     "rebuild": 1,
-    "silent": 1,
+    "silent": 0,
     "continue": 0
   },
   "test_macros":
   {
-    "VERBOSE": 2
+    "VERBOSE": 3
   },
   "env_flags":{
     "CC":"gcc",
@@ -18,7 +18,7 @@
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
-    "double"
+    "single"
   ],
   "apis": [
     "blasfeo"
@@ -33,9 +33,10 @@
     "PANELMAJ"
   ],
   "TARGET": [
-    "ARMV8A_ARM_CORTEX_A57",
-    "ARMV8A_ARM_CORTEX_A53",
-    "GENERIC"
+    "GENERIC",
+    "X64_INTEL_CORE",
+    "X64_INTEL_HASWELL",
+    "X64_INTEL_SANDY_BRIDGE"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
@@ -43,10 +44,7 @@
   "routines": [
     "gemm_nn",
     "gemm_nt",
-    "gemm_tn",
-    "gemm_tt",
-    "potrf_l",
-    "potrf_l_mn"
+    "potrf_l"
   ]
 }
 

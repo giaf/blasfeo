@@ -1,7 +1,7 @@
 {
   "options":{
     "rebuild": 1,
-    "silent": 1,
+    "silent": 0,
     "continue": 0
   },
   "test_macros":
@@ -14,14 +14,14 @@
   },
   "blasfeo_flags":{
     "BLASFEO_REF_API": 1,
-    "BLAS_API": 0,
+    "BLAS_API": 1,
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
     "single"
   ],
   "apis": [
-    "blasfeo"
+    "blas"
   ],
   "K_MAX_STACK":[
     0, 500
@@ -33,9 +33,9 @@
     "COLMAJ"
   ],
   "TARGET": [
+    "GENERIC",
     "ARMV8A_ARM_CORTEX_A57",
-    "ARMV8A_ARM_CORTEX_A53",
-    "GENERIC"
+    "ARMV8A_ARM_CORTEX_A53"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
@@ -44,26 +44,7 @@
     "gemm_nn",
     "gemm_nt",
     "gemm_tn",
-    "gemm_tt",
-    "trsm_llnn",
-    "trsm_llnu",
-    "trsm_lltn",
-    "trsm_lltu",
-    "trsm_lunn",
-    "trsm_lunu",
-    "trsm_lutn",
-    "trsm_lutu",
-    "trsm_rlnn",
-    "trsm_rlnu",
-    "trsm_rltn",
-    "trsm_rltu",
-    "trsm_runn",
-    "trsm_runu",
-    "trsm_rutn",
-    "trsm_rutu",
-    "potrf_l",
-    "potrf_l_mn",
-    "potrf_u"
+    "gemm_tt"
   ]
 }
 
