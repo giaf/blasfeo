@@ -255,6 +255,11 @@ class BlasfeoTestset:
 				self.testset["test_macros"]["BLASFEO_MF"]=mf
 
 				for target in self.specs["TARGET"]:
+
+					if sys.platform == "darwin" and target == "ARMV8A_ARM_CORTEX_A53":
+						print("Skipping TARGET=ARMV8A_ARM_CORTEX_A53 on macOS")
+						continue
+
 					self.testset["blasfeo_flags"]["TARGET"]=target
 					self.testset["test_macros"]["BLASFEO_TARGET"]=target
 
