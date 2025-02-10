@@ -49,7 +49,7 @@ jobs:
           # Compiler infrastructure
           conda install cmake compilers make pkg-config
           # Dependencies
-          conda install libopenblas
+          conda install libblas liblapack
           # Python packages
           pip3 install jinja2
 
