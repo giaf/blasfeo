@@ -27,6 +27,7 @@ jobs:
             arch: arm64
           - api: blasfeo
             mf: cm
+            precision: double
             packalg: _packalg
 
     runs-on: ${{ matrix.os }}
@@ -53,7 +54,7 @@ jobs:
           # Python packages
           pip3 install jinja2
 
-      - name: Setup working directories
+      - name: Run tester
         shell: bash -l {0}
         working-directory: tests
         run: python3 tester.py testset_ci_${{ matrix.api }}_${{ matrix.mf }}_${{ matrix.precision }}_${{ matrix.arch }}${{ matrix.packalg }}.json
