@@ -57,6 +57,9 @@
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
+#if defined(OS_MAC)
+#error Cortex A53 kernel version not supported for OS_MAC (register x18 used)
+#endif
 
 
 	// early return
@@ -725,6 +728,9 @@
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
+#if defined(OS_MAC)
+#error Cortex A53 kernel version not supported for OS_MAC (register x18 used)
+#endif
 
 
 	// early return
@@ -1023,8 +1029,8 @@
 	add		x15, x14, x12 // 4
 	add		x16, x14, x12, LSL #1 // 5
 	add		x17, x16, x12 // 6
-	add		x18, x16, x12, LSL #1 // 7
-	add		x19, x18, x12 // 8
+	add		x21, x16, x12, LSL #1 // 7
+	add		x19, x21, x12 // 8
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #0]
@@ -1035,7 +1041,7 @@
 	prfm	PLDL1KEEP, [x15, #0]
 	prfm	PLDL1KEEP, [x16, #0]
 	prfm	PLDL1KEEP, [x17, #0]
-	prfm	PLDL1KEEP, [x18, #0]
+	prfm	PLDL1KEEP, [x21, #0]
 	prfm	PLDL1KEEP, [x19, #0]
 
 	// preload
@@ -1045,7 +1051,7 @@
 	ldr		q31, [x15], #16
 	ldr		q16, [x16], #16
 	ldr		q17, [x17], #16
-	ldr		q18, [x18], #16
+	ldr		q18, [x21], #16
 	ldr		q19, [x19], #16
 
 	ldp		q24, q25, [x9], #32
@@ -1084,7 +1090,7 @@
 	fmla	v9.4s, v24.4s, v17.s[0]
 	prfm	PLDL1KEEP, [x17, #48]
 	fmla	v10.4s, v24.4s, v18.s[0]
-	prfm	PLDL1KEEP, [x18, #48]
+	prfm	PLDL1KEEP, [x21, #48]
 	fmla	v11.4s, v24.4s, v19.s[0]
 	prfm	PLDL1KEEP, [x19, #48]
 	fmla	v12.4s, v20.4s, v16.s[0]
@@ -1154,7 +1160,7 @@
 	fmla	v13.4s, v23.4s, v17.s[3]
 	ldr		q17, [x17], #16
 	fmla	v14.4s, v23.4s, v18.s[3]
-	ldr		q18, [x18], #16
+	ldr		q18, [x21], #16
 	fmla	v15.4s, v23.4s, v19.s[3]
 	ldr		q19, [x19], #16
 
@@ -1191,7 +1197,7 @@
 	fmla	v9.4s, v24.4s, v17.s[0]
 //	prfm	PLDL1KEEP, [x17, #16]
 	fmla	v10.4s, v24.4s, v18.s[0]
-//	prfm	PLDL1KEEP, [x18, #16]
+//	prfm	PLDL1KEEP, [x21, #16]
 	fmla	v11.4s, v24.4s, v19.s[0]
 //	prfm	PLDL1KEEP, [x19, #16]
 	fmla	v12.4s, v20.4s, v16.s[0]
@@ -1261,7 +1267,7 @@
 	fmla	v13.4s, v23.4s, v17.s[3]
 //	ldr		q17, [x17], #16
 	fmla	v14.4s, v23.4s, v18.s[3]
-//	ldr		q18, [x18], #16
+//	ldr		q18, [x21], #16
 	fmla	v15.4s, v23.4s, v19.s[3]
 //	ldr		q19, [x19], #16
 
@@ -1280,7 +1286,7 @@
 	sub		x15, x15, #16
 	sub		x16, x16, #16
 	sub		x17, x17, #16
-	sub		x18, x18, #16
+	sub		x21, x21, #16
 	sub		x19, x19, #16
 
 3: // clean1-up loop
@@ -1294,7 +1300,7 @@
 	ldr		s31, [x15], #4
 	ldr		s16, [x16], #4
 	ldr		s17, [x17], #4
-	ldr		s18, [x18], #4
+	ldr		s18, [x21], #4
 	ldr		s19, [x19], #4
 	fmla	v0.4s, v24.4s, v28.s[0]
 	fmla	v1.4s, v24.4s, v29.s[0]

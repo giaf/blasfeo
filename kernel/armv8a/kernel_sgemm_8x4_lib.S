@@ -57,6 +57,9 @@
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
+#if defined(OS_MAC)
+#error Cortex A53 kernel version not supported for OS_MAC (register x18 used)
+#endif
 
 
 	// early return
@@ -537,6 +540,9 @@
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
+#if defined(OS_MAC)
+#error Cortex A53 kernel version not supported for OS_MAC (register x18 used)
+#endif
 
 
 	// early return
@@ -751,7 +757,7 @@
 	add		x15, x13, x13 // 4
 	add		x16, x14, x13 // 5
 	add		x17, x14, x14 // 6
-	add		x18, x15, x14 // 7
+	add		x20, x15, x14 // 7
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #0]
@@ -779,7 +785,7 @@
 	prfm	PLDL1KEEP, [x11, x15]
 	prfm	PLDL1KEEP, [x11, x16]
 	prfm	PLDL1KEEP, [x11, x17]
-	prfm	PLDL1KEEP, [x11, x18]
+	prfm	PLDL1KEEP, [x11, x20]
 
 	// main loop
 1:
@@ -807,7 +813,7 @@
 	fmla	v0.4s, v25.4s, v29.s[0]
 	prfm	PLDL1KEEP, [x11, x17]
 	fmla	v1.4s, v25.4s, v29.s[1]
-	prfm	PLDL1KEEP, [x11, x18]
+	prfm	PLDL1KEEP, [x11, x20]
 	fmla	v2.4s, v25.4s, v29.s[2]
 //	fmla	v3.4s, v25.4s, v29.s[3]
 	ldp		q24, q25, [x9], #32
@@ -874,7 +880,7 @@
 	fmla	v0.4s, v25.4s, v29.s[0]
 //	prfm	PLDL1KEEP, [x11, x17]
 	fmla	v1.4s, v25.4s, v29.s[1]
-//	prfm	PLDL1KEEP, [x11, x18]
+//	prfm	PLDL1KEEP, [x11, x20]
 	fmla	v2.4s, v25.4s, v29.s[2]
 //	fmla	v3.4s, v25.4s, v29.s[3]
 //	ldp		q24, q25, [x9], #32
@@ -983,6 +989,9 @@
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
+#if defined(OS_MAC)
+#error Cortex A53 kernel version not supported for OS_MAC (register x18 used)
+#endif
 
 
 	// early return
@@ -1197,7 +1206,7 @@
 	add		x15, x13, x13 // 4
 	add		x16, x14, x13 // 5
 	add		x17, x14, x14 // 6
-	add		x18, x15, x14 // 7
+	add		x20, x15, x14 // 7
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #0]
@@ -1225,7 +1234,7 @@
 	prfm	PLDL1KEEP, [x11, x15]
 	prfm	PLDL1KEEP, [x11, x16]
 	prfm	PLDL1KEEP, [x11, x17]
-	prfm	PLDL1KEEP, [x11, x18]
+	prfm	PLDL1KEEP, [x11, x20]
 
 	// main loop
 1:
@@ -1253,7 +1262,7 @@
 	fmla	v0.4s, v25.4s, v29.s[0]
 	prfm	PLDL1KEEP, [x11, x17]
 	fmla	v1.4s, v25.4s, v29.s[1]
-	prfm	PLDL1KEEP, [x11, x18]
+	prfm	PLDL1KEEP, [x11, x20]
 //	fmla	v2.4s, v25.4s, v29.s[2]
 //	fmla	v3.4s, v25.4s, v29.s[3]
 	ldp		q24, q25, [x9], #32
@@ -1320,7 +1329,7 @@
 	fmla	v0.4s, v25.4s, v29.s[0]
 //	prfm	PLDL1KEEP, [x11, x17]
 	fmla	v1.4s, v25.4s, v29.s[1]
-//	prfm	PLDL1KEEP, [x11, x18]
+//	prfm	PLDL1KEEP, [x11, x20]
 //	fmla	v2.4s, v25.4s, v29.s[2]
 //	fmla	v3.4s, v25.4s, v29.s[3]
 //	ldp		q24, q25, [x9], #32
@@ -1429,6 +1438,9 @@
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
+#if defined(OS_MAC)
+#error Cortex A53 kernel version not supported for OS_MAC (register x18 used)
+#endif
 
 
 	// early return
@@ -1643,7 +1655,7 @@
 	add		x15, x13, x13 // 4
 	add		x16, x14, x13 // 5
 	add		x17, x14, x14 // 6
-	add		x18, x15, x14 // 7
+	add		x20, x15, x14 // 7
 
 	// prefetch
 	prfm	PLDL1KEEP, [x9, #0]
@@ -1699,7 +1711,7 @@
 	fmla	v0.4s, v25.4s, v29.s[0]
 	prfm	PLDL1KEEP, [x11, x17]
 //	fmla	v1.4s, v25.4s, v29.s[1]
-	prfm	PLDL1KEEP, [x11, x18]
+	prfm	PLDL1KEEP, [x11, x20]
 //	fmla	v2.4s, v25.4s, v29.s[2]
 //	fmla	v3.4s, v25.4s, v29.s[3]
 	ldp		q24, q25, [x9], #32
@@ -1766,7 +1778,7 @@
 	fmla	v0.4s, v25.4s, v29.s[0]
 //	prfm	PLDL1KEEP, [x11, x17]
 //	fmla	v1.4s, v25.4s, v29.s[1]
-//	prfm	PLDL1KEEP, [x11, x18]
+//	prfm	PLDL1KEEP, [x11, x20]
 //	fmla	v2.4s, v25.4s, v29.s[2]
 //	fmla	v3.4s, v25.4s, v29.s[3]
 //	ldp		q24, q25, [x9], #32
@@ -1875,6 +1887,9 @@
 
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
+#if defined(OS_MAC)
+#error Cortex A53 kernel version not supported for OS_MAC (register x18 used)
+#endif
 
 
 	// early return
