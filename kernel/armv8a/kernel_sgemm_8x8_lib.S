@@ -1624,7 +1624,7 @@
 
 
 
-//                                 w0        x1             x2        w3        x4       w5       x6           x7        sp+0     sp+8      sp+16
+//                                  w0        x1            x2        w3       x4        w5       x6           x7        sp+0     sp+8      sp+16
 // void kernel_sgemm_nt_8x8_lib44cc(int kmax, float *alpha, float *A, int sda, float *B, int sdb, float *beta, float *C, int ldc, float *D, int ldd)
 
 	.align	4

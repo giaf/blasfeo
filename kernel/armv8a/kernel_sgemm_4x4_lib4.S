@@ -1704,7 +1704,8 @@ _ ## NAME:
 
 
 
-//                                  w0        x1             x2         w3           x4         w5       x6            x7         sp+0       sp+8    sp+16
+// OS_LINUX                         w0        x1             x2         w3           x4         w5       x6            x7         sp+0       sp+8    sp+16
+// OS_MAC                           w0        x1             x2         w3           x4         w5       x6            x7         sp+0       sp+8    sp+12
 // void kernel_sgemm_nn_4x4_vs_lib4(int kmax, double *alpha, double *A, int offsetB, double *B, int sdb, double *beta, double *C, double *D, int m1, int n1)
 
 	.align	4
@@ -1759,7 +1760,11 @@ _ ## NAME:
 	// store n
 	ldr		x8, [sp, #(STACKSIZE + 0)] // D
 	ldr		w9, [sp, #(STACKSIZE + 8)] // m1
+#if defined(OS_LINUX)
 	ldr		w10, [sp, #(STACKSIZE + 16)] // n1
+#else // defined(OS_MAC)
+	ldr		w10, [sp, #(STACKSIZE + 12)] // n1
+#endif
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_4X4_VS_LIB4

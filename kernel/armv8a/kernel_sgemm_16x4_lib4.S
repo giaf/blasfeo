@@ -1909,7 +1909,8 @@ _ ## NAME:
 
 
 
-//                               w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8     sp+16   sp+24
+// OS_LINUX                       w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8     sp+16   sp+24
+// OS_MAC                         w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8     sp+12   sp+16
 // void kernel_sgemm_nt_16x4_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1)
 
 	.align	4
@@ -1960,8 +1961,13 @@ _ ## NAME:
 	ldr		x8, [sp, #(STACKSIZE + 0)] // D
 	ldr		w9, [sp, #(STACKSIZE + 8)] // sdd
 	lsl		w9, w9, #4 // 16*sdd
+#if defined(OS_LINUX)
 	ldr		w10, [sp, #(STACKSIZE + 16)] // m1
 	ldr		w11, [sp, #(STACKSIZE + 24)] // n1
+#else // defined(OS_MAC)
+	ldr		w10, [sp, #(STACKSIZE + 12)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 16)] // n1
+#endif
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_16X4_VS_LIB4
@@ -1983,7 +1989,7 @@ _ ## NAME:
 
 
 
-//                                 w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8
+//                                  w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8
 // void kernel_ssyrk_nt_l_16x4_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd)
 
 	.align	4
@@ -2055,7 +2061,8 @@ _ ## NAME:
 
 
 
-//                                    w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8     sp+16   sp+24
+// OS_LINUX                            w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8     sp+16   sp+24
+// OS_MAC                              w0        x1             x2         w3       x4         x5            x6         w7       sp+0       sp+8     sp+12   sp+16
 // void kernel_ssyrk_nt_l_16x4_vs_lib4(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, int m1, int n1)
 
 	.align	4
@@ -2106,8 +2113,13 @@ _ ## NAME:
 	ldr		x8, [sp, #(STACKSIZE + 0)] // D
 	ldr		w9, [sp, #(STACKSIZE + 8)] // sdd
 	lsl		w9, w9, #4 // 16*sdd
+#if defined(OS_LINUX)
 	ldr		w10, [sp, #(STACKSIZE + 16)] // m1
 	ldr		w11, [sp, #(STACKSIZE + 24)] // n1
+#else // defined(OS_MAC)
+	ldr		w10, [sp, #(STACKSIZE + 12)] // m1
+	ldr		w11, [sp, #(STACKSIZE + 16)] // n1
+#endif
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_16X4_VS_LIB4
@@ -2129,7 +2141,7 @@ _ ## NAME:
 
 
 
-//                                      w0        x1         w2        x3        x4            x5         w6       x7         sp+0     sp+8       sp+16
+//                                      w0         x1         w2       x3         x4            x5         w6       x7         sp+0     sp+8       sp+16
 // void kernel_strsm_nt_rl_inv_16x4_lib4(int kmax, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E);
 
 	.align	4
@@ -2212,7 +2224,8 @@ _ ## NAME:
 
 
 
-//                                         w0        x1         w2        x3        x4            x5         w6       x7         sp+0     sp+8       sp+16               sp+24   sp+32
+// OS_LINUX                                 w0        x1         w2       x3         x4            x5         w6       x7         sp+0     sp+8       sp+16               sp+24   sp+32
+// OS_MAC                                   w0        x1         w2       x3         x4            x5         w6       x7         sp+0     sp+8       sp+16               sp+24   sp+28
 // void kernel_strsm_nt_rl_inv_16x4_vs_lib4(int kmax, double *A, int sda, double *B, double *beta, double *C, int sdc, double *D, int sdd, double *E, double *inv_diag_E, int m1, int n1);
 
 	.align	4
@@ -2261,7 +2274,11 @@ _ ## NAME:
 	// solution
 	ldr		x8, [sp, #(STACKSIZE + 8)] // E
 	ldr		x9, [sp, #(STACKSIZE + 16)] // inv_diag_E
+#if defined(OS_LINUX)
 	ldr		w10, [sp, #(STACKSIZE + 32)] // n1
+#else // defined(OS_MAC)
+	ldr		w10, [sp, #(STACKSIZE + 28)] // n1
+#endif
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_TRSM_RLT_INV_16X4_VS_LIB4
@@ -2276,7 +2293,11 @@ _ ## NAME:
 	ldr		w9, [sp, #(STACKSIZE + 0)] // sdd
 	lsl		w9, w9, #4 // 16*sdd
 	ldr		w10, [sp, #(STACKSIZE + 24)] // m1
+#if defined(OS_LINUX)
 	ldr		w11, [sp, #(STACKSIZE + 32)] // n1
+#else // defined(OS_MAC)
+	ldr		w11, [sp, #(STACKSIZE + 28)] // n1
+#endif
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_16X4_VS_LIB4
@@ -2298,7 +2319,7 @@ _ ## NAME:
 
 
 
-//                                  w0        x1         w2        x3        x4         w5       x6         w7       sp+0
+//                                   w0        x1         w2        x3        x4         w5       x6         w7       sp+0
 // void kernel_spotrf_nt_l_16x4_lib4(int kmax, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D);
 
 	.align	4
@@ -2379,7 +2400,8 @@ _ ## NAME:
 
 
 
-//                                     w0        x1         w2        x3        x4         w5       x6         w7       sp+0                sp+8    sp+16
+// OS_LINUX                             w0        x1         w2        x3        x4         w5       x6         w7       sp+0                sp+8    sp+16
+// OS_MAC                               w0        x1         w2        x3        x4         w5       x6         w7       sp+0                sp+8    sp+12
 // void kernel_spotrf_nt_l_16x4_vs_lib4(int kmax, double *A, int sda, double *B, double *C, int sdc, double *D, int sdd, double *inv_diag_D, int m1, int n1);
 
 	.align	4
@@ -2426,7 +2448,11 @@ _ ## NAME:
 
 	// factorization
 	ldr		x8, [sp, #(STACKSIZE + 0)] // inv_diag_D
+#if defined(OS_LINUX)
 	ldr		w9, [sp, #(STACKSIZE + 16)] // n1
+#else // defined(OS_MAC)
+	ldr		w9, [sp, #(STACKSIZE + 12)] // n1
+#endif
 
 #if MACRO_LEVEL>=1
 	INNER_EDGE_POTRF_16X4_VS_LIB4
@@ -2441,7 +2467,11 @@ _ ## NAME:
 	mov		w9, w7 // sdd
 	lsl		w9, w9, #4 // 16*sdd
 	ldr		w10, [sp, #(STACKSIZE + 8)] // m1
+#if defined(OS_LINUX)
 	ldr		w11, [sp, #(STACKSIZE + 16)] // n1
+#else // defined(OS_MAC)
+	ldr		w11, [sp, #(STACKSIZE + 12)] // n1
+#endif
 
 #if MACRO_LEVEL>=1
 	INNER_STORE_L_16X4_VS_LIB4

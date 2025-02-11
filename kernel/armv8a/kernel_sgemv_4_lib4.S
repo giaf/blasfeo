@@ -966,7 +966,7 @@ _ ## NAME:
 
 
 
-//                            w0        x1             w2         x3         w4      x5         x6            x7         sp+0          sp+8
+//                               w0        x1             w2        x3         w4       x5         x6            x7         sp+0       sp+8
 // void kernel_sgemv_t_4_vs_lib4(int kmax, double *alpha, int offA, double *A, int sda, double *x, double *beta, double *y, double *z, int m1)
 
 	.align	4
