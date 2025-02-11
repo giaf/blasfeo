@@ -45939,9 +45939,9 @@
 	bgt		100f
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_8X1_VS_LIBCC
+	INNER_KERNEL_GEMM_NT_8X1_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nt_8x1_vs_libcc)
+	CALL(inner_kernel_gemm_nt_8x1_vs_libcc)
 #endif
 
 	b		103f
@@ -45952,9 +45952,9 @@
 	bgt		101f
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_8X2_VS_LIBCC
+	INNER_KERNEL_GEMM_NT_8X2_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nt_8x2_vs_libcc)
+	CALL(inner_kernel_gemm_nt_8x2_vs_libcc)
 #endif
 	
 	b		103f
@@ -45965,9 +45965,9 @@
 	bgt		102f
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_8X3_VS_LIBCC
+	INNER_KERNEL_GEMM_NT_8X3_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nt_8x3_vs_libcc)
+	CALL(inner_kernel_gemm_nt_8x3_vs_libcc)
 #endif
 	
 	b		103f
@@ -45975,9 +45975,9 @@
 102:
 
 #if MACRO_LEVEL>=2
-	INNER_KERNEL_GEMM_ADD_NT_8X4_VS_LIBCC
+	INNER_KERNEL_GEMM_NT_8X4_VS_LIBCC
 #else
-	CALL(inner_kernel_gemm_add_nt_8x4_vs_libcc)
+	CALL(inner_kernel_gemm_nt_8x4_vs_libcc)
 #endif
 
 103:
