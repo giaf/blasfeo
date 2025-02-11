@@ -83,8 +83,7 @@
     "trmm_rutn",
     "trmm_rutu",
     "potrf_l",
-    "potrf_u",
-    "getrf"
+    "potrf_u"
   ]
 }
 
