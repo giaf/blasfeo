@@ -39503,9 +39503,9 @@
 	mov		w12, w5 // ldb
 	lsl		w12, w12, #3 // 8*ldb
 #if defined(OS_LINUX)
-	ldr		w13, [sp, #(STACKSIZE + 20)] // m1
+	ldr		w13, [sp, #(STACKSIZE + 24)] // m1
 
-	ldr		w14, [sp, #(STACKSIZE + 24)] // n1
+	ldr		w14, [sp, #(STACKSIZE + 32)] // n1
 #else // defined(OS_MAC)
 	ldr		w13, [sp, #(STACKSIZE + 20)] // m1
 
