@@ -54,4 +54,6 @@ jobs:
       - name: Run tester
         shell: bash -l {0}
         working-directory: tests
-        run: python3 tester.py testset_ci_${{ matrix.api }}_${{ matrix.mf }}_${{ matrix.precision }}_${{ matrix.arch }}${{ matrix.packalg }}.json
+        run: |
+          python3 tester.py testset_ci_${{ matrix.api }}_${{ matrix.mf }}_${{ matrix.precision }}_${{ matrix.arch }}${{ matrix.packalg }}.json
+          python3 tester.py testset_debug.json

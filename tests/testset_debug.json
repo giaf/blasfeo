@@ -1,8 +1,9 @@
+
 {
   "options":{
     "rebuild": 1,
     "silent": 0,
-    "continue": 0
+    "continue": 1
   },
   "test_macros":
   {
@@ -14,14 +15,14 @@
   },
   "blasfeo_flags":{
     "BLASFEO_REF_API": 1,
-    "BLAS_API": 0,
+    "BLAS_API": 1,
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
-    "single"
+    "double"
   ],
   "apis": [
-    "blasfeo"
+    "blas"
   ],
   "K_MAX_STACK":[
     500
@@ -33,16 +34,15 @@
     "COLMAJ"
   ],
   "TARGET": [
-    "ARMV8A_ARM_CORTEX_A57"
+    "X64_INTEL_SANDY_BRIDGE"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "gemm_nt"
+    "getrf"
   ]
 }
-
 
 
 
