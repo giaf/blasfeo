@@ -157,13 +157,10 @@ void initialize_args(struct RoutineArgs * args)
 
 
 /* prints a matrix in column-major format */
-// TODO remove !!!!!!!!!!!!!!!!!!!!
-void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int err_i, int err_j, int ERR, char *label)
+void print_xmat_debug(int m, int n, REAL *pA, int lda, int ai, int aj, int err_i, int err_j, int ERR, char *label)
 	{
 
 	/* REAL *pA = sA->pA + ai + aj*lda; */
-	int lda = sA->m;
-	REAL *pA = sA->pA;
 	int j0,i0, ie, je;
 	int i, j;
 	const int max_rows = 16;
@@ -231,7 +228,7 @@ void print_xmat_debug(int m, int n, struct STRMAT_REF *sA, int ai, int aj, int e
 
 
 /* prints a blasfeo matrix */
-void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, int err_i, int err_j, int ERR, char *label)
+void blasfeo_print_xmat_debug(int m, int n, struct MAT *sA, int ai, int aj, int err_i, int err_j, int ERR, char *label)
 	{
 	int i0, j0, ie, je;
 	int ii, jj, j, ip0, ipe, ip;
@@ -277,10 +274,10 @@ void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, i
 		for(jj=j0; jj<je; jj++)
 			{
 			if((ii==err_i) & (jj==err_j) & ERR)
-				printf(ANSI_COLOR_RED"%6.2f\t"ANSI_COLOR_RESET, MATEL_LIBSTR(sA, ii, jj));
+				printf(ANSI_COLOR_RED"%6.2f\t"ANSI_COLOR_RESET, BLASFEO_MATEL(sA, ii, jj));
 			else if((ii >= ai) & (ii < ai+m) & (jj >= aj) && (jj < aj+n))
-				printf(ANSI_COLOR_GREEN"%6.2f\t"ANSI_COLOR_RESET, MATEL_LIBSTR(sA, ii, jj));
-			else printf("%6.2f\t", MATEL_LIBSTR(sA, ii, jj));
+				printf(ANSI_COLOR_GREEN"%6.2f\t"ANSI_COLOR_RESET, BLASFEO_MATEL(sA, ii, jj));
+			else printf("%6.2f\t", BLASFEO_MATEL(sA, ii, jj));
 			}
 		printf("\n");
 		}
@@ -308,9 +305,9 @@ static void printbits(void *c, size_t n)
 
 
 // 1 to 1 comparison of every element
-int GECMP_LIBSTR(
+int GECMP_BLASFEOAPI(
 	int m, int n, int bi, int bj,
-	struct STRMAT *sD, struct STRMAT_REF *rD,
+	struct MAT *sD, struct MAT_REF *rD,
 	int* err_i, int* err_j, int debug)
 	{
 	int ii, jj;
@@ -321,9 +318,9 @@ int GECMP_LIBSTR(
 			{
 
 			// strtucture mat
-			REAL sbi = MATEL_LIBSTR(sD, ii, jj);
+			REAL sbi = BLASFEO_MATEL(sD, ii, jj);
 			// reference mat
-			REAL rbi = MATEL_REF(rD, ii, jj);
+			REAL rbi = BLASFEO_MATEL(rD, ii, jj);
 
 			if ( (sbi != rbi) & ( fabs(sbi-rbi) > REL_TOL*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > REL_TOL))
 				{
@@ -354,7 +351,7 @@ int GECMP_LIBSTR(
 	}
 
 
-int GECMP_BLASAPI(int m, int n, int bi, int bj, struct STRMAT_REF *sD, struct STRMAT_REF *rD, int* err_i, int* err_j, int debug)
+int GECMP_BLASAPI(int m, int n, int bi, int bj, REAL *cD, int cD_lda, REAL *bD, int bD_lda, int* err_i, int* err_j, int debug)
 	{
 	int ii, jj;
 
@@ -364,9 +361,9 @@ int GECMP_BLASAPI(int m, int n, int bi, int bj, struct STRMAT_REF *sD, struct ST
 			{
 
 			// strtucture mat
-			REAL sbi = sD->pA[ii+sD->m*jj];
+			REAL sbi = cD[ii+cD_lda*jj];
 			// reference mat
-			REAL rbi = rD->pA[ii+rD->m*jj];
+			REAL rbi = bD[ii+bD_lda*jj];
 
 			if ( (sbi != rbi) & ( fabs(sbi-rbi) > REL_TOL*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > REL_TOL))
 				{
@@ -385,8 +382,8 @@ int GECMP_BLASAPI(int m, int n, int bi, int bj, struct STRMAT_REF *sD, struct ST
 					printf("\n");
 
 					printf("\nResult matrix:\n");
-					print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1, "HP");
-					print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1, "REF");
+					print_xmat_debug(m, n, cD, cD_lda, bi, bj, ii, jj, 1, "HP");
+					print_xmat_debug(m, n, bD, bD_lda, bi, bj, ii, jj, 1, "REF");
 
 					return 1;
 				}

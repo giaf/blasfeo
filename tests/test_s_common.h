@@ -59,29 +59,25 @@
 #define PRECISION Single
 #define SINGLE_PRECISION
 
-#define GECMP_LIBSTR sgecmp_libstr
-#define GECMP_BLASAPI sgecmp_blasapi
 #define REAL float
 
 #define ZEROS s_zeros
 #define FREE s_free
 
-#define STRMAT blasfeo_smat
-#define STRVEC blasfeo_svec
+#define MAT blasfeo_smat
 
-#define ALLOCATE_STRMAT blasfeo_allocate_smat
-#define FREE_STRMAT blasfeo_free_smat
-#define GESE_LIBSTR blasfeo_sgese
-#define PACK_STRMAT blasfeo_pack_smat
-#define PRINT_STRMAT blasfeo_print_smat
+#define ALLOCATE_MAT blasfeo_allocate_smat
+#define FREE_MAT blasfeo_free_smat
+#define GESE blasfeo_sgese
+#define PACK_MAT blasfeo_pack_smat
+#define PRINT_MAT blasfeo_print_smat
 
-#define STRMAT_REF blasfeo_smat
-#define STRVEC_REF blasfeo_svec
+#define MAT_REF blasfeo_smat
 
-#define ALLOCATE_STRMAT_REF blasfeo_allocate_smat
-#define FREE_STRMAT_REF blasfeo_free_smat
+#define ALLOCATE_MAT_REF blasfeo_allocate_smat
+#define FREE_MAT_REF blasfeo_free_smat
 
 #define GESE_REF blasfeo_ref_sgese
 #define GECP_REF blasfeo_ref_sgecp
-#define PACK_STRMAT_REF blasfeo_ref_pack_smat
-#define PRINT_STRMAT_REF blasfeo_ref_print_smat
+#define PACK_MAT_REF blasfeo_ref_pack_smat
+#define PRINT_MAT_REF blasfeo_ref_print_smat

@@ -96,19 +96,13 @@
 
 #ifdef PRECISION_DOUBLE
 
-#define MATEL_LIBSTR BLASFEO_DMATEL
-#define MATEL_REF BLASFEO_DMATEL
-#define VECEL_LIBSTR BLASFEO_DVECEL
-#define VECEL_REF BLASFEO_DVECEL
+#define BLASFEO_MATEL BLASFEO_DMATEL
 
 #else
 
 #ifdef PRECISION_SINGLE
 
-#define MATEL_LIBSTR BLASFEO_SMATEL
-#define MATEL_REF BLASFEO_SMATEL
-#define VECEL_LIBSTR BLASFEO_SVECEL
-#define VECEL_REF BLASFEO_SVECEL
+#define BLASFEO_MATEL BLASFEO_SMATEL
 
 #else
 
@@ -167,25 +161,43 @@ struct RoutineArgs
 	int *ripiv;
 	// ref compare signature
 	int *cipiv;
+	int *bipiv;
 
-	// matrices
-	struct STRMAT *sA;
-	struct STRMAT *sA_po;
-	struct STRMAT *sB;
-	struct STRMAT *sC;
-	struct STRMAT *sD;
+	// matrices (blasfeo foramt)
+	struct MAT *sA;
+	struct MAT *sA_po;
+	struct MAT *sB;
+	struct MAT *sC;
+	struct MAT *sD;
 
-	struct STRMAT_REF *rA;
-	struct STRMAT_REF *rA_po;
-	struct STRMAT_REF *rB;
-	struct STRMAT_REF *rC;
-	struct STRMAT_REF *rD;
+	struct MAT_REF *rA;
+	struct MAT_REF *rA_po;
+	struct MAT_REF *rB;
+	struct MAT_REF *rC;
+	struct MAT_REF *rD;
 
-	struct STRMAT_REF *cA;
-	struct STRMAT_REF *cA_po;
-	struct STRMAT_REF *cB;
-	struct STRMAT_REF *cC;
-	struct STRMAT_REF *cD;
+	// matrices (column major foramt)
+	REAL *cA;
+	REAL *cA_po;
+	REAL *cB;
+	REAL *cC;
+	REAL *cD;
+	int cA_lda;
+	int cA_po_lda;
+	int cB_lda;
+	int cC_lda;
+	int cD_lda;
+
+	REAL *bA;
+	REAL *bA_po;
+	REAL *bB;
+	REAL *bC;
+	REAL *bD;
+	int bA_lda;
+	int bA_po_lda;
+	int bB_lda;
+	int bC_lda;
+	int bD_lda;
 
 //	void * work;
 	int info;
@@ -251,19 +263,16 @@ void call_routines(struct RoutineArgs *args);
 void print_routine(struct RoutineArgs *args);
 void print_routine_matrices(struct RoutineArgs *args);
 
-void print_xmat_debug(
-	int m, int n, struct STRMAT_REF *sA,
-	int ai, int aj, int err_i, int err_j, int ERR, char *label);
+void print_xmat_debug(int m, int n, REAL *A, int lda, int ai, int aj, int err_i, int err_j, int ERR, char *label);
+void blasfeo_print_xmat_debug(int m, int n, struct MAT *sA, int ai, int aj, int err_i, int err_j, int ERR, char *label);
 
-void blasfeo_print_xmat_debug(int m, int n, struct STRMAT *sA, int ai, int aj, int err_i, int err_j, int ERR, char *label);
-
-int GECMP_LIBSTR(
-	int n, int m, int bi, int bj, struct STRMAT *sC,
-	struct STRMAT_REF *rC, int* err_i, int* err_j, int debug);
+int GECMP_BLASFEOAPI(
+	int n, int m, int bi, int bj, struct MAT *sC,
+	struct MAT_REF *rC, int* err_i, int* err_j, int debug);
 
 int GECMP_BLASAPI(
-	int n, int m, int bi, int bj, struct STRMAT_REF *cC,
-	struct STRMAT_REF *rC, int* err_i, int* err_j, int debug);
+	int n, int m, int bi, int bj, REAL *cC, int cC_ldc,
+	REAL *bC, int bC_ldc, int* err_i, int* err_j, int debug);
 
 
 // template base on routine class

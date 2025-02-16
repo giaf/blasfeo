@@ -3,19 +3,36 @@
 
 void call_routines(struct RoutineArgs *args)
 	{
+	// copy input matrix C in D
+	int ii, jj;
+	for(jj=0; jj<args->n; jj++)
+		{
+		for(ii=0; ii<args->m; ii++)
+			{
+				args->cD[ii+args->cD_lda*jj] = args->cC[ii+args->cC_lda*jj];
+			}
+		}
+	for(jj=0; jj<args->n; jj++)
+		{
+		for(ii=0; ii<args->m; ii++)
+			{
+				args->bD[ii+args->bD_lda*jj] = args->bC[ii+args->bC_lda*jj];
+			}
+		}
+
 	BLASFEO_BLAS(ROUTINE)(
 		string(TRANSA), string(TRANSB),
 		&(args->m), &(args->n), &(args->k), &(args->alpha),
-		args->cA->pA, &(args->cA->m),
-		args->cB->pA, &(args->cB->m), &(args->beta),
-		args->cD->pA, &(args->cD->m));
+		args->cA, &(args->cA_lda),
+		args->cB, &(args->cB_lda), &(args->beta),
+		args->cD, &(args->cD_lda));
 
 	BLAS(ROUTINE)(
 		string(TRANSA), string(TRANSB),
 		&(args->m), &(args->n), &(args->k), &(args->alpha),
-		args->rA->pA, &(args->rA->m),
-		args->rB->pA, &(args->rB->m), &(args->beta),
-		args->rD->pA, &(args->rD->m));
+		args->bA, &(args->bA_lda),
+		args->bB, &(args->bB_lda), &(args->beta),
+		args->bD, &(args->bD_lda));
 
 	}
 
@@ -23,29 +40,40 @@ void call_routines(struct RoutineArgs *args)
 
 void print_routine(struct RoutineArgs *args)
 	{
-	printf("blas_%s(%s, %s, %d, %d, %d, %f, A, %d, B, %d, C, %d);\n", string(ROUTINE), string(TRANSA), string(TRANSB), args->m, args->n, args->k, args->alpha, args->cA->m, args->cB->m, args->cD->m);
+	printf("blas_%s(%s, %s, %d, %d, %d, %f, A, %d, B, %d, D, %d);\n", string(ROUTINE), string(TRANSA), string(TRANSB), args->m, args->n, args->k, args->alpha, args->cA_lda, args->cB_lda, args->cD_lda);
 	}
 
 
 
 void print_routine_matrices(struct RoutineArgs *args)
 	{
-	// TODO fixed based on transA & transB
 	printf("\nPrint A:\n");
-	print_xmat_debug(args->m, args->n, args->cA, args->ai, args->aj, 0, 0, 0, "HP");
-	print_xmat_debug(args->m, args->n, args->rA, args->ai, args->aj, 0, 0, 0, "REF");
+	if(*string(TRANSA)=='n' || *string(TRANSA)=='N')
+		{
+		print_xmat_debug(args->m, args->k, args->cA, args->cA_lda, args->ai, args->aj, 0, 0, 0, "HP");
+		print_xmat_debug(args->m, args->k, args->bA, args->cA_lda, args->ai, args->aj, 0, 0, 0, "REF");
+		}
+		else
+		{
+		print_xmat_debug(args->k, args->m, args->cA, args->cA_lda, args->ai, args->aj, 0, 0, 0, "HP");
+		print_xmat_debug(args->k, args->m, args->bA, args->cA_lda, args->ai, args->aj, 0, 0, 0, "REF");
+		}
 
 	printf("\nPrint B:\n");
-	print_xmat_debug(args->m, args->n, args->cB, args->ai, args->aj, 0, 0, 0, "HP");
-	print_xmat_debug(args->m, args->n, args->rB, args->ai, args->aj, 0, 0, 0, "REF");
+	if(*string(TRANSB)=='n' || *string(TRANSB)=='N')
+		{
+		print_xmat_debug(args->k, args->n, args->cB, args->cB_lda, args->bi, args->bj, 0, 0, 0, "HP");
+		print_xmat_debug(args->k, args->n, args->bB, args->bB_lda, args->bi, args->bj, 0, 0, 0, "REF");
+		}
+		else
+		{
+		print_xmat_debug(args->n, args->k, args->cB, args->cB_lda, args->bi, args->bj, 0, 0, 0, "HP");
+		print_xmat_debug(args->n, args->k, args->bB, args->bB_lda, args->bi, args->bj, 0, 0, 0, "REF");
+		}
 
 	printf("\nPrint C:\n");
-	print_xmat_debug(args->m, args->n, args->cC, args->ai, args->aj, 0, 0, 0, "HP");
-	print_xmat_debug(args->m, args->n, args->rC, args->ai, args->aj, 0, 0, 0, "REF");
-
-	printf("\nPrint D:\n");
-	print_xmat_debug(args->m, args->n, args->cD, args->ai, args->aj, 0, 0, 0, "HP");
-	print_xmat_debug(args->m, args->n, args->rD, args->ai, args->aj, 0, 0, 0, "REF");
+	print_xmat_debug(args->m, args->n, args->cC, args->cC_lda, args->di, args->dj, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->n, args->bC, args->bC_lda, args->di, args->dj, 0, 0, 0, "REF");
 	}
 
 

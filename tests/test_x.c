@@ -50,10 +50,10 @@ int test_routine(struct RoutineArgs *args, int *bad_calls)
 	#ifdef TEST_BLAS_API
 	int err = GECMP_BLASAPI(
 		args->n, args->m, args->ai, args->aj,
-		args->cD, args->rD,
+		args->cD, args->cD_lda, args->bD, args->bD_lda,
 		&(args->err_i), &(args->err_j), VERBOSE);
 	#else
-	int err = GECMP_LIBSTR(
+	int err = GECMP_BLASFEOAPI(
 		args->n, args->m, args->ai, args->aj,
 		args->sD, args->rD,
 		&(args->err_i), &(args->err_j), VERBOSE);
@@ -119,6 +119,8 @@ int main()
 
 	// matrices in column-major format
 	REAL *A, *A_po, *B, *C, *D;
+	REAL *cA, *cA_po, *cB, *cC, *cD;
+	REAL *bA, *bA_po, *bB, *bC, *bD;
 
 	// standard column major allocation (malloc)
 	ZEROS(&A, n, n);
@@ -126,6 +128,18 @@ int main()
 	ZEROS(&B, n, n);
 	ZEROS(&C, n, n);
 	ZEROS(&D, n, n);
+
+	ZEROS(&cA, n, n);
+	ZEROS(&cA_po, n, n);
+	ZEROS(&cB, n, n);
+	ZEROS(&cC, n, n);
+	ZEROS(&cD, n, n);
+
+	ZEROS(&bA, n, n);
+	ZEROS(&bA_po, n, n);
+	ZEROS(&bB, n, n);
+	ZEROS(&bC, n, n);
+	ZEROS(&bD, n, n);
 
 	// fill up matrices with not trivial numbers
 	for(ii=0; ii<n*n; ii++) A[ii] = ii+1;
@@ -155,16 +169,16 @@ int main()
 	for(ii=0; ii<n; ii++) A_po[(ii*n)+ii] = A_po[(ii*n)+ii] + 1E6+ii;
 
 	// Allocate HP matrices
-	struct STRMAT sA; ALLOCATE_STRMAT(n, n, &sA);
-	struct STRMAT sA_po; ALLOCATE_STRMAT(n, n, &sA_po);
-	struct STRMAT sB; ALLOCATE_STRMAT(n, n, &sB);
-	struct STRMAT sC; ALLOCATE_STRMAT(n, n, &sC);
-	struct STRMAT sD; ALLOCATE_STRMAT(n, n, &sD);
-	PACK_STRMAT(n, n, A, n, &sA, 0, 0);
-	PACK_STRMAT(n, n, A_po, n, &sA_po, 0, 0);
-	PACK_STRMAT(n, n, B, n, &sB, 0, 0);
-	PACK_STRMAT(n, n, C, n, &sC, 0, 0);
-	PACK_STRMAT(n, n, D, n, &sD, 0, 0);
+	struct MAT sA; ALLOCATE_MAT(n, n, &sA);
+	struct MAT sA_po; ALLOCATE_MAT(n, n, &sA_po);
+	struct MAT sB; ALLOCATE_MAT(n, n, &sB);
+	struct MAT sC; ALLOCATE_MAT(n, n, &sC);
+	struct MAT sD; ALLOCATE_MAT(n, n, &sD);
+	PACK_MAT(n, n, A, n, &sA, 0, 0);
+	PACK_MAT(n, n, A_po, n, &sA_po, 0, 0);
+	PACK_MAT(n, n, B, n, &sB, 0, 0);
+	PACK_MAT(n, n, C, n, &sC, 0, 0);
+	PACK_MAT(n, n, D, n, &sD, 0, 0);
 	sA.m = n;
 	sA.n = n;
 	sB.m = n;
@@ -175,36 +189,30 @@ int main()
 	sD.n = n;
 
 	// Allocate BLASFEO_blasapi matrices
-	struct STRMAT_REF cA; ALLOCATE_STRMAT_REF(n, n, &cA);
-	struct STRMAT_REF cA_po; ALLOCATE_STRMAT_REF(n, n, &cA_po);
-	struct STRMAT_REF cB; ALLOCATE_STRMAT_REF(n, n, &cB);
-	struct STRMAT_REF cC; ALLOCATE_STRMAT_REF(n, n, &cC);
-	struct STRMAT_REF cD; ALLOCATE_STRMAT_REF(n, n, &cD);
-	PACK_STRMAT_REF(n, n, A, n, &cA, 0, 0);
-	PACK_STRMAT_REF(n, n, A_po, n, &cA_po, 0, 0);
-	PACK_STRMAT_REF(n, n, B, n, &cB, 0, 0);
-	PACK_STRMAT_REF(n, n, C, n, &cC, 0, 0);
-	PACK_STRMAT_REF(n, n, D, n, &cD, 0, 0);
-	cA.m = n;
-	cA.n = n;
-	cB.m = n;
-	cB.n = n;
-	cC.m = n;
-	cC.n = n;
-	cD.m = n;
-	cD.n = n;
+	for(ii=0; ii<n*n; ii++) cA[ii] = A[ii];
+	for(ii=0; ii<n*n; ii++) cA_po[ii] = A_po[ii];
+	for(ii=0; ii<n*n; ii++) cB[ii] = B[ii];
+	for(ii=0; ii<n*n; ii++) cC[ii] = C[ii];
+	for(ii=0; ii<n*n; ii++) cD[ii] = D[ii];
+
+	// Allocate blas matrices
+	for(ii=0; ii<n*n; ii++) bA[ii] = A[ii];
+	for(ii=0; ii<n*n; ii++) bA_po[ii] = A_po[ii];
+	for(ii=0; ii<n*n; ii++) bB[ii] = B[ii];
+	for(ii=0; ii<n*n; ii++) bC[ii] = C[ii];
+	for(ii=0; ii<n*n; ii++) bD[ii] = D[ii];
 
 	// Allocate ref matrices
-	struct STRMAT_REF rA; ALLOCATE_STRMAT_REF(n, n, &rA);
-	struct STRMAT_REF rA_po; ALLOCATE_STRMAT_REF(n, n, &rA_po);
-	struct STRMAT_REF rB; ALLOCATE_STRMAT_REF(n, n, &rB);
-	struct STRMAT_REF rC; ALLOCATE_STRMAT_REF(n, n, &rC);
-	struct STRMAT_REF rD; ALLOCATE_STRMAT_REF(n, n, &rD);
-	PACK_STRMAT_REF(n, n, A, n, &rA, 0, 0);
-	PACK_STRMAT_REF(n, n, A_po, n, &rA_po, 0, 0);
-	PACK_STRMAT_REF(n, n, B, n, &rB, 0, 0);
-	PACK_STRMAT_REF(n, n, C, n, &rC, 0, 0);
-	PACK_STRMAT_REF(n, n, D, n, &rD, 0, 0);
+	struct MAT_REF rA; ALLOCATE_MAT_REF(n, n, &rA);
+	struct MAT_REF rA_po; ALLOCATE_MAT_REF(n, n, &rA_po);
+	struct MAT_REF rB; ALLOCATE_MAT_REF(n, n, &rB);
+	struct MAT_REF rC; ALLOCATE_MAT_REF(n, n, &rC);
+	struct MAT_REF rD; ALLOCATE_MAT_REF(n, n, &rD);
+	PACK_MAT_REF(n, n, A, n, &rA, 0, 0);
+	PACK_MAT_REF(n, n, A_po, n, &rA_po, 0, 0);
+	PACK_MAT_REF(n, n, B, n, &rB, 0, 0);
+	PACK_MAT_REF(n, n, C, n, &rC, 0, 0);
+	PACK_MAT_REF(n, n, D, n, &rD, 0, 0);
 	rA.m = n;
 	rA.n = n;
 	rB.m = n;
@@ -218,9 +226,11 @@ int main()
 	int *sipiv;
 	int *ripiv;
 	int *cipiv;
+	int *bipiv;
 	int_zeros(&sipiv, n, 1);
-	int_zeros(&cipiv, n, 1);
 	int_zeros(&ripiv, n, 1);
+	int_zeros(&cipiv, n, 1);
+	int_zeros(&bipiv, n, 1);
 
 	// Test description structure
 	struct TestArgs targs;
@@ -264,6 +274,7 @@ int main()
 	initialize_args(&args);
 
 	// bind matrices
+	// blasfeo matrices
 	args.sA = &sA;
 	args.sA_po = &sA_po;
 	args.sB = &sB;
@@ -271,20 +282,39 @@ int main()
 	args.sD = &sD;
 	args.sipiv = sipiv;
 
-	// blasapi matrices (column major)
-	args.cA = &cA;
-	args.cA_po = &cA_po;
-	args.cB = &cB;
-	args.cC = &cC;
-	args.cD = &cD;
-	args.cipiv = cipiv;
-
+	// blasfeo reference
 	args.rA = &rA;
 	args.rA_po = &rA_po;
 	args.rB = &rB;
 	args.rC = &rC;
 	args.rD = &rD;
 	args.ripiv = ripiv;
+
+	// blasapi matrices (column major)
+	args.cA = cA;
+	args.cA_lda = n;
+	args.cA_po = cA_po;
+	args.cA_po_lda = n;
+	args.cB = cB;
+	args.cB_lda = n;
+	args.cC = cC;
+	args.cC_lda = n;
+	args.cD = cD;
+	args.cD_lda = n;
+	args.cipiv = cipiv;
+
+	// blas matrices (column major)
+	args.bA = cA;
+	args.bA_lda = n;
+	args.bA_po = cA_po;
+	args.bA_po_lda = n;
+	args.bB = cB;
+	args.bB_lda = n;
+	args.bC = cC;
+	args.bC_lda = n;
+	args.bD = cD;
+	args.bD_lda = n;
+	args.bipiv = bipiv;
 
 	// loop over alphas/betas
 	for (aa = 0; aa < alphas; aa++)
@@ -322,8 +352,9 @@ int main()
 
 									// reset result D
 									GESE_REF(n, n, -1.0, &rD, 0, 0);
-									GESE_REF(n, n, -1.0, &cD, 0, 0);
-									GESE_LIBSTR(n, n, -1.0, &sD, 0, 0);
+									GESE(n, n, -1.0, &sD, 0, 0);
+									for(ii=0; ii<n*n; ii++) cD[ii] = -1.0;
+									for(ii=0; ii<n*n; ii++) bD[ii] = -1.0;
 
 									// load current iteration arguments
 									args.ai = ai;
@@ -380,17 +411,34 @@ int main()
 	FREE(C);
 	FREE(D);
 
-	FREE_STRMAT(&sB);
-	FREE_STRMAT(&sA);
-	FREE_STRMAT(&sA_po);
-	FREE_STRMAT(&sC);
-	FREE_STRMAT(&sD);
+	FREE(cA);
+	FREE(cA_po);
+	FREE(cB);
+	FREE(cC);
+	FREE(cD);
 
-	FREE_STRMAT_REF(&rA);
-	FREE_STRMAT_REF(&rA_po);
-	FREE_STRMAT_REF(&rB);
-	FREE_STRMAT_REF(&rC);
-	FREE_STRMAT_REF(&rD);
+	FREE(bA);
+	FREE(bA_po);
+	FREE(bB);
+	FREE(bC);
+	FREE(bD);
+
+	FREE_MAT(&sB);
+	FREE_MAT(&sA);
+	FREE_MAT(&sA_po);
+	FREE_MAT(&sC);
+	FREE_MAT(&sD);
+
+	FREE_MAT_REF(&rA);
+	FREE_MAT_REF(&rA_po);
+	FREE_MAT_REF(&rB);
+	FREE_MAT_REF(&rC);
+	FREE_MAT_REF(&rD);
+
+	int_free(sipiv);
+	int_free(ripiv);
+	int_free(cipiv);
+	int_free(bipiv);
 
 	if (bad_calls > 0)
 		return 1;

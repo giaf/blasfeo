@@ -35,8 +35,8 @@
   "TARGET": [
     "GENERIC",
     "X64_INTEL_CORE",
-    "X64_INTEL_HASWELL",
-    "X64_INTEL_SANDY_BRIDGE"
+    "X64_INTEL_SANDY_BRIDGE",
+    "X64_INTEL_HASWELL"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
@@ -83,7 +83,8 @@
     "trmm_rutn",
     "trmm_rutu",
     "potrf_l",
-    "potrf_u"
+    "potrf_u",
+    "getrf"
   ]
 }
 

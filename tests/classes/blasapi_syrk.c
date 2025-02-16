@@ -4,59 +4,69 @@
 void call_routines(struct RoutineArgs *args)
 	{
 
-	// copy input matrix B in C
-	GECP_REF(args->m, args->m, args->cB, 0, 0, args->cC, 0, 0);
-	GECP_REF(args->m, args->m, args->rB, 0, 0, args->rC, 0, 0);
-
-	// input matrices A and B are unchanged
+	// copy input matrix B in D
+	int ii, jj;
+	for(jj=0; jj<args->m; jj++)
+		{
+		for(ii=0; ii<args->m; ii++)
+			{
+				args->cD[ii+args->cD_lda*jj] = args->cB[ii+args->cB_lda*jj];
+			}
+		}
+	for(jj=0; jj<args->m; jj++)
+		{
+		for(ii=0; ii<args->m; ii++)
+			{
+				args->bD[ii+args->bD_lda*jj] = args->bB[ii+args->bB_lda*jj];
+			}
+		}
 
 	// routine call
 	//
 	BLASFEO_BLAS(ROUTINE)(
 		string(UPLO), string(TRANS),
-		&(args->m), &(args->n), &(args->alpha),
-		args->cA->pA, &(args->cA->m),
+		&(args->m), &(args->k), &(args->alpha),
+		args->cA, &(args->cA_lda),
 		&(args->beta),
-		args->cC->pA, &(args->cC->m));
+		args->cD, &(args->cD_lda));
 
 	BLAS(ROUTINE)(
 		string(UPLO), string(TRANS),
-		&(args->m), &(args->n), &(args->alpha),
-		args->rA->pA, &(args->rA->m),
+		&(args->m), &(args->k), &(args->alpha),
+		args->bA, &(args->bA_lda),
 		&(args->beta),
-		args->rC->pA, &(args->rC->m));
+		args->bD, &(args->bD_lda));
 
-	// C matrix is overwritten with the solution
+	// D matrix is overwritten with the solution
 
-	// copy result matrix C in D
-	GECP_REF(args->m, args->m, args->cC, 0, 0, args->cD, 0, 0);
-	GECP_REF(args->m, args->m, args->rC, 0, 0, args->rD, 0, 0);
 	}
 
 
 
 void print_routine(struct RoutineArgs *args)
 	{
-	printf("blas_%s(%s, %s, %d, %d, %f, A, %d, %f, C, %d);\n", string(ROUTINE), string(UPLO), string(TRANS), args->m, args->n, args->alpha, args->cA->m, args->beta, args->cC->m);
+	printf("blas_%s(%s, %s, %d, %d, %f, A, %d, %f, D, %d);\n", string(ROUTINE), string(UPLO), string(TRANS), args->m, args->k, args->alpha, args->cA_lda, args->beta, args->cD_lda);
 	}
 
 
 
 void print_routine_matrices(struct RoutineArgs *args)
 	{
-	int maxn = (args->m > args->n)? args->m : args->n;
-
 	printf("\nPrint A:\n");
-	print_xmat_debug(maxn, maxn, args->cA, 0, 0, 0, 0, 0, "HP");
-	print_xmat_debug(maxn, maxn, args->rA, 0, 0, 0, 0, 0, "REF");
+	if(*string(TRANS)=='n' || *string(TRANS)=='N')
+		{
+		print_xmat_debug(args->m, args->k, args->cA, args->cA_lda, 0, 0, 0, 0, 0, "HP");
+		print_xmat_debug(args->m, args->k, args->bA, args->bA_lda, 0, 0, 0, 0, 0, "REF");
+		}
+		else
+		{
+		print_xmat_debug(args->k, args->m, args->cA, args->cA_lda, 0, 0, 0, 0, 0, "HP");
+		print_xmat_debug(args->k, args->m, args->bA, args->bA_lda, 0, 0, 0, 0, 0, "REF");
+		}
 
 	printf("\nPrint B:\n");
-	print_xmat_debug(args->m, args->m, args->cB, 0, 0, 0, 0, 0, "HP");
-	print_xmat_debug(args->m, args->m, args->rB, 0, 0, 0, 0, 0, "REF");
-
-	printf("\nPrint D:\n");
-	print_xmat_debug(args->m, args->m, args->cD, 0, 0, 0, 0, 0, "HP");
-	print_xmat_debug(args->m, args->m, args->rD, 0, 0, 0, 0, 0, "REF");
+	print_xmat_debug(args->m, args->m, args->cB, args->cB_lda, 0, 0, 0, 0, 0, "HP");
+	print_xmat_debug(args->m, args->m, args->bB, args->bB_lda, 0, 0, 0, 0, 0, "REF");
 	}
 
 
@@ -64,7 +74,7 @@ void print_routine_matrices(struct RoutineArgs *args)
 void set_test_args(struct TestArgs *targs)
 	{
 	targs->nis = 17;
-	targs->njs = 9;
+	targs->nks = 9;
 
 	targs->alphas = 1;
 	}
