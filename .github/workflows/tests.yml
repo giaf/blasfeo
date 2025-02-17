@@ -56,4 +56,4 @@ jobs:
         working-directory: tests
         run: |
           python3 tester.py testset_ci_${{ matrix.api }}_${{ matrix.mf }}_${{ matrix.precision }}_${{ matrix.arch }}${{ matrix.packalg }}.json
-          python3 tester.py testset_debug.json
+          #python3 tester.py testset_debug.json

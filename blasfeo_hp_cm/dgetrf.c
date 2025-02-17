@@ -284,7 +284,7 @@ alg1:
 			goto left_12_1;
 			}
 		}
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#elif 0 //defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	if(m<=8)
 		{
 		if(m<=4)
@@ -490,7 +490,7 @@ left_12_1:
 
 
 
-#if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_HASWELL) //| defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 left_8_1:
 
 	m_max = m<jj ? m : jj;
