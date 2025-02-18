@@ -15,34 +15,31 @@
   },
   "blasfeo_flags":{
     "BLASFEO_REF_API": 1,
-    "BLAS_API": 1,
+    "BLAS_API": 0,
     "EXTERNAL_BLAS": "SYSTEM"
   },
   "precisions": [
     "double"
   ],
   "apis": [
-    "blas"
+    "blasfeo"
   ],
   "K_MAX_STACK":[
-    500
+    0
   ],
   "PACKING_ALG":[
     "AUTO"
   ],
   "MF": [
-    "COLMAJ"
+    "PANELMAJ"
   ],
   "TARGET": [
-    "X64_INTEL_SANDY_BRIDGE"
+    "ARMV8A_ARM_CORTEX_A53"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "getrf"
+    "trsm_rltn"
   ]
 }
-
-
-
