@@ -14058,8 +14058,8 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 
 
 
-//                                   1      2              3          4        5          6          7        8       9
-// void kernel_dtrmm_nt_ru_12x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *D, int sdd, int km, int kn);
+//                                      1      2              3          4        5          6          7        8       9
+// void kernel_dtrmm_nt_ru_12x4_vs_lib4(int k, double *alpha, double *A, int sda, double *B, double *D, int sdd, int km, int kn);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dtrmm_nt_ru_12x4_vs_lib4)
@@ -14083,9 +14083,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 //	addq	$ 128, %r13 // B+4*bs
 
 #if MACRO_LEVEL>=1
-	INNER_EDGE_DTRMM_NT_RU_12X4_LIB4
+	INNER_EDGE_DTRMM_NT_RU_12X4_VS_LIB4
 #else
-	CALL(inner_edge_dtrmm_nt_ru_12x4_lib4)
+	CALL(inner_edge_dtrmm_nt_ru_12x4_vs_lib4)
 #endif
 
 #if MACRO_LEVEL>=2

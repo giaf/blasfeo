@@ -5271,7 +5271,6 @@ void blasfeo_hp_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sB, 
 
 	i = 0;
 #if defined(TARGET_X64_INTEL_HASWELL)
-// XXX there is a bug here !!!!!!
 	for(; i<m-11; i+=12)
 		{
 		j = 0;
@@ -5300,7 +5299,7 @@ void blasfeo_hp_dtrmm_rutn(int m, int n, double alpha, struct blasfeo_dmat *sB, 
 			}
 		}
 
-#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE) || defined(TARGET_X64_INTEL_HASWELL)
+#elif defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; i<m-7; i+=8)
 		{
 		j = 0;
