@@ -54,6 +54,35 @@ jobs:
       - name: Run tester
         shell: bash -l {0}
         working-directory: tests
-        run: |
-          python3 tester.py testset_ci_${{ matrix.api }}_${{ matrix.mf }}_${{ matrix.precision }}_${{ matrix.arch }}${{ matrix.packalg }}.json
-          #python3 tester.py testset_debug.json
+        run: python3 tester.py testset_ci_${{ matrix.api }}_${{ matrix.mf }}_${{ matrix.precision }}_${{ matrix.arch }}${{ matrix.packalg }}.json
+
+  # debug:
+  #   strategy:
+  #     fail-fast: false
+    
+  #   runs-on: ubuntu-24.04-arm
+
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - uses: conda-incubator/setup-miniconda@v3
+  #       with:
+  #         miniforge-version: latest
+  #         channels: conda-forge
+  #         python-version: "3.10"
+  #         activate-environment: blasfeo
+
+  #     - name: Install dependencies
+  #       shell: bash -l {0}
+  #       run: |
+  #         # Compiler infrastructure
+  #         conda install cmake compilers make pkg-config
+  #         # Dependencies
+  #         conda install libblas liblapack
+  #         # Python packages
+  #         pip3 install jinja2
+
+  #     - name: Run tester
+  #       shell: bash -l {0}
+  #       working-directory: tests
+  #       run: python3 tester.py testset_debug.json

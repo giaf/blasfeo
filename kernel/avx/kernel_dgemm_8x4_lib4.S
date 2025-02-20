@@ -12421,8 +12421,8 @@ NAME:
 
 
 
-//                                  1      2              3          4        5          6          7        8       9
-// void kernel_dtrmm_nt_ru_8x4_lib4(int k, double *alpha, double *A, int sda, double *B, double *D, int sdd, int km, int kn);
+//                                     1      2              3          4        5          6          7        8       9
+// void kernel_dtrmm_nt_ru_8x4_vs_lib4(int k, double *alpha, double *A, int sda, double *B, double *D, int sdd, int km, int kn);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_dtrmm_nt_ru_8x4_vs_lib4)
@@ -12482,9 +12482,9 @@ NAME:
 	movq	ARG2, %r10 // alpha
 
 #if MACRO_LEVEL>=1
-	INNER_SCALE_AB_8X4_LIB4
+	INNER_SCALE_A0_8X4_LIB4
 #else
-	CALL(inner_scale_ab_8x4_lib4)
+	CALL(inner_scale_a0_8x4_lib4)
 #endif
 
 
