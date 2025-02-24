@@ -50,7 +50,7 @@ typedef unsigned int uintptr_t;
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // needed in hp cm routines !!!
 void blasfeo_malloc(void **ptr, size_t size)
 	{
@@ -66,7 +66,7 @@ void blasfeo_malloc(void **ptr, size_t size)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // allocate memory aligned to typical cache line size (64 bytes)
 void blasfeo_malloc_align(void **ptr, size_t size)
 	{
@@ -119,7 +119,7 @@ void blasfeo_malloc_align(void **ptr, size_t size)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // needed in hp cm routines !!!
 void blasfeo_free(void *ptr)
 	{
@@ -130,7 +130,7 @@ void blasfeo_free(void *ptr)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 void blasfeo_free_align(void *ptr)
 	{
 

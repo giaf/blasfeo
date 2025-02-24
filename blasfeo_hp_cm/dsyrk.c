@@ -941,7 +941,7 @@ void blasfeo_hp_dsyrk3_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 ln_1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 #else
 	if(K_MAX_STACK<=0)
 		//goto ln_0;
@@ -951,7 +951,7 @@ ln_1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -1017,7 +1017,7 @@ ln_1:
 
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -1030,7 +1030,7 @@ ln_1:
 
 ln_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
@@ -1193,11 +1193,11 @@ ln_2:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto ln_1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -1314,7 +1314,7 @@ void blasfeo_hp_dsyrk3_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 lt_1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 #else
 	if(K_MAX_STACK<=0)
 		//goto lt_0;
@@ -1324,7 +1324,7 @@ lt_1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -1390,7 +1390,7 @@ lt_1:
 
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -1403,7 +1403,7 @@ lt_1:
 
 lt_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
@@ -1571,11 +1571,11 @@ lt_2:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto lt_1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -1695,7 +1695,7 @@ void blasfeo_hp_dsyrk3_un(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 un_1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 #else
 	if(K_MAX_STACK<=0)
 		//goto un_0;
@@ -1705,7 +1705,7 @@ un_1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -1771,7 +1771,7 @@ un_1:
 
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -1784,7 +1784,7 @@ un_1:
 
 un_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
@@ -1950,11 +1950,11 @@ un_2:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto un_1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -2066,7 +2066,7 @@ void blasfeo_hp_dsyrk3_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 ut_1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 #else
 	if(K_MAX_STACK<=0)
 		//goto ut_0;
@@ -2076,7 +2076,7 @@ ut_1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -2142,7 +2142,7 @@ ut_1:
 
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -2155,7 +2155,7 @@ ut_1:
 
 ut_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
@@ -2322,11 +2322,11 @@ ut_2:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto ut_1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -2545,7 +2545,7 @@ ln_1_return:
 
 lx_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	k1 = (k+128-1)/128*128;
 	m1 = (m+128-1)/128*128;
@@ -2686,11 +2686,11 @@ lx_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	exit(1);
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -2988,7 +2988,7 @@ ln_1_return:
 
 lx_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	k1 = (k+128-1)/128*128;
 	m1 = (m+128-1)/128*128;
@@ -3201,11 +3201,11 @@ lx_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	exit(1);
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;

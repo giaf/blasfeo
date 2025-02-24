@@ -2762,7 +2762,7 @@ void blasfeo_hp_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 nn_m1:
 	
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 //	if(K_MAX_STACK<=0)
 //		goto nn_2;
 #else
@@ -2772,7 +2772,7 @@ nn_m1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -2839,7 +2839,7 @@ nn_m1:
 
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -2852,7 +2852,7 @@ nn_m1:
 
 nn_n1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 //	if(K_MAX_STACK<=0)
 //		goto nn_2;
 #else
@@ -2862,7 +2862,7 @@ nn_n1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -2909,7 +2909,7 @@ nn_n1:
 			}
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -2922,7 +2922,7 @@ nn_n1:
 
 nn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if defined(TARGET_X64_INTEL_SKYLAKE_X) | defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
@@ -3517,11 +3517,11 @@ nn_2_return:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto nn_m1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 nn_0:
 	ii = 0;
@@ -3851,7 +3851,7 @@ void blasfeo_hp_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 nt_m1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 //	if(K_MAX_STACK<=0)
 //		goto nt_2;
 #else
@@ -3861,7 +3861,7 @@ nt_m1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -3908,7 +3908,7 @@ nt_m1:
 			}
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -3921,7 +3921,7 @@ nt_m1:
 
 nt_n1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 //	if(K_MAX_STACK<=0)
 //		goto nt_2;
 #else
@@ -3931,7 +3931,7 @@ nt_n1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -3978,7 +3978,7 @@ nt_n1:
 			}
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -3992,7 +3992,7 @@ nt_n1:
 
 nt_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 //#if 0
 #if defined(TARGET_X64_INTEL_SKYLAKE_X) | defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
@@ -4251,11 +4251,11 @@ nt_2_return:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto nt_m1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 
 
@@ -4555,7 +4555,7 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 tn_m1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 //	if(K_MAX_STACK<=0)
 //		goto tn_2;
 #else
@@ -4567,7 +4567,7 @@ tn_m1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -4615,7 +4615,7 @@ tn_m1:
 
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -4628,7 +4628,7 @@ tn_m1:
 
 tn_n1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 //	if(K_MAX_STACK<=0)
 //		goto tn_2;
 #else
@@ -4640,7 +4640,7 @@ tn_n1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 //	if(k>KC)
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
@@ -4688,7 +4688,7 @@ tn_n1:
 			}
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 //	if(k>KC)
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
@@ -4702,7 +4702,7 @@ tn_n1:
 
 tn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 //#if 0
 #if defined(TARGET_X64_INTEL_SKYLAKE_X) | defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
@@ -4983,11 +4983,11 @@ blasfeo_free(mem);
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto tn_m1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 
 	// never to get here
@@ -5194,7 +5194,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 tt_m1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 //	if(K_MAX_STACK<=0)
 //		goto tt_2;
 #else
@@ -5204,7 +5204,7 @@ tt_m1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -5251,7 +5251,7 @@ tt_m1:
 			}
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -5264,7 +5264,7 @@ tt_m1:
 
 tt_n1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 //	if(K_MAX_STACK<=0)
 //		goto tt_2;
 #else
@@ -5274,7 +5274,7 @@ tt_n1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -5321,7 +5321,7 @@ tt_n1:
 			}
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -5334,7 +5334,7 @@ tt_n1:
 
 tt_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 //#if 0
 #if defined(TARGET_X64_INTEL_SKYLAKE_X) | defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
@@ -5599,11 +5599,11 @@ tt_2_return:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto tt_m1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 
 

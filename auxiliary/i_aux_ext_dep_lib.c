@@ -40,12 +40,11 @@
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* creates a zero matrix aligned */
 void int_zeros(int **pA, int row, int col)
 	{
-	void *temp = malloc((row*col)*sizeof(int));
-	*pA = (int *)temp;
+	blasfeo_malloc((void **) pA, (row*col)*sizeof(int));
 	int *A = *pA;
 	int i;
 	for(i=0; i<row*col; i++) A[i] = 0;
@@ -54,7 +53,7 @@ void int_zeros(int **pA, int row, int col)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* creates a zero matrix aligned to a cache line */
 void int_zeros_align(int **pA, int row, int col)
 	{
@@ -67,17 +66,17 @@ void int_zeros_align(int **pA, int row, int col)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* frees matrix */
 void int_free(int *pA)
 	{
-	free( pA );
+	blasfeo_free( pA );
 	}
 #endif
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* frees aligned matrix */
 void int_free_align(int *pA)
 	{

@@ -573,7 +573,7 @@ void blasfeo_hp_dsyr2k_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, i
 
 ln_1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 #else
 	if(K_MAX_STACK<=0)
 		//goto ln_0;
@@ -583,7 +583,7 @@ ln_1:
 
 	// k-blocking alg
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(2*k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		pU_size = M_KERNEL*KC*sizeof(double);
@@ -653,7 +653,7 @@ ln_1:
 
 		}
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(2*k>K_MAX_STACK && KC>K_MAX_STACK)
 		{
 		blasfeo_free(mem);
@@ -666,7 +666,7 @@ ln_1:
 
 ln_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
@@ -851,11 +851,11 @@ ln_2:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto ln_1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;

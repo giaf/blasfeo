@@ -52,15 +52,13 @@ extern "C" {
 
 
 
-#ifdef EXT_DEP
-
 /************************************************
 * s_aux_extern_depend_lib.c
 ************************************************/
 
 /* column-major matrices */
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // dynamically allocate row*col floats of memory and set accordingly a pointer to float; set allocated memory to zero
 void s_zeros(float **pA, int row, int col);
 // dynamically allocate row*col floats of memory aligned to 64-byte boundaries and set accordingly a pointer to float; set allocated memory to zero
@@ -95,7 +93,7 @@ void s_print_to_string_mat(char **buf_out, int row, int col, float *A, int lda);
 
 /* strmat and strvec */
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // create a strmat for a matrix of size m*n by dynamically allocating memory
 void blasfeo_allocate_smat(int m, int n, struct blasfeo_smat *sA);
 // create a strvec for a vector of size m by dynamically allocating memory
@@ -135,8 +133,6 @@ void blasfeo_print_to_string_svec(char **buf_out, int m, struct blasfeo_svec *sa
 // print to string the transposed of a strvec
 void blasfeo_print_to_string_tran_svec(char **buf_out, int m, struct blasfeo_svec *sa, int ai);
 #endif
-
-#endif // EXT_DEP
 
 
 

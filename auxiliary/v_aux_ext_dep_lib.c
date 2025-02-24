@@ -44,12 +44,12 @@
 #endif
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* creates a zero matrix given the size in bytes */
 void v_zeros(void **ptrA, int size)
 	{
 	// allocate memory
-	*ptrA = (void *) malloc(size);
+	blasfeo_malloc(ptrA, size);
 	// zero memory
 	int i;
 	double *dA = (double *) *ptrA;
@@ -62,7 +62,7 @@ void v_zeros(void **ptrA, int size)
 #endif
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* creates a zero matrix aligned to a cache line given the size in bytes */
 void v_zeros_align(void **ptrA, int size)
 	{
@@ -80,16 +80,16 @@ void v_zeros_align(void **ptrA, int size)
 #endif
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* frees matrix */
 void v_free(void *pA)
 	{
-	free( pA );
+	blasfeo_free( pA );
 	}
 #endif
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* frees aligned matrix */
 void v_free_align(void *pA)
 	{
@@ -98,12 +98,12 @@ void v_free_align(void *pA)
 #endif
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* creates a zero matrix given the size in bytes */
 void c_zeros(char **ptrA, int size)
 	{
 	// allocate memory
-	*ptrA = (char *)malloc(size);
+	blasfeo_malloc((void **) ptrA, size);
 	// zero memory
 	int i;
 	double *dA = (double *) *ptrA;
@@ -116,7 +116,7 @@ void c_zeros(char **ptrA, int size)
 #endif
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* creates a zero matrix aligned to a cache line given the size in bytes */
 void c_zeros_align(char **ptrA, int size)
 	{
@@ -134,16 +134,16 @@ void c_zeros_align(char **ptrA, int size)
 #endif
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* frees matrix */
 void c_free(char *pA)
 	{
-	free( pA );
+	blasfeo_free( pA );
 	}
 #endif
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* frees aligned matrix */
 void c_free_align(char *pA)
 	{

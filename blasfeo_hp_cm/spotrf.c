@@ -282,7 +282,7 @@ l_1_return:
 
 l_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps0, m1, m1);
@@ -497,11 +497,11 @@ l_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	exit(1);
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -805,7 +805,7 @@ u_0_return:
 
 u_1:
 	
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_smat(ps, m1, m1);
@@ -996,11 +996,11 @@ u_1_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	exit(1);
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -1340,7 +1340,7 @@ l_1_return:
 
 l_2:
 	
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
@@ -1606,11 +1606,11 @@ l_2_return:
 	free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	exit(1);
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;

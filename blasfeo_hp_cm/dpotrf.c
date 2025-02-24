@@ -765,7 +765,7 @@ l_1_return:
 
 l_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
@@ -994,10 +994,10 @@ l_2_return:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -1301,7 +1301,7 @@ u_1_return:
 
 u_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m1, m1);
@@ -1492,10 +1492,10 @@ u_2_return:
 	free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -1835,7 +1835,7 @@ l_1_return:
 
 l_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
@@ -1852,10 +1852,10 @@ l_2:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;

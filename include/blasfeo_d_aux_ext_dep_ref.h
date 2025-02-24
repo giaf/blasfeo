@@ -58,7 +58,7 @@ extern "C" {
 // expose reference BLASFEO for testing
 // see blasfeo_d_aux_exp_dep.h for help
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 void blasfeo_allocate_dmat_ref(int m, int n, struct blasfeo_dmat_ref *sA);
 void blasfeo_allocate_dvec_ref(int m, struct blasfeo_dvec_ref *sa);
 void blasfeo_free_dmat_ref(struct blasfeo_dmat_ref *sA);

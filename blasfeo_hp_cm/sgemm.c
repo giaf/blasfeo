@@ -2046,7 +2046,7 @@ void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *
 
 nn_m1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(K_MAX_STACK<=0)
 		goto nn_2;
 #else
@@ -2085,7 +2085,7 @@ nn_m1:
 
 nn_n1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(K_MAX_STACK<=0)
 		goto nn_2;
 #else
@@ -2125,7 +2125,7 @@ nn_n1:
 nn_2:
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
@@ -2594,11 +2594,11 @@ nn_2_return:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto nn_m1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 
 
@@ -2846,7 +2846,7 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 
 nt_m1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(K_MAX_STACK<=0)
 		goto nt_2;
 #else
@@ -2885,7 +2885,7 @@ nt_m1:
 
 nt_n1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(K_MAX_STACK<=0)
 		goto nt_2;
 #else
@@ -2924,7 +2924,7 @@ nt_n1:
 
 nt_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
@@ -3365,11 +3365,11 @@ nt_2_return:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto nt_m1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 
 nt_0:
@@ -3561,7 +3561,7 @@ void blasfeo_hp_sgemm_tn(int m, int n, int k, float alpha, struct blasfeo_smat *
 
 tn_m1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(K_MAX_STACK<=0)
 		goto tn_2;
 #else
@@ -3602,7 +3602,7 @@ tn_m1:
 
 tn_n1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(K_MAX_STACK<=0)
 		goto tn_2;
 #else
@@ -3643,7 +3643,7 @@ tn_n1:
 
 tn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
@@ -4120,11 +4120,11 @@ free(mem);
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto tn_m1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 
 	// never to get here
@@ -4335,7 +4335,7 @@ void blasfeo_hp_sgemm_tt(int m, int n, int k, float alpha, struct blasfeo_smat *
 
 tt_m1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(K_MAX_STACK<=0)
 		goto tt_2;
 #else
@@ -4374,7 +4374,7 @@ tt_m1:
 
 tt_n1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 	if(K_MAX_STACK<=0)
 		goto tt_2;
 #else
@@ -4413,7 +4413,7 @@ tt_n1:
 
 tt_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 
@@ -4862,11 +4862,11 @@ tt_2_return:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	goto tt_m1;
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 
 tt_0:

@@ -52,8 +52,6 @@ extern "C" {
 * d_aux_extern_depend_lib.c
 ************************************************/
 
-#ifdef EXT_DEP
-
 void v_zeros(void **ptrA, int size);
 // dynamically allocate size bytes of memory aligned to 64-byte boundaries and set accordingly a pointer to void; set allocated memory to zero
 void v_zeros_align(void **ptrA, int size);
@@ -69,8 +67,6 @@ void c_zeros_align(char **ptrA, int size);
 void c_free(char *ptrA);
 // free the memory allocated by c_zeros_aligned
 void c_free_align(char *ptrA);
-
-#endif // EXT_DEP
 
 
 

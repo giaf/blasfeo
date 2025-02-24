@@ -876,10 +876,8 @@ OBJS += $(BLASFEO_WR_OBJS)
 endif # LA EXTERNAL_BLAS_WAPPER
 
 
-#ifeq ($(EXT_DEP), 1)
 # ext dep
 OBJS += $(AUX_EXT_DEP_OBJS)
-#endif
 
 
 
@@ -1220,6 +1218,11 @@ endif
 ifeq ($(EXT_DEP), 1)
 	echo "#ifndef EXT_DEP" >> ./include/blasfeo_target.h
 	echo "#define EXT_DEP" >> ./include/blasfeo_target.h
+	echo "#endif"          >> ./include/blasfeo_target.h
+endif
+ifeq ($(EXT_DEP_MALLOC), 1)
+	echo "#ifndef EXT_DEP_MALLOC" >> ./include/blasfeo_target.h
+	echo "#define EXT_DEP_MALLOC" >> ./include/blasfeo_target.h
 	echo "#endif"          >> ./include/blasfeo_target.h
 endif
 ifeq ($(BLAS_API), 1)

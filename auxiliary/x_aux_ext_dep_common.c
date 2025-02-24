@@ -35,7 +35,7 @@
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* creates a zero matrix */
 void ZEROS(REAL **pA, int row, int col)
 	{
@@ -48,7 +48,7 @@ void ZEROS(REAL **pA, int row, int col)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* creates a zero matrix aligned to a cache line */
 void ZEROS_ALIGN(REAL **pA, int row, int col)
 	{
@@ -61,7 +61,7 @@ void ZEROS_ALIGN(REAL **pA, int row, int col)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* frees matrix */
 void FREE(REAL *pA)
 	{
@@ -71,7 +71,7 @@ void FREE(REAL *pA)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 /* frees aligned matrix */
 void FREE_ALIGN(REAL *pA)
 	{

@@ -1433,14 +1433,14 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 
 	if(k>K_MAX_STACK)
 		{
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 		sAt_size = blasfeo_memsize_dmat(12, k);
 		blasfeo_malloc(&mem, sAt_size+64);
 		blasfeo_align_64_byte(mem, (void **) &mem_align);
 		blasfeo_create_dmat(12, k, &sAt, (void *) mem_align);
 		pU = sAt.pA;
 		sdu = sAt.cn;
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 		// not enought static memory, can't allocate dynamic memory
 #if defined(BLASFEO_REF_API)
 		blasfeo_ref_dgemm_tn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
@@ -1448,7 +1448,7 @@ void blasfeo_hp_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #else
 		exit(1);
 #endif
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 		}
 	else
 		{
@@ -1856,10 +1856,10 @@ left_4_n0:
 tn_return:
 	if(k>K_MAX_STACK)
 		{
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 		blasfeo_free(mem);
-#else // EXT_DEP
-#endif // EXT_DEP
+#else // EXT_DEP_MALLOC
+#endif // EXT_DEP_MALLOC
 		}
 	return;
 
@@ -2341,9 +2341,9 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		{
 		if(k>K_MAX_STACK)
 			{
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 			goto loop_00_1;
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 			// not enought static memory, can't allocate dynamic memory
 			// TODO block over k
 #if defined(BLASFEO_REF_API)
@@ -2352,7 +2352,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #else
 			exit(1);
 #endif
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 			}
 		else
 			{
@@ -2363,9 +2363,9 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 		{
 		if(k>K_MAX_STACK)
 			{
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 			goto loop_CD_1;
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 			// not enought static memory, can't allocate dynamic memory
 			// TODO block over k
 #if defined(BLASFEO_REF_API)
@@ -2374,7 +2374,7 @@ void blasfeo_hp_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat 
 #else
 			exit(1);
 #endif
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 			}
 		else
 			{
@@ -2912,7 +2912,7 @@ tt_0_return:
 
 loop_00_1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	sAt_size = blasfeo_memsize_dmat(12, k);
 	blasfeo_malloc(&mem, sAt_size+64);
@@ -3107,17 +3107,17 @@ loop_00_1:
 #endif
 	goto tt_1_return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	exit(1);
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 
 	// main loop C, D not aligned
 loop_CD_1:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	sAt_size = blasfeo_memsize_dmat(12, k);
 	blasfeo_malloc(&mem, sAt_size+64);
@@ -3206,16 +3206,16 @@ loop_CD_1:
 	// common return if i==m
 	goto tt_1_return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	exit(1);
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if defined(TARGET_X64_INTEL_HASWELL)
 left_12_1:
@@ -3466,11 +3466,11 @@ tt_1_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	exit(1);
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	}
 #endif
@@ -5470,14 +5470,14 @@ void blasfeo_hp_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 		{
 		if(air!=0)
 			{
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 			sAt_size = blasfeo_memsize_dmat(12, k);
 			blasfeo_malloc(&mem, sAt_size+64);
 			blasfeo_align_64_byte(mem, (void **) &mem_align);
 			blasfeo_create_dmat(12, k, &sAt, (void *) mem_align);
 			pU = sAt.pA;
 			sdu = sAt.cn;
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 			// not enought static memory, can't allocate dynamic memory
 			// TODO block over k
 #if defined(BLASFEO_REF_API)
@@ -5486,7 +5486,7 @@ void blasfeo_hp_dsyrk_ln(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 #else
 			exit(1);
 #endif
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 			}
 		else
 			{
@@ -6207,10 +6207,10 @@ end:
 		{
 		if(air!=0)
 			{
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 			blasfeo_free(mem);
-#else // EXT_DEP
-#endif // EXT_DEP
+#else // EXT_DEP_MALLOC
+#endif // EXT_DEP_MALLOC
 			}
 		}
 	return;
@@ -6971,11 +6971,11 @@ void blasfeo_hp_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 	// allocate memory
 	if(k>K_MAX_STACK)
 		{
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 		sdu = (k+ps-1)/ps*ps;
 		blasfeo_malloc(&mem, 12*sdu*sizeof(double)+63);
 		blasfeo_align_64_byte(mem, (void **) &pU);
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 		// not enought static memory, can't allocate dynamic memory
 		// TODO block over k
 #if defined(BLASFEO_REF_API)
@@ -6984,7 +6984,7 @@ void blasfeo_hp_dsyrk_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, in
 #else
 		exit(1);
 #endif
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 		}
 	else
 		{
@@ -7150,10 +7150,10 @@ left_4:
 end:
 	if(k>K_MAX_STACK)
 		{
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 		blasfeo_free(mem);
-#else // EXT_DEP
-#endif // EXT_DEP
+#else // EXT_DEP_MALLOC
+#endif // EXT_DEP_MALLOC
 		}
 	return;
 

@@ -79,7 +79,9 @@ int main()
     int C_size = blasfeo_memsize_dmat(n, n);                                 // size of memory needed by C
     C_size += 64;                                                            // 64-bytes alignment
     void *C_mem = malloc(C_size);
-    void *C_mem_align = (void *) ((((unsigned long long) C_mem)+63)/64*64);  // align memory pointer
+    //void *C_mem_align = (void *) ((((unsigned long long) C_mem)+63)/64*64);  // align memory pointer
+    void *C_mem_align;
+    blasfeo_align_64_byte(C_mem, &C_mem_align);                              // align memory pointer
     blasfeo_create_dmat(n, n, &sC, C_mem_align);                             // assign aligned memory to struct
 
     // A

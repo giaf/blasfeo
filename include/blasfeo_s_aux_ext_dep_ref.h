@@ -36,8 +36,6 @@
 #ifndef BLASFEO_S_AUX_EXT_DEP_REF_H_
 #define BLASFEO_S_AUX_EXT_DEP_REF_H_
 
-#if defined(EXT_DEP)
-
 
 
 #include <stdio.h>
@@ -51,7 +49,7 @@ extern "C" {
 // expose reference BLASFEO for testing
 // see blasfeo_s_aux_exp_dep.h for help
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 void blasfeo_allocate_smat_ref(int m, int n, struct blasfeo_smat_ref *sA);
 void blasfeo_allocate_svec_ref(int m, struct blasfeo_svec_ref *sa);
 void blasfeo_free_smat_ref(struct blasfeo_smat_ref *sA);
@@ -80,7 +78,5 @@ void blasfeo_print_to_string_tran_svec_ref(char **buf_out, int m, struct blasfeo
 #endif
 
 
-
-#endif  // EXT_DEP
 
 #endif  // BLASFEO_S_AUX_EXT_DEP_REF_H_

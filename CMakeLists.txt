@@ -127,8 +127,12 @@ set(MACRO_LEVEL 1)
 set(USE_C99_MATH ON CACHE BOOL "Use C99 extension to math library")
 
 # Compile auxiliary functions with external dependencies
-# (for memory allocation and printing)
+# (for memory printing and timing)
 set(EXT_DEP ON CACHE BOOL "Compile external dependencies in BLASFEO")
+
+# Compile auxiliary functions with external dependencies
+# (for memory allocation)
+set(EXT_DEP_MALLOC ON CACHE BOOL "Compile external dependencies in BLASFEO")
 
 # Options
 # enable runtine checks
@@ -308,6 +312,11 @@ endif()
 #
 if(${EXT_DEP})
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXT_DEP")
+endif()
+
+#
+if(${EXT_DEP_MALLOC})
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DEXT_DEP_MALLOC")
 endif()
 
 #
@@ -1231,11 +1240,7 @@ endif()
 
 # TODO WR
 
-#if(${EXT_DEP})
-	
 	list(APPEND BLASFEO_SRC ${AUX_EXT_DEP_SRC})
-
-#endif()
 
 
 

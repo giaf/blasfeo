@@ -647,7 +647,7 @@ end_1:
 
 alg2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	n1 = (n+128-1)/128*128;
@@ -1271,11 +1271,11 @@ end_m_2:
 //		ipiv[ii] += 1;
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 
 	exit(1);
 
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;

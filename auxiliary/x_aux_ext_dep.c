@@ -35,7 +35,7 @@
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // create a matrix structure for a matrix of size m*n by dynamically allocating the memory
 void ALLOCATE_MAT(int m, int n, struct MAT *sA)
 	{
@@ -49,7 +49,7 @@ void ALLOCATE_MAT(int m, int n, struct MAT *sA)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // free memory of a matrix structure
 void FREE_MAT(struct MAT *sA)
 	{
@@ -60,7 +60,7 @@ void FREE_MAT(struct MAT *sA)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // create a vector structure for a vector of size m by dynamically allocating the memory
 void ALLOCATE_VEC(int m, struct VEC *sa)
 	{
@@ -74,7 +74,7 @@ void ALLOCATE_VEC(int m, struct VEC *sa)
 
 
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // free memory of a matrix structure
 void FREE_VEC(struct VEC *sa)
 	{

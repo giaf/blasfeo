@@ -679,7 +679,7 @@ llnn_1_return:
 
 llnn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
@@ -847,10 +847,10 @@ llnn_2:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -1064,7 +1064,7 @@ llnu_1_return:
 
 llnu_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
@@ -1200,10 +1200,10 @@ llnu_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -1430,7 +1430,7 @@ lltn_1_return:
 
 lunn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
@@ -1596,10 +1596,10 @@ lunn_2:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -1811,7 +1811,7 @@ lltu_1_return:
 
 lunu_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
@@ -1947,10 +1947,10 @@ lunu_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -2163,7 +2163,7 @@ lunn_1_return:
 
 lunn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
@@ -2299,10 +2299,10 @@ lunn_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -2515,7 +2515,7 @@ lunu_1_return:
 
 lunu_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
@@ -2651,10 +2651,10 @@ lunu_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -2866,7 +2866,7 @@ lutn_1_return:
 
 llnn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
@@ -3002,10 +3002,10 @@ llnn_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -3217,7 +3217,7 @@ lutu_1_return:
 
 llnu_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	m1 = (m+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, m1);
@@ -3353,10 +3353,10 @@ llnu_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -3576,7 +3576,7 @@ rlnn_1_return:
 
 rutn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 #if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 
@@ -3863,10 +3863,10 @@ rutn_2:
 
 #endif
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -4073,7 +4073,7 @@ rlnu_1_return:
 
 rutu_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
@@ -4203,10 +4203,10 @@ rutu_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -4413,7 +4413,7 @@ rltn_1_return:
 
 rltn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
@@ -4551,10 +4551,10 @@ rltn_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -4762,7 +4762,7 @@ rltu_1_return:
 
 rltu_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
@@ -4900,10 +4900,10 @@ rltu_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -5110,7 +5110,7 @@ runn_1_return:
 
 rltn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
@@ -5240,10 +5240,10 @@ rltn_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -5450,7 +5450,7 @@ runu_1_return:
 
 rltu_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
@@ -5580,10 +5580,10 @@ rltu_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -5791,7 +5791,7 @@ rutn_1_return:
 
 rutn_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
@@ -5932,10 +5932,10 @@ rutn_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;
@@ -6143,7 +6143,7 @@ rutu_1_return:
 
 rutu_2:
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 
 	n1 = (n+128-1)/128*128;
 	tA_size = blasfeo_pm_memsize_dmat(ps, m_kernel, n1);
@@ -6283,10 +6283,10 @@ rutu_2_return:
 	blasfeo_free(mem);
 	return;
 
-#else // EXT_DEP
+#else // EXT_DEP_MALLOC
 	// TODO not implemented !!!!!
 	exit(1);
-#endif // EXT_DEP
+#endif // EXT_DEP_MALLOC
 
 	// never to get here
 	return;

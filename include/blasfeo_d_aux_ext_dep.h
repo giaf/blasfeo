@@ -65,7 +65,7 @@ extern "C" {
 
 /* column-major matrices */
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // dynamically allocate row*col doubles of memory and set accordingly a pointer to double; set allocated memory to zero
 void d_zeros(double **pA, int row, int col);
 // dynamically allocate row*col doubles of memory aligned to 64-byte boundaries and set accordingly a pointer to double; set allocated memory to zero
@@ -100,7 +100,7 @@ void d_print_to_string_mat(char **buf_out, int row, int col, double *A, int lda)
 
 /* strmat and strvec */
 
-#ifdef EXT_DEP
+#ifdef EXT_DEP_MALLOC
 // create a strmat for a matrix of size m*n by dynamically allocating memory
 void blasfeo_allocate_dmat(int m, int n, struct blasfeo_dmat *sA);
 // create a strvec for a vector of size m by dynamically allocating memory

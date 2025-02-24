@@ -239,10 +239,15 @@ MACRO_LEVEL = 1
 # USE_C99_MATH = 0
 USE_C99_MATH = 1
 
-# Compile auxiliary functions with external dependencies (for memory allocation, printing and timing)
+# Compile auxiliary functions with external dependencies (for printing and timing)
 #
 # EXT_DEP = 0
 EXT_DEP = 1
+
+# Compile auxiliary functions with external dependencies (for memory allocation)
+#
+# EXT_DEP_MALLOC = 0
+EXT_DEP_MALLOC = 1
 
 # Enables the compilation of sandbox (experimental)
 #
@@ -281,9 +286,10 @@ PACKING_ALG = AUTO
 #
 CC ?= gcc
 # CC = clang
-# CC = x86_64-w64-mingw32-gcc
-# CC = arm-linux-gnueabihf-gcc
-# CC = /opt/ndk/bin/aarch64-linux-android-gcc
+# CC = x86_64-w64-mingw32-gcc   # win64
+# CC = arm-linux-gnueabihf-gcc   # armv7
+# CC = aarch64-linux-gnu-gcc   # aarch64
+# CC = /opt/ndk/bin/aarch64-linux-android-gcc  # aarch64 android
 # CC = /home/gianluca/android-ndk-r23b/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android31-clang
 
 # archive routine
@@ -431,6 +437,10 @@ endif
 
 ifeq ($(EXT_DEP), 1)
 CFLAGS += -DEXT_DEP
+endif
+
+ifeq ($(EXT_DEP_MALLOC), 1)
+CFLAGS += -DEXT_DEP_MALLOC
 endif
 
 ifeq ($(SANDBOX_MODE), 1)
