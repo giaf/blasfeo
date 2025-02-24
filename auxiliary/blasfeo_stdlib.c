@@ -57,7 +57,9 @@ void blasfeo_malloc(void **ptr, size_t size)
 	*ptr = malloc(size);
 	if(*ptr==NULL)
 		{
+#ifdef EXT_DEP
 		printf("Memory allocation error");
+#endif
 		exit(1);
 		}
 	return;
