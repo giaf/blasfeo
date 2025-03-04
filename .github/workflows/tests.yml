@@ -38,7 +38,6 @@ jobs:
         with:
           miniforge-version: latest
           channels: conda-forge
-          python-version: "3.10"
           activate-environment: blasfeo
 
       - name: Install dependencies
@@ -69,7 +68,6 @@ jobs:
   #       with:
   #         miniforge-version: latest
   #         channels: conda-forge
-  #         python-version: "3.10"
   #         activate-environment: blasfeo
 
   #     - name: Install dependencies
