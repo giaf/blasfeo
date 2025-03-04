@@ -56,6 +56,16 @@
 #undef OFF
 #endif
 
+#ifndef EXT_DEP_MALLOC
+#define ON 1
+#define OFF 0
+#if @EXT_DEP_MALLOC@==ON
+#define EXT_DEP_MALLOC
+#endif
+#undef ON
+#undef OFF
+#endif
+
 #ifndef BLAS_API
 #define ON 1
 #define OFF 0
