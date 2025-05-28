@@ -4899,14 +4899,9 @@ void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_nor
 	double tmp;
 	for(ii=0; ii<m; ii++)
 		{
-#ifdef USE_C99_MATH
-		norm = fmax(norm, fabs(x[ii]));
-		is_nan |= x[ii]!=x[ii];
-#else // no c99
 		tmp = fabs(x[ii]);
 		norm = tmp>norm ? tmp : norm;
 		is_nan |= x[ii]!=x[ii];
-#endif
 		}
 #ifdef NAN
 	*ptr_norm = is_nan==0 ? norm : NAN;
