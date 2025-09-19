@@ -3477,21 +3477,23 @@ void kernel_dgelqf_pd_dlarft4_4_lib4(int n, double *pD, double *dD, double *pT)
 	if(sigma==0.0)
 		{
 		dD[0] = 0.0;
-		tmp = 0.0;
-		goto col2;
+		tmp = 1.0;
 		}
-	alpha = pD[0+ps*0];
-	beta = sigma + alpha*alpha;
-	beta = sqrt(beta);
-	if(alpha<=0)
-		tmp = alpha-beta;
 	else
-		tmp = -sigma / (alpha+beta);
-	dD[0] = 2*tmp*tmp / (sigma+tmp*tmp);
-	pT[0+ps*0] = - dD[0];
-	tmp = 1.0 / tmp;
-	//
-	pD[0+ps*0] = beta;
+		{
+		alpha = pD[0+ps*0];
+		beta = sigma + alpha*alpha;
+		beta = sqrt(beta);
+		if(alpha<=0)
+			tmp = alpha-beta;
+		else
+			tmp = -sigma / (alpha+beta);
+		dD[0] = 2*tmp*tmp / (sigma+tmp*tmp);
+		pT[0+ps*0] = - dD[0];
+		tmp = 1.0 / tmp;
+		//
+		pD[0+ps*0] = beta;
+		}
 	w1 = pD[1+ps*0];
 	w2 = pD[2+ps*0];
 	w3 = pD[3+ps*0];
@@ -3549,25 +3551,26 @@ void kernel_dgelqf_pd_dlarft4_4_lib4(int n, double *pD, double *dD, double *pT)
 		sigma += pD[1+ps*ii] * pD[1+ps*ii];
 		}
 	// second column
-col2:
 	if(sigma==0.0)
 		{
 		dD[1] = 0.0;
-		tmp = 0.0;
-		goto col3;
+		tmp = 1.0;
 		}
-	alpha = pD[1+ps*1];
-	beta = sigma + alpha*alpha;
-	beta = sqrt(beta);
-	if(alpha<=0)
-		tmp = alpha-beta;
 	else
-		tmp = -sigma / (alpha+beta);
-	dD[1] = 2*tmp*tmp / (sigma+tmp*tmp);;
-	pT[1+ps*1] = - dD[1];
-	tmp = 1.0 / tmp;
-	//
-	pD[1+ps*1] = beta;
+		{
+		alpha = pD[1+ps*1];
+		beta = sigma + alpha*alpha;
+		beta = sqrt(beta);
+		if(alpha<=0)
+			tmp = alpha-beta;
+		else
+			tmp = -sigma / (alpha+beta);
+		dD[1] = 2*tmp*tmp / (sigma+tmp*tmp);;
+		pT[1+ps*1] = - dD[1];
+		tmp = 1.0 / tmp;
+		//
+		pD[1+ps*1] = beta;
+		}
 	w0 = pD[0+ps*1]; //
 	w2 = pD[2+ps*1];
 	w3 = pD[3+ps*1];
@@ -3611,25 +3614,26 @@ col2:
 		sigma += pD[2+ps*ii] * pD[2+ps*ii];
 		}
 	// third column
-col3:
 	if(sigma==0.0)
 		{
 		dD[2] = 0.0;
-		tmp = 0.0;
-		goto col4;
+		tmp = 1.0;
 		}
-	alpha = pD[2+ps*2];
-	beta = sigma + alpha*alpha;
-	beta = sqrt(beta);
-	if(alpha<=0)
-		tmp = alpha-beta;
 	else
-		tmp = -sigma / (alpha+beta);
-	dD[2] = 2*tmp*tmp / (sigma+tmp*tmp);;
-	pT[2+ps*2] = - dD[2];
-	tmp = 1.0 / tmp;
-	//
-	pD[2+ps*2] = beta;
+		{
+		alpha = pD[2+ps*2];
+		beta = sigma + alpha*alpha;
+		beta = sqrt(beta);
+		if(alpha<=0)
+			tmp = alpha-beta;
+		else
+			tmp = -sigma / (alpha+beta);
+		dD[2] = 2*tmp*tmp / (sigma+tmp*tmp);;
+		pT[2+ps*2] = - dD[2];
+		tmp = 1.0 / tmp;
+		//
+		pD[2+ps*2] = beta;
+		}
 	w0 = pD[0+ps*2];
 	w1 = pD[1+ps*2];
 	w3 = pD[3+ps*2];
@@ -3662,25 +3666,26 @@ col3:
 		sigma += pD[3+ps*ii] * pD[3+ps*ii];
 		}
 	// fourth column
-col4:
 	if(sigma==0.0)
 		{
 		dD[3] = 0.0;
-		tmp = 0.0;
-		return;
+		tmp = 1.0;
 		}
-	alpha = pD[3+ps*3];
-	beta = sigma + alpha*alpha;
-	beta = sqrt(beta);
-	if(alpha<=0)
-		tmp = alpha-beta;
 	else
-		tmp = -sigma / (alpha+beta);
-	dD[3] = 2*tmp*tmp / (sigma+tmp*tmp);;
-	pT[3+ps*3] = - dD[3];
-	tmp = 1.0 / tmp;
-	//
-	pD[3+ps*3] = beta;
+		{
+		alpha = pD[3+ps*3];
+		beta = sigma + alpha*alpha;
+		beta = sqrt(beta);
+		if(alpha<=0)
+			tmp = alpha-beta;
+		else
+			tmp = -sigma / (alpha+beta);
+		dD[3] = 2*tmp*tmp / (sigma+tmp*tmp);;
+		pT[3+ps*3] = - dD[3];
+		tmp = 1.0 / tmp;
+		//
+		pD[3+ps*3] = beta;
+		}
 	w0 =  pD[0+ps*3];
 	w1 =  pD[1+ps*3];
 	w2 =  pD[2+ps*3];
