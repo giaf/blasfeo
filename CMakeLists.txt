@@ -47,6 +47,8 @@ set(CMAKE_INSTALL_PREFIX "/opt/blasfeo" CACHE STRING "Installation path")
 
 project(blasfeo C ASM)
 
+include(GNUInstallDirs)
+
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # enable_language(C ASM)
@@ -1253,6 +1255,19 @@ endif()
 # add library
 add_library(blasfeo ${BLASFEO_SRC})
 
+# Read version from the 'version' file
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/version" BLASFEO_VERSION)
+string(STRIP "${BLASFEO_VERSION}" BLASFEO_VERSION)
+
+# split into major/minor for SOVERSION
+string(REPLACE "." ";" VERSION_LIST ${BLASFEO_VERSION})
+list(GET VERSION_LIST 0 BLASFEO_SOVERSION)
+
+set_target_properties(blasfeo PROPERTIES
+    VERSION ${BLASFEO_VERSION}
+    SOVERSION ${BLASFEO_SOVERSION}
+)
+
 # 1) *XILINX_NONE_ELF*:
 #		Xilinx standalone (any core, e.g. A53,R5,..; *untested*)
 # 2) *XILINX_ULTRASCALE_NONE_ELF_JAILHOUSE*:
@@ -1293,7 +1308,7 @@ install(TARGETS blasfeo EXPORT blasfeoConfig
 	RUNTIME DESTINATION bin)
 
 
-install(EXPORT blasfeoConfig DESTINATION cmake)
+install(EXPORT blasfeoConfig DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/blasfeo FILE blasfeoConfig.cmake)
 
 file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
