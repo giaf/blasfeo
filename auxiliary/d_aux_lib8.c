@@ -37,6 +37,15 @@
 #include <stdio.h>
 #include <math.h>
 
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+#include <mmintrin.h>
+#include <xmmintrin.h>  // SSE
+#include <emmintrin.h>  // SSE2
+#include <pmmintrin.h>  // SSE3
+#include <smmintrin.h>  // SSE4
+#include <immintrin.h>  // AVX
+#endif
+
 #include <blasfeo_common.h>
 #include <blasfeo_block_size.h>
 #include <blasfeo_d_aux.h>
@@ -1445,39 +1454,76 @@ void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_nor
 	double *x = sx->pa + xi;
 	double tmp;
 	double norm = 0.0;
+	int is_nan = 0;
 	int ii;
 
-#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#if defined(TARGET_X64_INTEL_SKYLAKE_X)
+
+	// TODO AVX512 !!!
+
 	const __m256d absmask = _mm256_castsi256_pd(_mm256_set1_epi64x(0x7FFFFFFFFFFFFFFFULL));
 
-	__m256d vmax = _mm256_setzero_pd();
-	__m256d vnan = _mm256_setzero_pd();
+	__m256d v0, v1;
 
+	__m256d vmax0 = _mm256_setzero_pd();
+	__m256d vmax1 = _mm256_setzero_pd();
+	__m256d vnan0 = _mm256_setzero_pd();
+	__m256d vnan1 = _mm256_setzero_pd();
+
+	ii = 0;
 	// process full 4-wide AVX2 vectors
-	for (ii = 0; ii + 3 < m; ii += 4) {
-		__m256d v = _mm256_loadu_pd(x + ii);
+	if(m>=8)
+		{
+		for(; ii<m-7; ii+=8)
+			{
+			__m256d v0 = _mm256_loadu_pd(&x[ii+0]);
+			__m256d v1 = _mm256_loadu_pd(&x[ii+4]);
 
-		// |x|
-		v = _mm256_and_pd(v, absmask);
+			// |x|
+			v0 = _mm256_and_pd(v0, absmask);
+			v1 = _mm256_and_pd(v1, absmask);
 
-		// NaN detection
-		vnan = _mm256_or_pd(vnan, _mm256_cmp_pd(v, v, _CMP_UNORD_Q));
+			// NaN detection
+			vnan0 = _mm256_or_pd(vnan0, _mm256_cmp_pd(v0, v0, _CMP_UNORD_Q));
+			vnan1 = _mm256_or_pd(vnan1, _mm256_cmp_pd(v1, v1, _CMP_UNORD_Q));
 
-		// max reduction
-		vmax = _mm256_max_pd(vmax, v);
-	}
+			// max reduction
+			vmax0 = _mm256_max_pd(vmax0, v0);
+			vmax1 = _mm256_max_pd(vmax1, v1);
+			}
 
-	// horizontal max for 4-wide vector
-	double t[4];
-	_mm256_storeu_pd(t, vmax);
-	if (t[0] > norm) norm = t[0];
-	if (t[1] > norm) norm = t[1];
-	if (t[2] > norm) norm = t[2];
-	if (t[3] > norm) norm = t[3];
+		vnan0 = _mm256_or_pd(vnan0, vnan1);
+		vmax0 = _mm256_max_pd(vmax0, vmax1);
+		}
 
-	// reduce NaN mask from vectorized portion
-	_mm256_storeu_pd(t, vnan);
-	int is_nan = (t[0] != 0.0) || (t[1] != 0.0) || (t[2] != 0.0) || (t[3] != 0.0);
+	if(m>=4)
+		{
+		for(; ii<m-3; ii+=4)
+			{
+			__m256d v0 = _mm256_loadu_pd(&x[ii]);
+
+			// |x|
+			v0 = _mm256_and_pd(v0, absmask);
+
+			// NaN detection
+			vnan0 = _mm256_or_pd(vnan0, _mm256_cmp_pd(v0, v0, _CMP_UNORD_Q));
+
+			// max reduction
+			vmax0 = _mm256_max_pd(vmax0, v0);
+			}
+
+		// horizontal max for 4-wide vector
+		double t[4];
+		_mm256_storeu_pd(t, vmax0);
+		double tmp0 = t[0]>t[1] ? t[0] : t[1];
+		double tmp1 = t[2]>t[3] ? t[2] : t[3];
+		norm = tmp0>norm ? tmp0 : norm;
+		norm = tmp1>norm ? tmp1 : norm;
+
+		// reduce NaN mask from vectorized portion
+		_mm256_storeu_pd(t, vnan0);
+		is_nan = (t[0]!=0.0) || (t[1]!=0.0) || (t[2]!=0.0) || (t[3]!=0.0);
+		}
 
 	// handle remaining elements (<4)
 	for (; ii < m; ii++)
@@ -1486,8 +1532,9 @@ void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_nor
 		norm = tmp>norm ? tmp : norm; // compiles into max_sd XXX does not propagate NaN at all !!!
 		is_nan |= x[ii]!=x[ii]; // additional NaN check
 		}
+
 #else
-	int is_nan = 0;
+
 	for(ii=0; ii<m; ii++)
 		{
 #if 0 // def USE_C99_MATH
@@ -1501,13 +1548,18 @@ void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_nor
 #endif
 		}
 	//*ptr_norm = norm;
+
 #endif
+
 #ifdef NAN
 	*ptr_norm = is_nan==0 ? norm : NAN;
 #else
 	*ptr_norm = is_nan==0 ? norm : 0.0/0.0;
 #endif
+	return;
 	}
+
+
 
 
 
