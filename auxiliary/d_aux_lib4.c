@@ -4889,14 +4889,54 @@ void blasfeo_dvecze(int m, struct blasfeo_dvec *sm, int mi, struct blasfeo_dvec 
 	}
 
 
-// compute inf norm of vector
 void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm)
-	{
-	int ii;
+{
 	double *x = sx->pa + xi;
-	double norm = 0.0;
-	int is_nan = 0;
 	double tmp;
+	double norm = 0.0;
+	int ii;
+
+#if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	const __m256d absmask = _mm256_castsi256_pd(_mm256_set1_epi64x(0x7FFFFFFFFFFFFFFFULL));
+
+	__m256d vmax = _mm256_setzero_pd();
+	__m256d vnan = _mm256_setzero_pd();
+
+	// process full 4-wide AVX2 vectors
+	for (ii = 0; ii + 3 < m; ii += 4) {
+		__m256d v = _mm256_loadu_pd(x + ii);
+
+		// |x|
+		v = _mm256_and_pd(v, absmask);
+
+		// NaN detection
+		vnan = _mm256_or_pd(vnan, _mm256_cmp_pd(v, v, _CMP_UNORD_Q));
+
+		// max reduction
+		vmax = _mm256_max_pd(vmax, v);
+	}
+
+	// horizontal max for 4-wide vector
+	double t[4];
+	_mm256_storeu_pd(t, vmax);
+	if (t[0] > norm) norm = t[0];
+	if (t[1] > norm) norm = t[1];
+	if (t[2] > norm) norm = t[2];
+	if (t[3] > norm) norm = t[3];
+
+	// reduce NaN mask from vectorized portion
+	_mm256_storeu_pd(t, vnan);
+	int is_nan = (t[0] != 0.0) || (t[1] != 0.0) || (t[2] != 0.0) || (t[3] != 0.0);
+
+	// handle remaining elements (<4)
+	for (; ii < m; ii++)
+		{
+		tmp = fabs(x[ii]);
+		norm = tmp>norm ? tmp : norm; // compiles into max_sd XXX does not propagate NaN at all !!!
+		is_nan |= x[ii]!=x[ii]; // additional NaN check
+		}
+#else
+	int is_nan = 0;
 	for(ii=0; ii<m; ii++)
 		{
 #if 0 // def USE_C99_MATH
@@ -4910,12 +4950,12 @@ void blasfeo_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_nor
 #endif
 		}
 	//*ptr_norm = norm;
+#endif
 #ifdef NAN
 	*ptr_norm = is_nan==0 ? norm : NAN;
 #else
 	*ptr_norm = is_nan==0 ? norm : 0.0/0.0;
 #endif
-	return;
 	}
 
 
