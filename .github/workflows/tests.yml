@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, ubuntu-24.04-arm, macos-13, macos-14 ]
+        os: [ ubuntu-latest, ubuntu-24.04-arm, macos-14 ]
         api: [ blas, blasfeo ]
         mf: [ cm, pm ]
         precision: [ single, double ]
@@ -20,8 +20,6 @@ jobs:
             arch: amd64
           - os: ubuntu-24.04-arm
             arch: arm64
-          - os: macos-13
-            arch: amd64
           - os: macos-14
             arch: arm64
           - api: blasfeo
