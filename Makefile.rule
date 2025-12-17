@@ -216,6 +216,10 @@ endif
 ### other makefile options and settings
 #################################################
 
+# Single and/or double precision routines only
+DP_ROUTINES = 1
+SP_ROUTINES = 1
+
 # In BLAS API, fallback to external BLAS library for some not-yet-implemented routines
 #
 FALLBACK_TO_EXTERNAL_BLAS = 0
@@ -412,6 +416,13 @@ ifeq ($(COMPLEMENT_WITH_NETLIB_LAPACK), 1)
 ifeq ($(FORTRAN_BLAS_API), 0)
 $(error Cannot expose non-FORTRAN style BLAS_API when complementing with Netlib LAPACK)
 endif
+endif
+
+ifeq ($(DP_ROUTINES), 1)
+CFLAGS += -DDP_ROUTINES
+endif
+ifeq ($(SP_ROUTINES), 1)
+CFLAGS += -DSP_ROUTINES
 endif
 
 STACK_SIZE := $(shell ulimit -s)

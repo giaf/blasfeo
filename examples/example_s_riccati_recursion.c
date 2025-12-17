@@ -41,6 +41,22 @@
 #include <blasfeo.h>
 
 
+#ifndef DP_ROUTINES
+/* creates a zero matrix */
+void d_zeros(double **pA, int row, int col)
+	{
+	blasfeo_malloc((void **) pA, (row*col)*sizeof(double));
+	double *A = *pA;
+	int i;
+	for(i=0; i<row*col; i++) A[i] = 0.0;
+	}
+/* frees matrix */
+void d_free(double *pA)
+	{
+	blasfeo_free( pA );
+	}
+#endif
+
 
 static void s_back_ric_sv_libstr(int N, int *nx, int *nu, struct blasfeo_smat *hsBAbt, struct blasfeo_smat *hsRSQrq, struct blasfeo_smat *hsL, struct blasfeo_svec *hsux, struct blasfeo_svec *hspi, struct blasfeo_smat *hswork_mat, struct blasfeo_svec *hswork_vec)
 	{

@@ -35,24 +35,27 @@
 
 include ../../Makefile.rule
 
+KERNEL_OBJS =
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		\
-		kernel_sgemm_12x4_lib4.o \
-		kernel_sgemm_8x4_lib4.o \
-		kernel_sgemm_4x4_lib4.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_12x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_8x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+endif # SP
 endif
 
 ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		\
-		kernel_sgemm_8x4_lib4.o \
-		kernel_sgemm_4x4_lib4.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_8x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+endif # SP
 endif
 
 

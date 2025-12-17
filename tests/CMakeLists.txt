@@ -34,23 +34,35 @@
 ###################################################################################################
 
 
-add_executable(test_d_blasfeo_api test_d_blasfeo_api.c)
-add_executable(test_s_blasfeo_api test_s_blasfeo_api.c)
-add_executable(test_d_blas_api test_d_blas_api.c)
-add_executable(test_s_blas_api test_s_blas_api.c)
+if(${DP_ROUTINES})
+	add_executable(test_d_blasfeo_api test_d_blasfeo_api.c)
+	add_executable(test_d_blas_api test_d_blas_api.c)
+endif()
+if(${SP_ROUTINES})
+	add_executable(test_s_blasfeo_api test_s_blasfeo_api.c)
+	add_executable(test_s_blas_api test_s_blas_api.c)
+endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES MSVC) # no explicit math library and no running blas api (for now)
 
-	target_link_libraries(test_d_blasfeo_api blasfeo)
-	target_link_libraries(test_s_blasfeo_api blasfeo)
-	target_link_libraries(test_d_blas_api blasfeo)
-	target_link_libraries(test_s_blas_api blasfeo)
+	if(${DP_ROUTINES})
+		target_link_libraries(test_d_blasfeo_api blasfeo)
+		target_link_libraries(test_d_blas_api blasfeo)
+	endif()
+	if(${SP_ROUTINES})
+		target_link_libraries(test_s_blasfeo_api blasfeo)
+		target_link_libraries(test_s_blas_api blasfeo)
+	endif()
 
 else() # add explicit math library
 
-	target_link_libraries(test_d_blasfeo_api blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
-	target_link_libraries(test_s_blasfeo_api blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
-	target_link_libraries(test_d_blas_api blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
-	target_link_libraries(test_s_blas_api blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+	if(${DP_ROUTINES})
+		target_link_libraries(test_d_blasfeo_api blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+		target_link_libraries(test_d_blas_api blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+	endif()
+	if(${SP_ROUTINES})
+		target_link_libraries(test_s_blasfeo_api blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+		target_link_libraries(test_s_blas_api blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+	endif()
 
 endif()

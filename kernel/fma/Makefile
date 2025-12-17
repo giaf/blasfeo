@@ -36,10 +36,14 @@
 include ../../Makefile.rule
 
 
-ifeq ($(TARGET), X64_AMD_BULLDOZER)
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
+KERNEL_OBJS =
 
+ifeq ($(TARGET), X64_AMD_BULLDOZER)
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+endif # SP
 endif
 
 

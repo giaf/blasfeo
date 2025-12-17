@@ -37,25 +37,24 @@ include ../Makefile.rule
 
 HP_CM_OBJS =
 
-
-HP_CM_OBJS =
-
-HP_CM_OBJS += dgemm.o
-HP_CM_OBJS += dsyrk.o
-HP_CM_OBJS += dtrsm.o
-HP_CM_OBJS += dtrmm.o
-HP_CM_OBJS += dsyr2k.o
-HP_CM_OBJS += dpotrf.o
-HP_CM_OBJS += dgetrf.o
-HP_CM_OBJS += dgetr.o
-HP_CM_OBJS += dgemv.o
-HP_CM_OBJS += dsymv.o
-HP_CM_OBJS += dger.o
-
-HP_CM_OBJS += sgemm.o
-HP_CM_OBJS += strsm.o
-HP_CM_OBJS += spotrf.o
-
+ifeq ($(DP_ROUTINES), 1)
+	HP_CM_OBJS += dgemm.o
+	HP_CM_OBJS += dsyrk.o
+	HP_CM_OBJS += dtrsm.o
+	HP_CM_OBJS += dtrmm.o
+	HP_CM_OBJS += dsyr2k.o
+	HP_CM_OBJS += dpotrf.o
+	HP_CM_OBJS += dgetrf.o
+	HP_CM_OBJS += dgetr.o
+	HP_CM_OBJS += dgemv.o
+	HP_CM_OBJS += dsymv.o
+	HP_CM_OBJS += dger.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	HP_CM_OBJS += sgemm.o
+	HP_CM_OBJS += strsm.o
+	HP_CM_OBJS += spotrf.o
+endif # SP
 
 OBJS =
 

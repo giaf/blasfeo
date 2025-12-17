@@ -62,26 +62,32 @@ void blasfeo_init()
 #ifdef EXT_DEP_MALLOC
 	size_t tmp0, tmp1;
 	// compute max needed memory
+	#ifdef DP_ROUTINES
 	size_t size_A_double = blasfeo_pm_memsize_dmat(D_PS, D_MC, D_KC); 
 	size_t size_B_double = blasfeo_pm_memsize_dmat(D_PS, D_NC, D_KC); 
 	tmp0 = blasfeo_pm_memsize_dmat(D_PS, D_KC, D_KC); 
 	tmp1 = blasfeo_pm_memsize_dmat(D_PS, D_NC, D_NC); 
 	size_t size_T_double = tmp0>tmp1 ? tmp0 : tmp1;
-	// TODO size_T_double
+	size_A_double = (size_A_double + 4096 - 1) / 4096 * 4096;
+	size_B_double = (size_B_double + 4096 - 1) / 4096 * 4096;
+	size_T_double = (size_T_double + 4096 - 1) / 4096 * 4096;
+	size_t size_double = size_A_double + size_B_double + size_T_double;
+	#else
+	size_t size_double = 0;
+	#endif
+	#ifdef SP_ROUTINES
 	size_t size_A_single = blasfeo_pm_memsize_smat(S_PS, S_MC, S_KC); 
 	size_t size_B_single = blasfeo_pm_memsize_smat(S_PS, S_NC, S_KC); 
 	tmp0 = blasfeo_pm_memsize_smat(S_PS, S_KC, S_KC); 
 	tmp1 = blasfeo_pm_memsize_smat(S_PS, S_NC, S_NC); 
 	size_t size_T_single = tmp0>tmp1 ? tmp0 : tmp1;
-	// TODO size_T_single
-	size_A_double = (size_A_double + 4096 - 1) / 4096 * 4096;
-	size_B_double = (size_B_double + 4096 - 1) / 4096 * 4096;
-	size_T_double = (size_T_double + 4096 - 1) / 4096 * 4096;
 	size_A_single = (size_A_single + 4096 - 1) / 4096 * 4096;
 	size_B_single = (size_B_single + 4096 - 1) / 4096 * 4096;
 	size_T_single = (size_T_single + 4096 - 1) / 4096 * 4096;
-	size_t size_double = size_A_double + size_B_double + size_T_double;
 	size_t size_single = size_A_single + size_B_single + size_T_single;
+	#else
+	size_t size_single = 0;
+	#endif
 	size_t size = size_double>=size_single ? size_double : size_single;
 	// alignment
 	size += 2*4096;

@@ -36,14 +36,17 @@
 include ../../Makefile.rule
 
 
-ifeq ($(TARGET), X86_AMD_JAGUAR)
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemv_4_lib4.o \
+KERNEL_OBJS =
 
+ifeq ($(TARGET), X86_AMD_JAGUAR)
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+endif # SP
 endif
 
 

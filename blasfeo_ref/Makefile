@@ -37,45 +37,51 @@ include ../Makefile.rule
 
 
 REF_OBJS =
-#
-REF_OBJS += d_blas1_ref.o
-REF_OBJS += d_blas2_ref.o
-REF_OBJS += d_blas2_diag_ref.o
-REF_OBJS += d_blas3_ref.o
-REF_OBJS += d_blas3_diag_ref.o
-REF_OBJS += d_lapack_ref.o
-#
-REF_OBJS += s_blas1_ref.o
-REF_OBJS += s_blas2_ref.o
-REF_OBJS += s_blas2_diag_ref.o
-REF_OBJS += s_blas3_ref.o
-REF_OBJS += s_blas3_diag_ref.o
-REF_OBJS += s_lapack_ref.o
+ifeq ($(DP_ROUTINES), 1)
+	REF_OBJS += d_blas1_ref.o
+	REF_OBJS += d_blas2_ref.o
+	REF_OBJS += d_blas2_diag_ref.o
+	REF_OBJS += d_blas3_ref.o
+	REF_OBJS += d_blas3_diag_ref.o
+	REF_OBJS += d_lapack_ref.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	REF_OBJS += s_blas1_ref.o
+	REF_OBJS += s_blas2_ref.o
+	REF_OBJS += s_blas2_diag_ref.o
+	REF_OBJS += s_blas3_ref.o
+	REF_OBJS += s_blas3_diag_ref.o
+	REF_OBJS += s_lapack_ref.o
+endif # SP
 
 
 HP_CM_OBJS =
-#
-HP_CM_OBJS += d_blas1_hp_cm.o
-HP_CM_OBJS += d_blas2_hp_cm.o
-HP_CM_OBJS += d_blas2_diag_hp_cm.o
-HP_CM_OBJS += d_blas3_hp_cm.o
-HP_CM_OBJS += d_blas3_diag_hp_cm.o
-HP_CM_OBJS += d_lapack_hp_cm.o
-#
-HP_CM_OBJS += s_blas1_hp_cm.o
-HP_CM_OBJS += s_blas2_hp_cm.o
-HP_CM_OBJS += s_blas2_diag_hp_cm.o
-HP_CM_OBJS += s_blas3_hp_cm.o
-HP_CM_OBJS += s_blas3_diag_hp_cm.o
-HP_CM_OBJS += s_lapack_hp_cm.o
+ifeq ($(DP_ROUTINES), 1)
+	HP_CM_OBJS += d_blas1_hp_cm.o
+	HP_CM_OBJS += d_blas2_hp_cm.o
+	HP_CM_OBJS += d_blas2_diag_hp_cm.o
+	HP_CM_OBJS += d_blas3_hp_cm.o
+	HP_CM_OBJS += d_blas3_diag_hp_cm.o
+	HP_CM_OBJS += d_lapack_hp_cm.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	HP_CM_OBJS += s_blas1_hp_cm.o
+	HP_CM_OBJS += s_blas2_hp_cm.o
+	HP_CM_OBJS += s_blas2_diag_hp_cm.o
+	HP_CM_OBJS += s_blas3_hp_cm.o
+	HP_CM_OBJS += s_blas3_diag_hp_cm.o
+	HP_CM_OBJS += s_lapack_hp_cm.o
+endif # SP
 
 
 REF_BLAS_OBJS =
-#
-REF_BLAS_OBJS += d_blas3_ref_blas.o
-REF_BLAS_OBJS += d_lapack_ref_blas.o
-#
-REF_BLAS_OBJS += s_blas3_ref_blas.o
+ifeq ($(DP_ROUTINES), 1)
+	REF_BLAS_OBJS += d_blas3_ref_blas.o
+	REF_BLAS_OBJS += d_lapack_ref_blas.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	REF_BLAS_OBJS += s_blas3_ref_blas.o
+endif # SP
 
 
 OBJS =

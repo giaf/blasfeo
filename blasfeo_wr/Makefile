@@ -38,8 +38,24 @@ include ../Makefile.rule
 
 ifeq ($(LA), EXTERNAL_BLAS_WRAPPER)
 
-OBJS += d_blas1_lib.o d_blas2_lib.o d_blas2_diag_lib.o d_blas3_lib.o d_blas3_diag_lib.o d_lapack_lib.o
-OBJS += s_blas1_lib.o s_blas2_lib.o s_blas2_diag_lib.o s_blas3_lib.o s_blas3_diag_lib.o s_lapack_lib.o
+OBJS =
+
+ifeq ($(DP_ROUTINES), 1)
+	OBJS += d_blas1_lib.o
+	OBJS += d_blas2_lib.o
+	OBJS += d_blas2_diag_lib.o
+	OBJS += d_blas3_lib.o
+	OBJS += d_blas3_diag_lib.o
+	OBJS += d_lapack_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	OBJS += s_blas1_lib.o
+	OBJS += s_blas2_lib.o
+	OBJS += s_blas2_diag_lib.o
+	OBJS += s_blas3_lib.o
+	OBJS += s_blas3_diag_lib.o
+	OBJS += s_lapack_lib.o
+endif # SP
 
 endif # LA choice
 

@@ -32,23 +32,36 @@
 # Author: Gianluca Frison, gianluca.frison (at) imtek.uni-freiburg.de                             #
 #                                                                                                 #
 ###################################################################################################
-add_executable(benchmark_d_blasfeo benchmark_d_blasfeo_api.c)
-add_executable(benchmark_s_blasfeo benchmark_s_blasfeo_api.c)
-add_executable(benchmark_d_blas benchmark_d_blas_api.c)
-add_executable(benchmark_s_blas benchmark_s_blas_api.c)
+
+if(${DP_ROUTINES})
+	add_executable(benchmark_d_blasfeo benchmark_d_blasfeo_api.c)
+	add_executable(benchmark_d_blas benchmark_d_blas_api.c)
+endif()
+if(${SP_ROUTINES})
+	add_executable(benchmark_s_blasfeo benchmark_s_blasfeo_api.c)
+	add_executable(benchmark_s_blas benchmark_s_blas_api.c)
+endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES MSVC) # no explicit math library and no running BLAS (for now)
 
-	target_link_libraries(benchmark_d_blasfeo blasfeo)
-	target_link_libraries(benchmark_s_blasfeo blasfeo)
-	target_link_libraries(benchmark_d_blas blasfeo)
-	target_link_libraries(benchmark_s_blas blasfeo)
+	if(${DP_ROUTINES})
+		target_link_libraries(benchmark_d_blasfeo blasfeo)
+		target_link_libraries(benchmark_d_blas blasfeo)
+	endif()
+	if(${SP_ROUTINES})
+		target_link_libraries(benchmark_s_blasfeo blasfeo)
+		target_link_libraries(benchmark_s_blas blasfeo)
+	endif()
 
 else() # add explicit math library
 
-	target_link_libraries(benchmark_d_blasfeo blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
-	target_link_libraries(benchmark_s_blasfeo blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
-	target_link_libraries(benchmark_d_blas blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
-	target_link_libraries(benchmark_s_blas blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+	if(${DP_ROUTINES})
+		target_link_libraries(benchmark_d_blasfeo blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+		target_link_libraries(benchmark_d_blas blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+	endif()
+	if(${SP_ROUTINES})
+		target_link_libraries(benchmark_s_blasfeo blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+		target_link_libraries(benchmark_s_blas blasfeo ${EXTERNAL_BLAS_LIBRARIES} m)
+	endif()
 
 endif()

@@ -36,17 +36,21 @@
 include ../../Makefile.rule
 
 
-ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
-KERNEL_OBJS = \
-		kernel_dgemm_24x8_lib8.o \
-		kernel_dgemm_16x8_lib8.o \
-		kernel_dgemm_8x8_lib8.o \
-		kernel_dgemv_8_lib8.o \
-		kernel_dgemv_16_lib8.o \
-		kernel_dpack_lib8.o \
-		kernel_dgeqrf_8_lib8.o \
-		kernel_dgelqf_lib8.o \
+KERNEL_OBJS =
 
+ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_24x8_lib8.o
+	KERNEL_OBJS += kernel_dgemm_16x8_lib8.o
+	KERNEL_OBJS += kernel_dgemm_8x8_lib8.o
+	KERNEL_OBJS += kernel_dgemv_8_lib8.o
+	KERNEL_OBJS += kernel_dgemv_16_lib8.o
+	KERNEL_OBJS += kernel_dpack_lib8.o
+	KERNEL_OBJS += kernel_dgeqrf_8_lib8.o
+	KERNEL_OBJS += kernel_dgelqf_lib8.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+endif # SP
 endif
 
 

@@ -118,6 +118,10 @@ set(EXTERNAL_BLAS 0 CACHE STRING "External blas to use")
 # set(EXTERNAL_BLAS ATLAS CACHE STRING "External blas to use")
 # set(EXTERNAL_BLAS ARMPL CACHE STRING "External blas to use")
 
+# Single and/or double precision routines only
+set(DP_ROUTINES ON)
+set(SP_ROUTINES ON)
+
 # Stack buffer size (malloc for larger)
 set(K_MAX_STACK 300 CACHE STRING "Maximum k value using stack memory")
 
@@ -289,7 +293,15 @@ message(STATUS "Using matrix format: ${MF}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMF_${MF}")
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -DMF_${MF}")
 
+#
+if(${DP_ROUTINES})
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDP_ROUTINES")
+endif()
+if(${SP_ROUTINES})
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DSP_ROUTINES")
+endif()
 
+#
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DK_MAX_STACK=${K_MAX_STACK}")
 
 #
@@ -479,33 +491,50 @@ file(GLOB AUX_COMMON_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_processor_features.c
 	${PROJECT_SOURCE_DIR}/auxiliary/blasfeo_stdlib.c
 	${PROJECT_SOURCE_DIR}/auxiliary/memory.c
+	)
+
+file(GLOB AUX_COMMON_DP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_common.c
+	)
+
+file(GLOB AUX_COMMON_SP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_common.c
 	)
 
 file(GLOB AUX_EXT_DEP_SRC
-	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_common.c
-	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_common.c
-	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep.c
-	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep.c
 	${PROJECT_SOURCE_DIR}/auxiliary/v_aux_ext_dep_lib.c
 	${PROJECT_SOURCE_DIR}/auxiliary/i_aux_ext_dep_lib.c
 	${PROJECT_SOURCE_DIR}/auxiliary/timing.c
 	)
 
-file(GLOB AUX_REF_SRC
+file(GLOB AUX_EXT_DEP_DP_SRC
+	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep_common.c
+	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ext_dep.c
+	)
+
+file(GLOB AUX_EXT_DEP_SP_SRC
+	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep_common.c
+	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ext_dep.c
+	)
+
+file(GLOB AUX_REF_DP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_ref.c
+	)
+
+file(GLOB AUX_REF_SP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_ref.c
 	)
 
-file(GLOB BLASFEO_REF_SRC
+file(GLOB BLASFEO_REF_DP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_ref.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_ref.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_ref.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_ref.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_ref.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_ref.c
+	)
 
+file(GLOB BLASFEO_REF_SP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas1_ref.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_ref.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_diag_ref.c
@@ -514,37 +543,44 @@ file(GLOB BLASFEO_REF_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_lapack_ref.c
 	)
 
-file(GLOB AUX_HP_CM_SRC
+file(GLOB AUX_HP_CM_DP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_hp_cm.c
+	)
+
+file(GLOB AUX_HP_CM_SP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_hp_cm.c
 	)
 
-file(GLOB BLASFEO_HP_CM_SRC
+file(GLOB BLASFEO_HP_CM_DP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgemm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dsyrk.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dtrsm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dtrmm.c
-	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dsyr2k.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dsyrk2.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dpotrf.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgetrf.c
-	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgetr.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgetrf.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dgemv.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dsymv.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/dger.c
+	)
 
+file(GLOB BLASFEO_HP_CM_SP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/sgemm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/strsm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/spotrf.c
 	)
 
-file(GLOB BLASFEO_HP_CM_REF_SRC
+file(GLOB BLASFEO_HP_CM_REF_DP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas1_hp_cm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_hp_cm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas2_diag_hp_cm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_hp_cm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_diag_hp_cm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_hp_cm.c
+	)
 
+file(GLOB BLASFEO_HP_CM_REF_SP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas1_hp_cm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_hp_cm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas2_diag_hp_cm.c
@@ -553,14 +589,16 @@ file(GLOB BLASFEO_HP_CM_REF_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_lapack_hp_cm.c
 	)
 
-file(GLOB BLASFEO_WR_SRC
+file(GLOB BLASFEO_WR_DP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_blas1_lib.c
 	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_blas2_lib.c
 	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_blas2_diag_lib.c
 	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_blas3_lib.c
 	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_blas3_diag_lib.c
 	${PROJECT_SOURCE_DIR}/blasfeo_wr/d_lapack_lib.c
+	)
 
+file(GLOB BLASFEO_WR_SP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_wr/s_blas1_lib.c
 	${PROJECT_SOURCE_DIR}/blasfeo_wr/s_blas2_lib.c
 	${PROJECT_SOURCE_DIR}/blasfeo_wr/s_blas2_diag_lib.c
@@ -570,7 +608,7 @@ file(GLOB BLASFEO_WR_SRC
 	)
 
 #list(APPEND BLAS_SRC
-file(GLOB BLAS_SRC
+file(GLOB BLAS_DP_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/dcopy.c
 	${PROJECT_SOURCE_DIR}/blas_api/daxpy.c
 	${PROJECT_SOURCE_DIR}/blas_api/ddot.c
@@ -591,7 +629,9 @@ file(GLOB BLAS_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/dsymv_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dgemv_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/dger_ref.c # XXX
+	)
 
+file(GLOB BLAS_SP_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/saxpy.c
 	${PROJECT_SOURCE_DIR}/blas_api/sdot.c
 	${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c # XXX
@@ -599,34 +639,40 @@ file(GLOB BLAS_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/spotrf_ref.c # XXX
 	)
 
-file(GLOB REF_BLAS_SRC
+file(GLOB REF_BLAS_DP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_blas3_ref_blas.c
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/d_lapack_ref_blas.c
+	)
 
+file(GLOB REF_BLAS_SP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_ref/s_blas3_ref_blas.c
 	)
 
-file(GLOB BLAS_CM_SRC
+file(GLOB BLAS_CM_DP_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/dgemm_ref.c
 	${PROJECT_SOURCE_DIR}/blas_api/dsyrk_ref.c
 	${PROJECT_SOURCE_DIR}/blas_api/dtrmm_ref.c
 	${PROJECT_SOURCE_DIR}/blas_api/dtrsm_ref.c
 	${PROJECT_SOURCE_DIR}/blas_api/dpotrf_ref.c
 	${PROJECT_SOURCE_DIR}/blas_api/dgetrf_ref.c
+	)
 
+file(GLOB BLAS_CM_SP_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c
 	)
 
 if(${TARGET} MATCHES X64_INTEL_SKYLAKE_X)
 
-file(GLOB BLASFEO_HP_PM_SRC
+file(GLOB BLASFEO_HP_PM_DP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib8.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib8.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib8.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib8.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib8.c
+	)
 
+file(GLOB BLASFEO_HP_PM_SP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib16.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib16.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
@@ -635,8 +681,11 @@ file(GLOB BLASFEO_HP_PM_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib16.c
 	)
 
-file(GLOB AUX_HP_PM_SRC
+file(GLOB AUX_HP_PM_DP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib8.c
+	)
+
+file(GLOB AUX_HP_PM_SP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib16.c
 	#${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
 	)
@@ -644,14 +693,16 @@ file(GLOB AUX_HP_PM_SRC
 endif()
 if(${TARGET} MATCHES X64_INTEL_HASWELL OR ${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
 
-file(GLOB BLASFEO_HP_PM_SRC
+file(GLOB BLASFEO_HP_PM_DP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
+	)
 
+file(GLOB BLASFEO_HP_PM_SP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib8.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib8.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
@@ -660,23 +711,28 @@ file(GLOB BLASFEO_HP_PM_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib8.c
 	)
 
-file(GLOB AUX_HP_PM_SRC
+file(GLOB AUX_HP_PM_DP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+	)
+
+file(GLOB AUX_HP_PM_SP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib8.c
-	${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
+	#${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib48.c
 	)
 
 endif()
 if(${TARGET} MATCHES X64_INTEL_CORE OR ${TARGET} MATCHES X64_AMD_BULLDOZER OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7 OR ${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9 OR ${TARGET} MATCHES GENERIC)
 
-file(GLOB BLASFEO_HP_PM_SRC
+file(GLOB BLASFEO_HP_PM_DP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas1_lib4.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_lib4.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas2_diag_lib.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_lib4.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_blas3_diag_lib4.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/d_lapack_lib4.c
+	)
 
+file(GLOB BLASFEO_HP_PM_SP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas1_lib4.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_lib4.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_blas2_diag_lib.c
@@ -685,17 +741,20 @@ file(GLOB BLASFEO_HP_PM_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_pm/s_lapack_lib4.c
 	)
 
-file(GLOB AUX_HP_PM_SRC
+file(GLOB AUX_HP_PM_DP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/d_aux_lib4.c
+	)
+
+file(GLOB AUX_HP_PM_SP_SRC
 	${PROJECT_SOURCE_DIR}/auxiliary/s_aux_lib4.c
-	${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
+	#${PROJECT_SOURCE_DIR}/auxiliary/m_aux_lib44.c
 	)
 
 endif()
 
 if(${TARGET} MATCHES X64_INTEL_SKYLAKE_X)
 
-file(GLOB KERNEL_SRC
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgemm_24x8_lib8.S
 	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgemm_16x8_lib8.S
 	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgemm_8x8_lib8.S
@@ -704,9 +763,11 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dpack_lib8.S
 	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgeqrf_8_lib8.c
 	${PROJECT_SOURCE_DIR}/kernel/avx512/kernel_dgelqf_lib8.S
-
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dpack_lib4.S
+	)
+
+file(GLOB KERNEL_SP_SRC
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -717,7 +778,7 @@ endif(${TARGET} MATCHES X64_INTEL_SKYLAKE_X)
 
 if(${TARGET} MATCHES X64_INTEL_HASWELL)
 
-file(GLOB KERNEL_SRC
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_12x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x8_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_dgemm_8x4_lib4.S
@@ -741,7 +802,10 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_d_aux_lib.S
+	)
 
+file(GLOB KERNEL_SP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_24x4_lib8.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_16x4_lib8.S
 	${PROJECT_SOURCE_DIR}/kernel/avx2/kernel_sgemm_8x8_lib8.S
@@ -758,8 +822,6 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_d_aux_lib.S
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -769,7 +831,7 @@ file(GLOB KERNEL_ALIGN_SRC
 endif(${TARGET} MATCHES X64_INTEL_HASWELL)
 if(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
 
-file(GLOB KERNEL_SRC
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_12x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_8x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_dgemm_4x4_lib4.S
@@ -792,7 +854,10 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dger_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_d_aux_lib.S
+	)
 
+file(GLOB KERNEL_SP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_16x4_lib8.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x8_lib8.S
 	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_sgemm_8x4_lib8.S
@@ -808,8 +873,6 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-	${PROJECT_SOURCE_DIR}/kernel/avx/kernel_d_aux_lib.S
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -819,7 +882,7 @@ file(GLOB KERNEL_ALIGN_SRC
 endif(${TARGET} MATCHES X64_INTEL_SANDY_BRIDGE)
 if(${TARGET} MATCHES X64_INTEL_CORE)
 
-file(GLOB KERNEL_SRC
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_dgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_dgemv_4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
@@ -836,7 +899,10 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
 
+file(GLOB KERNEL_SP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/sse3/kernel_sgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
@@ -848,8 +914,6 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -859,7 +923,7 @@ file(GLOB KERNEL_ALIGN_SRC
 endif(${TARGET} MATCHES X64_INTEL_CORE)
 if(${TARGET} MATCHES X64_AMD_BULLDOZER)
 
-file(GLOB KERNEL_SRC
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/fma/kernel_dgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
@@ -875,7 +939,10 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
 
+file(GLOB KERNEL_SP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
@@ -886,8 +953,6 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -897,7 +962,7 @@ file(GLOB KERNEL_ALIGN_SRC
 endif(${TARGET} MATCHES X64_AMD_BULLDOZER)
 if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A57)
 
-file(GLOB KERNEL_SRC
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dpack_lib4.S
@@ -919,7 +984,10 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_d_aux_lib.S
+	)
 
+file(GLOB KERNEL_SP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x8_lib4.S
@@ -937,8 +1005,6 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_d_aux_lib.S
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -948,8 +1014,7 @@ file(GLOB KERNEL_ALIGN_SRC
 endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A57 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A57)
 if(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A53)
 
-file(GLOB KERNEL_SRC
-
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_12x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_8x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_dgemm_4x4_lib4.S
@@ -972,7 +1037,10 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_d_aux_lib.S
+	)
 
+file(GLOB KERNEL_SP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_16x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_12x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_sgemm_8x8_lib4.S
@@ -990,8 +1058,6 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-	${PROJECT_SOURCE_DIR}/kernel/armv8a/kernel_d_aux_lib.S
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -1001,7 +1067,7 @@ file(GLOB KERNEL_ALIGN_SRC
 endif(${TARGET} MATCHES ARMV8A_ARM_CORTEX_A53 OR ${TARGET2} MATCHES ARMV8A_ARM_CORTEX_A53)
 if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
 
-file(GLOB KERNEL_SRC
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
@@ -1017,7 +1083,10 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
 
+file(GLOB KERNEL_SP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_12x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
@@ -1031,8 +1100,6 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -1042,7 +1109,7 @@ file(GLOB KERNEL_ALIGN_SRC
 endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A15)
 if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
 
-file(GLOB KERNEL_SRC
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
@@ -1058,7 +1125,10 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
 
+file(GLOB KERNEL_SP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
@@ -1071,8 +1141,6 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -1082,7 +1150,7 @@ file(GLOB KERNEL_ALIGN_SRC
 endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A7)
 if(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
 
-file(GLOB KERNEL_SRC
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_dgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
@@ -1098,7 +1166,10 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
 
+file(GLOB KERNEL_SP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_8x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/armv7a/kernel_sgemm_4x4_lib4.S
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
@@ -1111,8 +1182,6 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -1122,7 +1191,7 @@ file(GLOB KERNEL_ALIGN_SRC
 endif(${TARGET} MATCHES ARMV7A_ARM_CORTEX_A9)
 if(${TARGET} MATCHES GENERIC)
 
-file(GLOB KERNEL_SRC
+file(GLOB KERNEL_DP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemm_diag_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgemv_4_lib4.c
@@ -1137,7 +1206,10 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_ddot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_daxpy_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_dgetr_lib.c
+	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
+	)
 
+file(GLOB KERNEL_SP_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_4x4_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemm_diag_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sgemv_4_lib4.c
@@ -1148,8 +1220,6 @@ file(GLOB KERNEL_SRC
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_spack_lib4.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_sdot_lib.c
 	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_saxpy_lib.c
-
-	${PROJECT_SOURCE_DIR}/kernel/generic/kernel_d_aux_lib.c
 	)
 
 file(GLOB KERNEL_ALIGN_SRC
@@ -1161,29 +1231,59 @@ endif(${TARGET} MATCHES GENERIC)
 
 
 set(BLASFEO_SRC ${AUX_COMMON_SRC})
+if(${DP_ROUTINES})
+	list(APPEND BLASFEO_SRC ${AUX_COMMON_DP_SRC})
+endif()
+if(${SP_ROUTINES})
+	list(APPEND BLASFEO_SRC ${AUX_COMMON_SP_SRC})
+endif()
 
 if(${LA} MATCHES HIGH_PERFORMANCE)
 
-	list(APPEND BLASFEO_SRC ${KERNEL_SRC})
 	list(APPEND BLASFEO_SRC ${KERNEL_ALIGN_SRC})
+	if(${DP_ROUTINES})
+		list(APPEND BLASFEO_SRC ${KERNEL_DP_SRC})
+	endif()
+	if(${SP_ROUTINES})
+		list(APPEND BLASFEO_SRC ${KERNEL_SP_SRC})
+	endif()
 
 	if(${MF} MATCHES PANELMAJ)
 
-		list(APPEND BLASFEO_SRC ${AUX_HP_PM_SRC})
-		list(APPEND BLASFEO_SRC ${BLASFEO_HP_PM_SRC})
+		if(${DP_ROUTINES})
+			list(APPEND BLASFEO_SRC ${AUX_HP_PM_DP_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_PM_DP_SRC})
+		endif()
+		if(${SP_ROUTINES})
+			list(APPEND BLASFEO_SRC ${AUX_HP_PM_SP_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_PM_SP_SRC})
+		endif()
 
 	else()
 
-		list(APPEND BLASFEO_SRC ${AUX_HP_CM_SRC})
-		list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SRC})
-		list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_SRC})
+		if(${DP_ROUTINES})
+			list(APPEND BLASFEO_SRC ${AUX_HP_CM_DP_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_DP_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_DP_SRC})
+		endif()
+		if(${SP_ROUTINES})
+			list(APPEND BLASFEO_SRC ${AUX_HP_CM_SP_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SP_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_SP_SRC})
+		endif()
 
 	endif()
 
 	if(${BLASFEO_REF_API})
 
-		list(APPEND BLASFEO_SRC ${AUX_REF_SRC})
-		list(APPEND BLASFEO_SRC ${BLASFEO_REF_SRC})
+		if(${DP_ROUTINES})
+			list(APPEND BLASFEO_SRC ${AUX_REF_DP_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_REF_DP_SRC})
+		endif()
+		if(${SP_ROUTINES})
+			list(APPEND BLASFEO_SRC ${AUX_REF_SP_SRC})
+			list(APPEND BLASFEO_SRC ${BLASFEO_REF_SP_SRC})
+		endif()
 
 	endif()
 
@@ -1191,12 +1291,23 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 
 		if(${MF} MATCHES PANELMAJ)
 
-			list(APPEND BLASFEO_SRC ${BLAS_SRC})
-			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SRC})
+			if(${DP_ROUTINES})
+				list(APPEND BLASFEO_SRC ${BLAS_DP_SRC})
+				list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_DP_SRC})
+			endif()
+			if(${SP_ROUTINES})
+				list(APPEND BLASFEO_SRC ${BLAS_SP_SRC})
+				list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SP_SRC})
+			endif()
 
 		else()
 
-			list(APPEND BLASFEO_SRC ${BLAS_CM_SRC})
+			if(${DP_ROUTINES})
+				list(APPEND BLASFEO_SRC ${BLAS_CM_DP_SRC})
+			endif()
+			if(${SP_ROUTINES})
+				list(APPEND BLASFEO_SRC ${BLAS_CM_SP_SRC})
+			endif()
 
 		endif()
 
@@ -1205,22 +1316,45 @@ if(${LA} MATCHES HIGH_PERFORMANCE)
 endif()
 if(${LA} MATCHES REFERENCE)
 
-	list(APPEND BLASFEO_SRC ${KERNEL_ALIGN_SRC})
-	list(APPEND BLASFEO_SRC ${AUX_REF_SRC})
-	list(APPEND BLASFEO_SRC ${BLASFEO_REF_SRC})
+	if(${DP_ROUTINES})
+		list(APPEND BLASFEO_SRC ${KERNEL_ALIGN_DP_SRC})
+		list(APPEND BLASFEO_SRC ${AUX_REF_DP_SRC})
+		list(APPEND BLASFEO_SRC ${BLASFEO_REF_DP_SRC})
+	endif()
+	if(${SP_ROUTINES})
+		list(APPEND BLASFEO_SRC ${KERNEL_ALIGN_SP_SRC})
+		list(APPEND BLASFEO_SRC ${AUX_REF_SP_SRC})
+		list(APPEND BLASFEO_SRC ${BLASFEO_REF_SP_SRC})
+	endif()
 
 	if(${BLASFEO_HP_API})
 
-		list(APPEND BLASFEO_SRC ${KERNEL_SRC})
+		if(${DP_ROUTINES})
+			list(APPEND BLASFEO_SRC ${KERNEL_DP_SRC})
+		endif()
+		if(${SP_ROUTINES})
+			list(APPEND BLASFEO_SRC ${KERNEL_SP_SRC})
+		endif()
 
 		if(${MF} MATCHES PANELMAJ)
 
-			list(APPEND BLASFEO_SRC ${BLASFEO_HP_PM_SRC})
+			if(${DP_ROUTINES})
+				list(APPEND BLASFEO_SRC ${BLASFEO_HP_PM_DP_SRC})
+			endif()
+			if(${SP_ROUTINES})
+				list(APPEND BLASFEO_SRC ${BLASFEO_HP_PM_SP_SRC})
+			endif()
 
 		else()
 
-			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SRC})
-			list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_SRC})
+			if(${DP_ROUTINES})
+				list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_DP_SRC})
+				list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_DP_SRC})
+			endif()
+			if(${SP_ROUTINES})
+				list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_SP_SRC})
+				list(APPEND BLASFEO_SRC ${BLASFEO_HP_CM_REF_SP_SRC})
+			endif()
 
 		endif()
 
@@ -1228,11 +1362,21 @@ if(${LA} MATCHES REFERENCE)
 
 	if(${BLAS_API})
 
-		list(APPEND BLASFEO_SRC ${BLAS_SRC})
+		if(${DP_ROUTINES})
+			list(APPEND BLASFEO_SRC ${BLAS_DP_SRC})
+		endif()
+		if(${SP_ROUTINES})
+			list(APPEND BLASFEO_SRC ${BLAS_SP_SRC})
+		endif()
 
 		if(${MF} MATCHES PANELMAJ)
 
-			list(APPEND BLASFEO_SRC ${REF_BLAS_SRC})
+			if(${DP_ROUTINES})
+				list(APPEND BLASFEO_SRC ${REF_BLAS_DP_SRC})
+			endif()
+			if(${SP_ROUTINES})
+				list(APPEND BLASFEO_SRC ${REF_BLAS_SP_SRC})
+			endif()
 
 		endif()
 
@@ -1242,7 +1386,13 @@ endif()
 
 # TODO WR
 
-	list(APPEND BLASFEO_SRC ${AUX_EXT_DEP_SRC})
+list(APPEND BLASFEO_SRC ${AUX_EXT_DEP_SRC})
+if(${DP_ROUTINES})
+	list(APPEND BLASFEO_SRC ${AUX_EXT_DEP_DP_SRC})
+endif()
+if(${SP_ROUTINES})
+	list(APPEND BLASFEO_SRC ${AUX_EXT_DEP_SP_SRC})
+endif()
 
 
 

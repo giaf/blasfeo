@@ -40,49 +40,86 @@ OBJS =
 OBJS += blasfeo_stdlib.o \
         blasfeo_processor_features.o \
         memory.o \
-		d_aux_common.o \
-		s_aux_common.o
+
+ifeq ($(DP_ROUTINES), 1)
+	OBJS += d_aux_common.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	OBJS += s_aux_common.o
+endif # SP
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(MF), PANELMAJ)
 
 ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
-OBJS += d_aux_lib8.o
-OBJS += s_aux_lib16.o
-#OBJS += m_aux_lib48.o
+ifeq ($(DP_ROUTINES), 1)
+	OBJS += d_aux_lib8.o
+	ifeq ($(SP_ROUTINES), 1)
+	#OBJS += m_aux_lib48.o
+	endif # MP
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	OBJS += s_aux_lib16.o
+endif # SP
 endif
 
 ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE))
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib8.o
-OBJS += m_aux_lib48.o
+ifeq ($(DP_ROUTINES), 1)
+	OBJS += d_aux_lib4.o
+	ifeq ($(SP_ROUTINES), 1)
+	#OBJS += m_aux_lib48.o
+	endif # MP
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	OBJS += s_aux_lib8.o
+endif # SP
 endif
 
 ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_CORE X64_AMD_BULLDOZER X86_AMD_JAGUAR X86_AMD_BARCELONA ARMV8A_APPLE_M1 ARMV8A_ARM_CORTEX_A76 ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
-OBJS += d_aux_lib4.o
-OBJS += s_aux_lib4.o
-OBJS += m_aux_lib44.o
+ifeq ($(DP_ROUTINES), 1)
+	OBJS += d_aux_lib4.o
+	ifeq ($(SP_ROUTINES), 1)
+	#OBJS += m_aux_lib44.o
+	endif # MP
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	OBJS += s_aux_lib4.o
+endif # SP
 endif
 
 else # MF COLMAJ
 
 # TODO optimized hp cm version
-OBJS += d_aux_hp_cm.o
-OBJS += s_aux_hp_cm.o
+ifeq ($(DP_ROUTINES), 1)
+	OBJS += d_aux_hp_cm.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	OBJS += s_aux_hp_cm.o
+endif # SP
 
 endif # MF choice
 
 ifeq ($(BLASFEO_REF_API), 1)
-OBJS += d_aux_ref.o
-OBJS += s_aux_ref.o
+ifeq ($(DP_ROUTINES), 1)
+	OBJS += d_aux_ref.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	OBJS += s_aux_ref.o
+endif # SP
 endif
 
 else # LA_REFERENCE | LA_EXTERNAL_BLAS_WRAPPER
 
-OBJS += d_aux_ref.o
-OBJS += s_aux_ref.o
-OBJS += m_aux_lib.o
+ifeq ($(DP_ROUTINES), 1)
+	OBJS += d_aux_ref.o
+	ifeq ($(SP_ROUTINES), 1)
+	#OBJS += m_aux_lib.o
+	endif # MP
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	OBJS += s_aux_ref.o
+endif # SP
 
 endif # LA choice
 
@@ -90,13 +127,17 @@ endif # LA choice
 #ext dep
 #ifeq ($(EXT_DEP), 1)
 
-OBJS += d_aux_ext_dep_common.o
-OBJS += s_aux_ext_dep_common.o
-OBJS += d_aux_ext_dep.o
-OBJS += s_aux_ext_dep.o
 OBJS += v_aux_ext_dep_lib.o
 OBJS += i_aux_ext_dep_lib.o
 OBJS += timing.o
+ifeq ($(DP_ROUTINES), 1)
+	OBJS += d_aux_ext_dep_common.o
+	OBJS += d_aux_ext_dep.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	OBJS += s_aux_ext_dep_common.o
+	OBJS += s_aux_ext_dep.o
+endif # SP
 
 #endif
 

@@ -39,33 +39,35 @@ OBJS =
 
 ifeq ($(BLAS_API), 1)
 
-OBJS += dcopy.o
-OBJS += daxpy.o
-OBJS += ddot.o
-OBJS += dgemm_ref.o # XXX
-OBJS += dsyrk_ref.o # XXX
-OBJS += dtrmm_ref.o # XXX
-OBJS += dtrsm_ref.o # XXX
-OBJS += dsyr2k_ref.o # XXX
-OBJS += dgesv.o
-OBJS += dgetrf_ref.o # XXX
-OBJS += dgetrs.o
-OBJS += dlaswp.o
-OBJS += dposv.o
-OBJS += dpotrf_ref.o # XXX
-OBJS += dpotrs.o
-OBJS += dtrtrs.o
-OBJS += dgetr_ref.o # XXX
-OBJS += dgemv_ref.o # XXX
-OBJS += dsymv_ref.o # XXX
-OBJS += dger_ref.o # XXX
-
-OBJS += saxpy.o
-OBJS += sdot.o
-OBJS += sgemm_ref.o # XXX
-OBJS += strsm_ref.o # XXX
-OBJS += spotrf_ref.o # XXX
-
+ifeq ($(DP_ROUTINES), 1)
+	OBJS += dcopy.o
+	OBJS += daxpy.o
+	OBJS += ddot.o
+	OBJS += dgemm_ref.o # XXX
+	OBJS += dsyrk_ref.o # XXX
+	OBJS += dtrmm_ref.o # XXX
+	OBJS += dtrsm_ref.o # XXX
+	OBJS += dsyr2k_ref.o # XXX
+	OBJS += dgesv.o
+	OBJS += dgetrf_ref.o # XXX
+	OBJS += dgetrs.o
+	OBJS += dlaswp.o
+	OBJS += dposv.o
+	OBJS += dpotrf_ref.o # XXX
+	OBJS += dpotrs.o
+	OBJS += dtrtrs.o
+	OBJS += dgetr_ref.o # XXX
+	OBJS += dgemv_ref.o # XXX
+	OBJS += dsymv_ref.o # XXX
+	OBJS += dger_ref.o # XXX
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	OBJS += saxpy.o
+	OBJS += sdot.o
+	OBJS += sgemm_ref.o # XXX
+	OBJS += strsm_ref.o # XXX
+	OBJS += spotrf_ref.o # XXX
+endif # SP
 
 endif # BLAS_API
 

@@ -35,69 +35,71 @@
 
 include ../../Makefile.rule
 
+KERNEL_OBJS =
 
 ifeq ($(TARGET), X64_INTEL_SKYLAKE_X) # TODO remove when not needed !!!
-KERNEL_OBJS = \
-		kernel_dpack_lib4.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dpack_lib4.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+endif # SP
 endif
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)
-KERNEL_OBJS = \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_diag_lib8.o \
-		kernel_sgetr_lib8.o \
-		kernel_sgead_lib8.o \
-		kernel_sgecpsc_lib8.o \
-		kernel_sgemv_8_lib8.o \
-		kernel_sgemv_4_lib8.o \
-		kernel_spack_lib8.o \
-		\
-		kernel_d_aux_lib.o \
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_diag_lib8.o
+	KERNEL_OBJS += kernel_sgetr_lib8.o
+	KERNEL_OBJS += kernel_sgead_lib8.o
+	KERNEL_OBJS += kernel_sgecpsc_lib8.o
+	KERNEL_OBJS += kernel_sgemv_8_lib8.o
+	KERNEL_OBJS += kernel_sgemv_4_lib8.o
+	KERNEL_OBJS += kernel_spack_lib8.o
+endif # SP
 
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-KERNEL_OBJS = \
-		kernel_dgemm_12x4_lib4.o \
-		kernel_dgemm_8x4_lib4.o \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_12_lib4.o \
-		kernel_dgemv_8_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dsymv_6_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgebp_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_16x4_lib8.o \
-		kernel_sgemm_8x8_lib8.o \
-		kernel_sgemm_8x4_lib8.o \
-		kernel_sgemm_diag_lib8.o \
-		kernel_sgecpsc_lib8.o \
-		kernel_sgetr_lib8.o \
-		kernel_sgead_lib8.o \
-		kernel_sgetr_lib8.o \
-		kernel_sgemv_8_lib8.o \
-		kernel_sgemv_4_lib8.o \
-		kernel_spack_lib8.o \
-		\
-		kernel_d_aux_lib.o \
-		\
-#		kernel_sgemm_16x8_lib8.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_12x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_8x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgemv_12_lib4.o
+	KERNEL_OBJS += kernel_dgemv_8_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_6_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgebp_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_16x4_lib8.o
+	KERNEL_OBJS += kernel_sgemm_8x8_lib8.o
+	KERNEL_OBJS += kernel_sgemm_8x4_lib8.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib8.o
+	KERNEL_OBJS += kernel_sgecpsc_lib8.o
+	KERNEL_OBJS += kernel_sgetr_lib8.o
+	KERNEL_OBJS += kernel_sgead_lib8.o
+	KERNEL_OBJS += kernel_sgetr_lib8.o
+	KERNEL_OBJS += kernel_sgemv_8_lib8.o
+	KERNEL_OBJS += kernel_sgemv_4_lib8.o
+	KERNEL_OBJS += kernel_spack_lib8.o
+endif # SP
 endif
 
 

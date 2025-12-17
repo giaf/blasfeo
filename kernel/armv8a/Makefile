@@ -36,49 +36,51 @@
 include ../../Makefile.rule
 
 
-ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_APPLE_M1 ARMV8A_ARM_CORTEX_A76 ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57))
-KERNEL_OBJS = \
-		kernel_dgemm_8x4_lib4.o \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dgetr_lib.o \
-		kernel_dger_lib4.o \
-		\
-		kernel_sgemm_16x4_lib4.o \
-		kernel_sgemm_12x4_lib4.o \
-		kernel_sgemm_8x8_lib4.o \
-		kernel_sgemm_8x4_lib4.o \
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_spack_lib4.o \
-		\
-		kernel_d_aux_lib.o \
+KERNEL_OBJS =
 
+ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_APPLE_M1 ARMV8A_ARM_CORTEX_A76 ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57))
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_8x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_16x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_12x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_8x8_lib4.o
+	KERNEL_OBJS += kernel_sgemm_8x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+endif # SP
 endif
 
 ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53))
-KERNEL_OBJS = \
-		kernel_dgemm_12x4_lib4.o \
-		kernel_dgemm_8x4_lib4.o \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dgetr_lib.o \
-		kernel_dger_lib4.o \
-		\
-		kernel_sgemm_16x4_lib4.o \
-		kernel_sgemm_12x4_lib4.o \
-		kernel_sgemm_8x8_lib4.o \
-		kernel_sgemm_8x4_lib4.o \
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_spack_lib4.o \
-		\
-		kernel_d_aux_lib.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_12x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_8x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_16x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_12x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_8x8_lib4.o
+	KERNEL_OBJS += kernel_sgemm_8x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+endif # SP
 endif
 
 

@@ -36,13 +36,16 @@
 include ../../Makefile.rule
 
 
-ifeq ($(TARGET), X64_INTEL_CORE)
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
+KERNEL_OBJS =
 
+ifeq ($(TARGET), X64_INTEL_CORE)
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+endif # SP
 endif
 
 ifeq ($(TARGET), $(filter $(TARGET), X64_INTEL_HASWELL X64_INTEL_SANDY_BRIDGE X64_INTEL_CORE X64_AMD_BULLDOZER X64_INTEL_SKYLAKE_X))

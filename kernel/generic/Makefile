@@ -36,330 +36,336 @@
 include ../../Makefile.rule
 
 
-ifeq ($(TARGET), X64_INTEL_HASWELL)
-KERNEL_OBJS = kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-		\
-		kernel_sgemm_8x4_lib8.o \
+KERNEL_OBJS =
 
+ifeq ($(TARGET), X64_INTEL_HASWELL)
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+	KERNEL_OBJS += kernel_sgemm_8x4_lib8.o
+endif # SP
 endif
 
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
-KERNEL_OBJS = kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-		\
-		kernel_sgemm_8x4_lib8.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+	KERNEL_OBJS += kernel_sgemm_8x4_lib8.o
+endif # SP
 endif
 
 ifeq ($(TARGET), X64_INTEL_CORE)
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_sgecp_lib4.o \
-		kernel_sgetr_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-		\
-		kernel_d_aux_lib.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_sgecp_lib4.o
+	KERNEL_OBJS += kernel_sgetr_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+endif # SP
 endif
 
 ifeq ($(TARGET), X64_AMD_BULLDOZER)
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_sgecp_lib4.o \
-		kernel_sgetr_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-		\
-		kernel_d_aux_lib.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_sgecp_lib4.o
+	KERNEL_OBJS += kernel_sgetr_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+endif # SP
 endif
 
 ifeq ($(TARGET), X86_AMD_JAGUAR)
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_sgecp_lib4.o \
-		kernel_sgetr_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-		\
-		kernel_d_aux_lib.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_sgecp_lib4.o
+	KERNEL_OBJS += kernel_sgetr_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+endif # SP
 endif
 
 ifeq ($(TARGET), X86_AMD_BARCELONA)
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_sgecp_lib4.o \
-		kernel_sgetr_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-		\
-		kernel_d_aux_lib.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_sgecp_lib4.o
+	KERNEL_OBJS += kernel_sgetr_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+endif # SP
 endif
 
 ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_APPLE_M1 ARMV8A_ARM_CORTEX_A76 ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57))
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_sgecp_lib4.o \
-		kernel_sgetr_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_sgecp_lib4.o
+	KERNEL_OBJS += kernel_sgetr_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+endif # SP
 endif
 
 ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53))
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_sgecp_lib4.o \
-		kernel_sgetr_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_sgecp_lib4.o
+	KERNEL_OBJS += kernel_sgetr_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+endif # SP
 endif
 
 ifeq ($(TARGET), ARMV7A_ARM_CORTEX_A15)
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_sgecp_lib4.o \
-		kernel_sgetr_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-		\
-		kernel_d_aux_lib.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_sgecp_lib4.o
+	KERNEL_OBJS += kernel_sgetr_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+endif # SP
 endif
 
 ifeq ($(TARGET), $(filter $(TARGET), ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7))
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_sgecp_lib4.o \
-		kernel_sgetr_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-		\
-		kernel_d_aux_lib.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_sgecp_lib4.o
+	KERNEL_OBJS += kernel_sgetr_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+endif # SP
 endif
 
 ifeq ($(TARGET), GENERIC)
-KERNEL_OBJS = \
-		kernel_dgemm_4x4_lib4.o \
-		kernel_dgemm_diag_lib4.o \
-		kernel_dgemv_4_lib4.o \
-		kernel_dsymv_4_lib4.o \
-		kernel_dgetrf_pivot_lib4.o \
-		kernel_dgeqrf_4_lib4.o \
-		kernel_dgecp_lib4.o \
-		kernel_dgetr_lib4.o \
-		kernel_dpack_lib4.o \
-		kernel_dpack_buffer_lib4.o \
-		kernel_dger_lib4.o \
-		kernel_ddot_lib.o \
-		kernel_daxpy_lib.o \
-		kernel_dgetr_lib.o \
-		\
-		kernel_sgemm_4x4_lib4.o \
-		kernel_sgemm_diag_lib4.o \
-		kernel_sgemv_4_lib4.o \
-		kernel_ssymv_4_lib4.o \
-		kernel_sgetrf_pivot_lib4.o \
-		kernel_sgecp_lib4.o \
-		kernel_sgetr_lib4.o \
-		kernel_spack_lib4.o \
-		kernel_sdot_lib.o \
-		kernel_saxpy_lib.o \
-		\
-		kernel_d_aux_lib.o \
-
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_dgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dgeqrf_4_lib4.o
+	KERNEL_OBJS += kernel_dgecp_lib4.o
+	KERNEL_OBJS += kernel_dgetr_lib4.o
+	KERNEL_OBJS += kernel_dpack_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+	KERNEL_OBJS += kernel_dgetr_lib.o
+	KERNEL_OBJS += kernel_d_aux_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemm_diag_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_ssymv_4_lib4.o
+	KERNEL_OBJS += kernel_sgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_sgecp_lib4.o
+	KERNEL_OBJS += kernel_sgetr_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+endif # SP
 endif
 
 ifeq ($(TARGET), $(filter $(TARGET), ARMV8A_APPLE_M1 ARMV8A_ARM_CORTEX_A76 ARMV8A_ARM_CORTEX_A73 ARMV8A_ARM_CORTEX_A57 ARMV8A_ARM_CORTEX_A55 ARMV8A_ARM_CORTEX_A53 ARMV7A_ARM_CORTEX_A15 ARMV7A_ARM_CORTEX_A9 ARMV7A_ARM_CORTEX_A7 GENERIC))
