@@ -44,6 +44,15 @@ typedef unsigned int uintptr_t;
 #include <stdint.h>
 #endif
 
+#if defined(TARGET_X64_INTEL_SKYLAKE_X) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+#include <mmintrin.h>
+#include <xmmintrin.h>  // SSE
+#include <emmintrin.h>  // SSE2
+#include <pmmintrin.h>  // SSE3
+#include <smmintrin.h>  // SSE4
+#include <immintrin.h>  // AVX
+#endif
+
 #include <blasfeo_stdlib.h>
 #include <blasfeo_block_size.h>
 #include <blasfeo_align.h>
@@ -162,3 +171,54 @@ void blasfeo_free_align(void *ptr)
 
 	}
 #endif
+
+
+
+void blasfeo_zero_memset(size_t memsize, void *mem)
+	{
+	size_t ii;
+	size_t memsize_m8 = memsize/8; // sizeof(double) is 8
+	size_t memsize_r8 = memsize%8;
+	double *double_ptr = mem;
+	ii = 0;
+#if defined(TARGET_X64_INTEL_SKYLAKE_X) || defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
+	__m256d
+		y_zeros;
+
+	y_zeros = _mm256_setzero_pd();
+	if(memsize_m8>7)
+		{
+		for(; ii<memsize_m8-7; ii+=8)
+			{
+			_mm256_storeu_pd( double_ptr+ii+0, y_zeros );
+			_mm256_storeu_pd( double_ptr+ii+4, y_zeros );
+			}
+		}
+#else
+	if(memsize_m8>7)
+		{
+		for(; ii<memsize_m8-7; ii+=8)
+			{
+			double_ptr[ii+0] = 0.0;
+			double_ptr[ii+1] = 0.0;
+			double_ptr[ii+2] = 0.0;
+			double_ptr[ii+3] = 0.0;
+			double_ptr[ii+4] = 0.0;
+			double_ptr[ii+5] = 0.0;
+			double_ptr[ii+6] = 0.0;
+			double_ptr[ii+7] = 0.0;
+			}
+		}
+#endif
+	for(; ii<memsize_m8; ii++)
+		{
+		double_ptr[ii] = 0.0;
+		}
+	char *char_ptr = (char *) (&double_ptr[ii]);
+	for(ii=0; ii<memsize_r8; ii++)
+		{
+		char_ptr[ii] = 0;
+		}
+	return;
+	}
+

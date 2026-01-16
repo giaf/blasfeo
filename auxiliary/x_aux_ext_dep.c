@@ -42,6 +42,7 @@ void ALLOCATE_MAT(int m, int n, struct MAT *sA)
 	size_t size = MEMSIZE_MAT(m, n);
 	void *mem;
 	blasfeo_malloc_align(&mem, size);
+	blasfeo_zero_memset(size, mem);
 	CREATE_MAT(m, n, sA, mem);
 	return;
 	}
@@ -67,6 +68,7 @@ void ALLOCATE_VEC(int m, struct VEC *sa)
 	size_t size = MEMSIZE_VEC(m);
 	void *mem;
 	blasfeo_malloc_align(&mem, size);
+	blasfeo_zero_memset(size, mem);
 	CREATE_VEC(m, sa, mem);
 	return;
 	}

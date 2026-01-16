@@ -54,6 +54,8 @@ void blasfeo_free(void *ptr);
 //
 void blasfeo_free_align(void *ptr);
 #endif
+//
+void blasfeo_zero_memset(size_t memsize, void *mem);
 
 
 
