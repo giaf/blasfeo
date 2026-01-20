@@ -11883,8 +11883,6 @@ LC11:
 	.long	0x80000000
 	.long	0x0
 	.long	0x80000000
-	.long	0x0
-	.long	0x80000000
 
 
 

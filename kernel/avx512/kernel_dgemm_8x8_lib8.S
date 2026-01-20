@@ -14749,10 +14749,6 @@ LC03:
 	.long	0x80000000
 	.long	0x0
 	.long	0x80000000
-	.long	0x0
-	.long	0x80000000
-	.long	0x0
-	.long	0x80000000
 
 
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
