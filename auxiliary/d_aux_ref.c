@@ -119,6 +119,7 @@
 #define REF_VECZE blasfeo_ref_dvecze
 #define REF_VECNRM_INF blasfeo_ref_dvecnrm_inf
 #define REF_VECNRM_2 blasfeo_ref_dvecnrm_2
+#define REF_VECNRM_1 blasfeo_ref_dvecnrm_1
 #define REF_DIAIN blasfeo_ref_ddiain
 #define REF_DIAIN_SP blasfeo_ref_ddiain_sp
 #define REF_DIAEX blasfeo_ref_ddiaex
@@ -184,6 +185,7 @@
 #define VECZE blasfeo_dvecze
 #define VECNRM_INF blasfeo_dvecnrm_inf
 #define VECNRM_2 blasfeo_dvecnrm_2
+#define VECNRM_1 blasfeo_dvecnrm_1
 #define DIAIN blasfeo_ddiain
 #define DIAIN_SP blasfeo_ddiain_sp
 #define DIAEX blasfeo_ddiaex

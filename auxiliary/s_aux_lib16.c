@@ -1314,6 +1314,34 @@ void blasfeo_svecnrm_2(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm)
 
 
 
+// compute 1 norm of vector
+void blasfeo_svecnrm_1(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm)
+	{
+	int ii;
+	float *x = sx->pa + xi;
+	float norm = 0.0;
+	float vnorm[] = {0.0, 0.0, 0.0, 0.0};
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		vnorm[0] += fabs(x[ii+0]);
+		vnorm[1] += fabs(x[ii+1]);
+		vnorm[2] += fabs(x[ii+2]);
+		vnorm[3] += fabs(x[ii+3]);
+		}
+	vnorm[0] += vnorm[2];
+	vnorm[1] += vnorm[3];
+	norm = vnorm[0]+vnorm[1];
+	for(; ii<m; ii++)
+		{
+		norm += fabs(x[ii]);
+		}
+	*ptr_norm = norm;
+	return;
+	}
+
+
+
 // permute elements of a vector struct
 void blasfeo_svecpe(int kmax, int *ipiv, struct blasfeo_svec *sx, int xi)
 	{

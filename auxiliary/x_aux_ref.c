@@ -1020,7 +1020,7 @@ void REF_VECNRM_INF(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 
 
 
-// compute inf norm of vector
+// compute 2 norm of vector
 void REF_VECNRM_2(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 	{
 	int ii;
@@ -1031,6 +1031,34 @@ void REF_VECNRM_2(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 		norm += x[ii]*x[ii];
 		}
 	norm = SQRT(norm);
+	*ptr_norm = norm;
+	return;
+	}
+
+
+
+// compute 1 norm of vector
+void REF_VECNRM_1(int m, struct VEC *sx, int xi, REAL *ptr_norm)
+	{
+	int ii;
+	REAL *x = sx->pa + xi;
+	REAL norm = 0.0;
+	REAL vnorm[] = {0.0, 0.0, 0.0, 0.0};
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		vnorm[0] += fabs(x[ii+0]);
+		vnorm[1] += fabs(x[ii+1]);
+		vnorm[2] += fabs(x[ii+2]);
+		vnorm[3] += fabs(x[ii+3]);
+		}
+	vnorm[0] += vnorm[2];
+	vnorm[1] += vnorm[3];
+	norm = vnorm[0]+vnorm[1];
+	for(; ii<m; ii++)
+		{
+		norm += fabs(x[ii]);
+		}
 	*ptr_norm = norm;
 	return;
 	}

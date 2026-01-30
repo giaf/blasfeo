@@ -132,6 +132,8 @@ void blasfeo_ref_sveccl(int m, struct blasfeo_svec *sxm, int xim, struct blasfeo
 void blasfeo_ref_sveccl_mask(int m, struct blasfeo_svec *sxm, int xim, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sxp, int xip, struct blasfeo_svec *sz, int zi, struct blasfeo_svec *sm, int mi);
 void blasfeo_ref_svecze(int m, struct blasfeo_svec *sm, int mi, struct blasfeo_svec *sv, int vi, struct blasfeo_svec *se, int ei);
 void blasfeo_ref_svecnrm_inf(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm);
+void blasfeo_ref_svecnrm_2(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm);
+void blasfeo_ref_svecnrm_1(int m, struct blasfeo_svec *sx, int xi, float *ptr_norm);
 void blasfeo_ref_svecpe(int kmax, int *ipiv, struct blasfeo_svec *sx, int xi);
 void blasfeo_ref_svecpei(int kmax, int *ipiv, struct blasfeo_svec *sx, int xi);
 

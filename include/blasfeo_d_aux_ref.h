@@ -196,6 +196,8 @@ void blasfeo_ref_dveccl_mask(int m,
 
 void blasfeo_ref_dvecze(int m, struct blasfeo_dvec *sm, int mi, struct blasfeo_dvec *sv, int vi, struct blasfeo_dvec *se, int ei);
 void blasfeo_ref_dvecnrm_inf(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm);
+void blasfeo_ref_dvecnrm_2(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm);
+void blasfeo_ref_dvecnrm_1(int m, struct blasfeo_dvec *sx, int xi, double *ptr_norm);
 void blasfeo_ref_dvecpe(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
 void blasfeo_ref_dvecpei(int kmax, int *ipiv, struct blasfeo_dvec *sx, int xi);
 
