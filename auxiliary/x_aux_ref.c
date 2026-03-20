@@ -1862,6 +1862,13 @@ void VECNRM_2(int m, struct VEC *sx, int xi, REAL *ptr_norm)
 
 
 
+void VECNRM_1(int m, struct VEC *sx, int xi, REAL *ptr_norm)
+	{
+	REF_VECNRM_1(m, sx, xi, ptr_norm);
+	}
+
+
+
 void DIAIN(int kmax, REAL alpha, struct VEC *sx, int xi, struct MAT *sA, int ai, int aj)
 	{
 	REF_DIAIN(kmax, alpha, sx, xi, sA, ai, aj);
