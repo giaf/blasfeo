@@ -39,7 +39,8 @@
     "X64_INTEL_SANDY_BRIDGE"
   ],
   "LA": [
-    "HIGH_PERFORMANCE"
+    "HIGH_PERFORMANCE",
+    "REFERENCE"
   ],
   "routines": [
     "gemm_nn",
