@@ -37,6 +37,8 @@
 #define BLASFEO_TIMING_H_
 
 //#include <stdbool.h>
+//
+#include "blasfeo_target.h" // EXT_DEP is defined there
 
 
 
