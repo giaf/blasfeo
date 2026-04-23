@@ -72,8 +72,12 @@ void blasfeo_hp_dger(int m, int n, double alpha, struct blasfeo_dvec *sx, int xi
 	// extract pointer to column-major matrices from structures
 	int ldc = sC->m;
 	int ldd = sD->m;
-	double *C = sC->pA + ci + cj*ldc;
-	double *D = sD->pA + di + dj*ldd;
+
+	size_t ldc_s = ldc;
+	size_t ldd_s = ldd;
+
+	double *C = sC->pA + ci + cj*ldc_s;
+	double *D = sD->pA + di + dj*ldd_s;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 
@@ -83,12 +87,12 @@ void blasfeo_hp_dger(int m, int n, double alpha, struct blasfeo_dvec *sx, int xi
 	ii = 0;
 	for(; ii<n-3; ii+=4)
 		{
-		kernel_dger_4_libc(m, &alpha, x, y+ii, C+ii*ldc, ldc, D+ii*ldd, ldd);
+		kernel_dger_4_libc(m, &alpha, x, y+ii, C+ii*ldc_s, ldc, D+ii*ldd_s, ldd);
 		}
 	// clean up at the end
 	if(ii<n)
 		{
-		kernel_dger_4_vs_libc(m, &alpha, x, y+ii, C+ii*ldc, ldc, D+ii*ldd, ldd, n-ii);
+		kernel_dger_4_vs_libc(m, &alpha, x, y+ii, C+ii*ldc_s, ldc, D+ii*ldd_s, ldd, n-ii);
 		}
 	
 	return;

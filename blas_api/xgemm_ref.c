@@ -46,7 +46,7 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 	{
 
 #ifdef TIME_INT
-    blasfeo_timer timer;
+	blasfeo_timer timer;
 	blasfeo_tic(&timer);
 #endif
 
@@ -137,12 +137,12 @@ void GEMM(char *ta, char *tb, int *pm, int *pn, int *pk, REAL *palpha, REAL *A, 
 //#endif
 
 #ifdef TIME_INT
-	double flops = 2 * *pm * *pn * *pk;
+	double flops = 2.0 * *pm * *pn * *pk;
 	double time = blasfeo_toc(&timer);
 	double Gflops = 1e-9 * flops / time;
-	double Gflops_max = 3.4 * 16;
+	double Gflops_max = 3.7 * 16;
 #ifdef EXT_DEP
-    printf("\nblasfeo gemm\t%c\t%c\t\t%d\t%d\t%d\t%f\t%f\n", *ta, *tb, *pm, *pn, *pk, Gflops, 100.0*Gflops/Gflops_max);
+	printf("\nblasfeo gemm\t%c\t%c\t\t%d\t%d\t%d\t%f\t%f\n", *ta, *tb, *pm, *pn, *pk, Gflops, 100.0*Gflops/Gflops_max);
 #endif
 #endif
 

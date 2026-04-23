@@ -33,6 +33,8 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+#include <stdlib.h>
+
 #include <blasfeo_common.h>
 #include <blasfeo_d_kernel.h>
 
@@ -48,43 +50,46 @@
 
 static void blasfeo_dgetrf_m0_p0(int m, int n, double *pA, int lda, double *pB, int ldb, double *pAp, double *pBp)
 	{
+
+	size_t lda_s = lda;
+
 	int ii;
 
 	ii=0;
 #if defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<n-8; ii+=8)
 		{
-		kernel_dgetr_tn_8_p0_lib(m, pA+ii*lda, lda, pB+ii, ldb, pA+(ii+8)*lda, pB+ii+8);
+		kernel_dgetr_tn_8_p0_lib(m, pA+ii*lda_s, lda, pB+ii, ldb, pA+(ii+8)*lda_s, pB+ii+8);
 		}
 	if(ii<n-7)
 		{
-		kernel_dgetr_tn_8_p0_lib(m, pA+ii*lda, lda, pB+ii, ldb, pAp, pBp);
+		kernel_dgetr_tn_8_p0_lib(m, pA+ii*lda_s, lda, pB+ii, ldb, pAp, pBp);
 		ii+=8;
 		}
 	if(ii<n-3)
 		{
-		kernel_dgetr_tn_4_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		kernel_dgetr_tn_4_lib(m, pA+ii*lda_s, lda, pB+ii, ldb);
 		ii+=4;
 		}
 #elif defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 	for(; ii<n-7; ii+=8)
 		{
-		kernel_dgetr_tn_8_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		kernel_dgetr_tn_8_lib(m, pA+ii*lda_s, lda, pB+ii, ldb);
 		}
 	if(ii<n-3)
 		{
-		kernel_dgetr_tn_4_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		kernel_dgetr_tn_4_lib(m, pA+ii*lda_s, lda, pB+ii, ldb);
 		ii+=4;
 		}
 #else
 	for(; ii<n-3; ii+=4)
 		{
-		kernel_dgetr_tn_4_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		kernel_dgetr_tn_4_lib(m, pA+ii*lda_s, lda, pB+ii, ldb);
 		}
 #endif
 	if(ii<n)
 		{
-		kernel_dgetr_tn_4_vs_lib(m, pA+ii*lda, lda, pB+ii, ldb, n-ii);
+		kernel_dgetr_tn_4_vs_lib(m, pA+ii*lda_s, lda, pB+ii, ldb, n-ii);
 		}
 	
 	return;
@@ -95,28 +100,31 @@ static void blasfeo_dgetrf_m0_p0(int m, int n, double *pA, int lda, double *pB, 
 
 static void blasfeo_dgetrf_m0(int m, int n, double *pA, int lda, double *pB, int ldb)
 	{
+
+	size_t lda_s = lda;
+
 	int ii;
 
 	ii=0;
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) | defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<n-7; ii+=8)
 		{
-		kernel_dgetr_tn_8_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		kernel_dgetr_tn_8_lib(m, pA+ii*lda_s, lda, pB+ii, ldb);
 		}
 	if(ii<n-3)
 		{
-		kernel_dgetr_tn_4_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		kernel_dgetr_tn_4_lib(m, pA+ii*lda_s, lda, pB+ii, ldb);
 		ii+=4;
 		}
 #else
 	for(; ii<n-3; ii+=4)
 		{
-		kernel_dgetr_tn_4_lib(m, pA+ii*lda, lda, pB+ii, ldb);
+		kernel_dgetr_tn_4_lib(m, pA+ii*lda_s, lda, pB+ii, ldb);
 		}
 #endif
 	if(ii<n)
 		{
-		kernel_dgetr_tn_4_vs_lib(m, pA+ii*lda, lda, pB+ii, ldb, n-ii);
+		kernel_dgetr_tn_4_vs_lib(m, pA+ii*lda_s, lda, pB+ii, ldb, n-ii);
 		}
 	
 	return;
@@ -134,27 +142,27 @@ static void blasfeo_dgetrf_n0_p0(int m, int n, double *pA, int lda, double *pB, 
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-8; ii+=8)
 		{
-		kernel_dgetr_nt_8_p0_lib(n, pA+ii, lda, pB+ii*ldb, ldb, pA+ii+8, pB+(ii+8)*ldb);
+		kernel_dgetr_nt_8_p0_lib(n, pA+ii, lda, pB+ii*ldb_s, ldb, pA+ii+8, pB+(ii+8)*ldb_s);
 		}
 	if(ii<m-7)
 		{
-		kernel_dgetr_nt_8_p0_lib(n, pA+ii, lda, pB+ii*ldb, ldb, pAp, pBp);
+		kernel_dgetr_nt_8_p0_lib(n, pA+ii, lda, pB+ii*ldb_s, ldb, pAp, pBp);
 		ii+=8;
 		}
 	if(ii<m-3)
 		{
-		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb, ldb);
+		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb_s, ldb);
 		ii+=4;
 		}
 #else
 	for(; ii<m-3; ii+=4)
 		{
-		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb, ldb);
+		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb_s, ldb);
 		}
 #endif
 	if(ii<m)
 		{
-//		kernel_dgetr_nt_4_vs_lib(n, pA+ii, lda, pB+ii*ldb, ldb, m-ii);
+//		kernel_dgetr_nt_4_vs_lib(n, pA+ii, lda, pB+ii*ldb_s, ldb, m-ii);
 		}
 	
 	return;
@@ -171,22 +179,22 @@ static void blasfeo_dgetrf_n0(int m, int n, double *pA, int lda, double *pB, int
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_X64_INTEL_SANDY_BRIDGE) //| defined(TARGET_ARMV8A_ARM_CORTEX_A57) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	for(; ii<m-7; ii+=8)
 		{
-		kernel_dgetr_nt_8_lib(n, pA+ii, lda, pB+ii*ldb, ldb);
+		kernel_dgetr_nt_8_lib(n, pA+ii, lda, pB+ii*ldb_s, ldb);
 		}
 	if(ii<m-3)
 		{
-		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb, ldb);
+		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb_s, ldb);
 		ii+=4;
 		}
 #else
 	for(; ii<m-3; ii+=4)
 		{
-		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb, ldb);
+		kernel_dgetr_nt_4_lib(n, pA+ii, lda, pB+ii*ldb_s, ldb);
 		}
 #endif
 	if(ii<m)
 		{
-//		kernel_dgetr_nt_4_vs_lib(n, pA+ii, lda, pB+ii*ldb, ldb, m-ii);
+//		kernel_dgetr_nt_4_vs_lib(n, pA+ii, lda, pB+ii*ldb_s, ldb, m-ii);
 		}
 	
 	return;
@@ -203,8 +211,12 @@ void blasfeo_hp_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, str
 	sB->use_dA = 0;
 	int lda = sA->m;
 	int ldb = sB->m;
-	double *pA = sA->pA + ai + aj*lda;
-	double *pB = sB->pA + bi + bj*ldb;
+
+	size_t lda_s = lda;
+	size_t ldb_s = ldb;
+
+	double *pA = sA->pA + ai + aj*lda_s;
+	double *pB = sB->pA + bi + bj*ldb_s;
 
 	double *pAp, *pBp;
 
@@ -231,9 +243,9 @@ void blasfeo_hp_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, str
 
 			mleft = m-ii<=mc ? m-ii : mc;
 			pAp = m-ii<=mc ? pA+ii : pA+ii+mc;
-			pBp = m-ii<=mc ? pB+ii*ldb : pB+(ii+mc)*ldb;
+			pBp = m-ii<=mc ? pB+ii*ldb_s : pB+(ii+mc)*ldb_s;
 
-			blasfeo_dgetrf_m0_p0(mleft, n, pA+ii, lda, pB+ii*ldb, ldb, pAp, pBp);
+			blasfeo_dgetrf_m0_p0(mleft, n, pA+ii, lda, pB+ii*ldb_s, ldb, pAp, pBp);
 
 			}
 
@@ -254,11 +266,11 @@ void blasfeo_hp_dgetr(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, str
 			{
 
 			nleft = n-ii<=nc ? n-ii : nc;
-			pAp = n-ii<=nc ? pA+ii*lda : pA+(ii+nc)*lda;
+			pAp = n-ii<=nc ? pA+ii*lda_s : pA+(ii+nc)*lda_s;
 			pBp = n-ii<=nc ? pB+ii : pB+ii+nc;
 
-			blasfeo_dgetrf_n0(m, nleft, pA+ii*lda, lda, pB+ii, ldb);
-//			blasfeo_dgetrf_n0_p0(m, nleft, pA+ii*lda, lda, pB+ii, ldb, pAp, pBp);
+			blasfeo_dgetrf_n0(m, nleft, pA+ii*lda_s, lda, pB+ii, ldb);
+//			blasfeo_dgetrf_n0_p0(m, nleft, pA+ii*lda_s, lda, pB+ii, ldb, pAp, pBp);
 
 			}
 

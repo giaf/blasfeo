@@ -73,7 +73,10 @@ void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, in
 
 	// extract pointer to column-major matrices from structures
 	int lda = sA->m;
-	double *A = sA->pA + ai + aj*lda;
+
+	size_t lda_s = lda;
+
+	double *A = sA->pA + ai + aj*lda_s;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
@@ -116,12 +119,12 @@ void blasfeo_hp_dsymv_l(int m, double alpha, struct blasfeo_dmat *sA, int ai, in
 	ii = 0;
 	for(; ii<m-3; ii+=4)
 		{
-		kernel_dsymv_l_4_libc(m-ii, &alpha, A+ii+ii*lda, lda, x+ii, z+ii);
+		kernel_dsymv_l_4_libc(m-ii, &alpha, A+ii+ii*lda_s, lda, x+ii, z+ii);
 		}
 	// clean up at the end
 	if(ii<m)
 		{
-		kernel_dsymv_l_4_vs_libc(m-ii, &alpha, A+ii+ii*lda, lda, x+ii, z+ii, m-ii);
+		kernel_dsymv_l_4_vs_libc(m-ii, &alpha, A+ii+ii*lda_s, lda, x+ii, z+ii, m-ii);
 		}
 	
 	return;
@@ -143,7 +146,10 @@ void blasfeo_hp_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, in
 
 	// extract pointer to column-major matrices from structures
 	int lda = sA->m;
-	double *A = sA->pA + ai + aj*lda;
+
+	size_t lda_s = lda;
+
+	double *A = sA->pA + ai + aj*lda_s;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
@@ -186,12 +192,12 @@ void blasfeo_hp_dsymv_u(int m, double alpha, struct blasfeo_dmat *sA, int ai, in
 	ii = 0;
 	for(; ii<m-3; ii+=4)
 		{
-		kernel_dsymv_u_4_libc(ii, &alpha, A+ii*lda, lda, x, z);
+		kernel_dsymv_u_4_libc(ii, &alpha, A+ii*lda_s, lda, x, z);
 		}
 	// clean up at the end
 	if(ii<m)
 		{
-		kernel_dsymv_u_4_vs_libc(ii, &alpha, A+ii*lda, lda, x, z, m-ii);
+		kernel_dsymv_u_4_vs_libc(ii, &alpha, A+ii*lda_s, lda, x, z, m-ii);
 		}
 	
 	return;

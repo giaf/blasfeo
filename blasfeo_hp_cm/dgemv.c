@@ -73,7 +73,10 @@ void blasfeo_hp_dgemv_n(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 	// extract pointer to column-major matrices from structures
 	int lda = sA->m;
-	double *A = sA->pA + ai + aj*lda;
+
+	size_t lda_s = lda;
+
+	double *A = sA->pA + ai + aj*lda_s;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
@@ -116,12 +119,12 @@ void blasfeo_hp_dgemv_n(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	ii = 0;
 	for(; ii<n-3; ii+=4)
 		{
-		kernel_dgemv_n_4_libc(m, &alpha, A+ii*lda, lda, x+ii, z);
+		kernel_dgemv_n_4_libc(m, &alpha, A+ii*lda_s, lda, x+ii, z);
 		}
 	// clean up at the end
 	if(ii<n)
 		{
-		kernel_dgemv_n_4_vs_libc(m, &alpha, A+ii*lda, lda, x+ii, z, n-ii);
+		kernel_dgemv_n_4_vs_libc(m, &alpha, A+ii*lda_s, lda, x+ii, z, n-ii);
 		}
 	
 	return;
@@ -143,7 +146,10 @@ void blasfeo_hp_dgemv_t(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 
 	// extract pointer to column-major matrices from structures
 	int lda = sA->m;
-	double *A = sA->pA + ai + aj*lda;
+
+	size_t lda_s = lda;
+
+	double *A = sA->pA + ai + aj*lda_s;
 	double *x = sx->pa + xi;
 	double *y = sy->pa + yi;
 	double *z = sz->pa + zi;
@@ -154,12 +160,12 @@ void blasfeo_hp_dgemv_t(int m, int n, double alpha, struct blasfeo_dmat *sA, int
 	ii = 0;
 	for(; ii<n-3; ii+=4)
 		{
-		kernel_dgemv_t_4_libc(m, &alpha, A+ii*lda, lda, x, &beta, y+ii, z+ii);
+		kernel_dgemv_t_4_libc(m, &alpha, A+ii*lda_s, lda, x, &beta, y+ii, z+ii);
 		}
 	// clean up at the end
 	if(ii<n)
 		{
-		kernel_dgemv_t_4_vs_libc(m, &alpha, A+ii*lda, lda, x, &beta, y+ii, z+ii, n-ii);
+		kernel_dgemv_t_4_vs_libc(m, &alpha, A+ii*lda_s, lda, x, &beta, y+ii, z+ii, n-ii);
 		}
 	
 	return;
