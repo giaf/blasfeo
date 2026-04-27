@@ -3728,6 +3728,7 @@ llnn_2:
 		C = B;
 		ldc = ldb;
 		sC = sB;
+		ldc_s = ldc;
 
 #if 0
 
@@ -4714,7 +4715,7 @@ rutn_2:
 
 			sda = (kleft+4-1)/4*4; // XXX
 			sdb = (kleft+4-1)/4*4; // XXX
-			sdu_s = sdu;
+			sda_s = sda;
 			sdb_s = sdb;
 
 			for(jj=0; jj<kleft; jj+=nleft)

@@ -33,10 +33,25 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+//#define TIME_INT
+
+
+#ifdef TIME_INT
+#include <blasfeo_timing.h>
+#endif
+
 
 
 void GETRF(int *pm, int *pn, REAL *C, int *pldc, int *ipiv, int *info)
 	{
+
+#ifdef TIME_INT
+#ifdef EXT_DEP
+	printf("\nblasfeo getrf\t%d\t%d\t\t\t\t", *pm, *pn);
+#endif
+	blasfeo_timer timer;
+	blasfeo_tic(&timer);
+#endif
 
 #if defined(DIM_CHECK)
 //	if( !(*uplo=='l' | *uplo=='l' | *uplo=='U' | *uplo=='U') )
@@ -98,6 +113,18 @@ void GETRF(int *pm, int *pn, REAL *C, int *pldc, int *ipiv, int *info)
 			return;
 			}
 		}
+
+#ifdef TIME_INT
+	double flops;
+	int k = *pm<*pn ? *pm : *pn;
+	flops = 2.0/3.0 * *pm * *pn * k;
+	double time = blasfeo_toc(&timer);
+	double Gflops = 1e-9 * flops / time;
+	double Gflops_max = 3.7 * 16;
+#ifdef EXT_DEP
+	printf("\t%f\t%f\n", Gflops, 100.0*Gflops/Gflops_max);
+#endif
+#endif
 
 	return;
 

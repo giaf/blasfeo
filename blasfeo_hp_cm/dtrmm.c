@@ -1632,8 +1632,8 @@ lunn_2:
 	sda = tA.cn;
 	pB = tB.pA;
 	sdb = tB.cn;
-			sda_s = sda;
-			sdb_s = sdb;
+	sda_s = sda;
+	sdb_s = sdb;
 
 	// pack and transpose A
 	// lower to upper
@@ -3919,6 +3919,7 @@ rutn_2:
 				nleft = kleft-jj<nc ? kleft-jj : nc;
 
 				sdt = (nleft+4-1)/4*4; // XXX
+				sdt_s = sdt;
 
 				// pack and tran A
 #if defined(TARGET_X64_INTEL_SKYLAKE_X)

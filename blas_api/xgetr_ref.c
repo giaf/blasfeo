@@ -33,8 +33,25 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+//#define TIME_INT
+
+
+#ifdef TIME_INT
+#include <blasfeo_timing.h>
+#endif
+
+
+
 void BLAS_GETR(int *pm, int *pn, REAL *A, int *plda, REAL *B, int *pldb)
 	{
+
+#ifdef TIME_INT
+#ifdef EXT_DEP
+	printf("\nblasfeo getr\t%d\t%d\t\t\t\t", *pm, *pn);
+#endif
+	blasfeo_timer timer;
+	blasfeo_tic(&timer);
+#endif
 
 	struct MAT sA;
 	sA.pA = A;
@@ -45,6 +62,17 @@ void BLAS_GETR(int *pm, int *pn, REAL *A, int *plda, REAL *B, int *pldb)
 	sB.m = *pldb;
 
 	GETR(*pm, *pn, &sA, 0, 0, &sB, 0, 0);
+
+#ifdef TIME_INT
+	double flops;
+	flops = 1.0 * *pm * *pn;
+	double time = blasfeo_toc(&timer);
+	double Gflops = 1e-9 * flops / time;
+	double Gflops_max = 3.7 * 16;
+#ifdef EXT_DEP
+	printf("\t%f\t%f\n", Gflops, 100.0*Gflops/Gflops_max);
+#endif
+#endif
 
 	return;
 

@@ -33,8 +33,25 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+//#define TIME_INT
+
+
+#ifdef TIME_INT
+#include <blasfeo_timing.h>
+#endif
+
+
+
 void BLAS_GER(int *pm, int *pn, REAL *alpha, REAL *x0, int *pincx, REAL *y0, int *pincy, REAL *A, int *plda)
 	{
+
+#ifdef TIME_INT
+#ifdef EXT_DEP
+	printf("\nblasfeo ger\t%d\t%d\t\t\t\t", *pm, *pn);
+#endif
+	blasfeo_timer timer;
+	blasfeo_tic(&timer);
+#endif
 
 #if defined(DIM_CHECK)
 	if(*pincx==0 | *pincy==0)
@@ -154,6 +171,17 @@ void BLAS_GER(int *pm, int *pn, REAL *alpha, REAL *x0, int *pincx, REAL *y0, int
 #endif
 			}
 		}
+
+#ifdef TIME_INT
+	double flops;
+	flops = 2.0 * *pm * *pn;
+	double time = blasfeo_toc(&timer);
+	double Gflops = 1e-9 * flops / time;
+	double Gflops_max = 3.7 * 16;
+#ifdef EXT_DEP
+	printf("\t%f\t%f\n", Gflops, 100.0*Gflops/Gflops_max);
+#endif
+#endif
 
 	return;
 

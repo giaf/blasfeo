@@ -46,6 +46,9 @@ void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 	{
 
 #ifdef TIME_INT
+#ifdef EXT_DEP
+	printf("\nblasfeo potrf\t%c\t%d\t\t\t\t", *uplo, *pm);
+#endif
 	blasfeo_timer timer;
 	blasfeo_tic(&timer);
 #endif
@@ -111,6 +114,9 @@ void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 			goto end_label;
 			}
 		}
+
+end_label:
+
 #ifdef TIME_INT
 	double flops;
 	flops = 1.0/3.0 * *pm * *pm * *pm;
@@ -118,11 +124,9 @@ void POTRF(char *uplo, int *pm, REAL *C, int *pldc, int *info)
 	double Gflops = 1e-9 * flops / time;
 	double Gflops_max = 3.7 * 16;
 #ifdef EXT_DEP
-	printf("\nblasfeo potrf\t%c\t%d\t%f\t%f\n", *uplo, *pm, Gflops, 100.0*Gflops/Gflops_max);
+	printf("\t%f\t%f\n", Gflops, 100.0*Gflops/Gflops_max);
 #endif
 #endif
-
-end_label:
 
 	return;
 

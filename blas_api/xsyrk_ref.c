@@ -46,6 +46,9 @@ void SYRK(char *uplo, char *trans, int *pm, int *pk, REAL *palpha, REAL *A, int 
 	{
 
 #ifdef TIME_INT
+#ifdef EXT_DEP
+	printf("\nblasfeo syrk\t%c\t%c\t%d\t%d\t\t", *uplo, *trans, *pm, *pk);
+#endif
 	blasfeo_timer timer;
 	blasfeo_tic(&timer);
 #endif
@@ -128,7 +131,7 @@ void SYRK(char *uplo, char *trans, int *pm, int *pk, REAL *palpha, REAL *A, int 
 	double Gflops = 1e-9 * flops / time;
 	double Gflops_max = 3.7 * 16;
 #ifdef EXT_DEP
-	printf("\nblasfeo syrk\t%c\t%c\t%d\t%d\t%f\t%f\n", *uplo, *trans, *pm, *pk, Gflops, 100.0*Gflops/Gflops_max);
+	printf("\t%f\t%f\n", Gflops, 100.0*Gflops/Gflops_max);
 #endif
 #endif
 

@@ -33,8 +33,25 @@
 *                                                                                                 *
 **************************************************************************************************/
 
+//#define TIME_INT
+
+
+#ifdef TIME_INT
+#include <blasfeo_timing.h>
+#endif
+
+
+
 void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x0, int *pincx, REAL *beta, REAL *y0, int *pincy)
 	{
+
+#ifdef TIME_INT
+#ifdef EXT_DEP
+	printf("\nblasfeo symv\t%c\t%d\t\t\t\t", *uplo, *pn);
+#endif
+	blasfeo_timer timer;
+	blasfeo_tic(&timer);
+#endif
 
 #if defined(DIM_CHECK)
 	if( !(*uplo=='l' | *uplo=='l' | *uplo=='U' | *uplo=='U') )
@@ -166,6 +183,16 @@ void SYMV(char *uplo, int *pn, REAL *alpha, REAL *A, int *plda, REAL *x0, int *p
 #endif
 			}
 		}
+
+#ifdef TIME_INT
+	double flops = 2.0 * *pn * *pn;
+	double time = blasfeo_toc(&timer);
+	double Gflops = 1e-9 * flops / time;
+	double Gflops_max = 3.7 * 16;
+#ifdef EXT_DEP
+	printf("\t%f\t%f\n", Gflops, 100.0*Gflops/Gflops_max);
+#endif
+#endif
 
 	return;
 

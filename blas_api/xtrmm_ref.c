@@ -56,6 +56,9 @@ void TRMM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 #endif
 
 #ifdef TIME_INT
+#ifdef EXT_DEP
+	printf("\nblasfeo trmm\t%c\t%c\t%c\t%c\t%d\t%d", *side, *uplo, *transa, *diag, *pm, *pn);
+#endif
 	blasfeo_timer timer;
 	blasfeo_tic(&timer);
 #endif
@@ -220,7 +223,7 @@ void TRMM(char *side, char *uplo, char *transa, char *diag, int *pm, int *pn, RE
 	double Gflops = 1e-9 * flops / time;
 	double Gflops_max = 3.7 * 16;
 #ifdef EXT_DEP
-	printf("\nblasfeo trmm\t%c\t%c\t%c\t%c\t%d\t%d\t%f\t%f\n", *side, *uplo, *transa, *diag, *pm, *pn, Gflops, 100.0*Gflops/Gflops_max);
+	printf("\t%f\t%f\n", Gflops, 100.0*Gflops/Gflops_max);
 #endif
 #endif
 
