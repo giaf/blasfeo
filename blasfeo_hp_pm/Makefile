@@ -38,7 +38,7 @@ include ../Makefile.rule
 
 HP_OBJS =
 
-ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+ifeq ($(TARGET), $(filter $(TARGET), X64_AMD_ZEN5 X64_INTEL_SKYLAKE_X))
 ifeq ($(DP_ROUTINES), 1)
 	HP_OBJS += d_blas1_lib8.o
 	HP_OBJS += d_blas2_lib8.o

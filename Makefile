@@ -183,7 +183,7 @@ REF_BLAS_DP_OBJS += \
 REF_BLAS_SP_OBJS += \
 		blasfeo_ref/s_blas3_ref_blas.o \
 
-ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+ifeq ($(TARGET), $(filter $(TARGET), X64_AMD_ZEN5 X64_INTEL_SKYLAKE_X))
 
 ### BLASFEO HP, PANEL-MAJOR ###
 BLASFEO_HP_PM_DP_OBJS = \
@@ -274,7 +274,7 @@ AUX_HP_PM_MP_OBJS = \
 
 endif
 
-ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+ifeq ($(TARGET), $(filter $(TARGET), X64_AMD_ZEN5 X64_INTEL_SKYLAKE_X))
 
 ### KERNELS ###
 KERNEL_DP_OBJS = \
@@ -1150,6 +1150,17 @@ endif
 # generate target header
 target:
 	touch ./include/blasfeo_target.h
+ifeq ($(TARGET), X64_AMD_ZEN5)
+	echo "#ifndef TARGET_X64_AMD_ZEN5"         >  ./include/blasfeo_target.h
+	echo "#define TARGET_X64_AMD_ZEN5"         >> ./include/blasfeo_target.h
+	echo "#endif"                              >> ./include/blasfeo_target.h
+	echo "#ifndef TARGET_X64_INTEL_SKYLAKE_X"  >> ./include/blasfeo_target.h
+	echo "#define TARGET_X64_INTEL_SKYLAKE_X"  >> ./include/blasfeo_target.h
+	echo "#endif"                              >> ./include/blasfeo_target.h
+#	echo "#ifndef TARGET_NEED_FEATURE_AVX512F" >> ./include/blasfeo_target.h
+#	echo "#define TARGET_NEED_FEATURE_AVX512F" >> ./include/blasfeo_target.h
+#	echo "#endif"                              >> ./include/blasfeo_target.h
+endif
 ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
 	echo "#ifndef TARGET_X64_INTEL_SKYLAKE_X"  >  ./include/blasfeo_target.h
 	echo "#define TARGET_X64_INTEL_SKYLAKE_X"  >> ./include/blasfeo_target.h

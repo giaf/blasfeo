@@ -37,7 +37,7 @@ include ../../Makefile.rule
 
 KERNEL_OBJS =
 
-ifeq ($(TARGET), X64_INTEL_SKYLAKE_X) # TODO remove when not needed !!!
+ifeq ($(TARGET), $(filter $(TARGET), X64_AMD_ZEN5 X64_INTEL_SKYLAKE_X)) # TODO remove when not needed !!!
 ifeq ($(DP_ROUTINES), 1)
 	KERNEL_OBJS += kernel_dpack_lib4.o
 endif # DP

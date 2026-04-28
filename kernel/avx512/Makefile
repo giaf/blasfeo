@@ -38,7 +38,7 @@ include ../../Makefile.rule
 
 KERNEL_OBJS =
 
-ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+ifeq ($(TARGET), $(filter $(TARGET), X64_AMD_ZEN5 X64_INTEL_SKYLAKE_X))
 ifeq ($(DP_ROUTINES), 1)
 	KERNEL_OBJS += kernel_dgemm_24x8_lib8.o
 	KERNEL_OBJS += kernel_dgemm_16x8_lib8.o

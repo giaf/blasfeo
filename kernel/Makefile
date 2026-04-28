@@ -38,7 +38,7 @@ include ../Makefile.rule
 OBJS =
 
 obj: $(OBJS)
-ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+ifeq ($(TARGET), $(filter $(TARGET), X64_AMD_ZEN5 X64_INTEL_SKYLAKE_X))
 	( cd avx512; $(MAKE) obj)
 	( cd avx2; $(MAKE) obj)
 	( cd avx; $(MAKE) obj)

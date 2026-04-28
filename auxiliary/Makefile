@@ -52,7 +52,7 @@ ifeq ($(LA), HIGH_PERFORMANCE)
 
 ifeq ($(MF), PANELMAJ)
 
-ifeq ($(TARGET), X64_INTEL_SKYLAKE_X)
+ifeq ($(TARGET), $(filter $(TARGET), X64_AMD_ZEN5 X64_INTEL_SKYLAKE_X))
 ifeq ($(DP_ROUTINES), 1)
 	OBJS += d_aux_lib8.o
 	ifeq ($(SP_ROUTINES), 1)
