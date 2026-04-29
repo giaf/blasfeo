@@ -270,6 +270,9 @@ DLEV3_DONE += netlib/cblas/src/cblas_dsyrk.o
 DLEV3 += netlib/cblas/src/cblas_dsyr2k.o
 DLEV3_DONE += netlib/cblas/src/cblas_dtrmm.o
 DLEV3_DONE += netlib/cblas/src/cblas_dtrsm.o
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+DLEV3_DONE += netlib/cblas/src/cblas_zen5_dgemm.o
+endif
 
 #
 # All object files for single complex precision

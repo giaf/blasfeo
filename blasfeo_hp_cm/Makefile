@@ -36,6 +36,7 @@
 include ../Makefile.rule
 
 HP_CM_OBJS =
+HP_CM_ZEN5_OBJS =
 
 ifeq ($(DP_ROUTINES), 1)
 	HP_CM_OBJS += dgemm.o
@@ -49,6 +50,8 @@ ifeq ($(DP_ROUTINES), 1)
 	HP_CM_OBJS += dgemv.o
 	HP_CM_OBJS += dsymv.o
 	HP_CM_OBJS += dger.o
+	#
+	HP_CM_ZEN5_OBJS += zen5_dgemm.o
 endif # DP
 ifeq ($(SP_ROUTINES), 1)
 	HP_CM_OBJS += sgemm.o
@@ -57,15 +60,18 @@ ifeq ($(SP_ROUTINES), 1)
 endif # SP
 
 OBJS =
+ZEN5_OBJS =
 
 ifeq ($(MF), COLMAJ)
 
 ifeq ($(LA), HIGH_PERFORMANCE)
 OBJS += $(HP_CM_OBJS)
+ZEN5_OBJS += $(HP_CM_ZEN5_OBJS)
 else
 
 ifeq ($(BLASFEO_HP_API), 1)
 OBJS += $(HP_CM_OBJS)
+ZEN5_OBJS += $(HP_CM_ZEN5_OBJS)
 endif
 
 endif # LA HP
@@ -75,6 +81,7 @@ else # MF PANELMAJ
 ifeq ($(BLAS_API), 1)
 ifeq ($(LA), HIGH_PERFORMANCE)
 OBJS += $(HP_CM_OBJS)
+ZEN5_OBJS += $(HP_CM_ZEN5_OBJS)
 endif
 endif
 
@@ -82,6 +89,11 @@ endif # MF COLMAJ
 
 
 obj: $(OBJS)
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+	make zen5_obj
+endif
+
+zen5_obj: $(ZEN5_OBJS)
 
 clean:
 	rm -f *.o
@@ -90,3 +102,4 @@ clean:
 	rm -f *.gcno
 	rm -f *.gcov
 
+zen5_dgemm.o: dgemm.c zen5_dgemm.c

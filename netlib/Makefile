@@ -77,12 +77,47 @@ obj_cblas: | $(CBLAS_DIR)
 	@echo "FFLAGS = $(CFLAGS)" >> $(CBLAS_DIR)/Makefile.in
 	@echo "BLLIB = $(BLAS_DIR)/blas_LINUX.a" >> $(CBLAS_DIR)/Makefile.in
 	@echo "CFLAGS += $(BLASFEO_CBLAS_DEF)" >> $(CBLAS_DIR)/Makefile.in
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+	cp $(CBLAS_DIR)/src/Makefile $(CBLAS_DIR)/src/Makefile.bkp
+	@echo "" >> $(CBLAS_DIR)/src/Makefile
+	@echo "#" >> $(CBLAS_DIR)/src/Makefile
+	@echo "# BLASFEO's custom routines" >> $(CBLAS_DIR)/src/Makefile
+	@echo "#" >> $(CBLAS_DIR)/src/Makefile
+	@echo "zen5 = cblas_zen5_dgemm.o" >> $(CBLAS_DIR)/src/Makefile
+	@echo "zen5_all: \044(alev) \044(zen5)" >> $(CBLAS_DIR)/src/Makefile
+	@echo "	\044(ARCH) \044(ARCHFLAGS) \044(CBLIB) \044(alev) \044(zen5)" >> $(CBLAS_DIR)/src/Makefile
+	@echo "	\044(RANLIB) \044(CBLIB)" >> $(CBLAS_DIR)/src/Makefile
+	cp $(CBLAS_DIR)/Makefile $(CBLAS_DIR)/Makefile.bkp
+	@echo "" >> $(CBLAS_DIR)/Makefile
+	@echo "#" >> $(CBLAS_DIR)/Makefile
+	@echo "# BLASFEO's custom routines" >> $(CBLAS_DIR)/Makefile
+	@echo "#" >> $(CBLAS_DIR)/src/Makefile
+	@echo "zen5_alllib:  zen5_allprecision" >> $(CBLAS_DIR)/Makefile
+	@echo "zen5_allprecision:" >> $(CBLAS_DIR)/Makefile
+	@echo "	( cd src && make zen5_all)" >> $(CBLAS_DIR)/Makefile
+	@echo "#undef cblas_dgemm" > $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+	@echo "#undef dgemm_" >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+ifeq ($(FORTRAN_BLAS_API), 0)
+	@echo "#define cblas_dgemm blasfeo_cblas_zen5_dgemm" >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+	@echo "#define dgemm_ blasfeo_blas_zen5_dgemm" >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+else
+	@echo "#define cblas_dgemm cblas_zen5_dgemm" >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+	@echo "#define dgemm_ zen5_dgemm_" >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+endif
+	cat $(CBLAS_DIR)/src/cblas_dgemm.c >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+endif
 ifeq ($(EXT_DEP), 0)
 	cp $(CBLAS_DIR)/src/cblas_xerbla.c $(CBLAS_DIR)/src/cblas_xerbla_bkp.c
 	@echo "void cblas_xerbla(int info, const char *rout, const char *form, ...)" > $(CBLAS_DIR)/src/cblas_xerbla.c
 	@echo "{ return; }" >> $(CBLAS_DIR)/src/cblas_xerbla.c
 endif
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+	(cd $(CBLAS_DIR); $(MAKE) zen5_alllib)
+	cp $(CBLAS_DIR)/src/Makefile.bkp $(CBLAS_DIR)/src/Makefile
+	cp $(CBLAS_DIR)/Makefile.bkp $(CBLAS_DIR)/Makefile
+else
 	(cd $(CBLAS_DIR); $(MAKE) alllib)
+endif
 ifeq ($(EXT_DEP), 0)
 	cp $(CBLAS_DIR)/src/cblas_xerbla_bkp.c $(CBLAS_DIR)/src/cblas_xerbla.c
 endif

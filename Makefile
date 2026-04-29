@@ -108,6 +108,13 @@ BLASFEO_HP_CM_DP_OBJS = \
 		blasfeo_hp_cm/dsymv.o \
 		blasfeo_hp_cm/dger.o \
 
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+
+BLASFEO_HP_CM_DP_OBJS += \
+		blasfeo_hp_cm/zen5_dgemm.o \
+
+endif
+
 BLASFEO_HP_CM_SP_OBJS = \
 		blasfeo_hp_cm/sgemm.o \
 		blasfeo_hp_cm/strsm.o \
@@ -168,6 +175,13 @@ BLAS_DP_OBJS += \
 		blas_api/dgemv_ref.o \
 		blas_api/dsymv_ref.o \
 		blas_api/dger_ref.o \
+
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+
+BLAS_DP_OBJS += \
+		blas_api/zen5_dgemm_ref.o \
+
+endif
 
 BLAS_SP_OBJS += \
 		blas_api/saxpy.o \
@@ -345,6 +359,15 @@ KERNEL_SP_OBJS = \
 
 KERNEL_ALIGN_OBJS = \
 		kernel/sse3/kernel_align_x64.o \
+
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+KERNEL_DP_OBJS += \
+		kernel/avx512/kernel_dgemm_24x8_lib8.o \
+		kernel/avx512/kernel_dgemm_16x8_lib8.o \
+		kernel/avx512/kernel_dgemm_8x8_lib8.o \
+		kernel/avx512/kernel_dpack_lib8.o \
+
+endif
 
 endif
 ifeq ($(TARGET), X64_INTEL_SANDY_BRIDGE)
@@ -1397,6 +1420,11 @@ ifeq ($(OS), WINDOWS)
 	echo "#ifndef OS_WINDOWS" >> ./include/blasfeo_target.h
 	echo "#define OS_WINDOWS" >> ./include/blasfeo_target.h
 	echo "#endif"             >> ./include/blasfeo_target.h
+endif
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+	echo "#ifndef HASWELL_WITH_ZEN5" >> ./include/blasfeo_target.h
+	echo "#define HASWELL_WITH_ZEN5" >> ./include/blasfeo_target.h
+	echo "#endif"                    >> ./include/blasfeo_target.h
 endif
 
 

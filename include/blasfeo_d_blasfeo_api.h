@@ -238,6 +238,12 @@ void blasfeo_dsyr2k_lt(int m, int k, double alpha, struct blasfeo_dmat *sA, int 
 void blasfeo_dsyr2k_un(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= beta * C + alpha * A^T * B + alpha * B^T * A; C, D upper triangular
 void blasfeo_dsyr2k_ut(int m, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
+#ifdef HASWELL_WITH_ZEN5
+void blasfeo_zen5_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
+void blasfeo_zen5_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
+void blasfeo_zen5_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
+void blasfeo_zen5_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sB, int bi, int bj, double beta, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
+#endif
 
 // diagonal
 
@@ -342,6 +348,12 @@ void blasfeo_cm_dsyr2k_ln(int m, int k, double alpha, struct blasfeo_cm_dmat *sA
 void blasfeo_cm_dsyr2k_lt(int m, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
 void blasfeo_cm_dsyr2k_un(int m, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
 void blasfeo_cm_dsyr2k_ut(int m, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
+#ifdef HASWELL_WITH_ZEN5
+void blasfeo_cm_zen5_dgemm_nn(int m, int n, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
+void blasfeo_cm_zen5_dgemm_nt(int m, int n, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
+void blasfeo_cm_zen5_dgemm_tn(int m, int n, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
+void blasfeo_cm_zen5_dgemm_tt(int m, int n, int k, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dmat *sB, int bi, int bj, double beta, struct blasfeo_cm_dmat *sC, int ci, int cj, struct blasfeo_cm_dmat *sD, int di, int dj);
+#endif
 // BLAS 2
 void blasfeo_cm_dgemv_n(int m, int n, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dvec *sx, int xi, double beta, struct blasfeo_cm_dvec *sy, int yi, struct blasfeo_cm_dvec *sz, int zi);
 void blasfeo_cm_dgemv_t(int m, int n, double alpha, struct blasfeo_cm_dmat *sA, int ai, int aj, struct blasfeo_cm_dvec *sx, int xi, double beta, struct blasfeo_cm_dvec *sy, int yi, struct blasfeo_cm_dvec *sz, int zi);

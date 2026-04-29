@@ -287,6 +287,10 @@ PACKING_ALG = AUTO
 # PACKING_ALG = ALG_N1
 # PACKING_ALG = ALG_2
 
+# Adds selected Zen5 routines with special name to a standard Haswell target
+HASWELL_WITH_ZEN5 = 0
+#HASWELL_WITH_ZEN5 = 1
+
 # C Compiler
 #
 CC ?= gcc
@@ -489,6 +493,14 @@ endif
 ifeq ($(SOC), BACHMANN)
 CFLAGS  += -D__BACHMANN__
 ASFLAGS += -D__BACHMANN__
+endif
+
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+ifeq ($(TARGET), X64_INTEL_HASWELL)
+CFLAGS  += -DHASWELL_WITH_ZEN5
+else
+$(error No X64_INTEL_HASWELL selected for TARGET)
+endif
 endif
 
 # EXTERNAL_BLAS

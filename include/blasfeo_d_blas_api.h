@@ -111,6 +111,10 @@ void dtrmm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, do
 void dtrsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
 //
 void dsyr2k_(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
+#ifdef HASWELL_WITH_ZEN5
+//
+void zen5_dgemm_(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
+#endif
 
 
 
@@ -166,6 +170,10 @@ void cblas_dsyrk(const enum CBLAS_LAYOUT layout, const enum CBLAS_UPLO Uplo, con
 void cblas_dtrmm(const enum CBLAS_LAYOUT layout, const enum CBLAS_SIDE Side, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag, const int M, const int N, const double alpha, const double *A, const int lda, double *B, const int ldb);
 //
 void cblas_dtrsm(const enum CBLAS_LAYOUT layout, const enum CBLAS_SIDE Side, const enum CBLAS_UPLO Uplo, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag, const int M, const int N, const double alpha, const double *A, const int lda, double *B, const int ldb);
+#ifdef HASWELL_WITH_ZEN5
+//
+void cblas_zen5_dgemm(const enum CBLAS_LAYOUT layout, const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_TRANSPOSE TransB, const int M, const int N, const int K, const double alpha, const double *A, const int lda, const double *B, const int ldb, const double beta, double *C, const int ldc);
+#endif
 
 
 
@@ -204,6 +212,10 @@ void blasfeo_blas_dtrmm(char *side, char *uplo, char *transa, char *diag, int *m
 void blasfeo_blas_dtrsm(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *ldb);
 //
 void blasfeo_blas_dsyr2k(char *uplo, char *ta, int *m, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
+#ifdef HASWELL_WITH_ZEN5
+//
+void blasfeo_blas_zen5_dgemm(char *ta, char *tb, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc);
+#endif
 
 
 
@@ -259,6 +271,10 @@ void blasfeo_cblas_dsyrk(const enum BLASFEO_CBLAS_LAYOUT layout, const enum BLAS
 void blasfeo_cblas_dtrmm(const enum BLASFEO_CBLAS_LAYOUT layout, const enum BLASFEO_CBLAS_SIDE Side, const enum BLASFEO_CBLAS_UPLO Uplo, const enum BLASFEO_CBLAS_TRANSPOSE TransA, const enum BLASFEO_CBLAS_DIAG Diag, const int M, const int N, const double alpha, const double *A, const int lda, double *B, const int ldb);
 //
 void blasfeo_cblas_dtrsm(const enum BLASFEO_CBLAS_LAYOUT layout, const enum BLASFEO_CBLAS_SIDE Side, const enum BLASFEO_CBLAS_UPLO Uplo, const enum BLASFEO_CBLAS_TRANSPOSE TransA, const enum BLASFEO_CBLAS_DIAG Diag, const int M, const int N, const double alpha, const double *A, const int lda, double *B, const int ldb);
+#ifdef HASWELL_WITH_ZEN5
+//
+void blasfeo_cblas_zen5_dgemm(const enum BLASFEO_CBLAS_LAYOUT layout, const enum BLASFEO_CBLAS_TRANSPOSE TransA, const enum BLASFEO_CBLAS_TRANSPOSE TransB, const int M, const int N, const int K, const double alpha, const double *A, const int lda, const double *B, const int ldb, const double beta, double *C, const int ldc);
+#endif
 
 
 

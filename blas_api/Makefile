@@ -36,6 +36,7 @@
 include ../Makefile.rule
 
 OBJS =
+ZEN5_OBJS =
 
 ifeq ($(BLAS_API), 1)
 
@@ -60,6 +61,8 @@ ifeq ($(DP_ROUTINES), 1)
 	OBJS += dgemv_ref.o # XXX
 	OBJS += dsymv_ref.o # XXX
 	OBJS += dger_ref.o # XXX
+	#
+	ZEN5_OBJS += zen5_dgemm_ref.o # XXX
 endif # DP
 ifeq ($(SP_ROUTINES), 1)
 	OBJS += saxpy.o
@@ -72,9 +75,14 @@ endif # SP
 endif # BLAS_API
 
 obj: $(OBJS)
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+	make zen5_obj
+endif
 ifeq ($(EXPERIMENTAL), 1)
 	( cd experimental; $(MAKE) obj)
 endif
+
+zen5_obj: $(ZEN5_OBJS)
 
 clean:
 	make -C experimental clean
@@ -99,3 +107,5 @@ dger_ref.o: dger_ref.c xger_ref.c
 sgemm_ref.o: sgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/sgemm.c
 strsm_ref.o: strsm_ref.c xtrsm_ref.c
 spotrf_ref.o: spotrf_ref.c xpotrf_ref.c
+
+zen5_dgemm_ref.o: zen5_dgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/zen5_dgemm.c

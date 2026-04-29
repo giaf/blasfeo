@@ -53,6 +53,18 @@ ifeq ($(SP_ROUTINES), 1)
 endif # SP
 endif
 
+ifeq ($(TARGET), X64_INTEL_HASWELL)
+ifeq ($(HASWELL_WITH_ZEN5), 1)
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemm_24x8_lib8.o
+	KERNEL_OBJS += kernel_dgemm_16x8_lib8.o
+	KERNEL_OBJS += kernel_dgemm_8x8_lib8.o
+	KERNEL_OBJS += kernel_dpack_lib8.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+endif # SP
+endif # HASWELL_WITH_ZEN5
+endif
 
 OBJS = 
 
