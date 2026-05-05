@@ -4641,19 +4641,17 @@
 	prefetcht0		0(%r13, %r15)
 	prefetcht0		63(%r13, %r15)
 
-	leaq	0(%r11, %r12, 4), %rax
-
 	// TODO prefetch A !!!!!!!!!!!!!!!!!!!
 
 
 	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
+	leaq	0(%r11, %r12, 4), %rax
+
 	// main loop
 	.p2align 3
 1: // main loop
-
-	leaq	0(%r11, %r12, 4), %rax
 
 	// unroll 0
 	prefetcht0		0(%r13, %r14, 4)
@@ -6957,14 +6955,14 @@
 	cmpl	$ 4, %r10d
 	jle		0f // consider clean-up loop
 
+	leaq	0(%r11, %r12, 4), %rbx
+
 	// main loop
 	.p2align 3
 1: // main loop
 
 //	prefetcht0		32(%r13)
 //	...
-
-	leaq	0(%r11, %r12, 4), %rbx
 
 	// unroll 0
 	vmovupd			0(%r11), %zmm25 // A
@@ -7057,6 +7055,7 @@
 	leaq	0(%r11, %r12, 2), %r11
 	addq	$ 4*8, %r13
 	addq	$ 4*8, %r15
+	leaq	0(%rbx, %r12, 2), %rbx
 
 	cmpl	$ 4, %r10d
 	jg		1b // main loop
