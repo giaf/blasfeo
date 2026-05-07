@@ -52,6 +52,7 @@ ifeq ($(DP_ROUTINES), 1)
 	HP_CM_OBJS += dger.o
 	#
 	HP_CM_ZEN5_OBJS += zen5_dgemm.o
+	HP_CM_ZEN5_OBJS += zen5_dsyrk.o
 endif # DP
 ifeq ($(SP_ROUTINES), 1)
 	HP_CM_OBJS += sgemm.o
@@ -103,3 +104,4 @@ clean:
 	rm -f *.gcov
 
 zen5_dgemm.o: dgemm.c zen5_dgemm.c
+zen5_dsyrk.o: dsyrk.c zen5_dsyrk.c

@@ -83,7 +83,7 @@ ifeq ($(HASWELL_WITH_ZEN5), 1)
 	@echo "#" >> $(CBLAS_DIR)/src/Makefile
 	@echo "# BLASFEO's custom routines" >> $(CBLAS_DIR)/src/Makefile
 	@echo "#" >> $(CBLAS_DIR)/src/Makefile
-	@echo "zen5 = cblas_zen5_dgemm.o" >> $(CBLAS_DIR)/src/Makefile
+	@echo "zen5 = cblas_zen5_dgemm.o cblas_zen5_dsyrk.o" >> $(CBLAS_DIR)/src/Makefile
 	@echo "zen5_all: \044(alev) \044(zen5)" >> $(CBLAS_DIR)/src/Makefile
 	@echo "	\044(ARCH) \044(ARCHFLAGS) \044(CBLIB) \044(alev) \044(zen5)" >> $(CBLAS_DIR)/src/Makefile
 	@echo "	\044(RANLIB) \044(CBLIB)" >> $(CBLAS_DIR)/src/Makefile
@@ -97,14 +97,21 @@ ifeq ($(HASWELL_WITH_ZEN5), 1)
 	@echo "	( cd src && make zen5_all)" >> $(CBLAS_DIR)/Makefile
 	@echo "#undef cblas_dgemm" > $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
 	@echo "#undef dgemm_" >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+	@echo "#undef cblas_dsyrk" > $(CBLAS_DIR)/src/cblas_zen5_dsyrk.c
+	@echo "#undef dsyrk_" >> $(CBLAS_DIR)/src/cblas_zen5_dsyrk.c
 ifeq ($(FORTRAN_BLAS_API), 0)
 	@echo "#define cblas_dgemm blasfeo_cblas_zen5_dgemm" >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
 	@echo "#define dgemm_ blasfeo_blas_zen5_dgemm" >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+	@echo "#define cblas_dsyrk blasfeo_cblas_zen5_dsyrk" >> $(CBLAS_DIR)/src/cblas_zen5_dsyrk.c
+	@echo "#define dsyrk_ blasfeo_blas_zen5_dsyrk" >> $(CBLAS_DIR)/src/cblas_zen5_dsyrk.c
 else
 	@echo "#define cblas_dgemm cblas_zen5_dgemm" >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
 	@echo "#define dgemm_ zen5_dgemm_" >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+	@echo "#define cblas_dsyrk cblas_zen5_dsyrk" >> $(CBLAS_DIR)/src/cblas_zen5_dsyrk.c
+	@echo "#define dsyrk_ zen5_dsyrk_" >> $(CBLAS_DIR)/src/cblas_zen5_dsyrk.c
 endif
 	cat $(CBLAS_DIR)/src/cblas_dgemm.c >> $(CBLAS_DIR)/src/cblas_zen5_dgemm.c
+	cat $(CBLAS_DIR)/src/cblas_dsyrk.c >> $(CBLAS_DIR)/src/cblas_zen5_dsyrk.c
 endif
 ifeq ($(EXT_DEP), 0)
 	cp $(CBLAS_DIR)/src/cblas_xerbla.c $(CBLAS_DIR)/src/cblas_xerbla_bkp.c

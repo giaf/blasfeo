@@ -390,12 +390,14 @@ nt_m2_left_8:
 	goto nt_m2_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 nt_m2_left_4:
 	for(jj=0; jj<n; jj+=4)
 		{
 		kernel_dgemm_nt_4x4_vs_lib44cc(k, &alpha, pA+ii*sda_s, pB+jj*sdb_s, &beta, C+ii+jj*ldc_s, ldc, D+ii+jj*ldd_s, ldd, m-ii, n-jj);
 		}
 	goto nt_m2_return;
+#endif
 
 nt_m2_return:
 	return;
@@ -570,12 +572,14 @@ nt_n2_left_8:
 	goto nt_n2_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 nt_n2_left_4:
 	for(ii=0; ii<m; ii+=4)
 		{
 		kernel_dgemm_nt_4x4_vs_lib44cc(k, &alpha, pA+ii*sda_s, pB+jj*sdb_s, &beta, C+ii+jj*ldc_s, ldc, D+ii+jj*ldd_s, ldd, m-ii, n-jj);
 		}
 	goto nt_n2_return;
+#endif
 
 nt_n2_return:
 	return;
@@ -786,6 +790,7 @@ nn_m1_left_8:
 	goto nn_m1_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 nn_m1_left_4:
 	kernel_dpack_nn_4_vs_lib4(k, A+ii, lda, pU, m-ii);
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -817,6 +822,7 @@ nn_m1_left_4:
 		}
 #endif
 	goto nn_m1_return;
+#endif
 
 nn_m1_return:
 	return;
@@ -1049,6 +1055,7 @@ nn_n1_left_8:
 	goto nn_n1_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 nn_n1_left_4:
 	kernel_dpack_tn_4_vs_lib4(k, B+(jj+0)*ldb_s, ldb, pU+0*sdu_s, n-jj-0);
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -1080,6 +1087,7 @@ nn_n1_left_4:
 		}
 #endif
 	goto nn_n1_return;
+#endif
 
 nn_n1_return:
 	return;
@@ -1289,6 +1297,7 @@ nt_m1_left_8:
 	goto nt_m1_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 nt_m1_left_4:
 	kernel_dpack_nn_4_vs_lib4(k, A+ii, lda, pU, m-ii);
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -1320,6 +1329,7 @@ nt_m1_left_4:
 		}
 #endif
 	goto nt_m1_return;
+#endif
 
 nt_m1_return:
 	return;
@@ -1539,6 +1549,7 @@ nt_n1_left_8:
 	goto nt_n1_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 nt_n1_left_4:
 	kernel_dpack_nn_4_vs_lib4(k, B+jj, ldb, pU, n-jj);
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -1570,6 +1581,7 @@ nt_n1_left_4:
 		}
 #endif
 	goto nt_n1_return;
+#endif
 
 nt_n1_return:
 	return;
@@ -1791,6 +1803,7 @@ tn_m1_left_8:
 	goto tn_m1_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 tn_m1_left_4:
 	kernel_dpack_tn_4_vs_lib4(k, A+ii*lda_s, lda, pU, m-ii);
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -1822,6 +1835,7 @@ tn_m1_left_4:
 		}
 #endif
 	goto tn_m1_return;
+#endif
 
 tn_m1_return:
 	return;
@@ -2054,6 +2068,7 @@ tn_n1_left_8:
 	goto tn_n1_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 tn_n1_left_4:
 	kernel_dpack_tn_4_vs_lib4(k, B+(jj+0)*ldb_s, ldb, pU+0*sdu_s, n-jj-0);
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -2085,6 +2100,7 @@ tn_n1_left_4:
 		}
 #endif
 	goto tn_n1_return;
+#endif
 
 tn_n1_return:
 	return;
@@ -2306,6 +2322,7 @@ tt_m1_left_8:
 	goto tt_m1_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 tt_m1_left_4:
 	kernel_dpack_tn_4_vs_lib4(k, A+ii*lda_s, lda, pU, m-ii);
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -2337,6 +2354,7 @@ tt_m1_left_4:
 		}
 #endif
 	goto tt_m1_return;
+#endif
 
 tt_m1_return:
 	return;
@@ -2556,6 +2574,7 @@ tt_n1_left_8:
 	goto tt_n1_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 tt_n1_left_4:
 	kernel_dpack_nn_4_vs_lib4(k, B+jj, ldb, pU, n-jj);
 #if defined(TARGET_X64_INTEL_HASWELL)
@@ -2587,6 +2606,7 @@ tt_n1_left_4:
 		}
 #endif
 	goto tt_n1_return;
+#endif
 
 tt_n1_return:
 	return;
@@ -3567,6 +3587,7 @@ nn_2_left_8:
 	goto nn_2_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 nn_2_left_4:
 	kernel_dpack_nn_4_vs_lib4(k, A+ii, lda, tA.pA, m-ii);
 	for(jj=0; jj<n; jj+=4)
@@ -3576,6 +3597,7 @@ nn_2_left_4:
 		kernel_dgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb_s, &beta, C+ii+jj*ldc_s, ldc, D+ii+jj*ldd_s, ldd, m-ii, n-jj);
 		}
 	goto nn_2_return;
+#endif
 
 nn_2_return:
 	blasfeo_free(mem);
@@ -4373,6 +4395,7 @@ nt_2_left_8:
 	goto nt_2_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 nt_2_left_4:
 	kernel_dpack_nn_4_vs_lib4(k, A+ii, lda, tA.pA, m-ii);
 	for(jj=0; jj<n; jj+=4)
@@ -4380,6 +4403,7 @@ nt_2_left_4:
 		kernel_dgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb_s, &beta, C+ii+jj*ldc_s, ldc, D+ii+jj*ldd_s, ldd, m-ii, n-jj);
 		}
 	goto nt_2_return;
+#endif
 
 nt_2_return:
 	blasfeo_free(mem);
@@ -5188,6 +5212,7 @@ tn_2_left_8:
 	goto tn_2_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 tn_2_left_4:
 	kernel_dpack_tn_4_vs_lib4(k, A+(ii+0)*lda_s, lda, tA.pA, m-ii);
 	for(jj=0; jj<n; jj+=4)
@@ -5197,6 +5222,7 @@ tn_2_left_4:
 		kernel_dgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb_s, &beta, C+ii+jj*ldc_s, ldc, D+ii+jj*ldd_s, ldd, m-ii, n-jj);
 		}
 	goto tn_2_return;
+#endif
 
 tn_2_return:
 blasfeo_free(mem);
@@ -5822,6 +5848,7 @@ tt_2_left_8:
 	goto tt_2_return;
 #endif
 
+#if ! defined(TARGET_X64_INTEL_SKYLAKE_X)
 tt_2_left_4:
 	kernel_dpack_tn_4_vs_lib4(k, A+(ii+0)*lda_s, lda, tA.pA, m-ii);
 	for(jj=0; jj<n; jj+=4)
@@ -5829,6 +5856,7 @@ tt_2_left_4:
 		kernel_dgemm_nt_4x4_vs_lib44cc(k, &alpha, tA.pA, tB.pA+jj*sdb_s, &beta, C+ii+jj*ldc_s, ldc, D+ii+jj*ldd_s, ldd, m-ii, n-jj);
 		}
 	goto tt_2_return;
+#endif
 
 tt_2_return:
 	free(mem);

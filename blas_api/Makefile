@@ -63,6 +63,7 @@ ifeq ($(DP_ROUTINES), 1)
 	OBJS += dger_ref.o # XXX
 	#
 	ZEN5_OBJS += zen5_dgemm_ref.o # XXX
+	ZEN5_OBJS += zen5_dsyrk_ref.o # XXX
 endif # DP
 ifeq ($(SP_ROUTINES), 1)
 	OBJS += saxpy.o
@@ -109,3 +110,4 @@ strsm_ref.o: strsm_ref.c xtrsm_ref.c
 spotrf_ref.o: spotrf_ref.c xpotrf_ref.c
 
 zen5_dgemm_ref.o: zen5_dgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/zen5_dgemm.c
+zen5_dsyrk_ref.o: zen5_dsyrk_ref.c xsyrk_ref.c ../blasfeo_hp_cm/zen5_dsyrk.c

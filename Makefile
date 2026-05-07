@@ -112,6 +112,7 @@ ifeq ($(HASWELL_WITH_ZEN5), 1)
 
 BLASFEO_HP_CM_DP_OBJS += \
 		blasfeo_hp_cm/zen5_dgemm.o \
+		blasfeo_hp_cm/zen5_dsyrk.o \
 
 endif
 
@@ -180,6 +181,7 @@ ifeq ($(HASWELL_WITH_ZEN5), 1)
 
 BLAS_DP_OBJS += \
 		blas_api/zen5_dgemm_ref.o \
+		blas_api/zen5_dsyrk_ref.o \
 
 endif
 

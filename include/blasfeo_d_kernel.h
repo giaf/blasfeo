@@ -1227,12 +1227,24 @@ void kernel_dgemm_nt_8xn_p0_lib44cc(int n, int k, double *alpha, double *A, int 
 // 24x8
 void kernel_dgemm_nt_24x8_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_24x8_vs_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dsyrk_nt_l_24x8_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dsyrk_nt_l_24x8_vs_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dsyrk_nt_u_24x8_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dsyrk_nt_u_24x8_vs_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 16x8
 void kernel_dgemm_nt_16x8_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_16x8_vs_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dsyrk_nt_l_16x8_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dsyrk_nt_l_16x8_vs_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dsyrk_nt_u_16x8_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dsyrk_nt_u_16x8_vs_lib88cc(int kmax, double *alpha, double *A, int sda, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 // 8x8
 void kernel_dgemm_nt_8x8_lib88cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd);
 void kernel_dgemm_nt_8x8_vs_lib88cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dsyrk_nt_l_8x8_lib88cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dsyrk_nt_l_8x8_vs_lib88cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
+void kernel_dsyrk_nt_u_8x8_lib88cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd);
+void kernel_dsyrk_nt_u_8x8_vs_lib88cc(int kmax, double *alpha, double *A, double *B, double *beta, double *C, int ldc, double *D, int ldd, int m1, int n1);
 
 // A, panel-major bs=8; B, C, D column-major
 // 24x8

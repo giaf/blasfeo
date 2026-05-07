@@ -272,6 +272,7 @@ DLEV3_DONE += netlib/cblas/src/cblas_dtrmm.o
 DLEV3_DONE += netlib/cblas/src/cblas_dtrsm.o
 ifeq ($(HASWELL_WITH_ZEN5), 1)
 DLEV3_DONE += netlib/cblas/src/cblas_zen5_dgemm.o
+DLEV3_DONE += netlib/cblas/src/cblas_zen5_dsyrk.o
 endif
 
 #
