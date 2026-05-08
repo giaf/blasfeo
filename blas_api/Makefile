@@ -71,6 +71,7 @@ ifeq ($(SP_ROUTINES), 1)
 	OBJS += sgemm_ref.o # XXX
 	OBJS += strsm_ref.o # XXX
 	OBJS += spotrf_ref.o # XXX
+	OBJS += sgemv_ref.o # XXX
 endif # SP
 
 endif # BLAS_API
@@ -108,6 +109,7 @@ dger_ref.o: dger_ref.c xger_ref.c
 sgemm_ref.o: sgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/sgemm.c
 strsm_ref.o: strsm_ref.c xtrsm_ref.c
 spotrf_ref.o: spotrf_ref.c xpotrf_ref.c
+sgemv_ref.o: sgemv_ref.c xgemv_ref.c
 
 zen5_dgemm_ref.o: zen5_dgemm_ref.c xgemm_ref.c ../blasfeo_hp_cm/zen5_dgemm.c
 zen5_dsyrk_ref.o: zen5_dsyrk_ref.c xsyrk_ref.c ../blasfeo_hp_cm/zen5_dsyrk.c

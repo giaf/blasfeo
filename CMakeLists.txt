@@ -569,6 +569,7 @@ file(GLOB BLASFEO_HP_CM_SP_SRC
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/sgemm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/strsm.c
 	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/spotrf.c
+	${PROJECT_SOURCE_DIR}/blasfeo_hp_cm/sgemv.c
 	)
 
 file(GLOB BLASFEO_HP_CM_REF_DP_SRC
@@ -637,6 +638,7 @@ file(GLOB BLAS_SP_SRC
 	${PROJECT_SOURCE_DIR}/blas_api/sgemm_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/strsm_ref.c # XXX
 	${PROJECT_SOURCE_DIR}/blas_api/spotrf_ref.c # XXX
+	${PROJECT_SOURCE_DIR}/blas_api/sgemv_ref.c # XXX
 	)
 
 file(GLOB REF_BLAS_DP_SRC
