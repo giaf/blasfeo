@@ -8678,8 +8678,8 @@
 //	...
 
 	// unroll 0
-	vmovapd			0(%r11), %zmm25 // A
-	vmovapd			64(%r11), %zmm26 // A
+	vmovupd			0(%r11), %zmm25 // A
+	vmovupd			64(%r11), %zmm26 // A
 	vbroadcastsd	0*8(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm0
 	vfmadd231pd		%zmm26, %zmm24, %zmm8
@@ -8743,8 +8743,8 @@
 	leaq	0(%rbx, %r12, 2), %rbx
 
 	// unroll 2
-	vmovapd			0(%r11), %zmm25 // A
-	vmovapd			64(%r11), %zmm26 // A
+	vmovupd			0(%r11), %zmm25 // A
+	vmovupd			64(%r11), %zmm26 // A
 	vbroadcastsd	2*8(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm0
 	vfmadd231pd		%zmm26, %zmm24, %zmm8
@@ -8820,8 +8820,8 @@
 	jle		4f // clean1
 
 	// unroll 0
-	vmovapd			0(%r11), %zmm25 // A
-	vmovapd			64(%r11), %zmm26 // A
+	vmovupd			0(%r11), %zmm25 // A
+	vmovupd			64(%r11), %zmm26 // A
 	vbroadcastsd	0*8(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm0
 	vfmadd231pd		%zmm26, %zmm24, %zmm8
@@ -8878,8 +8878,8 @@
 	leaq	0(%r11, %r12, 2), %r11
 
 	// unroll 2
-	vmovapd			0(%r11), %zmm25 // A
-	vmovapd			64(%r11), %zmm26 // A
+	vmovupd			0(%r11), %zmm25 // A
+	vmovupd			64(%r11), %zmm26 // A
 	vbroadcastsd	2*8(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm0
 	vfmadd231pd		%zmm26, %zmm24, %zmm8
@@ -8950,8 +8950,8 @@
 3: // clean up loop
 
 	// unroll 0
-	vmovapd			0(%r11), %zmm25 // A
-	vmovapd			64(%r11), %zmm26 // A
+	vmovupd			0(%r11), %zmm25 // A
+	vmovupd			64(%r11), %zmm26 // A
 	vbroadcastsd	0*8(%r13), %zmm24 // B
 	vfmadd231pd		%zmm25, %zmm24, %zmm0
 	vfmadd231pd		%zmm26, %zmm24, %zmm8
