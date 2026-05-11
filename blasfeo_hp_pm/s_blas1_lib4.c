@@ -35,6 +35,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include <blasfeo_common.h>
 #include <blasfeo_s_kernel.h>
@@ -179,6 +180,8 @@ float blasfeo_hp_sdot(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_sve
 	return dot;
 	}
 
+
+
 void blasfeo_hp_srotg(float a, float b, float *c, float *s)
 	{
 	float aa = fabsf(a);
@@ -308,6 +311,8 @@ void blasfeo_hp_srowrot(int m, struct blasfeo_smat *sA, int ai0, int ai1, int aj
 		}
 	return;
 	}
+
+
 
 #if defined(LA_HIGH_PERFORMANCE)
 
