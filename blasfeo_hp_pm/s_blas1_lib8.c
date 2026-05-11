@@ -35,6 +35,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #if defined(TARGET_X64_INTEL_HASWELL) || defined(TARGET_X64_INTEL_SANDY_BRIDGE)
 #include <mmintrin.h>
@@ -47,6 +48,9 @@
 
 #include <blasfeo_common.h>
 #include <blasfeo_s_kernel.h>
+#if defined(BLASFEO_REF_API)
+#include <blasfeo_s_blasfeo_ref_api.h>
+#endif
 
 
 
@@ -217,6 +221,45 @@ float blasfeo_hp_sdot(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_sve
 	return dot;
 	}
 
+void blasfeo_hp_srotg(float a, float b, float *c, float *s)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_srotg(a, b, c, s);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_srotg: feature not implemented yet\n");
+#endif
+	exit(1);
+#endif
+	}
+
+
+
+void blasfeo_hp_scolrot(int m, struct blasfeo_smat *sA, int ai, int aj0, int aj1, float c, float s)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_scolrot(m, sA, ai, aj0, aj1, c, s);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_scolrot: feature not implemented yet\n");
+#endif
+	exit(1);
+#endif
+	}
+	
+
+
+void blasfeo_hp_srowrot(int m, struct blasfeo_smat *sA, int ai0, int ai1, int aj, float c, float s)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_srowrot(m, sA, ai0, ai1, aj, c, s);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_srowrot: feature not implemented yet\n");
+#endif
+	exit(1);
+#endif
+	}
 
 
 #if defined(LA_HIGH_PERFORMANCE)
@@ -265,24 +308,24 @@ float blasfeo_sdot(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *
 
 
 
-//void blasfeo_srotg(float a, float b, float *c, float *s)
-//	{
-//	blasfeo_hp_srotg(a, b, c, s);
-//	}
+void blasfeo_srotg(float a, float b, float *c, float *s)
+	{
+	blasfeo_hp_srotg(a, b, c, s);
+	}
 
 
 
-//void blasfeo_scolrot(int m, struct blasfeo_smat *sA, int ai, int aj0, int aj1, float c, float s)
-//	{
-//	blasfeo_hp_scolrot(m, sA, ai, aj0, aj1, c, s);
-//	}
+void blasfeo_scolrot(int m, struct blasfeo_smat *sA, int ai, int aj0, int aj1, float c, float s)
+	{
+	blasfeo_hp_scolrot(m, sA, ai, aj0, aj1, c, s);
+	}
 
 
 
-//void blasfeo_srowrot(int m, struct blasfeo_smat *sA, int ai0, int ai1, int aj, float c, float s)
-//	{
-//	blasfeo_hp_srowrot(m, sA, ai0, ai1, aj, c, s);
-//	}
+void blasfeo_srowrot(int m, struct blasfeo_smat *sA, int ai0, int ai1, int aj, float c, float s)
+	{
+	blasfeo_hp_srowrot(m, sA, ai0, ai1, aj, c, s);
+	}
 
 
 

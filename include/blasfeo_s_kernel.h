@@ -666,6 +666,12 @@ void kernel_sgemm_nt_4x4_vs_libcccc(int kmax, float *alpha, float *A, int lda, f
 void kernel_sgemm_tt_4x4_libcccc(int kmax, float *alpha, float *A, int lda, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd);
 void kernel_sgemm_tt_4x4_vs_libcccc(int kmax, float *alpha, float *A, int lda, float *B, int ldb, float *beta, float *C, int ldc, float *D, int ldd, int m1, int n1);
 
+// level 2 BLAS
+void kernel_sgemv_n_4_libc(int kmax, float *alpha, float *A, int lda, float *x, float *z);
+void kernel_sgemv_n_4_vs_libc(int kmax, float *alpha, float *A, int lda, float *x, float *z, int km);
+void kernel_sgemv_t_4_libc(int kmax, float *alpha, float *A, int lda, float *x, float *beta, float *y, float *z);
+void kernel_sgemv_t_4_vs_libc(int kmax, float *alpha, float *A, int lda, float *x, float *beta, float *y, float *z, int km);
+
 // vector
 void kernel_sdot_11_lib(int n, float *x, float *y, float *res);
 void kernel_saxpy_11_lib(int n, float *alpha, float *x, float *y);

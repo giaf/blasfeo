@@ -35,6 +35,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include <blasfeo_common.h>
 #include <blasfeo_s_kernel.h>
@@ -181,6 +182,138 @@ float blasfeo_hp_sdot(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_sve
 
 
 
+void blasfeo_hp_srotg(float a, float b, float *c, float *s)
+	{
+	float aa = fabsf(a);
+	float bb = fabsf(b);
+	float roe = aa>=bb ? a : b;
+	float scale = aa + bb;
+	float r;
+	if(scale==0)
+		{
+		*c = 1.0;
+		*s = 0.0;
+		}
+	else
+		{
+		aa = a/scale;
+		bb = b/scale;
+		r = scale * sqrtf(aa*aa + bb*bb);
+		r = r * (roe >= 0 ? 1 : -1);
+		*c = a / r;
+		*s = b / r;
+		}
+	return;
+	}
+
+
+
+void blasfeo_hp_scolrot(int m, struct blasfeo_smat *sA, int ai, int aj0, int aj1, float c, float s)
+	{
+	const int ps = 4;
+	int sda = sA->cn;
+	float *px = sA->pA + ai/ps*ps*sda + ai%ps + aj0*ps;
+	float *py = sA->pA + ai/ps*ps*sda + ai%ps + aj1*ps;
+	int mna = (ps-ai%ps)%ps;
+	int ii;
+	float d_tmp;
+	ii = 0;
+	if(mna>0)
+		{
+		for(; ii<mna; ii++)
+			{
+			d_tmp = c*px[0] + s*py[0];
+			py[0] = c*py[0] - s*px[0];
+			px[0] = d_tmp;
+			px++;
+			py++;
+			}
+		px += ps*(sda-1);
+		py += ps*(sda-1);
+		}
+	for(; ii<m-3; ii+=4)
+		{
+		//
+		d_tmp = c*px[0] + s*py[0];
+		py[0] = c*py[0] - s*px[0];
+		px[0] = d_tmp;
+		//
+		d_tmp = c*px[1] + s*py[1];
+		py[1] = c*py[1] - s*px[1];
+		px[1] = d_tmp;
+		//
+		d_tmp = c*px[2] + s*py[2];
+		py[2] = c*py[2] - s*px[2];
+		px[2] = d_tmp;
+		//
+		d_tmp = c*px[3] + s*py[3];
+		py[3] = c*py[3] - s*px[3];
+		px[3] = d_tmp;
+		//
+		px+=ps*sda;
+		py+=ps*sda;
+		}
+	for(; ii<m; ii++)
+		{
+		//
+		d_tmp = c*px[0] + s*py[0];
+		py[0] = c*py[0] - s*px[0];
+		px[0] = d_tmp;
+		//
+		px++;
+		py++;
+		}
+	return;
+	}
+	
+
+
+void blasfeo_hp_srowrot(int m, struct blasfeo_smat *sA, int ai0, int ai1, int aj, float c, float s)
+	{
+	const int ps = 4;
+	int sda = sA->cn;
+	float *px = sA->pA + ai0/ps*ps*sda + ai0%ps + aj*ps;
+	float *py = sA->pA + ai1/ps*ps*sda + ai1%ps + aj*ps;
+	int ii;
+	float d_tmp;
+	ii = 0;
+	for(; ii<m-3; ii+=4)
+		{
+		//
+		d_tmp = c*px[0*ps] + s*py[0*ps];
+		py[0*ps] = c*py[0*ps] - s*px[0*ps];
+		px[0*ps] = d_tmp;
+		//
+		d_tmp = c*px[1*ps] + s*py[1*ps];
+		py[1*ps] = c*py[1*ps] - s*px[1*ps];
+		px[1*ps] = d_tmp;
+		//
+		d_tmp = c*px[2*ps] + s*py[2*ps];
+		py[2*ps] = c*py[2*ps] - s*px[2*ps];
+		px[2*ps] = d_tmp;
+		//
+		d_tmp = c*px[3*ps] + s*py[3*ps];
+		py[3*ps] = c*py[3*ps] - s*px[3*ps];
+		px[3*ps] = d_tmp;
+		//
+		px+=4*ps;
+		py+=4*ps;
+		}
+	for(; ii<m; ii++)
+		{
+		//
+		d_tmp = c*px[0*ps] + s*py[0*ps];
+		py[0*ps] = c*py[0*ps] - s*px[0*ps];
+		px[0*ps] = d_tmp;
+		//
+		px+=1*ps;
+		py+=1*ps;
+		}
+	return;
+	}
+
+
+
 #if defined(LA_HIGH_PERFORMANCE)
 
 
@@ -227,24 +360,24 @@ float blasfeo_sdot(int m, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *
 
 
 
-//void blasfeo_srotg(float a, float b, float *c, float *s)
-//	{
-//	blasfeo_hp_srotg(a, b, c, s);
-//	}
+void blasfeo_srotg(float a, float b, float *c, float *s)
+	{
+	blasfeo_hp_srotg(a, b, c, s);
+	}
 
 
 
-//void blasfeo_scolrot(int m, struct blasfeo_smat *sA, int ai, int aj0, int aj1, float c, float s)
-//	{
-//	blasfeo_hp_scolrot(m, sA, ai, aj0, aj1, c, s);
-//	}
+void blasfeo_scolrot(int m, struct blasfeo_smat *sA, int ai, int aj0, int aj1, float c, float s)
+	{
+	blasfeo_hp_scolrot(m, sA, ai, aj0, aj1, c, s);
+	}
 
 
 
-//void blasfeo_srowrot(int m, struct blasfeo_smat *sA, int ai0, int ai1, int aj, float c, float s)
-//	{
-//	blasfeo_hp_srowrot(m, sA, ai0, ai1, aj, c, s);
-//	}
+void blasfeo_srowrot(int m, struct blasfeo_smat *sA, int ai0, int ai1, int aj, float c, float s)
+	{
+	blasfeo_hp_srowrot(m, sA, ai0, ai1, aj, c, s);
+	}
 
 
 

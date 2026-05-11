@@ -33,13 +33,13 @@
 *                                                                                                 *
 **************************************************************************************************/
 
-#include <blasfeo_d_kernel.h>
+#include <blasfeo_s_kernel.h>
 
 
 
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) //|| defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dgemv_n_4_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z)
+#if 1 //#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) //|| defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_sgemv_n_4_libc(int kmax, float *alpha, float *A, int lda, float *x, float *z)
 	{
 
 	if(kmax<=0) 
@@ -47,7 +47,7 @@ void kernel_dgemv_n_4_libc(int kmax, double *alpha, double *A, int lda, double *
 	
 	int k;
 
-	double
+	float
 		a_00, a_01, a_02, a_03,
 		x_0, x_1, x_2, x_3, y_0;
 	
@@ -159,7 +159,7 @@ void kernel_dgemv_n_4_libc(int kmax, double *alpha, double *A, int lda, double *
 
 
 #if 1 //defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-static void kernel_dgemv_n_3_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z)
+static void kernel_sgemv_n_3_libc(int kmax, float *alpha, float *A, int lda, float *x, float *z)
 	{
 
 	if(kmax<=0) 
@@ -167,7 +167,7 @@ static void kernel_dgemv_n_3_libc(int kmax, double *alpha, double *A, int lda, d
 	
 	int k;
 
-	double
+	float
 		a_00, a_01, a_02,
 		x_0, x_1, x_2, y_0;
 	
@@ -268,7 +268,7 @@ static void kernel_dgemv_n_3_libc(int kmax, double *alpha, double *A, int lda, d
 
 
 #if 1 //defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-static void kernel_dgemv_n_2_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z)
+static void kernel_sgemv_n_2_libc(int kmax, float *alpha, float *A, int lda, float *x, float *z)
 	{
 
 	if(kmax<=0) 
@@ -276,7 +276,7 @@ static void kernel_dgemv_n_2_libc(int kmax, double *alpha, double *A, int lda, d
 	
 	int k;
 
-	double
+	float
 		a_00, a_01,
 		x_0, x_1, y_0;
 	
@@ -366,7 +366,7 @@ static void kernel_dgemv_n_2_libc(int kmax, double *alpha, double *A, int lda, d
 
 
 #if 1 //defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-static void kernel_dgemv_n_1_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z)
+static void kernel_sgemv_n_1_libc(int kmax, float *alpha, float *A, int lda, float *x, float *z)
 	{
 
 	if(kmax<=0) 
@@ -374,7 +374,7 @@ static void kernel_dgemv_n_1_libc(int kmax, double *alpha, double *A, int lda, d
 	
 	int k;
 
-	double
+	float
 		a_00,
 		x_0, y_0;
 	
@@ -454,7 +454,7 @@ static void kernel_dgemv_n_1_libc(int kmax, double *alpha, double *A, int lda, d
 
 #if 1 //defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 // XXX copy and scale y_n into z_n outside the kernel !!!!!
-void kernel_dgemv_n_4_vs_libc(int kmax, double *alpha, double *A, int lda, double *x, double *z, int km)
+void kernel_sgemv_n_4_vs_libc(int kmax, float *alpha, float *A, int lda, float *x, float *z, int km)
 	{
 
 	if(km<=0)
@@ -462,19 +462,19 @@ void kernel_dgemv_n_4_vs_libc(int kmax, double *alpha, double *A, int lda, doubl
 
 	if(km==1)
 		{
-		kernel_dgemv_n_1_libc(kmax, alpha, A, lda, x, z);
+		kernel_sgemv_n_1_libc(kmax, alpha, A, lda, x, z);
 		}
 	else if(km==2)
 		{
-		kernel_dgemv_n_2_libc(kmax, alpha, A, lda, x, z);
+		kernel_sgemv_n_2_libc(kmax, alpha, A, lda, x, z);
 		}
 	else if(km==3)
 		{
-		kernel_dgemv_n_3_libc(kmax, alpha, A, lda, x, z);
+		kernel_sgemv_n_3_libc(kmax, alpha, A, lda, x, z);
 		}
 	else
 		{
-		kernel_dgemv_n_4_libc(kmax, alpha, A, lda, x, z);
+		kernel_sgemv_n_4_libc(kmax, alpha, A, lda, x, z);
 		}
 
 	return;
@@ -484,16 +484,16 @@ void kernel_dgemv_n_4_vs_libc(int kmax, double *alpha, double *A, int lda, doubl
 
 
 
-#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) //|| defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dgemv_t_4_libc(int kmax, double *alpha, double *A, int lda, double *x, double *beta, double *y, double *z)
+#if 1 //#if defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_INTEL_CORE) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) //|| defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
+void kernel_sgemv_t_4_libc(int kmax, float *alpha, float *A, int lda, float *x, float *beta, float *y, float *z)
 	{
 
 	int k, kend;
 	
-	double
+	float
 		x_0, x_1, x_2, x_3;
 	
-	double yy[4] = {0.0, 0.0, 0.0, 0.0};
+	float yy[4] = {0.0, 0.0, 0.0, 0.0};
 	
 	k=0;
 	for(; k<kmax-3; k+=4)
@@ -565,15 +565,15 @@ void kernel_dgemv_t_4_libc(int kmax, double *alpha, double *A, int lda, double *
 
 
 
-static void kernel_dgemv_t_3_libc(int kmax, double *alpha, double *A, int lda, double *x, double *beta, double *y, double *z)
+static void kernel_sgemv_t_3_libc(int kmax, float *alpha, float *A, int lda, float *x, float *beta, float *y, float *z)
 	{
 
 	int k, kend;
 	
-	double
+	float
 		x_0, x_1, x_2, x_3;
 	
-	double yy[3] = {0.0, 0.0, 0.0};
+	float yy[3] = {0.0, 0.0, 0.0};
 	
 	k=0;
 	for(; k<kmax-3; k+=4)
@@ -637,15 +637,15 @@ static void kernel_dgemv_t_3_libc(int kmax, double *alpha, double *A, int lda, d
 
 
 
-static void kernel_dgemv_t_2_libc(int kmax, double *alpha, double *A, int lda, double *x, double *beta, double *y, double *z)
+static void kernel_sgemv_t_2_libc(int kmax, float *alpha, float *A, int lda, float *x, float *beta, float *y, float *z)
 	{
 
 	int k, kend;
 	
-	double
+	float
 		x_0, x_1, x_2, x_3;
 	
-	double yy[2] = {0.0, 0.0};
+	float yy[2] = {0.0, 0.0};
 	
 	k=0;
 	for(; k<kmax-3; k+=4)
@@ -702,15 +702,15 @@ static void kernel_dgemv_t_2_libc(int kmax, double *alpha, double *A, int lda, d
 
 
 
-static void kernel_dgemv_t_1_libc(int kmax, double *alpha, double *A, int lda, double *x, double *beta, double *y, double *z)
+static void kernel_sgemv_t_1_libc(int kmax, float *alpha, float *A, int lda, float *x, float *beta, float *y, float *z)
 	{
 
 	int k, kend;
 	
-	double
+	float
 		x_0, x_1, x_2, x_3;
 	
-	double yy[1] = {0.0};
+	float yy[1] = {0.0};
 	
 	k=0;
 	for(; k<kmax-3; k+=4)
@@ -761,7 +761,7 @@ static void kernel_dgemv_t_1_libc(int kmax, double *alpha, double *A, int lda, d
 
 
 #if 1 //defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-void kernel_dgemv_t_4_vs_libc(int kmax, double *alpha, double *A, int lda, double *x, double *beta, double *y, double *z, int km)
+void kernel_sgemv_t_4_vs_libc(int kmax, float *alpha, float *A, int lda, float *x, float *beta, float *y, float *z, int km)
 	{
 
 	if(km<=0)
@@ -769,19 +769,19 @@ void kernel_dgemv_t_4_vs_libc(int kmax, double *alpha, double *A, int lda, doubl
 
 	if(km==1)
 		{
-		kernel_dgemv_t_1_libc(kmax, alpha, A, lda, x, beta, y, z);
+		kernel_sgemv_t_1_libc(kmax, alpha, A, lda, x, beta, y, z);
 		}
 	else if(km==2)
 		{
-		kernel_dgemv_t_2_libc(kmax, alpha, A, lda, x, beta, y, z);
+		kernel_sgemv_t_2_libc(kmax, alpha, A, lda, x, beta, y, z);
 		}
 	else if(km==3)
 		{
-		kernel_dgemv_t_3_libc(kmax, alpha, A, lda, x, beta, y, z);
+		kernel_sgemv_t_3_libc(kmax, alpha, A, lda, x, beta, y, z);
 		}
 	else
 		{
-		kernel_dgemv_t_4_libc(kmax, alpha, A, lda, x, beta, y, z);
+		kernel_sgemv_t_4_libc(kmax, alpha, A, lda, x, beta, y, z);
 		}
 
 	return;
