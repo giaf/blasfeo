@@ -401,3 +401,4 @@ kernel_dgemv_4_lib4.o: kernel_dgemv_4_lib4.c kernel_dgemv_4_lib.c
 kernel_dsymv_4_lib4.o: kernel_dsymv_4_lib4.c kernel_dsymv_4_lib.c
 kernel_dger_lib4.o: kernel_dger_lib4.c kernel_dger_lib.c
 kernel_sgemm_4x4_lib4.o: kernel_sgemm_4x4_lib4.c kernel_sgemm_4x4_lib.c
+kernel_sgemv_4_lib4.o: kernel_sgemv_4_lib4.c kernel_sgemv_4_lib.c

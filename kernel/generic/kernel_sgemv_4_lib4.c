@@ -1610,3 +1610,11 @@ void kernel_strmv_ut_4_lib4(int kmax, float *A, int sda, float *x, float *z)
 #endif
 
 
+
+//#if defined(BLAS_API)
+#if ( defined(BLAS_API) | ( defined(LA_HIGH_PERFORMANCE) & defined(MF_COLMAJ) ) )
+
+#include "kernel_sgemv_4_lib.c"
+
+#endif
+

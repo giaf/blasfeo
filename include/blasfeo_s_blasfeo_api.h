@@ -298,6 +298,9 @@ void blasfeo_cm_strsm_runn(int m, int n, float alpha, struct blasfeo_cm_smat *sA
 void blasfeo_cm_strsm_runu(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
 void blasfeo_cm_strsm_rutn(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
 void blasfeo_cm_strsm_rutu(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_smat *sB, int bi, int bj, struct blasfeo_cm_smat *sD, int di, int dj);
+// BLAS 2
+void blasfeo_cm_sgemv_n(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_svec *sx, int xi, float beta, struct blasfeo_cm_svec *sy, int yi, struct blasfeo_cm_svec *sz, int zi);
+void blasfeo_cm_sgemv_t(int m, int n, float alpha, struct blasfeo_cm_smat *sA, int ai, int aj, struct blasfeo_cm_svec *sx, int xi, float beta, struct blasfeo_cm_svec *sy, int yi, struct blasfeo_cm_svec *sz, int zi);
 // LAPACK
 void blasfeo_cm_spotrf_l(int m, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);
 void blasfeo_cm_spotrf_u(int m, struct blasfeo_cm_smat *sC, int ci, int cj, struct blasfeo_cm_smat *sD, int di, int dj);

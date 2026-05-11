@@ -191,6 +191,7 @@ BLAS_SP_OBJS += \
 		blas_api/sgemm_ref.o \
 		blas_api/strsm_ref.o \
 		blas_api/spotrf_ref.o \
+		blas_api/sgemv_ref.o \
 
 REF_BLAS_DP_OBJS += \
 		blasfeo_ref/d_blas3_ref_blas.o \
