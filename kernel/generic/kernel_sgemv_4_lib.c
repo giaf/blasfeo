@@ -761,7 +761,6 @@ static void kernel_sgemv_t_1_libc(int kmax, float *alpha, float *A, int lda, flo
 
 
 #if 1 //defined(TARGET_GENERIC) || defined(TARGET_X86_AMD_BARCELONA) || defined(TARGET_X86_AMD_JAGUAR) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) || defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
-// XXX copy and scale y_n into z_n outside the kernel !!!!!
 void kernel_sgemv_t_4_vs_libc(int kmax, float *alpha, float *A, int lda, float *x, float *beta, float *y, float *z, int km)
 	{
 
