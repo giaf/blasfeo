@@ -50,6 +50,7 @@ ifeq ($(DP_ROUTINES), 1)
 	KERNEL_OBJS += kernel_dgelqf_lib8.o
 endif # DP
 ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_16x16_lib16.o
 endif # SP
 endif
 

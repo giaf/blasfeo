@@ -47,6 +47,12 @@ extern "C" {
 #endif
 
 
+//
+// lib16
+//
+
+// 16x16
+void kernel_sgemm_nt_16x16_lib16(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
 
 //
 // lib8

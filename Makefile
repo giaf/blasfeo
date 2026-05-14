@@ -307,6 +307,7 @@ KERNEL_DP_OBJS = \
 		kernel/avx/kernel_dpack_lib4.o \
 
 KERNEL_SP_OBJS = \
+		kernel/avx512/kernel_sgemm_16x16_lib16.o \
 
 KERNEL_ALIGN_OBJS = \
 		kernel/sse3/kernel_align_x64.o \
