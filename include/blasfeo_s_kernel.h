@@ -53,6 +53,7 @@ extern "C" {
 
 // 16x16
 void kernel_sgemm_nt_16x16_lib16(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D);
+void kernel_sgemm_nt_16x16_vs_lib16(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int m1, int n1);
 
 //
 // lib8

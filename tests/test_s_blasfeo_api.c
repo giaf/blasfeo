@@ -119,7 +119,8 @@ int main()
 //	kernel_sgemm_nt_8x4_lib4(4, &alpha, sA.pA+0*sA.cn, sA.cn, sB.pA, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
 //	kernel_sgemm_nt_8x4_vs_lib4(4, &alpha, sA.pA+0*sA.cn, sA.cn, sB.pA, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 7, 3);
 //	kernel_sgemm_nt_8x8_lib4(8, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
-	kernel_sgemm_nt_16x16_lib16(16, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+//	kernel_sgemm_nt_16x16_lib16(16, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+	kernel_sgemm_nt_16x16_vs_lib16(16, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 16, 16);
 
 //	blasfeo_sgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
