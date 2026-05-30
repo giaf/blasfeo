@@ -6337,7 +6337,7 @@ NAME:
 // r10d  <- k
 // r11   <- A
 // r12   <- B
-// r13   <- 4*sdb*sizeof(double)
+// r13   <- 8*sdb*sizeof(double)
 // r14   <- offB
 // zmm0  <- []
 // ...
@@ -6348,7 +6348,7 @@ NAME:
 // r10d  <- 0
 // r11   <- A+8*k*sizeof(double)
 // r12   <- B+8*k*sizeof(double)
-// r13   <- 4*sdb*sizeof(double)
+// r13   <- 8*sdb*sizeof(double)
 // r14   <- offB
 // zmm0  <- []
 // ...
@@ -6372,9 +6372,9 @@ NAME:
 	subl			%r14d, %r15d // 8-offsetB
 	cmpl			%r10d, %r15d
 //	jle				0f
-//	movl			%r10d, %r15d // kend=min(k,4-offsetB)
+//	movl			%r10d, %r15d // kend=min(k,8-offsetB)
 //0:
-	cmovgl			%r10d, %r15d // kend=min(k,4-offsetB)
+	cmovgl			%r10d, %r15d // kend=min(k,8-offsetB)
 
 	movl			%r14d, %eax
 	sall			$ 3, %eax // offsetB*sizeof(double)
@@ -11246,7 +11246,7 @@ NAME:
 	movq	ARG6, %r12 // offsetC
 	movq	ARG7, %r13 // C
 	movq	ARG8, %r14 // sdc
-	sall	$ 6, %r14d // 4*sdc*sizeof(double)
+	sall	$ 6, %r14d // 8*sdc*sizeof(double)
 	movq	ARG14, %r15 // n0
 	movq	ARG15, %rax // n1
 
@@ -11262,7 +11262,7 @@ NAME:
 	movq	ARG9, %r10 // offsetD
 	movq	ARG10, %r11 // D
 	movq	ARG11, %r12 // sdd
-	sall	$ 6, %r12d // 4*sdb*sizeof(double)
+	sall	$ 6, %r12d // 8*sdb*sizeof(double)
 	movq	ARG12, %r13 // m0
 	movq	ARG13, %r14 // m1
 	movq	ARG14, %r15 // n0
@@ -11304,7 +11304,7 @@ NAME:
 	movq	ARG3, %r11  // A
 	movq	ARG5, %r12  // B
 	movq	ARG6, %r13 // sdb
-	sall	$ 6, %r13d // 4*sdb*sizeof(double)
+	sall	$ 6, %r13d // 8*sdb*sizeof(double)
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -11373,7 +11373,7 @@ NAME:
 	movq	ARG3, %r11  // A
 	movq	ARG5, %r12  // B
 	movq	ARG6, %r13 // sdb
-	sall	$ 6, %r13d // 4*sdb*sizeof(double)
+	sall	$ 6, %r13d // 8*sdb*sizeof(double)
 
 	movq	ARG4, %r14 // offsetB
 
@@ -11451,7 +11451,7 @@ NAME:
 	movq	ARG3, %r11  // A
 	movq	ARG5, %r12  // B
 	movq	ARG6, %r13 // sdb
-	sall	$ 6, %r13d // 4*sdb*sizeof(double)
+	sall	$ 6, %r13d // 8*sdb*sizeof(double)
 
 	movq	ARG4, %r14 // offsetB
 
@@ -11479,7 +11479,7 @@ NAME:
 	movq	ARG8, %r12 // offsetC
 	movq	ARG9, %r13 // C
 	movq	ARG10, %r14 // sdc
-	sall	$ 6, %r14d // 4*sdc*sizeof(double)
+	sall	$ 6, %r14d // 8*sdc*sizeof(double)
 	movq	ARG16, %r15 // n0
 	movq	ARG17, %rax // n1
 
@@ -11495,7 +11495,7 @@ NAME:
 	movq	ARG11, %r10 // offsetD
 	movq	ARG12, %r11 // D
 	movq	ARG13, %r12 // sdd
-	sall	$ 6, %r12d // 4*sdb*sizeof(double)
+	sall	$ 6, %r12d // 8*sdb*sizeof(double)
 	movq	ARG14, %r13 // m0
 	movq	ARG15, %r14 // m1
 	movq	ARG16, %r15 // n0
@@ -11730,7 +11730,7 @@ NAME:
 	movq	ARG8, %r12 // offsetC
 	movq	ARG9, %r13 // C
 	movq	ARG10, %r14 // sdc
-	sall	$ 6, %r14d // 4*sdc*sizeof(double)
+	sall	$ 6, %r14d // 8*sdc*sizeof(double)
 	movq	ARG16, %r15 // n0
 	movq	ARG17, %rax // n1
 
@@ -11746,7 +11746,7 @@ NAME:
 	movq	ARG11, %r10 // offsetD
 	movq	ARG12, %r11 // D
 	movq	ARG13, %r12 // sdd
-	sall	$ 6, %r12d // 4*sdb*sizeof(double)
+	sall	$ 6, %r12d // 8*sdb*sizeof(double)
 	movq	ARG14, %r13 // m0
 	movq	ARG15, %r14 // m1
 	movq	ARG16, %r15 // n0
@@ -11932,7 +11932,7 @@ NAME:
 	movq	ARG6, %r12 // offsetC
 	movq	ARG7, %r13 // C
 	movq	ARG8, %r14 // sdc
-	sall	$ 6, %r14d // 4*sdc*sizeof(double)
+	sall	$ 6, %r14d // 8*sdc*sizeof(double)
 	movq	ARG14, %r15 // n0
 	movq	ARG15, %rax // n1
 
@@ -11948,7 +11948,7 @@ NAME:
 	movq	ARG9, %r10 // offsetD
 	movq	ARG10, %r11 // D
 	movq	ARG11, %r12 // sdd
-	sall	$ 6, %r12d // 4*sdb*sizeof(double)
+	sall	$ 6, %r12d // 8*sdb*sizeof(double)
 	movq	ARG12, %r13 // m0
 	movq	ARG13, %r14 // m1
 	movq	ARG14, %r15 // n0
@@ -11990,7 +11990,7 @@ NAME:
 	movq	ARG3, %r11 // A
 	movq	ARG5, %r12 // B
 	movq	ARG6, %r13 // sdb
-	sall	$ 6, %r13d // 4*sdb*sizeof(double)
+	sall	$ 6, %r13d // 8*sdb*sizeof(double)
 	movq	ARG4, %r14 // offsetB
 
 #if MACRO_LEVEL>=1
@@ -12065,7 +12065,7 @@ NAME:
 	movq	ARG3, %r11 // A
 	movq	ARG5, %r12 // B
 	movq	ARG6, %r13 // sdb
-	sall	$ 6, %r13d // 4*sdb*sizeof(double)
+	sall	$ 6, %r13d // 8*sdb*sizeof(double)
 
 	movq	ARG4, %r14 // offsetB
 
@@ -12148,7 +12148,7 @@ NAME:
 	movq	ARG3, %r11 // A
 	movq	ARG5, %r12 // B
 	movq	ARG6, %r13 // sdb
-	sall	$ 6, %r13d // 4*sdb*sizeof(double)
+	sall	$ 6, %r13d // 8*sdb*sizeof(double)
 
 	movq	ARG4, %r14 // offsetB
 
@@ -12194,7 +12194,7 @@ NAME:
 	movq	ARG7, %r10 // offsetD
 	movq	ARG8, %r11 // D
 	movq	ARG9, %r12 // sdd
-	sall	$ 6, %r12d // 4*sdb*sizeof(double)
+	sall	$ 6, %r12d // 8*sdb*sizeof(double)
 	movq	ARG10, %r13 // m0
 	movq	ARG11, %r14 // m1
 	movq	ARG12, %r15 // n0

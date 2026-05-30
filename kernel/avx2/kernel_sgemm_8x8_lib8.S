@@ -3420,7 +3420,7 @@ NAME:
 
 
 //                                  1      2             3         4         5            6         7         8       9
-// void kernel_sgemm_nt_8x8_vs)lib8(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn);
+// void kernel_sgemm_nt_8x8_vs_lib8(int k, float *alpha, float *A, float *B, float *beta, float *C, float *D, int km, int kn);
 
 	.p2align 4,,15
 	GLOB_FUN_START(kernel_sgemm_nt_8x8_vs_lib8)
@@ -3438,6 +3438,7 @@ NAME:
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // B
 
+	// TODO vs
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB8
 #else
@@ -3451,6 +3452,7 @@ NAME:
 	movq	ARG5, %r11 // beta
 	movq	ARG6, %r12   // C
 
+	// TODO vs
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X8_LIB8
 #else
@@ -3500,6 +3502,7 @@ NAME:
 	movq	ARG3, %r11  // A
 	movq	ARG4, %r12  // B
 
+	// TODO vs
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NT_8X8_LIB8
 #else
@@ -3642,12 +3645,14 @@ NAME:
 	sall	$ 5, %r13d // 8*sdb*sizeof(float)
 	movq	ARG4, %r14 // offsetB
 
+	// TODO vs
 #if MACRO_LEVEL>=1
 	INNER_EDGE_GEMM_ADD_NN_8X8_LIB8
 #else
 	CALL(inner_edge_gemm_add_nn_8x8_lib8)
 #endif
 
+	// TODO vs
 #if MACRO_LEVEL>=2
 	INNER_KERNEL_GEMM_ADD_NN_8X8_LIB8
 #else
@@ -3661,6 +3666,7 @@ NAME:
 	movq	ARG7, %r11 // beta
 	movq	ARG8, %r12   // C
 
+	// TODO vs
 #if MACRO_LEVEL>=1
 	INNER_SCALE_AB_8X8_LIB8
 #else

@@ -226,7 +226,7 @@ int main()
 		nrep = nrep>1 ? nrep : 1;
 //		int n = ll+1;
 //		int nrep = nnrep[0];
-//		n = n<16 ? 16 : n;
+		n = n<16 ? 16 : n;
 
 		int n2 = n*n;
 
@@ -359,9 +359,10 @@ int main()
 //				kernel_sgemm_nn_8x8_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //				kernel_sgemm_nn_8x4_lib8(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 //				kernel_sgemm_nt_16x16_lib16(n, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
+				kernel_sgemm_nn_16x16_lib16(n, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
 
 				// blasfeo routines
-				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
+//				blasfeo_sgemm_nt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_nn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_tn(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
 //				blasfeo_sgemm_tt(n, n, n, 1.0, &sA, 0, 0, &sB, 0, 0, 0.0, &sD, 0, 0, &sD, 0, 0);
@@ -442,7 +443,7 @@ int main()
 		// flops
 
 		// blasfeo kernels
-//		float flop_operation = 16*16.0*2*n; // kernel 16x16
+		float flop_operation = 16*16.0*2*n; // kernel 16x16
 //		float flop_operation = 4*16.0*2*n; // kernel 16x4
 //		float flop_operation = 3*16.0*2*n; // kernel 12x4
 //		float flop_operation = 2*16.0*2*n; // kernel 8x4
@@ -450,7 +451,7 @@ int main()
 //		float flop_operation = 0.5*16.0*2*n; // kernel 2x4
 
 		// blasfeo routines
-		float flop_operation = 2.0*n*n*n; // gemm
+//		float flop_operation = 2.0*n*n*n; // gemm
 //		float flop_operation = 1.0*n*n*n; // syrk trmm trsm
 //		float flop_operation = 1.0/3.0*n*n*n; // potrf trtri
 //		float flop_operation = 2.0/3.0*n*n*n; // getrf
