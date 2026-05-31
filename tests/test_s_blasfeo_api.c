@@ -52,7 +52,7 @@ int main()
 
 	int ii, jj;
 
-	int n = 16;
+	int n = 32;
 
 	//
 	// matrices in column-major format
@@ -81,12 +81,12 @@ int main()
 	struct blasfeo_smat sA;
 	blasfeo_allocate_smat(n, n, &sA);
 	blasfeo_pack_smat(n, n, A, n, &sA, 0, 0);
-	blasfeo_print_smat(n, n, &sA, 0, 0);
+	blasfeo_print_smat(16, 24, &sA, 0, 0);
 
 	struct blasfeo_smat sB;
 	blasfeo_allocate_smat(n, n, &sB);
 	blasfeo_pack_smat(n, n, B, n, &sB, 0, 0);
-	blasfeo_print_smat(n, n, &sB, 0, 0);
+	blasfeo_print_smat(16, 24, &sB, 0, 0);
 
 	struct blasfeo_smat sD;
 	blasfeo_allocate_smat(n, n, &sD);
@@ -109,39 +109,46 @@ int main()
 	// tests
 	//
 
-#if 1
+#if 0
 	// gemm_nt
 	alpha = 1.0;
 	beta = 0.0;
-	blasfeo_print_smat(n, n, &sD, 0, 0);
+	//blasfeo_print_smat(n, n, &sD, 0, 0);
+	//blasfeo_print_smat(16, 24, &sD, 0, 0);
 
 //	kernel_sgemm_nt_4x4_lib4(4, &alpha, sA.pA+4*sA.cn, sB.pA, &beta, sA.pA, sD.pA);
 //	kernel_sgemm_nt_8x4_lib4(4, &alpha, sA.pA+0*sA.cn, sA.cn, sB.pA, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
 //	kernel_sgemm_nt_8x4_vs_lib4(4, &alpha, sA.pA+0*sA.cn, sA.cn, sB.pA, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 7, 3);
 //	kernel_sgemm_nt_8x8_lib4(8, &alpha, sA.pA, sA.cn, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
 //	kernel_sgemm_nt_16x16_lib16(16, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA);
-	kernel_sgemm_nt_16x16_vs_lib16(16, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 16, 16);
+//	kernel_sgemm_nt_16x16_vs_lib16(16, &alpha, sA.pA, sB.pA, &beta, sD.pA, sD.pA, 16, 16);
 
 //	blasfeo_sgemm_nt(n, n, n, alpha, &sA, 0, 0, &sB, 0, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
-	blasfeo_print_smat(n, n, &sD, 0, 0);
+	//blasfeo_print_smat(n, n, &sD, 0, 0);
+	blasfeo_print_smat(16, 24, &sD, 0, 0);
 	return 0;
 #endif
 
-#if 0
+#if 1
 	// gemm_nn
 	alpha = 1.0;
 	beta = 0.0;
-	blasfeo_print_smat(n, n, &sD, 0, 0);
+	//blasfeo_print_smat(n, n, &sD, 0, 0);
+	//blasfeo_print_smat(16, 24, &sD, 0, 0);
 
 //	kernel_sgemm_nn_4x4_lib4(8, &alpha, sA.pA+4*sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sD.pA);
 //	kernel_sgemm_nn_8x4_lib4(8, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
 //	kernel_sgemm_nn_8x8_lib4(8, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn);
-//	kernel_sgemm_nn_8x8_vs_lib4(8, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 7, 5);
+//	kernel_sgemm_nn_8x8_vs_lib4(8, &alpha, sA.pA, sA.cn, 0, sB.pA, sB.cn, &beta, sA.pA, sA.cn, sD.pA, sD.cn, 8, 8);
+//	kernel_sgemm_nn_8x8_vs_lib8(4, &alpha, sB.pA, 1, sA.pA, sB.cn, &beta, sA.pA, sD.pA, 8, 8);
+//	kernel_sgemm_nn_16x16_lib16(16, &alpha, sA.pA, 0, sB.pA, sB.cn, &beta, sD.pA, sD.pA);
+	kernel_sgemm_nn_16x16_vs_lib16(16, &alpha, sB.pA, 0, sA.pA, sB.cn, &beta, sD.pA, sD.pA, 16, 16);
 
-	blasfeo_sgemm_nn(1, 5, 2, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sD, 0, 0, &sD, 0, 0);
+//	blasfeo_sgemm_nn(1, 5, 2, alpha, &sB, 0, 0, &sA, 1, 0, beta, &sD, 0, 0, &sD, 0, 0);
 
-	blasfeo_print_smat(n, n, &sD, 0, 0);
+	//blasfeo_print_smat(n, n, &sD, 0, 0);
+	blasfeo_print_smat(16, 24, &sD, 0, 0);
 	return 0;
 #endif
 
