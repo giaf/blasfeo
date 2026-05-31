@@ -116,7 +116,7 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 #endif
 		}
 
-	const int bs = 8;
+	const int bs = 16;
 
 	int sda = sA->cn;
 	int sdb = sB->cn;

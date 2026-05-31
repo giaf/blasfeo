@@ -6977,21 +6977,21 @@ NAME:
 	vmovaps		192+256(%r12), %zmm25
 	vfmadd231ps	%zmm24, %zmm25, %zmm7
 	vmovaps		0+512(%r12), %zmm25
-	vfmadd231ps	%zmm24, %zmm25, %zmm4
+	vfmadd231ps	%zmm24, %zmm25, %zmm8
 	vmovaps		64+512(%r12), %zmm25
-	vfmadd231ps	%zmm24, %zmm25, %zmm5
+	vfmadd231ps	%zmm24, %zmm25, %zmm9
 	vmovaps		128+512(%r12), %zmm25
-	vfmadd231ps	%zmm24, %zmm25, %zmm6
+	vfmadd231ps	%zmm24, %zmm25, %zmm10
 	vmovaps		192+512(%r12), %zmm25
-	vfmadd231ps	%zmm24, %zmm25, %zmm7
+	vfmadd231ps	%zmm24, %zmm25, %zmm11
 	vmovaps		0+768(%r12), %zmm25
-	vfmadd231ps	%zmm24, %zmm25, %zmm4
+	vfmadd231ps	%zmm24, %zmm25, %zmm12
 	vmovaps		64+768(%r12), %zmm25
-	vfmadd231ps	%zmm24, %zmm25, %zmm5
+	vfmadd231ps	%zmm24, %zmm25, %zmm13
 	vmovaps		128+768(%r12), %zmm25
-	vfmadd231ps	%zmm24, %zmm25, %zmm6
+	vfmadd231ps	%zmm24, %zmm25, %zmm14
 	vmovaps		192+768(%r12), %zmm25
-	vfmadd231ps	%zmm24, %zmm25, %zmm7
+	vfmadd231ps	%zmm24, %zmm25, %zmm15
 
 0:
 
