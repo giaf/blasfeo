@@ -5747,6 +5747,149 @@ NAME:
 // zmm15 <- []
 
 #if MACRO_LEVEL>=2
+	.macro INNER_KERNEL_GEMM_NN_VX1_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_kernel_gemm_nn_vx1_lib16)
+#endif
+
+	cmpl	$ 0, %r10d
+	jle		2f // return
+
+	// prefetch
+
+
+	// preload
+	vmovaps 		0(%r11), %zmm25 {%k1}{z} // A
+
+	cmpl	$ 16, %r10d
+	jle		0f // consider clean-up loop
+
+	// main loop
+	.p2align 3
+1: // main loop
+
+	// unroll 0
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vmovaps			64(%r11), %zmm26 {%k1}{z} // A
+
+	subl	$ 16, %r10d
+
+	// unroll 1 - 14
+	movq			$ 0, %r14
+
+5:
+
+	addq	$ 128, %r11
+	addq	$ 1, %r14
+
+	// unroll 1
+	vbroadcastss	-1*4+0*64(%r12, %r14, 8), %zmm24 // B
+	vfmadd231ps		%zmm26, %zmm24, %zmm0
+	vmovaps			0*64(%r11), %zmm25 {%k1}{z} // A
+
+	// unroll 2
+	vbroadcastss	0*4+0*64(%r12, %r14, 8), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vmovaps			1*64(%r11), %zmm26 {%k1}{z} // A
+
+	cmpq	$ 7, %r14
+	jl		5b // main loop
+
+	addq	$ 128, %r11
+
+	// unroll 15
+	vbroadcastss	15*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm26, %zmm24, %zmm0
+	vmovaps			0*64(%r11), %zmm25 {%k1}{z} // A
+	addq	%r13, %r12
+
+	cmpl	$ 16, %r10d
+	jg		1b // main loop
+
+
+0: // consider clean16-up
+
+	cmpl	$ 15, %r10d
+	jle		4f // clean1
+
+	// unroll 0
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vmovaps			64(%r11), %zmm26 {%k1}{z} // A
+
+	subl	$ 16, %r10d
+
+	// unroll 1 - 14
+	movq			$ 0, %r14
+
+5:
+
+	addq	$ 128, %r11
+	addq	$ 1, %r14
+
+	// unroll 1
+	vbroadcastss	-1*4+0*64(%r12, %r14, 8), %zmm24 // B
+	vfmadd231ps		%zmm26, %zmm24, %zmm0
+	vmovaps			0*64(%r11), %zmm25 {%k1}{z} // A
+
+	// unroll 2
+	vbroadcastss	0*4+0*64(%r12, %r14, 8), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vmovaps			1*64(%r11), %zmm26 {%k1}{z} // A
+
+	cmpq	$ 7, %r14
+	jl		5b // main loop
+
+	addq	$ 128, %r11
+
+	// unroll 15
+	vbroadcastss	15*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm26, %zmm24, %zmm0
+	//vmovaps			0*64(%r11), %zmm25 {%k1}{z} // A
+	addq	%r13, %r12
+
+
+	jmp		2f // return
+
+
+4: // consider clean1-up loop
+
+	cmpl	$ 0, %r10d
+	jle		2f // return
+
+	// clean-up loop
+3: // clean up loop
+
+	// unroll 0
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+
+	addq	$ 64, %r11
+	addq	$ 4, %r12
+	subl	$ 1, %r10d
+
+	cmpl	$ 0, %r10d
+	jg		3b // clean up loop
+
+
+2: // return
+
+#if MACRO_LEVEL>=2
+	.endm
+#else
+	ret
+
+	FUN_END(inner_kernel_gemm_nn_vx1_lib16)
+#endif
+
+
+
+
+
+#if MACRO_LEVEL>=2
 	.macro INNER_KERNEL_GEMM_NN_VX16_LIB16
 #else
 	.p2align 4,,15
@@ -6206,9 +6349,9 @@ NAME:
 	jg		100f
 
 #if MACRO_LEVEL>=2
-	//INNER_KERNEL_GEMM_NN_VX1_LIB16
+	INNER_KERNEL_GEMM_NN_VX1_LIB16
 #else
-	//CALL(inner_kernel_gemm_nn_vx1_lib16)
+	CALL(inner_kernel_gemm_nn_vx1_lib16)
 #endif
 	
 	jmp		115f
