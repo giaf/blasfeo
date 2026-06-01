@@ -10593,6 +10593,1476 @@ NAME:
 
 
 #if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX1_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx1_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx1_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX2_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx2_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx2_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX3_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx3_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx3_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX4_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx4_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx4_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX5_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx5_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx5_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX6_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx6_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+	vbroadcastss	0*4+5*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm5
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx6_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX7_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx7_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+	vbroadcastss	0*4+5*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm5
+	vbroadcastss	0*4+6*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm6
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx7_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX8_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx8_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+	vbroadcastss	0*4+5*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm5
+	vbroadcastss	0*4+6*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm6
+	vbroadcastss	0*4+7*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm7
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx8_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX9_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx9_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+	vbroadcastss	0*4+5*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm5
+	vbroadcastss	0*4+6*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm6
+	vbroadcastss	0*4+7*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm7
+	vbroadcastss	0*4+8*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm8
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx9_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX10_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx10_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+	vbroadcastss	0*4+5*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm5
+	vbroadcastss	0*4+6*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm6
+	vbroadcastss	0*4+7*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm7
+	vbroadcastss	0*4+8*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm8
+	vbroadcastss	0*4+9*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm9
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx10_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX11_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx11_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+	vbroadcastss	0*4+5*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm5
+	vbroadcastss	0*4+6*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm6
+	vbroadcastss	0*4+7*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm7
+	vbroadcastss	0*4+8*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm8
+	vbroadcastss	0*4+9*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm9
+	vbroadcastss	0*4+10*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm10
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx11_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX12_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx12_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+	vbroadcastss	0*4+5*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm5
+	vbroadcastss	0*4+6*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm6
+	vbroadcastss	0*4+7*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm7
+	vbroadcastss	0*4+8*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm8
+	vbroadcastss	0*4+9*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm9
+	vbroadcastss	0*4+10*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm10
+	vbroadcastss	0*4+11*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm11
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx12_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX13_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx13_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+	vbroadcastss	0*4+5*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm5
+	vbroadcastss	0*4+6*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm6
+	vbroadcastss	0*4+7*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm7
+	vbroadcastss	0*4+8*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm8
+	vbroadcastss	0*4+9*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm9
+	vbroadcastss	0*4+10*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm10
+	vbroadcastss	0*4+11*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm11
+	vbroadcastss	0*4+12*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm12
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx13_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX14_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx14_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+	vbroadcastss	0*4+5*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm5
+	vbroadcastss	0*4+6*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm6
+	vbroadcastss	0*4+7*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm7
+	vbroadcastss	0*4+8*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm8
+	vbroadcastss	0*4+9*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm9
+	vbroadcastss	0*4+10*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm10
+	vbroadcastss	0*4+11*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm11
+	vbroadcastss	0*4+12*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm12
+	vbroadcastss	0*4+13*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm13
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx14_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
+	.macro INNER_EDGE_GEMM_NN_VX15_LIB16
+#else
+	.p2align 4,,15
+	FUN_START(inner_edge_gemm_nn_vx15_lib16)
+#endif
+
+	cmpl			$ 0, %r14d // offset==0
+	jle				2f // end
+
+	cmpl			$ 0, %r10d // k==0
+	jle				2f // end
+
+	movl			$ 16, %r15d
+	subl			%r14d, %r15d // 16-offsetB
+	cmpl			%r10d, %r15d
+//	jle				0f
+//	movl			%r10d, %r15d // kend=min(k,16-offsetB)
+//0:
+	cmovgl			%r10d, %r15d // kend=min(k,16-offsetB)
+
+	movl			%r14d, %eax
+	sall			$ 2, %eax // offsetB*sizeof(float)
+	addq			%rax, %r12 // B+offsetB*sizeof(double)
+
+1:
+	vmovaps			0(%r11), %zmm25 {%k1}{z} // A
+	vbroadcastss	0*4+0*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm0
+	vbroadcastss	0*4+1*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm1
+	vbroadcastss	0*4+2*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm2
+	vbroadcastss	0*4+3*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm3
+	vbroadcastss	0*4+4*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm4
+	vbroadcastss	0*4+5*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm5
+	vbroadcastss	0*4+6*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm6
+	vbroadcastss	0*4+7*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm7
+	vbroadcastss	0*4+8*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm8
+	vbroadcastss	0*4+9*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm9
+	vbroadcastss	0*4+10*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm10
+	vbroadcastss	0*4+11*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm11
+	vbroadcastss	0*4+12*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm12
+	vbroadcastss	0*4+13*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm13
+	vbroadcastss	0*4+14*64(%r12), %zmm24 // B
+	vfmadd231ps		%zmm25, %zmm24, %zmm14
+
+	subl			$ 1, %r10d // k-1
+	subl			$ 1, %r15d // kend-1
+	addq			$ 64, %r11 // A+1*bs*sizeof(float)
+	addq			$ 4, %r12 // B+1*sizeof(float)
+
+	cmpl			$ 0, %r15d
+	jg				1b
+
+	cmpl			$ 0, %r10d
+	jle				2f // end
+
+	addq			%r13, %r12
+	subq			$ 64, %r12 // B+bs*(sdb-1)*sizeof(float)
+
+2:
+
+#if MACRO_LEVEL>=1
+	.endm
+#else
+	ret
+
+	FUN_END(inner_edge_gemm_nn_vx15_lib16)
+#endif
+
+
+
+
+
+// common inner routine with file scope
+//
+// edge for B unaligned
+//
+// input arguments:
+// r10d  <- k
+// r11   <- A
+// r12   <- B
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+//
+// output arguments:
+// r10d  <- 0
+// r11   <- A+...
+// r12   <- B+...
+// r13   <- 16*sdb*sizeof(double)
+// r14   <- offB
+// zmm0  <- []
+// ...
+// zmm15 <- []
+
+
+#if MACRO_LEVEL>=1
 	.macro INNER_EDGE_GEMM_NN_VX16_LIB16
 #else
 	.p2align 4,,15
@@ -10729,9 +12199,9 @@ NAME:
 	jg		100f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX1_LIB16
+	INNER_EDGE_GEMM_NN_VX1_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx1_lib16)
+	CALL(inner_edge_gemm_nn_vx1_lib16)
 #endif
 	
 	jmp		115f
@@ -10742,9 +12212,9 @@ NAME:
 	jg		101f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX2_LIB16
+	INNER_EDGE_GEMM_NN_VX2_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx2_lib16)
+	CALL(inner_edge_gemm_nn_vx2_lib16)
 #endif
 	
 	jmp		115f
@@ -10755,9 +12225,9 @@ NAME:
 	jg		102f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX3_LIB16
+	INNER_EDGE_GEMM_NN_VX3_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx3_lib16)
+	CALL(inner_edge_gemm_nn_vx3_lib16)
 #endif
 	
 	jmp		115f
@@ -10768,9 +12238,9 @@ NAME:
 	jg		103f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX4_LIB16
+	INNER_EDGE_GEMM_NN_VX4_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx4_lib16)
+	CALL(inner_edge_gemm_nn_vx4_lib16)
 #endif
 	
 	jmp		115f
@@ -10781,9 +12251,9 @@ NAME:
 	jg		104f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX5_LIB16
+	INNER_EDGE_GEMM_NN_VX5_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx5_lib16)
+	CALL(inner_edge_gemm_nn_vx5_lib16)
 #endif
 	
 	jmp		115f
@@ -10794,9 +12264,9 @@ NAME:
 	jg		105f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX6_LIB16
+	INNER_EDGE_GEMM_NN_VX6_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx6_lib16)
+	CALL(inner_edge_gemm_nn_vx6_lib16)
 #endif
 	
 	jmp		115f
@@ -10807,9 +12277,9 @@ NAME:
 	jg		106f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX7_LIB16
+	INNER_EDGE_GEMM_NN_VX7_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx7_lib16)
+	CALL(inner_edge_gemm_nn_vx7_lib16)
 #endif
 	
 	jmp		115f
@@ -10820,9 +12290,9 @@ NAME:
 	jg		107f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX8_LIB16
+	INNER_EDGE_GEMM_NN_VX8_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx8_lib16)
+	CALL(inner_edge_gemm_nn_vx8_lib16)
 #endif
 	
 	jmp		115f
@@ -10833,9 +12303,9 @@ NAME:
 	jg		108f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX9_LIB16
+	INNER_EDGE_GEMM_NN_VX9_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx9_lib16)
+	CALL(inner_edge_gemm_nn_vx9_lib16)
 #endif
 	
 	jmp		115f
@@ -10846,9 +12316,9 @@ NAME:
 	jg		109f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX10_LIB16
+	INNER_EDGE_GEMM_NN_VX10_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx10_lib16)
+	CALL(inner_edge_gemm_nn_vx10_lib16)
 #endif
 	
 	jmp		115f
@@ -10859,9 +12329,9 @@ NAME:
 	jg		110f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX11_LIB16
+	INNER_EDGE_GEMM_NN_VX11_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx11_lib16)
+	CALL(inner_edge_gemm_nn_vx11_lib16)
 #endif
 	
 	jmp		115f
@@ -10872,9 +12342,9 @@ NAME:
 	jg		111f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX12_LIB16
+	INNER_EDGE_GEMM_NN_VX12_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx12_lib16)
+	CALL(inner_edge_gemm_nn_vx12_lib16)
 #endif
 	
 	jmp		115f
@@ -10885,9 +12355,9 @@ NAME:
 	jg		112f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX13_LIB16
+	INNER_EDGE_GEMM_NN_VX13_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx13_lib16)
+	CALL(inner_edge_gemm_nn_vx13_lib16)
 #endif
 	
 	jmp		115f
@@ -10898,9 +12368,9 @@ NAME:
 	jg		113f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX14_LIB16
+	INNER_EDGE_GEMM_NN_VX14_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx14_lib16)
+	CALL(inner_edge_gemm_nn_vx14_lib16)
 #endif
 	
 	jmp		115f
@@ -10911,9 +12381,9 @@ NAME:
 	jg		114f
 
 #if MACRO_LEVEL>=1
-	//INNER_EDGE_GEMM_NN_VX15_LIB16
+	INNER_EDGE_GEMM_NN_VX15_LIB16
 #else
-	//CALL(inner_edge_gemm_nn_vx15_lib16)
+	CALL(inner_edge_gemm_nn_vx15_lib16)
 #endif
 	
 	jmp		115f

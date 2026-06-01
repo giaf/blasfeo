@@ -49,15 +49,105 @@
 // dgemm nn
 void blasfeo_hp_sgemm_nn(int m, int n, int k, float alpha, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sB, int bi, int bj, float beta, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj)
 	{
+
+	if(m==0 | n==0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+#if defined(DIM_CHECK)
+#ifdef EXT_DEP
+	// non-negative size
+	if(m<0) printf("\n****** blasfeo_sgemm_nt : m<0 : %d<0 *****\n", m);
+	if(n<0) printf("\n****** blasfeo_sgemm_nt : n<0 : %d<0 *****\n", n);
+	if(k<0) printf("\n****** blasfeo_sgemm_nt : k<0 : %d<0 *****\n", k);
+	// non-negative offset
+	if(ai<0) printf("\n****** blasfeo_sgemm_nt : ai<0 : %d<0 *****\n", ai);
+	if(aj<0) printf("\n****** blasfeo_sgemm_nt : aj<0 : %d<0 *****\n", aj);
+	if(bi<0) printf("\n****** blasfeo_sgemm_nt : bi<0 : %d<0 *****\n", bi);
+	if(bj<0) printf("\n****** blasfeo_sgemm_nt : bj<0 : %d<0 *****\n", bj);
+	if(ci<0) printf("\n****** blasfeo_sgemm_nt : ci<0 : %d<0 *****\n", ci);
+	if(cj<0) printf("\n****** blasfeo_sgemm_nt : cj<0 : %d<0 *****\n", cj);
+	if(di<0) printf("\n****** blasfeo_sgemm_nt : di<0 : %d<0 *****\n", di);
+	if(dj<0) printf("\n****** blasfeo_sgemm_nt : dj<0 : %d<0 *****\n", dj);
+	// inside matrix
+	// A: m x k
+	if(ai+m > sA->m) printf("\n***** blasfeo_sgemm_nn : ai+m > row(A) : %d+%d > %d *****\n\n", ai, m, sA->m);
+	if(aj+k > sA->n) printf("\n***** blasfeo_sgemm_nn : aj+k > col(A) : %d+%d > %d *****\n\n", aj, k, sA->n);
+	// B: k x n
+	if(bi+k > sB->m) printf("\n***** blasfeo_sgemm_nn : bi+k > row(B) : %d+%d > %d *****\n\n", bi, k, sB->m);
+	if(bj+n > sB->n) printf("\n***** blasfeo_sgemm_nn : bj+n > col(B) : %d+%d > %d *****\n\n", bj, n, sB->n);
+	// C: m x n
+	if(ci+m > sC->m) printf("\n***** blasfeo_sgemm_nn : ci+m > row(C) : %d+%d > %d *****\n\n", ci, n, sC->m);
+	if(cj+n > sC->n) printf("\n***** blasfeo_sgemm_nn : cj+n > col(C) : %d+%d > %d *****\n\n", cj, k, sC->n);
+	// D: m x n
+	if(di+m > sD->m) printf("\n***** blasfeo_sgemm_nn : di+m > row(D) : %d+%d > %d *****\n\n", di, n, sD->m);
+	if(dj+n > sD->n) printf("\n***** blasfeo_sgemm_nn : dj+n > col(D) : %d+%d > %d *****\n\n", dj, k, sD->n);
+#endif
+#endif
+
+	if(ai>0 | ci>0 | di>0)
+		{
 #if defined(BLASFEO_REF_API)
-	blasfeo_ref_sgemm_nn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+		blasfeo_ref_sgemm_nn(m, n, k, alpha, sA, ai, aj, sB, bi, bj, beta, sC, ci, cj, sD, di, dj);
+		return;
 #else
 #ifdef EXT_DEP
-	printf("\nblasfeo_sgemm_nn: feature not implemented yet\n");
+		printf("\nblasfeo_sgemm_nn: feature not implemented yet: ai>0, ci>0, di>0\n");
 #endif	
-	exit(1);
+		exit(1);
 #endif
+		}
+
+	const int bs = 16;
+
+	int sda = sA->cn;
+	int sdb = sB->cn;
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	float *pA = sA->pA + aj*bs;
+	float *pB = sB->pA + bj*bs + bi/bs*bs*sdb;
+	float *pC = sC->pA + cj*bs;
+	float *pD = sD->pA + dj*bs;
+
+	int offsetB = bi%bs;
+
+	int i, j, l;
+
+	i = 0;
+
+	for(; i<m-15; i+=16)
+		{
+		j = 0;
+		for(; j<n-15; j+=16)
+			{
+			kernel_sgemm_nn_16x16_lib16(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd]);
+			}
+		if(j<n)
+			{
+			kernel_sgemm_nn_16x16_vs_lib16(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd], 16, n-j);
+			}
+		}
+	if(m>i)
+		{
+		goto left_16;
+		}
+
+	// common return if i==m
+	return;
+
+	left_16:
+	j = 0;
+	for(; j<n; j+=16)
+		{
+		kernel_sgemm_nn_16x16_vs_lib16(k, &alpha, &pA[i*sda], offsetB, &pB[(j+0)*bs], sdb, &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd], m-i, n-j);
+		}
+	return;
+
 	}
+
+
 
 
 
@@ -146,7 +236,7 @@ void blasfeo_hp_sgemm_nt(int m, int n, int k, float alpha, struct blasfeo_smat *
 			kernel_sgemm_nt_16x16_vs_lib16(k, &alpha, &pA[i*sda], &pB[0+j*sdb], &beta, &pC[(j+0)*bs+i*sdc], &pD[(j+0)*bs+i*sdd], 16, n-j);
 			}
 		}
-	if(m-i>0)
+	if(m>i)
 		{
 		goto left_16;
 		}
