@@ -1167,7 +1167,7 @@ ifeq ($(SANDBOX_MODE), 1)
 	( cd sandbox; $(MAKE) obj)
 endif
 	# TODO fix shared library extension depending on architecture
-	$(CC) -shared -o libblasfeo.so $(OBJS) $(LIBS_EXTERNAL_BLAS) -lm #-Wl,-Bsymbolic
+	$(CC) -shared -o libblasfeo.$(SO_EXT) $(OBJS) $(LIBS_EXTERNAL_BLAS) -lm #-Wl,-Bsymbolic
 	mv libblasfeo.so ./lib/
 	@echo
 	@echo " libblasfeo.so shared library build complete."

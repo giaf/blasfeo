@@ -609,3 +609,14 @@ CFLAGS  += -DTARGET_GENERIC
 endif
 # TODO remove and fix tests
 # CFLAGS  += -DBLASFEO_TARGET=$(TARGET)
+
+# Set shared library extension
+ifeq ($(OS), LINUX)
+SO_EXT = "so"
+endif
+ifeq ($(OS), MAC)
+SO_EXT = "dylib"
+endif
+ifeq ($(OS), WINDOWS)
+SO_EXT = "dll"
+endif
