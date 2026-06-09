@@ -1168,9 +1168,9 @@ ifeq ($(SANDBOX_MODE), 1)
 endif
 	# TODO fix shared library extension depending on architecture
 	$(CC) -shared -o libblasfeo.$(SO_EXT) $(OBJS) $(LIBS_EXTERNAL_BLAS) -lm #-Wl,-Bsymbolic
-	mv libblasfeo.so ./lib/
+	mv libblasfeo.$(SO_EXT) ./lib/
 	@echo
-	@echo " libblasfeo.so shared library build complete."
+	@echo " libblasfeo.$(SO_EXT) shared library build complete."
 	@echo
 
 
@@ -1448,7 +1448,7 @@ endif
 install_shared:
 	mkdir -p $(PREFIX)/blasfeo
 	mkdir -p $(PREFIX)/blasfeo/lib
-	cp -f ./lib/libblasfeo.so $(PREFIX)/blasfeo/lib/
+	cp -f ./lib/libblasfeo.$(SO_EXT) $(PREFIX)/blasfeo/lib/
 	mkdir -p $(PREFIX)/blasfeo/include
 	cp -f ./include/*.h $(PREFIX)/blasfeo/include/
 ifeq ($(CBLAS_API), 1)
