@@ -1476,7 +1476,7 @@ clean:
 deep_clean: clean
 	rm -f ./include/blasfeo_target.h
 	rm -f ./lib/libblasfeo.a
-	rm -f ./lib/libblasfeo.so
+	rm -f ./lib/libblasfeo.$(SO_EXT)
 	make -C netlib deep_clean
 	make -C examples deep_clean
 	make -C tests deep_clean
