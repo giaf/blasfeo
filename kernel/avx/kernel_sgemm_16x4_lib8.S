@@ -4208,6 +4208,10 @@ kernel_sgemm_nt_16x4_lib8:
 #elif defined(OS_MAC)
 	.globl _kernel_sgemm_nt_16x4_lib8
 _kernel_sgemm_nt_16x4_lib8:
+#elif defined(OS_WINDOWS)
+  .globl kernel_sgemm_nt_16x4_lib8
+  .def kernel_sgemm_nt_16x4_lib8; .scl 2; .type 32; .endef
+kernel_sgemm_nt_16x4_lib8:
 #endif
 	
 	PROLOGUE
