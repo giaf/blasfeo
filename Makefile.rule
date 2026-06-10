@@ -612,11 +612,11 @@ endif
 
 # Set shared library extension
 ifeq ($(OS), LINUX)
-SO_EXT = "so"
+SO_EXT = so
 endif
 ifeq ($(OS), MAC)
-SO_EXT = "dylib"
+SO_EXT = dylib
 endif
 ifeq ($(OS), WINDOWS)
-SO_EXT = "dll"
+SO_EXT = dll
 endif
