@@ -43,6 +43,7 @@ ifeq ($(TARGET), $(filter $(TARGET), X64_AMD_ZEN5 X64_INTEL_SKYLAKE_X))
 	( cd avx2; $(MAKE) obj)
 	( cd avx; $(MAKE) obj)
 	( cd sse3; $(MAKE) obj)
+	( cd generic; $(MAKE) obj)
 endif
 
 ifeq ($(TARGET), X64_INTEL_HASWELL)

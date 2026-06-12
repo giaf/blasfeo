@@ -38,6 +38,25 @@ include ../../Makefile.rule
 
 KERNEL_OBJS =
 
+ifeq ($(TARGET), $(filter $(TARGET), X64_AMD_ZEN5 X64_INTEL_SKYLAKE_X))
+ifeq ($(DP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_dgemv_4_lib4.o
+	KERNEL_OBJS += kernel_dsymv_4_lib4.o
+	KERNEL_OBJS += kernel_dgetrf_pivot_lib4.o
+	KERNEL_OBJS += kernel_dpack_buffer_lib4.o
+	KERNEL_OBJS += kernel_dger_lib4.o
+	KERNEL_OBJS += kernel_ddot_lib.o
+	KERNEL_OBJS += kernel_daxpy_lib.o
+endif # DP
+ifeq ($(SP_ROUTINES), 1)
+	KERNEL_OBJS += kernel_sgemm_4x4_lib4.o
+	KERNEL_OBJS += kernel_sgemv_4_lib4.o
+	KERNEL_OBJS += kernel_spack_lib4.o
+	KERNEL_OBJS += kernel_sdot_lib.o
+	KERNEL_OBJS += kernel_saxpy_lib.o
+endif # SP
+endif
+
 ifeq ($(TARGET), X64_INTEL_HASWELL)
 ifeq ($(DP_ROUTINES), 1)
 	KERNEL_OBJS += kernel_dgemv_4_lib4.o

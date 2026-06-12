@@ -120,6 +120,7 @@ BLASFEO_HP_CM_SP_OBJS = \
 		blasfeo_hp_cm/sgemm.o \
 		blasfeo_hp_cm/strsm.o \
 		blasfeo_hp_cm/spotrf.o \
+		blasfeo_hp_cm/sgemv.o \
 
 BLASFEO_HP_CM_REF_DP_OBJS = \
 		blasfeo_ref/d_blas1_hp_cm.o \
@@ -304,10 +305,25 @@ KERNEL_DP_OBJS = \
 		kernel/avx512/kernel_dgeqrf_8_lib8.o \
 		kernel/avx512/kernel_dgelqf_lib8.o \
 		kernel/avx2/kernel_dgemm_4x4_lib4.o \
+		kernel/avx2/kernel_dgemv_4_lib4.o \
+		kernel/avx2/kernel_dger_lib4.o \
 		kernel/avx/kernel_dpack_lib4.o \
+		kernel/avx/kernel_dgetr_lib.o \
+		kernel/generic/kernel_dgemv_4_lib4.o \
+		kernel/generic/kernel_dsymv_4_lib4.o \
+		kernel/generic/kernel_dgetrf_pivot_lib4.o \
+		kernel/generic/kernel_dpack_buffer_lib4.o \
+		kernel/generic/kernel_dger_lib4.o \
+		kernel/generic/kernel_ddot_lib.o \
+		kernel/generic/kernel_daxpy_lib.o \
 
 KERNEL_SP_OBJS = \
 		kernel/avx512/kernel_sgemm_16x16_lib16.o \
+		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
+		kernel/generic/kernel_spack_lib4.o \
+		kernel/generic/kernel_sdot_lib.o \
+		kernel/generic/kernel_saxpy_lib.o \
 
 KERNEL_ALIGN_OBJS = \
 		kernel/sse3/kernel_align_x64.o \
@@ -356,6 +372,7 @@ KERNEL_SP_OBJS = \
 		kernel/avx/kernel_spack_lib8.o \
 		kernel/generic/kernel_sgemm_8x4_lib8.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
 		kernel/generic/kernel_spack_lib4.o \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \
@@ -415,6 +432,7 @@ KERNEL_SP_OBJS = \
 		kernel/avx/kernel_spack_lib8.o \
 		kernel/generic/kernel_sgemm_8x4_lib8.o \
 		kernel/generic/kernel_sgemm_4x4_lib4.o \
+		kernel/generic/kernel_sgemv_4_lib4.o \
 		kernel/generic/kernel_spack_lib4.o \
 		kernel/generic/kernel_sdot_lib.o \
 		kernel/generic/kernel_saxpy_lib.o \

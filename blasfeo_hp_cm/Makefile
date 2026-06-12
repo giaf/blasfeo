@@ -58,6 +58,7 @@ ifeq ($(SP_ROUTINES), 1)
 	HP_CM_OBJS += sgemm.o
 	HP_CM_OBJS += strsm.o
 	HP_CM_OBJS += spotrf.o
+	HP_CM_OBJS += sgemv.o
 endif # SP
 
 OBJS =
