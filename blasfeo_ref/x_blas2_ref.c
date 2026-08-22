@@ -1767,28 +1767,40 @@ void TRMV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	REF_TRMV_LNN(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
-
+void TRMV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_LNU(m, sA, ai, aj, sx, xi, sz, zi);
+	}
 
 void TRMV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	REF_TRMV_LTN(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
-
+void TRMV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_LTN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
 
 void TRMV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	REF_TRMV_UNN(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
-
+void TRMV_UNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_UNN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
 
 void TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	REF_TRMV_UTN(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
-
+void TRMV_UTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_UTN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
 
 void TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
