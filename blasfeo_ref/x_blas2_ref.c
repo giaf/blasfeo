@@ -551,7 +551,7 @@ static void REF_TRMV_LNU_MN(int m, int n, struct XMAT *sA, int ai, int aj, struc
 	if(n%2!=0)
 		{
 		ii = n-1;
-		y_0 = x[ii];
+		y_0 = x[ii]; // unit diagonal
 		for(jj=0; jj<ii; jj++)
 			{
 			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[jj];
@@ -561,8 +561,8 @@ static void REF_TRMV_LNU_MN(int m, int n, struct XMAT *sA, int ai, int aj, struc
 		}
 	for(ii=n-2; ii>=0; ii-=2)
 		{
-		y_0 = x[ii+0];
-		y_1 = x[ii+1];
+		y_0 = x[ii+0]; // unit diagonal
+		y_1 = x[ii+1]; // unit diagonal
 		y_1 += XMATEL_A(aai+ii+1, aaj+(ii+0)) * y_0;
 		jj = 0;
 		for(; jj<ii-1; jj+=2)
@@ -570,12 +570,6 @@ static void REF_TRMV_LNU_MN(int m, int n, struct XMAT *sA, int ai, int aj, struc
 			y_0 += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x[jj+0] + XMATEL_A(aai+ii+0, aaj+(jj+1)) * x[jj+1];
 			y_1 += XMATEL_A(aai+ii+1, aaj+(jj+0)) * x[jj+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x[jj+1];
 			}
-//	XXX there is no clean up loop !!!!!
-//		for(; jj<ii; jj++)
-//			{
-//			y_0 += XMATEL_A(aai+ii+0, aaj+jj) * x[jj];
-//			y_1 += XMATEL_A(aai+ii+1, aaj+jj) * x[jj];
-//			}
 		z[ii+0] = y_0;
 		z[ii+1] = y_1;
 		}
@@ -664,8 +658,8 @@ static void REF_TRMV_LTU_MN(int m, int n, struct XMAT *sA, int ai, int aj, struc
 	for(; jj<n-1; jj+=2)
 		{
 		// diagonal block with unit diagonal
-		y_0 = x[jj+0];
-		y_1 = x[jj+1];
+		y_0 = x[jj+0]; // unit diagonal
+		y_1 = x[jj+1]; // unit diagonal
 		y_0 += XMATEL_A(aai+jj+1, aaj+(jj+0)) * y_1;
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
@@ -683,7 +677,7 @@ static void REF_TRMV_LTU_MN(int m, int n, struct XMAT *sA, int ai, int aj, struc
 		}
 	for(; jj<n; jj++)
 		{
-		y_0 = x[jj];
+		y_0 = x[jj]; // unit diagonal
 		for(ii=jj+1; ii<m; ii++)
 			{
 			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[ii];
@@ -810,8 +804,8 @@ void REF_TRMV_UNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 	jj = 0;
 	for(; jj<m-1; jj+=2)
 		{
-		y_0 = x[jj+0];
-		y_1 = x[jj+1];
+		y_0 = x[jj+0]; // unit diagonal
+		y_1 = x[jj+1]; // unit diagonal
 		y_0 += XMATEL_A(aai+jj+0, aaj+(jj+1)) * y_1;
 		ii = jj+2;
 		for(; ii<m-1; ii+=2)
@@ -829,7 +823,7 @@ void REF_TRMV_UNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 		}
 	for(; jj<m; jj++)
 		{
-		y_0 = x[jj];
+		y_0 = x[jj]; // unit diagonal
 		for(ii=jj+1; ii<m; ii++)
 			{
 			y_0 += XMATEL_A(aai+jj, aaj+ii) * x[ii];
@@ -905,7 +899,7 @@ void REF_TRMV_UTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 	if(m%2!=0)
 		{
 		jj = m-1;
-		y_0 = x[jj];
+		y_0 = x[jj]; // unit diagonal
 		for(ii=0; ii<jj; ii++)
 			{
 			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[ii];
@@ -915,9 +909,9 @@ void REF_TRMV_UTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 		}
 	for(jj=m-2; jj>=0; jj-=2)
 		{
-		y_1 = x[jj+1];
+		y_0 = x[jj+0]; // unit diagonal
+		y_1 = x[jj+1]; // unit diagonal
 		y_1 += XMATEL_A(aai+jj+0, aaj+(jj+1)) * x[jj+0];
-		y_0 = x[jj+0];
 		for(ii=0; ii<jj-1; ii+=2)
 			{
 			y_0 += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+0)) * x[ii+1];
