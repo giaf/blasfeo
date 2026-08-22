@@ -1422,24 +1422,45 @@ void blasfeo_strmv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct bl
 
 
 
-//void blasfeo_strmv_ltu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
-//	{
-//	blasfeo_hp_strmv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
-//	}
+void blasfeo_strmv_ltu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+#ifdef BLASFEO_REF_API
+	blasfeo_ref_strmv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_strmv_ltu: feature not implemented yet: ai=%d\n", ai);
+#endif
+	exit(1);
+#endif
+	}
 
 
 
-//void blasfeo_strmv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
-//	{
-//	blasfeo_hp_strmv_unn(m, sA, ai, aj, sx, xi, sz, zi);
-//	}
+void blasfeo_strmv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+#ifdef BLASFEO_REF_API
+	blasfeo_ref_strmv_unn(m, sA, ai, aj, sx, xi, sz, zi);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_strmv_unn: feature not implemented yet: ai=%d\n", ai);
+#endif
+	exit(1);
+#endif
+	}
 
 
 
-//void blasfeo_strmv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
-//	{
-//	blasfeo_hp_strmv_utn(m, sA, ai, aj, sx, xi, sz, zi);
-//	}
+void blasfeo_strmv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+#ifdef BLASFEO_REF_API
+	blasfeo_ref_strmv_utn(m, sA, ai, aj, sx, xi, sz, zi);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_strmv_utn: feature not implemented yet: ai=%d\n", ai);
+#endif
+	exit(1);
+#endif
+	}
 
 
 
@@ -1457,10 +1478,17 @@ void blasfeo_strsv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct bl
 
 
 
-//void blasfeo_strsv_lnu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
-//	{
-//	blasfeo_hp_strsv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
-//	}
+void blasfeo_strsv_lnu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+#ifdef BLASFEO_REF_API
+	blasfeo_ref_strsv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_strsv_lnu: feature not implemented yet: ai=%d\n", ai);
+#endif
+	exit(1);
+#endif
+	}
 
 
 
@@ -1478,24 +1506,45 @@ void blasfeo_strsv_ltn(int m, struct blasfeo_smat *sA, int ai, int aj, struct bl
 
 
 
-//void blasfeo_strsv_ltu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
-//	{
-//	blasfeo_hp_strsv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
-//	}
+void blasfeo_strsv_ltu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+#ifdef BLASFEO_REF_API
+	blasfeo_ref_strsv_ltu(m, sA, ai, aj, sx, xi, sz, zi);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_strsv_ltu: feature not implemented yet: ai=%d\n", ai);
+#endif
+	exit(1);
+#endif
+	}
 
 
 
-//void blasfeo_strsv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
-//	{
-//	blasfeo_hp_strsv_unn(m, sA, ai, aj, sx, xi, sz, zi);
-//	}
+void blasfeo_strsv_unn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+#ifdef BLASFEO_REF_API
+	blasfeo_ref_strsv_unn(m, sA, ai, aj, sx, xi, sz, zi);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_strsv_unn: feature not implemented yet: ai=%d\n", ai);
+#endif
+	exit(1);
+#endif
+	}
+ 
 
 
-
-//void blasfeo_strsv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
-//	{
-//	blasfeo_hp_strsv_utn(m, sA, ai, aj, sx, xi, sz, zi);
-//	}
+void blasfeo_strsv_utn(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+#ifdef BLASFEO_REF_API
+	blasfeo_ref_strsv_utn(m, sA, ai, aj, sx, xi, sz, zi);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_strsv_utn: feature not implemented yet: ai=%d\n", ai);
+#endif
+	exit(1);
+#endif
+	}
 
 
 
