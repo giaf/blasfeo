@@ -70,10 +70,16 @@
 #define REF_SYMV_L blasfeo_ref_ssymv_l
 #define REF_SYMV_L_MN blasfeo_ref_ssymv_l_mn
 #define REF_SYMV_U blasfeo_ref_ssymv_u
+
 #define REF_TRMV_LNN blasfeo_ref_strmv_lnn
+#define REF_TRMV_LNU blasfeo_ref_strmv_lnu
 #define REF_TRMV_LTN blasfeo_ref_strmv_ltn
+#define REF_TRMV_LTU blasfeo_ref_strmv_ltu
 #define REF_TRMV_UNN blasfeo_ref_strmv_unn
+#define REF_TRMV_UNU blasfeo_ref_strmv_unu
 #define REF_TRMV_UTN blasfeo_ref_strmv_utn
+#define REF_TRMV_UTU blasfeo_ref_strmv_utu
+
 #define REF_TRSV_LNN blasfeo_ref_strsv_lnn
 #define REF_TRSV_LNN_MN blasfeo_ref_strsv_lnn_mn
 #define REF_TRSV_LNU blasfeo_ref_strsv_lnu
@@ -82,6 +88,7 @@
 #define REF_TRSV_LTU blasfeo_ref_strsv_ltu
 #define REF_TRSV_UNN blasfeo_ref_strsv_unn
 #define REF_TRSV_UTN blasfeo_ref_strsv_utn
+
 #define REF_GER blasfeo_ref_sger
 
 #define GEMV_N blasfeo_sgemv_n
