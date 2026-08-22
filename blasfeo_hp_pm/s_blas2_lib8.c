@@ -288,6 +288,164 @@ void blasfeo_hp_strmv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct
 	return;
 	}
 
+// m >= n
+static void blasfeo_hp_strmv_lnu_mn(int m, int n, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+
+	if(m<=0)
+		return;
+
+	const int bs = 8;
+
+	int sda = sA->cn;
+	float *pA = sA->pA + aj*bs + ai/bs*bs*sda + ai%bs;
+	float *x = sx->pa + xi;
+	float *z = sz->pa + zi;
+
+	if(m-n>0)
+		blasfeo_hp_sgemv_n(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
+
+	float *pA2 = pA;
+	float *z2 = z;
+	int m2 = n;
+	int n2 = 0;
+	float *pA3, *x3;
+
+	float alpha = 1.0;
+	float beta = 1.0;
+
+	float zt[8];
+
+	int ii, jj, jj_end;
+
+	ii = 0;
+
+	if(ai%bs!=0)
+		{
+		pA2 += sda*bs - ai%bs;
+		z2 += bs-ai%bs;
+		m2 -= bs-ai%bs;
+		n2 += bs-ai%bs;
+		}
+	
+	pA2 += m2/bs*bs*sda;
+	z2 += m2/bs*bs;
+	n2 += m2/bs*bs;
+
+	if(m2%bs!=0)
+		{
+		//
+		pA3 = pA2 + bs*n2;
+		x3 = x + n2;
+		zt[7] = pA3[7+bs*0]*x3[0] + pA3[7+bs*1]*x3[1] + pA3[7+bs*2]*x3[2] + pA3[7+bs*3]*x3[3] + pA3[7+bs*4]*x3[4] + pA3[7+bs*5]*x3[5] + pA3[7+bs*6]*x3[6] + 1.0*x3[7];
+		zt[6] = pA3[6+bs*0]*x3[0] + pA3[6+bs*1]*x3[1] + pA3[6+bs*2]*x3[2] + pA3[6+bs*3]*x3[3] + pA3[6+bs*4]*x3[4] + pA3[6+bs*5]*x3[5] + 1.0*x3[6];
+		zt[5] = pA3[5+bs*0]*x3[0] + pA3[5+bs*1]*x3[1] + pA3[5+bs*2]*x3[2] + pA3[5+bs*3]*x3[3] + pA3[5+bs*4]*x3[4] + 1.0*x3[5];
+		zt[4] = pA3[4+bs*0]*x3[0] + pA3[4+bs*1]*x3[1] + pA3[4+bs*2]*x3[2] + pA3[4+bs*3]*x3[3] + 1.0*x3[4];
+		zt[3] = pA3[3+bs*0]*x3[0] + pA3[3+bs*1]*x3[1] + pA3[3+bs*2]*x3[2] + 1.0*x3[3];
+		zt[2] = pA3[2+bs*0]*x3[0] + pA3[2+bs*1]*x3[1] + 1.0*x3[2];
+		zt[1] = pA3[1+bs*0]*x3[0] + 1.0*x3[1];
+		zt[0] = 1.0*x3[0];
+		kernel_sgemv_n_8_lib8(n2, &alpha, pA2, x, &beta, zt, zt);
+		for(jj=0; jj<m2%bs; jj++)
+			z2[jj] = zt[jj];
+		}
+	for(; ii<m2-7; ii+=8)
+		{
+		pA2 -= bs*sda;
+		z2 -= 8;
+		n2 -= 8;
+		pA3 = pA2 + bs*n2;
+		x3 = x + n2;
+		z2[7] = pA3[7+bs*0]*x3[0] + pA3[7+bs*1]*x3[1] + pA3[7+bs*2]*x3[2] + pA3[7+bs*3]*x3[3] + pA3[7+bs*4]*x3[4] + pA3[7+bs*5]*x3[5] + pA3[7+bs*6]*x3[6] + 1.0*x3[7];
+		z2[6] = pA3[6+bs*0]*x3[0] + pA3[6+bs*1]*x3[1] + pA3[6+bs*2]*x3[2] + pA3[6+bs*3]*x3[3] + pA3[6+bs*4]*x3[4] + pA3[6+bs*5]*x3[5] + 1.0*x3[6];
+		z2[5] = pA3[5+bs*0]*x3[0] + pA3[5+bs*1]*x3[1] + pA3[5+bs*2]*x3[2] + pA3[5+bs*3]*x3[3] + pA3[5+bs*4]*x3[4] + 1.0*x3[5];
+		z2[4] = pA3[4+bs*0]*x3[0] + pA3[4+bs*1]*x3[1] + pA3[4+bs*2]*x3[2] + pA3[4+bs*3]*x3[3] + 1.0*x3[4];
+		z2[3] = pA3[3+bs*0]*x3[0] + pA3[3+bs*1]*x3[1] + pA3[3+bs*2]*x3[2] + 1.0*x3[3];
+		z2[2] = pA3[2+bs*0]*x3[0] + pA3[2+bs*1]*x3[1] + 1.0*x3[2];
+		z2[1] = pA3[1+bs*0]*x3[0] + 1.0*x3[1];
+		z2[0] = 1.0*x3[0];
+		kernel_sgemv_n_8_lib8(n2, &alpha, pA2, x, &beta, z2, z2);
+		}
+	if(ai%bs!=0)
+		{
+		if(ai%bs==1)
+			{
+			zt[6] = pA[6+bs*0]*x[0] + pA[6+bs*1]*x[1] + pA[6+bs*2]*x[2] + pA[6+bs*3]*x[3] + pA[6+bs*4]*x[4] + pA[6+bs*5]*x[5] + 1.0*x[6];
+			zt[5] = pA[5+bs*0]*x[0] + pA[5+bs*1]*x[1] + pA[5+bs*2]*x[2] + pA[5+bs*3]*x[3] + pA[5+bs*4]*x[4] + 1.0*x[5];
+			zt[4] = pA[4+bs*0]*x[0] + pA[4+bs*1]*x[1] + pA[4+bs*2]*x[2] + pA[4+bs*3]*x[3] + 1.0*x[4];
+			zt[3] = pA[3+bs*0]*x[0] + pA[3+bs*1]*x[1] + pA[3+bs*2]*x[2] + 1.0*x[3];
+			zt[2] = pA[2+bs*0]*x[0] + pA[2+bs*1]*x[1] + 1.0*x[2];
+			zt[1] = pA[1+bs*0]*x[0] + 1.0*x[1];
+			zt[0] = 1.0*x[0];
+			jj_end = 8-ai%bs<n ? 8-ai%bs : n;
+			for(jj=0; jj<jj_end; jj++)
+				z[jj] = zt[jj];
+			}
+		else if(ai%bs==2)
+			{
+			zt[5] = pA[5+bs*0]*x[0] + pA[5+bs*1]*x[1] + pA[5+bs*2]*x[2] + pA[5+bs*3]*x[3] + pA[5+bs*4]*x[4] + 1.0*x[5];
+			zt[4] = pA[4+bs*0]*x[0] + pA[4+bs*1]*x[1] + pA[4+bs*2]*x[2] + pA[4+bs*3]*x[3] + 1.0*x[4];
+			zt[3] = pA[3+bs*0]*x[0] + pA[3+bs*1]*x[1] + pA[3+bs*2]*x[2] + 1.0*x[3];
+			zt[2] = pA[2+bs*0]*x[0] + pA[2+bs*1]*x[1] + 1.0*x[2];
+			zt[1] = pA[1+bs*0]*x[0] + 1.0*x[1];
+			zt[0] = 1.0*x[0];
+			jj_end = 8-ai%bs<n ? 8-ai%bs : n;
+			for(jj=0; jj<jj_end; jj++)
+				z[jj] = zt[jj];
+			}
+		else if(ai%bs==3)
+			{
+			zt[4] = pA[4+bs*0]*x[0] + pA[4+bs*1]*x[1] + pA[4+bs*2]*x[2] + pA[4+bs*3]*x[3] + 1.0*x[4];
+			zt[3] = pA[3+bs*0]*x[0] + pA[3+bs*1]*x[1] + pA[3+bs*2]*x[2] + 1.0*x[3];
+			zt[2] = pA[2+bs*0]*x[0] + pA[2+bs*1]*x[1] + 1.0*x[2];
+			zt[1] = pA[1+bs*0]*x[0] + 1.0*x[1];
+			zt[0] = 1.0*x[0];
+			jj_end = 8-ai%bs<n ? 8-ai%bs : n;
+			for(jj=0; jj<jj_end; jj++)
+				z[jj] = zt[jj];
+			}
+		else if(ai%bs==4)
+			{
+			zt[3] = pA[3+bs*0]*x[0] + pA[3+bs*1]*x[1] + pA[3+bs*2]*x[2] + 1.0*x[3];
+			zt[2] = pA[2+bs*0]*x[0] + pA[2+bs*1]*x[1] + 1.0*x[2];
+			zt[1] = pA[1+bs*0]*x[0] + 1.0*x[1];
+			zt[0] = 1.0*x[0];
+			jj_end = 8-ai%bs<n ? 8-ai%bs : n;
+			for(jj=0; jj<jj_end; jj++)
+				z[jj] = zt[jj];
+			}
+		else if(ai%bs==5)
+			{
+			zt[2] = pA[2+bs*0]*x[0] + pA[2+bs*1]*x[1] + 1.0*x[2];
+			zt[1] = pA[1+bs*0]*x[0] + 1.0*x[1];
+			zt[0] = 1.0*x[0];
+			jj_end = 8-ai%bs<n ? 8-ai%bs : n;
+			for(jj=0; jj<jj_end; jj++)
+				z[jj] = zt[jj];
+			}
+		else if(ai%bs==6)
+			{
+			zt[1] = pA[1+bs*0]*x[0] + 1.0*x[1];
+			zt[0] = 1.0*x[0];
+			jj_end = 8-ai%bs<n ? 8-ai%bs : n;
+			for(jj=0; jj<jj_end; jj++)
+				z[jj] = zt[jj];
+			}
+		else // if (ai%bs==7)
+			{
+			z[0] = 1.0*x[0];
+			}
+		}
+
+	return;
+
+	}
+
+void blasfeo_hp_strmv_lnu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_strmv_lnu_mn(m, m, sA, ai, aj, sx, xi, sz, zi);
+	return;
+	}
 
 
 // m >= n
@@ -1250,10 +1408,10 @@ void blasfeo_strmv_lnn(int m, struct blasfeo_smat *sA, int ai, int aj, struct bl
 
 
 
-//void blasfeo_strmv_lnu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
-//	{
-//	blasfeo_hp_strmv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
-//	}
+void blasfeo_strmv_lnu(int m, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi, struct blasfeo_svec *sz, int zi)
+	{
+	blasfeo_hp_strmv_lnu(m, sA, ai, aj, sx, xi, sz, zi);
+	}
 
 
 
