@@ -1956,14 +1956,34 @@ void blasfeo_dtrmv_unn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 	blasfeo_hp_dtrmv_unn(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
-
+void blasfeo_dtrmv_unu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_dtrmv_unu(m, sA, ai, aj, sx, xi, sz, zi);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_dtrsv_unu: feature not implemented yet: ai=%d\n", ai);
+#endif
+	exit(1);
+#endif
+	}
 
 void blasfeo_dtrmv_utn(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
 	blasfeo_hp_dtrmv_utn(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
-
+void blasfeo_dtrmv_utu(int m, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_dtrmv_utu(m, sA, ai, aj, sx, xi, sz, zi);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_dtrsv_utu: feature not implemented yet: ai=%d\n", ai);
+#endif
+	exit(1);
+#endif
+	}
 
 void blasfeo_dtrsv_lnn_mn(int m, int n, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi, struct blasfeo_dvec *sz, int zi)
 	{
