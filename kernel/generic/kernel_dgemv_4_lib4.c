@@ -38,7 +38,6 @@
 #include <blasfeo_d_kernel.h>
 
 
-
 #if defined(TARGET_GENERIC) || defined(TARGET_X64_AMD_BULLDOZER) || defined(TARGET_ARMV7A_ARM_CORTEX_A15) || defined(TARGET_ARMV7A_ARM_CORTEX_A7) || defined(TARGET_ARMV7A_ARM_CORTEX_A9) //|| defined(TARGET_ARMV8A_ARM_CORTEX_A57) || defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 void kernel_dgemv_n_4_lib4(int kmax, double *alpha, double *A, double *x, double *beta, double *y, double *z)
 	{
@@ -1562,7 +1561,7 @@ void kernel_dtrmv_ut_4_lib4(int kmax, double *A, int sda, double *x, double *z)
 	
 	double x_0, x_1, x_2, x_3;
 	
-	int k1 = kmax/bs*bs;
+	int k1 = (kmax-bs)/bs*bs; // subtract bs to make sure we don't multiply the triangular part
 	double alpha1 = 1.0;
 	double beta1  = 1.0;
 
