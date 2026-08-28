@@ -1486,7 +1486,7 @@ void kernel_dtrmv_ut_4_vs_lib4(int kmax, double *A, int sda, double *x, double *
 	
 	double x_0, x_1, x_2, x_3;
 	
-	int k1 = kmax/bs*bs;
+	int k1 = (kmax-bs)/bs*bs;
 	double alpha1 = 1.0;
 	double beta1  = 1.0;
 

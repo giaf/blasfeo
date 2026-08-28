@@ -1487,7 +1487,7 @@ void kernel_strmv_ut_4_vs_lib4(int kmax, float *A, int sda, float *x, float *z, 
 	
 	float x_0, x_1, x_2, x_3;
 	
-	int k1 = kmax/bs*bs;
+	int k1 = (kmax-bs)/bs*bs;
 	float alpha1 = 1.0;
 	float beta1  = 1.0;
 
@@ -1562,7 +1562,7 @@ void kernel_strmv_ut_4_lib4(int kmax, float *A, int sda, float *x, float *z)
 	
 	float x_0, x_1, x_2, x_3;
 	
-	int k1 = kmax/bs*bs;
+	int k1 = (kmax-bs)/bs*bs;
 	float alpha1 = 1.0;
 	float beta1  = 1.0;
 

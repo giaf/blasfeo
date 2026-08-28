@@ -2344,7 +2344,7 @@ NAME:
 	vmulpd		%ymm8, %ymm12, %ymm15
 	vaddpd		%ymm0, %ymm15, %ymm0
 	
-	vmovapd	32(%r11), %ymm8
+	vmovapd		32(%r11), %ymm8
 	vblendpd	$ 0x3, %ymm8, %ymm14, %ymm8
 	vmulpd		%ymm8, %ymm12, %ymm15
 	vaddpd		%ymm1, %ymm15, %ymm1
