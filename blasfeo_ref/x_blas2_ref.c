@@ -530,6 +530,60 @@ void REF_TRMV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 	return;
 	}
 
+static void REF_TRMV_LNU_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	int ii, jj;
+	REAL
+		y_0, y_1;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
+	REAL *x = sx->pa + xi;
+	REAL *z = sz->pa + zi;
+	if(m-n>0)
+		{
+		REF_GEMV_N(m-n, n, 1.0, sA, ai+n, aj, sx, xi, 0.0, sz, zi+n, sz, zi+n);
+		}
+	if(n%2!=0)
+		{
+		ii = n-1;
+		y_0 = x[ii]; // unit diagonal
+		for(jj=0; jj<ii; jj++)
+			{
+			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[jj];
+			}
+		z[ii] = y_0;
+		n -= 1;
+		}
+	for(ii=n-2; ii>=0; ii-=2)
+		{
+		y_0 = x[ii+0]; // unit diagonal
+		y_1 = x[ii+1]; // unit diagonal
+		y_1 += XMATEL_A(aai+ii+1, aaj+(ii+0)) * y_0;
+		jj = 0;
+		for(; jj<ii-1; jj+=2)
+			{
+			y_0 += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x[jj+0] + XMATEL_A(aai+ii+0, aaj+(jj+1)) * x[jj+1];
+			y_1 += XMATEL_A(aai+ii+1, aaj+(jj+0)) * x[jj+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x[jj+1];
+			}
+		z[ii+0] = y_0;
+		z[ii+1] = y_1;
+		}
+	return;
+	}
+
+
+	
+void REF_TRMV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_LNU_MN(m, m, sA, ai, aj, sx, xi, sz, zi);
+	return;
+	}
+
 
 
 static void REF_TRMV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
@@ -581,11 +635,63 @@ static void REF_TRMV_LTN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struc
 	return;
 	}
 
-
-
 void REF_TRMV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	REF_TRMV_LTN_MN(m, m, sA, ai, aj, sx, xi, sz, zi);
+	return;
+	}
+
+static void REF_TRMV_LTU_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	int ii, jj;
+	REAL y_0, y_1;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
+	REAL *x = sx->pa + xi;
+	REAL *z = sz->pa + zi;
+	jj = 0;
+	for(; jj<n-1; jj+=2)
+		{
+		// diagonal block with unit diagonal
+		y_0 = x[jj+0]; // unit diagonal
+		y_1 = x[jj+1]; // unit diagonal
+		y_0 += XMATEL_A(aai+jj+1, aaj+(jj+0)) * y_1;
+		ii = jj+2;
+		for(; ii<m-1; ii+=2)
+			{
+			y_0 += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+0)) * x[ii+1];
+			y_1 += XMATEL_A(aai+ii+0, aaj+(jj+1)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x[ii+1];
+			}
+		for(; ii<m; ii++)
+			{
+			y_0 += XMATEL_A(aai+ii, aaj+(jj+0)) * x[ii];
+			y_1 += XMATEL_A(aai+ii, aaj+(jj+1)) * x[ii];
+			}
+		z[jj+0] = y_0;
+		z[jj+1] = y_1;
+		}
+	for(; jj<n; jj++)
+		{
+		y_0 = x[jj]; // unit diagonal
+		for(ii=jj+1; ii<m; ii++)
+			{
+			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[ii];
+			}
+		z[jj] = y_0;
+		}
+	return;
+	}
+
+
+
+void REF_TRMV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_LTU_MN(m, m, sA, ai, aj, sx, xi, sz, zi);
 	return;
 	}
 
@@ -680,6 +786,53 @@ void REF_TRMV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 	return;
 	}
 
+void REF_TRMV_UNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	int ii, jj;
+	REAL
+		y_0, y_1,
+		x_0, x_1;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
+	REAL *x = sx->pa + xi;
+	REAL *z = sz->pa + zi;
+	jj = 0;
+	for(; jj<m-1; jj+=2)
+		{
+		y_0 = x[jj+0]; // unit diagonal
+		y_1 = x[jj+1]; // unit diagonal
+		y_0 += XMATEL_A(aai+jj+0, aaj+(jj+1)) * y_1;
+		ii = jj+2;
+		for(; ii<m-1; ii+=2)
+			{
+			y_0 += XMATEL_A(aai+jj+0, aaj+(ii+0)) * x[ii+0] + XMATEL_A(aai+jj+0, aaj+(ii+1)) * x[ii+1];
+			y_1 += XMATEL_A(aai+jj+1, aaj+(ii+0)) * x[ii+0] + XMATEL_A(aai+jj+1, aaj+(ii+1)) * x[ii+1];
+			}
+		if(ii<m)
+			{
+			y_0 += XMATEL_A(aai+jj+0, aaj+(ii+0)) * x[ii+0];
+			y_1 += XMATEL_A(aai+jj+1, aaj+(ii+0)) * x[ii+0];
+			}
+		z[jj+0] = y_0;
+		z[jj+1] = y_1;
+		}
+	for(; jj<m; jj++)
+		{
+		y_0 = x[jj]; // unit diagonal
+		for(ii=jj+1; ii<m; ii++)
+			{
+			y_0 += XMATEL_A(aai+jj, aaj+ii) * x[ii];
+			}
+		z[jj] = y_0;
+		}
+	return;
+	}
+
 
 
 void REF_TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
@@ -729,6 +882,46 @@ void REF_TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int x
 	return;
 	}
 
+void REF_TRMV_UTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	int ii, jj;
+	REAL
+		y_0, y_1;
+#if defined(MF_COLMAJ)
+	int lda = sA->m;
+	REAL *pA = sA->pA + ai + aj*lda;
+	const int aai=0; const int aaj=0;
+#else
+	int aai=ai; int aaj=aj;
+#endif
+	REAL *x = sx->pa + xi;
+	REAL *z = sz->pa + zi;
+	if(m%2!=0)
+		{
+		jj = m-1;
+		y_0 = x[jj]; // unit diagonal
+		for(ii=0; ii<jj; ii++)
+			{
+			y_0 += XMATEL_A(aai+ii, aaj+jj) * x[ii];
+			}
+		z[jj] = y_0;
+		m -= 1; // XXX 
+		}
+	for(jj=m-2; jj>=0; jj-=2)
+		{
+		y_0 = x[jj+0]; // unit diagonal
+		y_1 = x[jj+1]; // unit diagonal
+		y_1 += XMATEL_A(aai+jj+0, aaj+(jj+1)) * x[jj+0];
+		for(ii=0; ii<jj-1; ii+=2)
+			{
+			y_0 += XMATEL_A(aai+ii+0, aaj+(jj+0)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+0)) * x[ii+1];
+			y_1 += XMATEL_A(aai+ii+0, aaj+(jj+1)) * x[ii+0] + XMATEL_A(aai+ii+1, aaj+(jj+1)) * x[ii+1];
+			}
+		z[jj+0] = y_0;
+		z[jj+1] = y_1;
+		}
+	return;
+	}
 
 
 void REF_TRSV_LNN_MN(int m, int n, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
@@ -1574,28 +1767,40 @@ void TRMV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, s
 	REF_TRMV_LNN(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
-
+void TRMV_LNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_LNU(m, sA, ai, aj, sx, xi, sz, zi);
+	}
 
 void TRMV_LTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	REF_TRMV_LTN(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
-
+void TRMV_LTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_LTN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
 
 void TRMV_UNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	REF_TRMV_UNN(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
-
+void TRMV_UNU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_UNN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
 
 void TRMV_UTN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
 	REF_TRMV_UTN(m, sA, ai, aj, sx, xi, sz, zi);
 	}
 
-
+void TRMV_UTU(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
+	{
+	REF_TRMV_UTN(m, sA, ai, aj, sx, xi, sz, zi);
+	}
 
 void TRSV_LNN(int m, struct XMAT *sA, int ai, int aj, struct XVEC *sx, int xi, struct XVEC *sz, int zi)
 	{
