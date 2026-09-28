@@ -133,15 +133,17 @@ void kernel_sgemv_n_4_vs_lib4(int kmax, float *alpha, float *A, float *x, float 
 
 	float yy[4] = {0.0, 0.0, 0.0, 0.0};
 
-	kernel_sgemv_n_4_lib4(kmax, alpha, A, x, beta, y, yy);
+	float beta1 = 0.0;
+
+	kernel_sgemv_n_4_lib4(kmax, alpha, A, x, &beta1, yy, yy);
 	
-	z[0] = yy[0];
+	z[0] = yy[0] + beta[0]*y[0];
 	if(m1<2) return;
-	z[1] = yy[1];
+	z[1] = yy[1] + beta[0]*y[1];
 	if(m1<3) return;
-	z[2] = yy[2];
+	z[2] = yy[2] + beta[0]*y[2];
 	if(m1<4) return;
-	z[3] = yy[3];
+	z[3] = yy[3] + beta[0]*y[3];
 
 	return;
 
@@ -158,12 +160,14 @@ void kernel_sgemv_n_4_gen_lib4(int kmax, float *alpha, float *A, float *x, float
 
 	float yy[4] = {0.0, 0.0, 0.0, 0.0};
 
-	kernel_sgemv_n_4_lib4(kmax, alpha, A, x, beta, y, yy);
+	float beta1 = 0.0;
+
+	kernel_sgemv_n_4_lib4(kmax, alpha, A, x, &beta1, yy, yy);
 	
-	if(m0<=0 & m1>0) z[0] = yy[0];
-	if(m0<=1 & m1>1) z[1] = yy[1];
-	if(m0<=2 & m1>2) z[2] = yy[2];
-	if(m0<=3 & m1>3) z[3] = yy[3];
+	if(m0<=0 & m1>0) z[0] = yy[0] + beta[0]*y[0];
+	if(m0<=1 & m1>1) z[1] = yy[1] + beta[0]*y[1];
+	if(m0<=2 & m1>2) z[2] = yy[2] + beta[0]*y[2];
+	if(m0<=3 & m1>3) z[3] = yy[3] + beta[0]*y[3];
 	
 	return;
 
@@ -283,15 +287,17 @@ void kernel_sgemv_t_4_vs_lib4(int kmax, float *alpha, int offsetA, float *A, int
 
 	float yy[4] = {0.0, 0.0, 0.0, 0.0};
 
-	kernel_sgemv_t_4_lib4(kmax, alpha, offsetA, A, sda, x, beta, y, yy);
+	float beta1 = 0.0;
+
+	kernel_sgemv_t_4_lib4(kmax, alpha, offsetA, A, sda, x, &beta1, yy, yy);
 	
-	z[0] = yy[0];
+	z[0] = yy[0] + beta[0]*y[0];
 	if(m1<2) return;
-	z[1] = yy[1];
+	z[1] = yy[1] + beta[0]*y[1];
 	if(m1<3) return;
-	z[2] = yy[2];
+	z[2] = yy[2] + beta[0]*y[2];
 	if(m1<4) return;
-	z[3] = yy[3];
+	z[3] = yy[3] + beta[0]*y[3];
 
 	return;
 
@@ -315,7 +321,7 @@ void kernel_strsv_ln_inv_4_vs_lib4(int kmax, float *A, float *inv_diag_A, float 
 
 	int k1 = kmax/bs*bs;
 
-	kernel_sgemv_n_4_lib4(k1, &alpha1, A, x, &beta1, y, yy);
+	kernel_sgemv_n_4_vs_lib4(k1, &alpha1, A, x, &beta1, y, yy, m1);
 
 	A += k1*bs;
 
@@ -468,7 +474,7 @@ void kernel_strsv_ln_one_4_vs_lib4(int kmax, float *A, float *x, float *y, float
 
 	int k1 = kmax/bs*bs;
 
-	kernel_sgemv_n_4_lib4(k1, &alpha1, A, x, &beta1, y, yy);
+	kernel_sgemv_n_4_vs_lib4(k1, &alpha1, A, x, &beta1, y, yy, m1);
 
 	A += k1*bs;
 
@@ -1290,7 +1296,7 @@ void kernel_strsv_ut_inv_4_vs_lib4(int kmax, float *A, int sda, float *inv_diag_
 	float alpha = -1.0;
 	float beta = 1.0;
 
-	kernel_sgemv_t_4_lib4(k1, &alpha, 0, A, sda, x, &beta, y, yy);
+	kernel_sgemv_t_4_vs_lib4(k1, &alpha, 0, A, sda, x, &beta, y, yy, m1);
 
 	A += sda*k1;
 
