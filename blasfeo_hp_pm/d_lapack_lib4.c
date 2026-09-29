@@ -2435,13 +2435,19 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	if(pC!=pD)
 		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
-	// factorize and pivot the first %bs columns d in [d D]
+	int rem = di%ps;
+	// if rem is nonzero need to re-align
+	if(rem != 0)
+		{
+		// factorize and pivot the first %bs columns d in [d D]
+		blasfeo_ref_degetrf_rp(m, rem, sD. 0, 0, sD, 0, 0, ipiv);
+	  // apply pivot to the matrix D
+	  // calcuate the first rows
+	  // minimum matrix size
+		}
 
-	// apply pivot to the matrix D
 
-	// calcuate the first rows
 
-	// minimum matrix size
 	p = n<m ? n : m; // XXX
 
 	// main loop
