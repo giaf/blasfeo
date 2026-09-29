@@ -1356,7 +1356,7 @@ void REF_ROWSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi,
 
 
 // permute the rows of a matrix struct
-void REF_ROWPE(int kmax, int *ipiv, struct MAT *sA)
+void REF_ROWPE(int kmax, int *ipiv, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1364,7 +1364,7 @@ void REF_ROWPE(int kmax, int *ipiv, struct MAT *sA)
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			REF_ROWSW(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+			REF_ROWSW(sA->n, sA, ii+ai, aj, sA, ipiv[ii]+ai, aj);
 		}
 	return;
 	}
@@ -1372,7 +1372,7 @@ void REF_ROWPE(int kmax, int *ipiv, struct MAT *sA)
 
 
 // inverse permute the rows of a matrix struct
-void REF_ROWPEI(int kmax, int *ipiv, struct MAT *sA)
+void REF_ROWPEI(int kmax, int *ipiv, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1380,7 +1380,7 @@ void REF_ROWPEI(int kmax, int *ipiv, struct MAT *sA)
 	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			REF_ROWSW(sA->n, sA, ii, 0, sA, ipiv[ii], 0);
+			REF_ROWSW(sA->n, sA, ii+ai, aj, sA, ipiv[ii]+ai, aj);
 		}
 	return;
 	}
@@ -1499,7 +1499,7 @@ void REF_COLSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi,
 
 
 // permute the cols of a matrix struct
-void REF_COLPE(int kmax, int *ipiv, struct MAT *sA)
+void REF_COLPE(int kmax, int *ipiv, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1507,7 +1507,7 @@ void REF_COLPE(int kmax, int *ipiv, struct MAT *sA)
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			REF_COLSW(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+			REF_COLSW(sA->m, sA, ai, ii+aj, sA, aj, ipiv[ii]+aj);
 		}
 	return;
 	}
@@ -1515,7 +1515,7 @@ void REF_COLPE(int kmax, int *ipiv, struct MAT *sA)
 
 
 // inverse permute the cols of a matrix struct
-void REF_COLPEI(int kmax, int *ipiv, struct MAT *sA)
+void REF_COLPEI(int kmax, int *ipiv, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1523,7 +1523,7 @@ void REF_COLPEI(int kmax, int *ipiv, struct MAT *sA)
 	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			REF_COLSW(sA->m, sA, 0, ii, sA, 0, ipiv[ii]);
+			REF_COLSW(sA->m, sA, ai, ii+aj, sA, ai, ipiv[ii]+aj);
 		}
 	return;
 	}
