@@ -2431,8 +2431,15 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	double dm1 = -1.0;
 
 	// needs to perform row-excanges on the yet-to-be-factorized matrix too
+	// TODO(@anton) What if they are equal but overlap... this is a bit pathalogical
 	if(pC!=pD)
 		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
+
+	// factorize and pivot the first %bs columns d in [d D]
+
+	// apply pivot to the matrix D
+
+	// calcuate the first rows
 
 	// minimum matrix size
 	p = n<m ? n : m; // XXX
