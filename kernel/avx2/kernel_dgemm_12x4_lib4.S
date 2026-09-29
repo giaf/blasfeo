@@ -1606,7 +1606,9 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 	cmpl	$ 3, %r10d
 	jg		1b // main loop 
 
-	jmp		2f
+	//jmp		2f
+	cmpl	$ 0, %r10d
+	jle		2f // return
 
 
 0: // clean up loop
@@ -17187,7 +17189,7 @@ FUN_END(inner_kernel_dgemm_nt_12x4_lib4)
 
 
 
-//                                1         2           3         4           5          6
+//                                 1         2           3        4           5           6
 // void kernel_dlarfb12_rn_12_lib4(int kmax, double *pV, int sdd, double *pT, double *pD, double *pK);
 
 	.p2align 4,,15
