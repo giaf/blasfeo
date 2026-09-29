@@ -120,6 +120,7 @@ void blasfeo_srowad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, stru
 void blasfeo_srowad_sp(int kmax, float alpha, struct blasfeo_svec *sx, int xi, int *idx, struct blasfeo_smat *sD, int di, int dj);
 void blasfeo_srowsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
 void blasfeo_srowpe(int kmax, int *ipiv, struct blasfeo_smat *sA);
+void blasfeo_srowpe_offset(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai);
 void blasfeo_srowpei(int kmax, int *ipiv, struct blasfeo_smat *sA);
 // col
 void blasfeo_scolex(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi);

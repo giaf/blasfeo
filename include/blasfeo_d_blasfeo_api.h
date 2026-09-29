@@ -282,6 +282,8 @@ void blasfeo_dgemm_nd(int m, int n, double alpha, struct blasfeo_dmat *sA, int a
 
 // D <= chol( C ) ; C, D lower triangular
 void blasfeo_dpotrf_l(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
+// C = [C_0;C_1]
+// [D_0;D_1] = [chol(C_0), C_1*chol(C_0)^{-T}];
 void blasfeo_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= chol( C ) ; C, D upper triangular
 void blasfeo_dpotrf_u(int m, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);

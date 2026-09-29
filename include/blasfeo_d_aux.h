@@ -161,6 +161,7 @@ void blasfeo_drowad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, str
 void blasfeo_drowad_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj);
 void blasfeo_drowsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj);
 void blasfeo_drowpe(int kmax, int *ipiv, struct blasfeo_dmat *sA);
+void blasfeo_drowpe_offset(int kmax, int *ipiv, struct blasfeo_dmat *sA, int ai); // row permutation with offset
 void blasfeo_drowpei(int kmax, int *ipiv, struct blasfeo_dmat *sA);
 
 // col

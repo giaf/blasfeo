@@ -2779,6 +2779,22 @@ void blasfeo_drowpe(int kmax, int *ipiv, struct blasfeo_dmat *sA)
 	return;
 	}
 
+// permute the rows of a matrix struct offset by ai rows
+void blasfeo_drowpe_offset(int kmax, int *ipiv, struct blasfeo_dmat *sA, int ai)
+	{
+
+	// invalidate stored inverse diagonal
+	sA->use_dA = 0;
+
+	int ii;
+	for(ii=0; ii<kmax; ii++)
+		{
+		if(ipiv[ii]!=ii)
+			blasfeo_drowsw(sA->n, sA, ii+ai, 0, sA, ipiv[ii]+ai, 0);
+		}
+	return;
+	}
+
 
 
 // inverse permute the rows of a matrix struct
