@@ -174,7 +174,7 @@ int main()
 	printf("\nI = \n");
 	blasfeo_print_dmat(n, n, &sI, 0, 0);
 
-	blasfeo_drowpe(n, ipiv, &sI);
+	blasfeo_drowpe(n, ipiv, &sI, 0, 0);
 	printf("\nperm(I) = \n");
 	blasfeo_print_dmat(n, n, &sI, 0, 0);
 
@@ -192,7 +192,7 @@ int main()
 	printf("\nI' = \n");
 	blasfeo_print_dmat(n, n, &sI, 0, 0);
 
-	blasfeo_dcolpe(n, ipiv, &sB);
+	blasfeo_dcolpe(n, ipiv, &sB, 0, 0);
 	printf("\nperm(I') = \n");
 	blasfeo_print_dmat(n, n, &sB, 0, 0);
 
@@ -220,7 +220,7 @@ int main()
 	printf("\n(inv(L^T)*inv(U^T)) = \n");
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 
-	blasfeo_drowpei(n, ipiv, &sD);
+	blasfeo_drowpei(n, ipiv, &sD, 0, 0);
 	printf("\nperm(inv(L^T)*inv(U^T)) = \n");
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 

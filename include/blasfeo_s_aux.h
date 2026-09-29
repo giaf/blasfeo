@@ -119,16 +119,16 @@ void blasfeo_srowex(int kmax, float alpha, struct blasfeo_smat *sA, int ai, int 
 void blasfeo_srowad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_srowad_sp(int kmax, float alpha, struct blasfeo_svec *sx, int xi, int *idx, struct blasfeo_smat *sD, int di, int dj);
 void blasfeo_srowsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
-void blasfeo_srowpe(int kmax, int *ipiv, struct blasfeo_smat *sA);
-void blasfeo_srowpei(int kmax, int *ipiv, struct blasfeo_smat *sA);
+void blasfeo_srowpe(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_srowpei(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj);
 // col
 void blasfeo_scolex(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_svec *sx, int xi);
 void blasfeo_scolin(int kmax, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_scolad(int kmax, float alpha, struct blasfeo_svec *sx, int xi, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_scolsc(int kmax, float alpha, struct blasfeo_smat *sA, int ai, int aj);
 void blasfeo_scolsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct blasfeo_smat *sC, int ci, int cj);
-void blasfeo_scolpe(int kmax, int *ipiv, struct blasfeo_smat *sA);
-void blasfeo_scolpei(int kmax, int *ipiv, struct blasfeo_smat *sA);
+void blasfeo_scolpe(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj);
+void blasfeo_scolpei(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj);
 // vec
 void blasfeo_svecse(int m, float alpha, struct blasfeo_svec *sx, int xi);
 void blasfeo_sveccp(int m, struct blasfeo_svec *sa, int ai, struct blasfeo_svec *sc, int ci);

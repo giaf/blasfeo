@@ -2009,14 +2009,14 @@ void COLSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int
 
 
 
-void COLPE(int kmax, int *ipiv, struct MAT *sA)
+void COLPE(int kmax, int *ipiv, struct MAT *sA, int ai, int aj)
 	{
 	REF_COLPE(kmax, ipiv, sA);
 	}
 
 
 
-void COLPEI(int kmax, int *ipiv, struct MAT *sA)
+void COLPEI(int kmax, int *ipiv, struct MAT *sA, int ai, int aj)
 	{
 	REF_COLPEI(kmax, ipiv, sA);
 	}
