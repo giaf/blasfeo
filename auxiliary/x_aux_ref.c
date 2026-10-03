@@ -1960,16 +1960,16 @@ void ROWSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int
 
 
 
-void ROWPE(int kmax, int *ipiv, struct MAT *sA)
+void ROWPE(int kmax, int *ipiv, struct MAT *sA, int ai, int aj)
 	{
-	REF_ROWPE(kmax, ipiv, sA);
+	REF_ROWPE(kmax, ipiv, sA, ai, aj);
 	}
 
 
 
-void ROWPEI(int kmax, int *ipiv, struct MAT *sA)
+void ROWPEI(int kmax, int *ipiv, struct MAT *sA, int ai, int aj)
 	{
-	REF_ROWPEI(kmax, ipiv, sA);
+	REF_ROWPEI(kmax, ipiv, sA, ai, aj);
 	}
 
 
@@ -2011,14 +2011,14 @@ void COLSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int
 
 void COLPE(int kmax, int *ipiv, struct MAT *sA, int ai, int aj)
 	{
-	REF_COLPE(kmax, ipiv, sA);
+	REF_COLPE(kmax, ipiv, sA, ai, aj);
 	}
 
 
 
 void COLPEI(int kmax, int *ipiv, struct MAT *sA, int ai, int aj)
 	{
-	REF_COLPEI(kmax, ipiv, sA);
+	REF_COLPEI(kmax, ipiv, sA, ai, aj);
 	}
 
 
