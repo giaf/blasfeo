@@ -62,7 +62,7 @@ void blasfeo_dgetrf_rp_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 		{
 #ifdef EXT_DEP
 		printf("\nblasfeo_dgetrf_rp: feature not implemented yet: ci=%d, di=%d\n", ci, di);
-#endif	
+#endif
 		exit(1);
 		}
 
@@ -526,7 +526,7 @@ void blasfeo_dgetrf_np_test(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 		{
 #ifdef EXT_DEP
 		printf("\nblasfeo_dgetf_np: feature not implemented yet: ci=%d, di=%d\n", ci, di);
-#endif	
+#endif
 		exit(1);
 		}
 
@@ -929,7 +929,7 @@ void blasfeo_hp_dpotrf_l(int m, struct blasfeo_dmat *sC, int ci, int cj, struct 
 #else
 #ifdef EXT_DEP
 		printf("\nblasfeo_dpotrf_l: feature not implemented yet: ci=%d, di=%d\n", ci, di);
-#endif	
+#endif
 		exit(1);
 #endif
 		}
@@ -1166,7 +1166,7 @@ void blasfeo_hp_dpotrf_l_mn(int m, int n, struct blasfeo_dmat *sC, int ci, int c
 #else
 #ifdef EXT_DEP
 		printf("\nblasfeo_dpotrf_l_mn: feature not implemented yet: ci=%d, di=%d\n", ci, di);
-#endif	
+#endif
 		exit(1);
 #endif
 		}
@@ -1501,10 +1501,10 @@ void blasfeo_hp_dpotrf_u(int m, struct blasfeo_dmat *sC, int ci, int cj, struct 
 #else
 #ifdef EXT_DEP
 	printf("\nblasfeo_dpotrf_u: feature not implemented yet\n");
-#endif	
+#endif
 	exit(1);
 #endif
-	
+
 	}
 
 
@@ -1524,7 +1524,7 @@ void blasfeo_hp_dsyrk_dpotrf_ln_mn(int m, int n, int k, struct blasfeo_dmat *sA,
 #else
 #ifdef EXT_DEP
 		printf("\nblasfeo_dsyrk_dpotrf_ln_mn: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
-#endif	
+#endif
 		exit(1);
 #endif
 		}
@@ -1861,7 +1861,7 @@ void blasfeo_hp_dsyrk_dpotrf_ln(int m, int k, struct blasfeo_dmat *sA, int ai, i
 #else
 #ifdef EXT_DEP
 		printf("\nblasfeo_dsyrk_dpotrf_ln: feature not implemented yet: ai=%d, bi=%d, ci=%d, di=%d\n", ai, bi, ci, di);
-#endif	
+#endif
 		exit(1);
 #endif
 		}
@@ -2086,7 +2086,7 @@ void blasfeo_hp_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 #else
 #ifdef EXT_DEP
 		printf("\nblasfeo_dgetf_np: feature not implemented yet: ci=%d, di=%d\n", ci, di);
-#endif	
+#endif
 		exit(1);
 #endif
 		}
@@ -2404,7 +2404,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 #else
 #ifdef EXT_DEP
 		printf("\nblasfeo_dgetrf_rp: feature not implemented yet: ci=%d, di=%d\n", ci, di);
-#endif	
+#endif
 		exit(1);
 #endif
 		}
@@ -2413,8 +2413,8 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 
 	int sdc = sC->cn;
 	int sdd = sD->cn;
-	double *pC = sC->pA + cj*ps;
-	double *pD = sD->pA + dj*ps;
+	double *pC = sC->pA + cj*ps + ci*sdc;
+	double *pD = sD->pA + dj*ps + di*sdd;
 	double *dD = sD->dA; // XXX what to do if di and dj are not zero
 
 	if(di==0 && dj==0)
@@ -2431,11 +2431,30 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	double dm1 = -1.0;
 
 	// needs to perform row-excanges on the yet-to-be-factorized matrix too
+	// TODO(@anton) What if they are equal but overlap... this is a bit pathalogical
 	if(pC!=pD)
 		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
-	// minimum matrix size
-	p = n<m ? n : m; // XXX
+	int rem = di%ps;
+	// if rem is nonzero need to re-align
+	if(rem != 0)
+		{
+		// factorize and pivot the first %bs columns d in [d D]
+		blasfeo_ref_dgetrf_rp(m, rem, sD, 0, 0, sD, 0, 0, ipiv);
+	  // apply pivot to the matrix D
+		blasfeo_drowpe(m, ipiv, sD, 0, rem);
+	  // calcuate the first rows
+		blasfeo_dtrsm_llnu(rem, rem, 1.0, sD, 0, 0, sD, 0, rem, sD, 0, rem);
+	  // update lower right block
+		blasfeo_dgemm_nn(n-rem, m-rem, rem, dm1, sD, 0, rem, sD, rem, 0, d1, sD, rem, rem, sD, rem, rem);
+
+		pD += rem*sdd; // The pD is now aligned
+		ipiv += rem;   // update ipiv alignment
+		}
+
+
+
+	p = (n-rem)<m ? (n-rem) : m; // XXX
 
 	// main loop
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
@@ -2470,6 +2489,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 				blasfeo_drowsw(jj, sD, jj+ii, 0, sD, ipiv[jj+ii], 0);
 				blasfeo_drowsw(n-jj-12, sD, jj+ii, jj+12, sD, ipiv[jj+ii], jj+12);
 				}
+			ipiv[jj+ii] += rem; // Update pivots for the top unaligned rows.
 			}
 #else
 		// pivot & factorize & solve lower
@@ -2502,24 +2522,28 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+0] += rem;
 		ipiv[i0+1] += i0;
 		if(ipiv[i0+1]!=i0+1)
 			{
 			kernel_drowsw_lib4(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+1] += rem;
 		ipiv[i0+2] += i0;
 		if(ipiv[i0+2]!=i0+2)
 			{
 			kernel_drowsw_lib4(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+2] += rem;
 		ipiv[i0+3] += i0;
 		if(ipiv[i0+3]!=i0+3)
 			{
 			kernel_drowsw_lib4(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+3] += rem;
 		// middle block-column
 		ii = i0;
 		kernel_dtrsm_nn_ll_one_4x4_lib4(ii, &pD[ii*sdd], &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], &pD[(jj+4)*ps+ii*sdd], &pD[ii*ps+ii*sdd]);
@@ -2551,24 +2575,28 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj+4, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps+(jj+8)*ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps+(jj+8)*ps);
 			}
+		ipiv[i1+0] += rem;
 		ipiv[i1+1] += i1;
 		if(ipiv[i1+1]!=i1+1)
 			{
 			kernel_drowsw_lib4(jj+4, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps+(jj+8)*ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps+(jj+8)*ps);
 			}
+		ipiv[i1+1] += rem;
 		ipiv[i1+2] += i1;
 		if(ipiv[i1+2]!=i1+2)
 			{
 			kernel_drowsw_lib4(jj+4, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps+(jj+8)*ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps+(jj+8)*ps);
 			}
+		ipiv[i1+2] += rem;
 		ipiv[i1+3] += i1;
 		if(ipiv[i1+3]!=i1+3)
 			{
 			kernel_drowsw_lib4(jj+4, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps+(jj+8)*ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps+(jj+8)*ps);
 			}
+		ipiv[i1+3] += rem;
 		// right block-column
 		ii = i0;
 		kernel_dtrsm_nn_ll_one_8x4_lib4(ii, &pD[ii*sdd], sdd, &pD[(jj+8)*ps], sdd, &d1, &pD[(jj+8)*ps+ii*sdd], sdd, &pD[(jj+8)*ps+ii*sdd], sdd, &pD[ii*ps+ii*sdd], sdd);
@@ -2600,24 +2628,28 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj+8, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps);
 			kernel_drowsw_lib4(n-jj-12, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps+(jj+12)*ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps+(jj+12)*ps);
 			}
+		ipiv[i1+0] += rem;
 		ipiv[i1+1] += i1;
 		if(ipiv[i1+1]!=i1+1)
 			{
 			kernel_drowsw_lib4(jj+8, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps);
 			kernel_drowsw_lib4(n-jj-12, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps+(jj+12)*ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps+(jj+12)*ps);
 			}
+		ipiv[i1+1] += rem;
 		ipiv[i1+2] += i1;
 		if(ipiv[i1+2]!=i1+2)
 			{
 			kernel_drowsw_lib4(jj+8, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps);
 			kernel_drowsw_lib4(n-jj-12, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps+(jj+12)*ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps+(jj+12)*ps);
 			}
+		ipiv[i1+2] += rem;
 		ipiv[i1+3] += i1;
 		if(ipiv[i1+3]!=i1+3)
 			{
 			kernel_drowsw_lib4(jj+8, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps);
 			kernel_drowsw_lib4(n-jj-12, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps+(jj+12)*ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps+(jj+12)*ps);
 			}
+		ipiv[i1+3] += rem;
 #endif
 
 		// solve upper
@@ -2687,24 +2719,28 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+0] += rem;
 		ipiv[i0+1] += i0;
 		if(ipiv[i0+1]!=i0+1)
 			{
 			kernel_drowsw_lib4(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+1] += rem;
 		ipiv[i0+2] += i0;
 		if(ipiv[i0+2]!=i0+2)
 			{
 			kernel_drowsw_lib4(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+2] += rem;
 		ipiv[i0+3] += i0;
 		if(ipiv[i0+3]!=i0+3)
 			{
 			kernel_drowsw_lib4(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+3] += rem;
 		// right block-column
 		ii = i0;
 		kernel_dtrsm_nn_ll_one_4x4_lib4(ii, &pD[ii*sdd], &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], &pD[(jj+4)*ps+ii*sdd], &pD[ii*ps+ii*sdd]);
@@ -2732,24 +2768,28 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj+4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+8)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+8)*ps);
 			}
+			ipiv[i0+0] += rem;
 		ipiv[i0+1] += i0;
 		if(ipiv[i0+1]!=i0+1)
 			{
 			kernel_drowsw_lib4(jj+4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+8)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+8)*ps);
 			}
+			ipiv[i0+1] += rem;
 		ipiv[i0+2] += i0;
 		if(ipiv[i0+2]!=i0+2)
 			{
 			kernel_drowsw_lib4(jj+4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+8)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+8)*ps);
 			}
+			ipiv[i0+2] += rem;
 		ipiv[i0+3] += i0;
 		if(ipiv[i0+3]!=i0+3)
 			{
 			kernel_drowsw_lib4(jj+4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+8)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+8)*ps);
 			}
+			ipiv[i0+3] += rem;
 
 		// solve upper
 		i0 -= 4;
@@ -2810,24 +2850,28 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+0] += rem;
 		ipiv[i0+1] += i0;
 		if(ipiv[i0+1]!=i0+1)
 			{
 			kernel_drowsw_lib4(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+1] += rem;
 		ipiv[i0+2] += i0;
 		if(ipiv[i0+2]!=i0+2)
 			{
 			kernel_drowsw_lib4(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+2] += rem;
 		ipiv[i0+3] += i0;
 		if(ipiv[i0+3]!=i0+3)
 			{
 			kernel_drowsw_lib4(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+3] += rem;
 
 		// solve upper
 		ll = jj+4;
@@ -2889,24 +2933,28 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+0] += rem;
 	ipiv[i0+1] += i0;
 	if(ipiv[i0+1]!=i0+1)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+1] += rem;
 	ipiv[i0+2] += i0;
 	if(ipiv[i0+2]!=i0+2)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+2] += rem;
 	ipiv[i0+3] += i0;
 	if(ipiv[i0+3]!=i0+3)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+3] += rem;
 	// middle block-column
 	ii = i0;
 	kernel_dtrsm_nn_ll_one_4x4_vs_lib4(ii, &pD[ii*sdd], &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], &pD[(jj+4)*ps+ii*sdd], &pD[ii*ps+ii*sdd], 4, n-jj-4);
@@ -2931,6 +2979,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj+4, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps);
 		kernel_drowsw_lib4(n-jj-8, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps+(jj+8)*ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps+(jj+8)*ps);
 		}
+	ipiv[i1+0] += rem;
 	if(n-jj-4>1)
 		{
 		ipiv[i1+1] += i1;
@@ -2939,6 +2988,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj+4, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps+(jj+8)*ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps+(jj+8)*ps);
 			}
+		ipiv[i1+1] += rem;
 		if(n-jj-4>2)
 			{
 			ipiv[i1+2] += i1;
@@ -2947,6 +2997,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 				kernel_drowsw_lib4(jj+4, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps);
 				kernel_drowsw_lib4(n-jj-8, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps+(jj+8)*ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps+(jj+8)*ps);
 				}
+			ipiv[i1+2] += rem;
 			if(n-jj-4>3)
 				{
 				ipiv[i1+3] += i1;
@@ -2955,6 +3006,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 					kernel_drowsw_lib4(jj+4, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps);
 					kernel_drowsw_lib4(n-jj-8, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps+(jj+8)*ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps+(jj+8)*ps);
 					}
+				ipiv[i1+3] += rem;
 				}
 			}
 		}
@@ -2982,6 +3034,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj+8, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps);
 		kernel_drowsw_lib4(n-jj-12, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps+(jj+12)*ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps+(jj+12)*ps);
 		}
+	ipiv[i1+0] += rem;
 	if(n-jj-8>1)
 		{
 		ipiv[i1+1] += i1;
@@ -2990,6 +3043,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj+8, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps);
 			kernel_drowsw_lib4(n-jj-12, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps+(jj+12)*ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps+(jj+12)*ps);
 			}
+		ipiv[i1+1] += rem;
 		if(n-jj-8>2)
 			{
 			ipiv[i1+2] += i1;
@@ -2998,6 +3052,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 				kernel_drowsw_lib4(jj+8, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps);
 				kernel_drowsw_lib4(n-jj-12, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps+(jj+12)*ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps+(jj+12)*ps);
 				}
+			ipiv[i1+2] += rem;
 			if(n-jj-8>3)
 				{
 				ipiv[i1+3] += i1;
@@ -3006,6 +3061,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 					kernel_drowsw_lib4(jj+8, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps);
 					kernel_drowsw_lib4(n-jj-12, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps+(jj+12)*ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps+(jj+12)*ps);
 					}
+				ipiv[i1+3] += rem;
 				}
 			}
 		}
@@ -3031,24 +3087,28 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+0] += rem;
 	ipiv[i0+1] += i0;
 	if(ipiv[i0+1]!=i0+1)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+1] += rem;
 	ipiv[i0+2] += i0;
 	if(ipiv[i0+2]!=i0+2)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+2] += rem;
 	ipiv[i0+3] += i0;
 	if(ipiv[i0+3]!=i0+3)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+3] += rem;
 	// middle block-column
 	ii = i0;
 	kernel_dtrsm_nn_ll_one_4x4_vs_lib4(ii, &pD[ii*sdd], &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], &pD[(jj+4)*ps+ii*sdd], &pD[ii*ps+ii*sdd], 4, n-jj-4);
@@ -3062,6 +3122,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj+4, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps);
 		kernel_drowsw_lib4(n-jj-8, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps+(jj+8)*ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps+(jj+8)*ps);
 		}
+	ipiv[i1+0] += rem;
 	if(m-jj-4>1)
 		{
 		ipiv[i1+1] += i1;
@@ -3070,6 +3131,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj+4, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps+(jj+8)*ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps+(jj+8)*ps);
 			}
+		ipiv[i1+1] += rem;
 		if(m-jj-4>2)
 			{
 			ipiv[i1+2] += i1;
@@ -3078,6 +3140,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 				kernel_drowsw_lib4(jj+4, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps);
 				kernel_drowsw_lib4(n-jj-8, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps+(jj+8)*ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps+(jj+8)*ps);
 				}
+			ipiv[i1+2] += rem;
 			if(m-jj-4>3)
 				{
 				ipiv[i1+3] += i1;
@@ -3086,6 +3149,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 					kernel_drowsw_lib4(jj+4, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps);
 					kernel_drowsw_lib4(n-jj-8, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps+(jj+8)*ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps+(jj+8)*ps);
 					}
+				ipiv[i1+3] += rem;
 				}
 			}
 		}
@@ -3102,6 +3166,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj+8, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps);
 		kernel_drowsw_lib4(n-jj-12, pD+(i1+0)/ps*ps*sdd+(i1+0)%ps+(jj+12)*ps, pD+(ipiv[i1+0])/ps*ps*sdd+(ipiv[i1+0])%ps+(jj+12)*ps);
 		}
+	ipiv[i1+0] += rem;
 	if(m-jj-8>1)
 		{
 		ipiv[i1+1] += i1;
@@ -3110,6 +3175,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj+8, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps);
 			kernel_drowsw_lib4(n-jj-12, pD+(i1+1)/ps*ps*sdd+(i1+1)%ps+(jj+12)*ps, pD+(ipiv[i1+1])/ps*ps*sdd+(ipiv[i1+1])%ps+(jj+12)*ps);
 			}
+		ipiv[i1+1] += rem;
 		if(m-jj-8>2)
 			{
 			ipiv[i1+2] += i1;
@@ -3118,6 +3184,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 				kernel_drowsw_lib4(jj+8, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps);
 				kernel_drowsw_lib4(n-jj-12, pD+(i1+2)/ps*ps*sdd+(i1+2)%ps+(jj+12)*ps, pD+(ipiv[i1+2])/ps*ps*sdd+(ipiv[i1+2])%ps+(jj+12)*ps);
 				}
+			ipiv[i1+2] += rem;
 			if(m-jj-8>3)
 				{
 				ipiv[i1+3] += i1;
@@ -3126,6 +3193,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 					kernel_drowsw_lib4(jj+8, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps);
 					kernel_drowsw_lib4(n-jj-12, pD+(i1+3)/ps*ps*sdd+(i1+3)%ps+(jj+12)*ps, pD+(ipiv[i1+3])/ps*ps*sdd+(ipiv[i1+3])%ps+(jj+12)*ps);
 					}
+				ipiv[i1+3] += rem;
 				}
 			}
 		}
@@ -3164,24 +3232,28 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+0] += rem;
 	ipiv[i0+1] += i0;
 	if(ipiv[i0+1]!=i0+1)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+1] += rem;
 	ipiv[i0+2] += i0;
 	if(ipiv[i0+2]!=i0+2)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+2] += rem;
 	ipiv[i0+3] += i0;
 	if(ipiv[i0+3]!=i0+3)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+3] += rem;
 	// right block-column
 	ii = i0;
 	kernel_dtrsm_nn_ll_one_4x4_vs_lib4(ii, &pD[ii*sdd], &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], &pD[(jj+4)*ps+ii*sdd], &pD[ii*ps+ii*sdd], 4, n-jj-4);
@@ -3202,6 +3274,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj+4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 		kernel_drowsw_lib4(n-jj-8, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+8)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+8)*ps);
 		}
+	ipiv[i0+0] += rem;
 	if(n-jj-4>1)
 		{
 		ipiv[i0+1] += i0;
@@ -3210,6 +3283,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj+4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+8)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+8)*ps);
 			}
+		ipiv[i0+1] += rem;
 		if(n-jj-4>2)
 			{
 			ipiv[i0+2] += i0;
@@ -3218,6 +3292,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 				kernel_drowsw_lib4(jj+4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 				kernel_drowsw_lib4(n-jj-8, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+8)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+8)*ps);
 				}
+			ipiv[i0+2] += rem;
 			if(n-jj-4>3)
 				{
 				ipiv[i0+3] += i0;
@@ -3226,6 +3301,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 					kernel_drowsw_lib4(jj+4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 					kernel_drowsw_lib4(n-jj-8, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+8)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+8)*ps);
 					}
+				ipiv[i0+3] += rem;
 				}
 			}
 		}
@@ -3251,24 +3327,28 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+0] += rem;
 	ipiv[i0+1] += i0;
 	if(ipiv[i0+1]!=i0+1)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+1] += rem;
 	ipiv[i0+2] += i0;
 	if(ipiv[i0+2]!=i0+2)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+2] += rem;
 	ipiv[i0+3] += i0;
 	if(ipiv[i0+3]!=i0+3)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+3] += rem;
 	// right block-column
 	ii = i0;
 	kernel_dtrsm_nn_ll_one_4x4_vs_lib4(ii, &pD[ii*sdd], &pD[(jj+4)*ps], sdd, &d1, &pD[(jj+4)*ps+ii*sdd], &pD[(jj+4)*ps+ii*sdd], &pD[ii*ps+ii*sdd], 4, n-jj-4);
@@ -3282,6 +3362,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj+4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 		kernel_drowsw_lib4(n-jj-8, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+8)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+8)*ps);
 		}
+	ipiv[i0+0] += rem;
 	if(m-jj-4>1)
 		{
 		ipiv[i0+1] += i0;
@@ -3290,6 +3371,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj+4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 			kernel_drowsw_lib4(n-jj-8, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+8)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+8)*ps);
 			}
+		ipiv[i0+1] += rem;
 		if(m-jj-4>2)
 			{
 			ipiv[i0+2] += i0;
@@ -3298,6 +3380,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 				kernel_drowsw_lib4(jj+4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 				kernel_drowsw_lib4(n-jj-8, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+8)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+8)*ps);
 				}
+			ipiv[i0+2] += rem;
 			if(m-jj-4>3)
 				{
 				ipiv[i0+3] += i0;
@@ -3306,6 +3389,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 					kernel_drowsw_lib4(jj+4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 					kernel_drowsw_lib4(n-jj-8, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+8)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+8)*ps);
 					}
+				ipiv[i0+3] += rem;
 				}
 			}
 		}
@@ -3337,6 +3421,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+0] += rem;
 	if(n-jj>1)
 		{
 		ipiv[i0+1] += i0;
@@ -3345,6 +3430,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+1] += rem;
 		if(n-jj>2)
 			{
 			ipiv[i0+2] += i0;
@@ -3353,6 +3439,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 				kernel_drowsw_lib4(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 				kernel_drowsw_lib4(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 				}
+			ipiv[i0+2] += rem;
 			if(n-jj>3)
 				{
 				ipiv[i0+3] += i0;
@@ -3361,6 +3448,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 					kernel_drowsw_lib4(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 					kernel_drowsw_lib4(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
 					}
+				ipiv[i0+3] += rem;
 				}
 			}
 		}
@@ -3390,6 +3478,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_drowsw_lib4(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
 		kernel_drowsw_lib4(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
 		}
+	ipiv[i0+0] += rem;
 	if(m-i0>1)
 		{
 		ipiv[i0+1] += i0;
@@ -3398,6 +3487,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			kernel_drowsw_lib4(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
 			kernel_drowsw_lib4(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
 			}
+		ipiv[i0+1] += rem;
 		if(m-i0>2)
 			{
 			ipiv[i0+2] += i0;
@@ -3406,6 +3496,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 				kernel_drowsw_lib4(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
 				kernel_drowsw_lib4(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 				}
+			ipiv[i0+2] += rem;
 			if(m-i0>3)
 				{
 				ipiv[i0+3] += i0;
@@ -3414,6 +3505,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 					kernel_drowsw_lib4(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
 					kernel_drowsw_lib4(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
 					}
+				ipiv[i0+3] += rem;
 				}
 			}
 		}
@@ -3429,7 +3521,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	}
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int blasfeo_hp_dgeqrf_worksize(int m, int n)
 	{
 	const int ps = 4;
@@ -3733,9 +3825,9 @@ void blasfeo_hp_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int
 	{
 	if(m<=0 | n<=0)
 		return;
-	
+
 	// TODO check that k <= m <= n
-	
+
 	if(di!=0)
 		{
 #if defined(BLASFEO_REF_API)
@@ -3744,7 +3836,7 @@ void blasfeo_hp_dorglq(int m, int n, int k, struct blasfeo_dmat *sC, int ci, int
 #else
 #ifdef EXT_DEP
 		printf("\nblasfeo_dorglq: feature not implemented yet: di=%d\n", di);
-#endif	
+#endif
 		exit(1);
 #endif
 		}
@@ -4060,7 +4152,7 @@ void blasfeo_hp_dgelqf_pd_la(int m, int n1, struct blasfeo_dmat *sD, int di, int
 #else
 #ifdef EXT_DEP
 		printf("\nblasfeo_dgelqf_pd_la: feature not implemented yet: ai!=di\n");
-#endif	
+#endif
 		exit(1);
 #endif
 		}
@@ -4148,7 +4240,7 @@ void blasfeo_hp_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, in
 #else
 #ifdef EXT_DEP
 		printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet: li!=ai\n");
-#endif	
+#endif
 		exit(1);
 #endif
 		}
@@ -4194,7 +4286,7 @@ void blasfeo_hp_dgelqf_pd_lla(int m, int n1, struct blasfeo_dmat *sD, int di, in
 #else
 #ifdef EXT_DEP
 		printf("\nblasfeo_dgelqf_pd_lla: feature not implemented yet: ai!=di\n");
-#endif	
+#endif
 		exit(1);
 #endif
 		}

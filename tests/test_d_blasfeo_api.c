@@ -886,9 +886,9 @@ int main()
 //	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	//
 	blasfeo_dgemm_nt(n, n, n, alpha, &sA, 0, 0, &sA, 0, 0, beta, &sB, 0, 0, &sD, 0, 0);
-	blasfeo_dcolpe(n, ipiv, &sD);
+	blasfeo_dcolpe(n, ipiv, &sD, 0, 0);
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
-	blasfeo_drowpe(n, ipiv, &sD);
+	blasfeo_drowpe(n, ipiv, &sD, 0, 0);
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
 	blasfeo_dpotrf_l(n, &sD, 0, 0, &sD, 0, 0);
 	blasfeo_print_dmat(n, n, &sD, 0, 0);
@@ -1223,7 +1223,7 @@ int main()
 
 #if 1 // solve P L U X = P B
 	blasfeo_print_dmat(n, n, &sB, 0, 0);
-	blasfeo_drowpe(n, ipiv, &sB);
+	blasfeo_drowpe(n, ipiv, &sB, 0, 0);
 	blasfeo_print_dmat(n, n, &sB, 0, 0);
 
 	blasfeo_dtrsm_llnu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);
@@ -1232,7 +1232,7 @@ int main()
 	blasfeo_print_dmat(n, n, &sE, 0, 0);
 #else // solve X^T (P L U)^T = B^T P^T
 	blasfeo_print_dmat(n, n, &sB, 0, 0);
-	blasfeo_dcolpe(n, ipiv, &sB);
+	blasfeo_dcolpe(n, ipiv, &sB, 0, 0);
 	blasfeo_print_dmat(n, n, &sB, 0, 0);
 
 	blasfeo_dtrsm_rltu(n, n, 1.0, &sD, 0, 0, &sB, 0, 0, &sE, 0, 0);

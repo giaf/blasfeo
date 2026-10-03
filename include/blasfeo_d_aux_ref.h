@@ -154,8 +154,8 @@ void blasfeo_ref_drowex(int kmax, double alpha, struct blasfeo_dmat *sA, int ai,
 void blasfeo_ref_drowad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj);
 void blasfeo_ref_drowad_sp(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, int *idx, struct blasfeo_dmat *sD, int di, int dj);
 void blasfeo_ref_drowsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj);
-void blasfeo_ref_drowpe(int kmax, int *ipiv, struct blasfeo_dmat *sA);
-void blasfeo_ref_drowpei(int kmax, int *ipiv, struct blasfeo_dmat *sA);
+void blasfeo_ref_drowpe(int kmax, int *ipiv, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_ref_drowpei(int kmax, int *ipiv, struct blasfeo_dmat *sA, int ai, int aj);
 
 // col
 void blasfeo_ref_dcolex(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dvec *sx, int xi);
@@ -163,8 +163,8 @@ void blasfeo_ref_dcolin(int kmax, struct blasfeo_dvec *sx, int xi, struct blasfe
 void blasfeo_ref_dcolad(int kmax, double alpha, struct blasfeo_dvec *sx, int xi, struct blasfeo_dmat *sA, int ai, int aj);
 void blasfeo_ref_dcolsc(int kmax, double alpha, struct blasfeo_dmat *sA, int ai, int aj);
 void blasfeo_ref_dcolsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct blasfeo_dmat *sC, int ci, int cj);
-void blasfeo_ref_dcolpe(int kmax, int *ipiv, struct blasfeo_dmat *sA);
-void blasfeo_ref_dcolpei(int kmax, int *ipiv, struct blasfeo_dmat *sA);
+void blasfeo_ref_dcolpe(int kmax, int *ipiv, struct blasfeo_dmat *sA, int ai, int aj);
+void blasfeo_ref_dcolpei(int kmax, int *ipiv, struct blasfeo_dmat *sA, int ai, int aj);
 
 // vec
 // a <= alpha
