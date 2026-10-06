@@ -318,14 +318,14 @@ int GECMP_BLASFEOAPI(
 			{
 
 			// strtucture mat
-			REAL sbi = BLASFEO_MATEL(sD, ii, jj);
+			REAL sbi = BLASFEO_MATEL(sD, bi+ii, bj+jj);
 			// reference mat
-			REAL rbi = BLASFEO_MATEL(rD, ii, jj);
+			REAL rbi = BLASFEO_MATEL(rD, bi+ii, bj+jj);
 
 			if ( (sbi != rbi) & ( fabs(sbi-rbi) > REL_TOL*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > REL_TOL))
 				{
-					*err_i = ii;
-					*err_j = jj;
+					*err_i = bi+ii;
+					*err_j = bj+jj;
 					if (!debug) return 1;
 
 					printf("\n\nFailed at index %d,%d, (HP) %2.18f != %2.18f (RF)\n", ii, jj, sbi, rbi);
@@ -339,8 +339,8 @@ int GECMP_BLASFEOAPI(
 					printf("\n");
 
 					printf("\nResult matrix:\n");
-					blasfeo_print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1, "HP");
-					blasfeo_print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1, "REF");
+					blasfeo_print_xmat_debug(m, n, sD, bi, bj, bi+ii, bj+jj, 1, "HP");
+					blasfeo_print_xmat_debug(m, n, rD, bi, bj, bi+ii, bj+jj, 1, "REF");
 
 					return 1;
 				}

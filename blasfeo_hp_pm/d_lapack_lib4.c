@@ -2395,7 +2395,7 @@ void blasfeo_hp_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 // dgetrf row pivoting
 void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
 	{
-
+#if 0
 	if(ci!=0 | di!=0)
 		{
 #if defined(BLASFEO_REF_API)
@@ -2408,13 +2408,16 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		exit(1);
 #endif
 		}
-
+#endif
 	const int ps = 4;
 
+	int cir = ci & (ps-1);
+	int dir = di & (ps-1);
+	
 	int sdc = sC->cn;
 	int sdd = sD->cn;
-	double *pC = sC->pA + cj*ps + ci*sdc;
-	double *pD = sD->pA + dj*ps + di*sdd;
+	double *pC = sC->pA + cj*ps + (ci - cir)*sdc;
+	double *pD = sD->pA + dj*ps + (di - dir)*sdd;
 	double *dD = sD->dA; // XXX what to do if di and dj are not zero
 
 	if(di==0 && dj==0)
@@ -2430,25 +2433,45 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	double d1 = 1.0;
 	double dm1 = -1.0;
 
+	printf("pC = %p, pD = %p\n", pC, pD);
+	printf("cir = %d, dir = %d\n", cir, dir);
+
 	// needs to perform row-excanges on the yet-to-be-factorized matrix too
 	// TODO(@anton) What if they are equal but overlap... this is a bit pathalogical
-	if(pC!=pD)
+	// NOTE(@anton) check unaligned equality, instead of raw pC = pD
+	if(pC+(cir*sdc)!=pD+(dir*sdd))
 		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
-	int rem = di%ps;
+
+	int rem = dir;
+	printf("rem = %d\n", rem);
+	printf("m = %d, n = %d\n", m, n);
 	// if rem is nonzero need to re-align
 	if(rem != 0)
 		{
+		printf("initial: \n");
+		blasfeo_print_dmat(m,n,sD,di,dj);
 		// factorize and pivot the first %bs columns d in [d D]
-		blasfeo_ref_dgetrf_rp(m, rem, sD, 0, 0, sD, 0, 0, ipiv);
-	  // apply pivot to the matrix D
-		blasfeo_drowpe(m, ipiv, sD, 0, rem);
-	  // calcuate the first rows
-		blasfeo_dtrsm_llnu(rem, rem, 1.0, sD, 0, 0, sD, 0, rem, sD, 0, rem);
-	  // update lower right block
-		blasfeo_dgemm_nn(n-rem, m-rem, rem, dm1, sD, 0, rem, sD, rem, 0, d1, sD, rem, rem, sD, rem, rem);
+		blasfeo_ref_dgetrf_rp(m, rem, sD, di, dj, sD, di, dj, ipiv);
+		printf("ref L: \n");
+		blasfeo_print_dmat(m,n,sD,di,dj);
+		printf("ipiv:\n");
+		for(ii=0;ii<m;ii++)
+		    printf("%d, ", ipiv[ii]);
+		printf("\n");
+		// apply pivot to the matrix D
+		blasfeo_drowpe(m, n-rem, ipiv, sD, di, dj+rem);
+		printf("pivot: \n");
+		blasfeo_print_dmat(m,n,sD,di,dj);
+		// calcuate the first rows
+		blasfeo_dtrsm_llnu(rem, n-rem, 1.0, sD, di, dj, sD, di, dj+rem, sD, di, dj+rem);
+		printf("U: \n");
+		blasfeo_print_dmat(m,n,sD,di,dj);
+		// update lower right block
+		blasfeo_dgemm_nn(m-rem, n-rem, rem, dm1, sD, di, dj+rem, sD, di+rem, dj, d1, sD, di+rem, dj+rem, sD, di+rem, dj+rem);
+		printf("downdate: \n");
+		blasfeo_print_dmat(m,n,sD,di,dj);
 
-		pD += rem*sdd; // The pD is now aligned
 		ipiv += rem;   // update ipiv alignment
 		}
 
@@ -2456,12 +2479,15 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 
 	p = (n-rem)<m ? (n-rem) : m; // XXX
 
+	printf("p = %d\n", p);
+
 	// main loop
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
 	// 12 columns at a time
 	jj = 0;
 	for(; jj<p-11; jj+=12)
 		{
+		printf("j = %d\n", jj);
 #if defined(TARGET_X64_INTEL_HASWELL)
 		// correct
 		ii = jj;
@@ -2486,8 +2512,8 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 			ipiv[jj+ii] += jj;
 			if(ipiv[jj+ii]!=jj+ii)
 				{
-				blasfeo_drowsw(jj, sD, jj+ii, 0, sD, ipiv[jj+ii], 0);
-				blasfeo_drowsw(n-jj-12, sD, jj+ii, jj+12, sD, ipiv[jj+ii], jj+12);
+				blasfeo_drowsw(jj, sD, di+jj+ii, dj, sD, di+ipiv[jj+ii], dj);
+				blasfeo_drowsw(n-jj-12, sD, di+jj+ii, dj+jj+12, sD, di+ipiv[jj+ii], dj+jj+12);
 				}
 			ipiv[jj+ii] += rem; // Update pivots for the top unaligned rows.
 			}
@@ -2910,6 +2936,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	// 9-12 columns at a time
 	// pivot & factorize & solve lower
 	// left block-column
+	printf("left_n_12\n");
 	ii = jj;
 	i0 = ii;
 	for( ; ii<m-8; ii+=12)
@@ -3077,6 +3104,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	// 9-12 rows at a time
 	// pivot & factorize & solve lower
 	// left block-column
+	printf("left_m_12\n");
 	ii = jj;
 	i0 = ii;
 	kernel_dgemm_nn_12x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
@@ -3214,6 +3242,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	// 5-8 columns at a time
 	// pivot & factorize & solve lower
 	// left block-column
+	printf("left_n_8\n");
 	ii = jj;
 	i0 = ii;
 	for( ; ii<m-4; ii+=8)
@@ -3317,6 +3346,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	// 5-8 rows at a time
 	// pivot & factorize & solve lower
 	// left block-column
+	printf("left_n_8\n");
 	ii = jj;
 	i0 = ii;
 	kernel_dgemm_nn_8x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
@@ -3408,6 +3438,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	left_n_4:
 	// 1-4 columns at a time
 	// pivot & factorize & solve lower
+	printf("left_n_4\n");
 	ii = jj;
 	i0 = ii;
 	for( ; ii<m; ii+=4)
@@ -3468,6 +3499,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	left_m_4:
 	// 1-4 rows at a time
 	// pivot & factorize & solve lower
+	printf("left_m_4\n");
 	ii = jj;
 	i0 = ii;
 	kernel_dgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], &pD[jj*ps+ii*sdd], m-ii, n-jj);

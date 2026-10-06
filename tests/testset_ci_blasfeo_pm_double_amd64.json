@@ -6,7 +6,7 @@
   },
   "test_macros":
   {
-    "VERBOSE": 1
+    "VERBOSE": 4
   },
   "env_flags":{
     "CC":"gcc",

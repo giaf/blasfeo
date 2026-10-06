@@ -49,12 +49,12 @@ int test_routine(struct RoutineArgs *args, int *bad_calls)
 	// routine test
 	#ifdef TEST_BLAS_API
 	int err = GECMP_BLASAPI(
-		args->n, args->m, args->ai, args->aj,
+		args->n, args->m, args->di, args->dj,
 		args->cD, args->cD_lda, args->bD, args->bD_lda,
 		&(args->err_i), &(args->err_j), VERBOSE);
 	#else
 	int err = GECMP_BLASFEOAPI(
-		args->n, args->m, args->ai, args->aj,
+		args->n, args->m, args->di, args->dj,
 		args->sD, args->rD,
 		&(args->err_i), &(args->err_j), VERBOSE);
 	#endif
