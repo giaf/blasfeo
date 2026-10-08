@@ -2433,8 +2433,8 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	double d1 = 1.0;
 	double dm1 = -1.0;
 
-	printf("pC = %p, pD = %p\n", pC, pD);
-	printf("cir = %d, dir = %d\n", cir, dir);
+	//printf("pC = %p, pD = %p\n", pC, pD);
+	//printf("cir = %d, dir = %d\n", cir, dir);
 
 	// needs to perform row-excanges on the yet-to-be-factorized matrix too
 	// TODO(@anton) What if they are equal but overlap... this is a bit pathalogical
@@ -2443,43 +2443,57 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
 
-	int rem = dir;
-	printf("rem = %d\n", rem);
-	printf("m = %d, n = %d\n", m, n);
+	int rem = (dir == 0) ? 0 : ps-dir;
+	//printf("rem = %d\n", rem);
+	//printf("m = %d, n = %d\n", m, n);
 	// if rem is nonzero need to re-align
 	if(rem != 0)
 		{
-		printf("initial: \n");
-		blasfeo_print_dmat(m,n,sD,di,dj);
+		// printf("initial: \n");
+		// blasfeo_print_dmat(m,n,sD,di,dj);
 		// factorize and pivot the first %bs columns d in [d D]
 		blasfeo_ref_dgetrf_rp(m, rem, sD, di, dj, sD, di, dj, ipiv);
-		printf("ref L: \n");
-		blasfeo_print_dmat(m,n,sD,di,dj);
-		printf("ipiv:\n");
-		for(ii=0;ii<m;ii++)
-		    printf("%d, ", ipiv[ii]);
-		printf("\n");
+		//printf("ref L: \n");
+		//blasfeo_print_dmat(m,n,sD,di,dj);
 		// apply pivot to the matrix D
-		blasfeo_drowpe(m, n-rem, ipiv, sD, di, dj+rem);
-		printf("pivot: \n");
-		blasfeo_print_dmat(m,n,sD,di,dj);
+		blasfeo_drowpe(rem, n-rem, ipiv, sD, di, dj+rem);
+		//printf("pivot: \n");
+		//blasfeo_print_dmat(m,n,sD,di,dj);
+		//printf("L11: \n");
+		//blasfeo_print_dmat(rem,rem,sD,di,dj);
+		//printf("A12: \n");
+		//blasfeo_print_dmat(rem,n-rem,sD,di,dj+rem);
 		// calcuate the first rows
-		blasfeo_dtrsm_llnu(rem, n-rem, 1.0, sD, di, dj, sD, di, dj+rem, sD, di, dj+rem);
-		printf("U: \n");
-		blasfeo_print_dmat(m,n,sD,di,dj);
+		blasfeo_ref_dtrsm_llnu(rem, n-rem, d1, sD, di, dj, sD, di, dj+rem, sD, di, dj+rem);
+		// printf("U: \n");
+		//blasfeo_print_dmat(m,n,sD,di,dj);
 		// update lower right block
-		blasfeo_dgemm_nn(m-rem, n-rem, rem, dm1, sD, di, dj+rem, sD, di+rem, dj, d1, sD, di+rem, dj+rem, sD, di+rem, dj+rem);
-		printf("downdate: \n");
-		blasfeo_print_dmat(m,n,sD,di,dj);
+		//printf("L21: \n");
+		//blasfeo_print_dmat(m-rem,rem,sD,di+rem,dj);
+		//printf("U12: \n");
+		//blasfeo_print_dmat(rem,n-rem,sD,di,dj+rem);
+		blasfeo_dgemm_nn(m-rem, n-rem, rem, dm1, sD, di+rem, dj, sD, di, dj+rem, d1, sD, di+rem, dj+rem, sD, di+rem, dj+rem);
+		//printf("downdate: \n");
+		//blasfeo_print_dmat(m-rem,n-rem,sD,di+rem,dj+rem);
 
+		pD += rem*ps + ps*sdd;  // update pD alignment
 		ipiv += rem;   // update ipiv alignment
+
+		// remove
+		//blasfeo_ref_dgetrf_rp(m-rem, n-rem, sD, di+rem, dj+rem, sD, di+rem, dj+rem, ipiv);
+		//printf("factor: \n");
+		//blasfeo_print_dmat(m-rem,n-rem,sD,di+rem,dj+rem);
+		//return;
 		}
 
 
 
-	p = (n-rem)<m ? (n-rem) : m; // XXX
+	p = (n-rem)<(m-rem) ? (n-rem) : (m-rem); // XXX
 
-	printf("p = %d\n", p);
+	//printf("p = %d\n", p);
+	//printf("*pD = %f\n", *pD);
+	//printf("*(sD->pA) = %f\n", *(sD->pA));
+	//printf("pD - sD->pA = %ld\n", pD - (sD->pA));
 
 	// main loop
 #if defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
@@ -2692,11 +2706,11 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		}
 	if(m>=n)
 		{
-		if(n-jj>0)
+		if(n-rem-jj>0)
 			{
-			if(n-jj<=4)
+			if(n-rem-jj<=4)
 				goto left_n_4;
-			else if(n-jj<=8)
+			else if(n-rem-jj<=8)
 				goto left_n_8;
 			else
 				goto left_n_12;
@@ -2704,11 +2718,11 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		}
 	else // n>m
 		{
-		if(m-jj>0)
+		if(m-rem-jj>0)
 			{
-			if(m-jj<=4)
+			if(m-rem-jj<=4)
 				goto left_m_4;
-			else if(m-jj<=8)
+			else if(m-rem-jj<=8)
 				goto left_m_8;
 			else
 				goto left_m_12;
@@ -3243,8 +3257,10 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	// pivot & factorize & solve lower
 	// left block-column
 	printf("left_n_8\n");
+	printf("m = %d, n = %d, jj = %d, rem = %d\n", m, n, jj, rem);
 	ii = jj;
 	i0 = ii;
+	// calculate U
 	for( ; ii<m-4; ii+=8)
 		{
 		kernel_dgemm_nn_8x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
@@ -3254,6 +3270,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		kernel_dgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], &pD[jj*ps+ii*sdd], m-ii, 4);
 //		ii+=4;
 		}
+	// calculate block on the diagonal
 	kernel_dgetrf_pivot_4_lib4(m-i0, &pD[jj*ps+i0*sdd], sdd, &dD[jj], &ipiv[i0]);
 	ipiv[i0+0] += i0;
 	if(ipiv[i0+0]!=i0+0)
@@ -3346,7 +3363,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	// 5-8 rows at a time
 	// pivot & factorize & solve lower
 	// left block-column
-	printf("left_n_8\n");
+	printf("left_m_8\n");
 	ii = jj;
 	i0 = ii;
 	kernel_dgemm_nn_8x4_vs_lib4(jj, &dm1, &pD[ii*sdd], sdd, 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], sdd, &pD[jj*ps+ii*sdd], sdd, m-ii, 4);
@@ -3439,45 +3456,46 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	// 1-4 columns at a time
 	// pivot & factorize & solve lower
 	printf("left_n_4\n");
+	printf("n-rem-jj = %d\n", n-rem-jj);
 	ii = jj;
 	i0 = ii;
 	for( ; ii<m; ii+=4)
 		{
-		kernel_dgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], &pD[jj*ps+ii*sdd], m-ii, n-jj);
+		kernel_dgemm_nn_4x4_vs_lib4(jj, &dm1, &pD[ii*sdd], 0, &pD[jj*ps], sdd, &d1, &pD[jj*ps+ii*sdd], &pD[jj*ps+ii*sdd], m-rem-ii, n-rem-jj);
 		}
-	kernel_dgetrf_pivot_4_vs_lib4(m-i0, &pD[jj*ps+i0*sdd], sdd, &dD[jj], &ipiv[i0], n-jj);
+	kernel_dgetrf_pivot_4_vs_lib4(m-rem-i0, &pD[jj*ps+i0*sdd], sdd, &dD[jj], &ipiv[i0], n-rem-jj);
 	ipiv[i0+0] += i0;
 	if(ipiv[i0+0]!=i0+0)
 		{
 		kernel_drowsw_lib4(jj, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps);
-		kernel_drowsw_lib4(n-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
+		kernel_drowsw_lib4(n-rem-jj-4, pD+(i0+0)/ps*ps*sdd+(i0+0)%ps+(jj+4)*ps, pD+(ipiv[i0+0])/ps*ps*sdd+(ipiv[i0+0])%ps+(jj+4)*ps);
 		}
 	ipiv[i0+0] += rem;
-	if(n-jj>1)
+	if(n-rem-jj>1)
 		{
 		ipiv[i0+1] += i0;
 		if(ipiv[i0+1]!=i0+1)
 			{
 			kernel_drowsw_lib4(jj, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps);
-			kernel_drowsw_lib4(n-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
+			kernel_drowsw_lib4(n-rem-jj-4, pD+(i0+1)/ps*ps*sdd+(i0+1)%ps+(jj+4)*ps, pD+(ipiv[i0+1])/ps*ps*sdd+(ipiv[i0+1])%ps+(jj+4)*ps);
 			}
 		ipiv[i0+1] += rem;
-		if(n-jj>2)
+		if(n-rem-jj>2)
 			{
 			ipiv[i0+2] += i0;
 			if(ipiv[i0+2]!=i0+2)
 				{
 				kernel_drowsw_lib4(jj, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps);
-				kernel_drowsw_lib4(n-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
+				kernel_drowsw_lib4(n-rem-jj-4, pD+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pD+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 				}
 			ipiv[i0+2] += rem;
-			if(n-jj>3)
+			if(n-rem-jj>3)
 				{
 				ipiv[i0+3] += i0;
 				if(ipiv[i0+3]!=i0+3)
 					{
 					kernel_drowsw_lib4(jj, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps);
-					kernel_drowsw_lib4(n-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
+					kernel_drowsw_lib4(n-rem-jj-4, pD+(i0+3)/ps*ps*sdd+(i0+3)%ps+(jj+4)*ps, pD+(ipiv[i0+3])/ps*ps*sdd+(ipiv[i0+3])%ps+(jj+4)*ps);
 					}
 				ipiv[i0+3] += rem;
 				}

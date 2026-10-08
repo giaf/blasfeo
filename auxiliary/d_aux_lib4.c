@@ -2769,7 +2769,6 @@ void blasfeo_drowpe(int m, int n, int *ipiv, struct blasfeo_dmat *sA, int ai, in
 
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
-
 	int ii;
 	for(ii=0; ii<m; ii++)
 		{

@@ -274,9 +274,9 @@ void blasfeo_print_xmat_debug(int m, int n, struct MAT *sA, int ai, int aj, int 
 		for(jj=j0; jj<je; jj++)
 			{
 			if((ii==err_i) & (jj==err_j) & ERR)
-				printf(ANSI_COLOR_RED"%6.2f\t"ANSI_COLOR_RESET, BLASFEO_MATEL(sA, ii, jj));
+				printf(ANSI_COLOR_RED"%- 6.2e\t"ANSI_COLOR_RESET, BLASFEO_MATEL(sA, ii, jj));
 			else if((ii >= ai) & (ii < ai+m) & (jj >= aj) && (jj < aj+n))
-				printf(ANSI_COLOR_GREEN"%6.2f\t"ANSI_COLOR_RESET, BLASFEO_MATEL(sA, ii, jj));
+				printf(ANSI_COLOR_GREEN"%- 6.2e\t"ANSI_COLOR_RESET, BLASFEO_MATEL(sA, ii, jj));
 			else printf("%6.2f\t", BLASFEO_MATEL(sA, ii, jj));
 			}
 		printf("\n");
