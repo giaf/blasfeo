@@ -73,7 +73,7 @@
 
 // scales and adds a packed matrix into a packed matrix: B = B + alpha*A
 void dgead_lib(int m, int n, double alpha, int offsetA, double *A, int sda, int offsetB, double *B, int sdb)
-  {
+	{
 
 	if(m<=0 || n<=0)
 		return;
