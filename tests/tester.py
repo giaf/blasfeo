@@ -218,7 +218,12 @@ class BlasfeoTestset:
 							test_macros["ROUTINE_CLASS_C"] = str(Path(TESTCLASSES_DIR, routine_testclass_src))
 							test_macros["ROUTINE"] = routine_name
 							test_macros["ROUTINE_FULLNAME"] = routine
-
+							if routine in ("potrf_u",):
+								test_macros["UMAT"] = str(1)
+							elif routine in ("potrf_l", "potrf_l_mn"):
+								test_macros["LMAT"] = str(1)
+							else:
+								test_macros["GEMAT"] = str(1)
 							# add blas_api flag arguments values
 
 							self.testset["scheduled_routines"][routine_fullname] = {

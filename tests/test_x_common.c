@@ -312,6 +312,7 @@ int GECMP_BLASFEOAPI(
 	{
 	int ii, jj;
 
+#ifdef GEMAT
 	for(ii = 0; ii < m; ii++)
 		{
 		for(jj = 0; jj < n; jj++)
@@ -346,6 +347,81 @@ int GECMP_BLASFEOAPI(
 				}
 			}
 		}
+#else
+#ifdef LMAT
+	for(ii = 0; ii < m; ii++)
+		{
+		for(jj = 0; jj < ii+1; jj++)
+			{
+
+			// strtucture mat
+			REAL sbi = BLASFEO_MATEL(sD, bi+ii, bj+jj);
+			// reference mat
+			REAL rbi = BLASFEO_MATEL(rD, bi+ii, bj+jj);
+
+			if ( (sbi != rbi) & ( fabs(sbi-rbi) > REL_TOL*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > REL_TOL))
+				{
+					*err_i = bi+ii;
+					*err_j = bj+jj;
+					if (!debug) return 1;
+
+					printf("\n\nFailed at index %d,%d, (HP) %2.18f != %2.18f (RF)\n", ii, jj, sbi, rbi);
+					printf("Absolute error: %3.5e\n", fabs(sbi-rbi));
+					printf("Relative error: %3.5e\n", fabs(sbi-rbi)/(fabs(sbi)+fabs(rbi)));
+					printf("\nBitwise comparison:\n");
+					printf("HP:  ");
+					printbits(&sbi, sizeof(REAL));
+					printf("REF: ");
+					printbits(&rbi, sizeof(REAL));
+					printf("\n");
+
+					printf("\nResult matrix:\n");
+					blasfeo_print_xmat_debug(m, n, sD, bi, bj, bi+ii, bj+jj, 1, "HP");
+					blasfeo_print_xmat_debug(m, n, rD, bi, bj, bi+ii, bj+jj, 1, "REF");
+
+					return 1;
+				}
+			}
+		}
+#else
+#ifdef UMAT
+	for(ii = 0; ii < m; ii++)
+		{
+		for(jj = ii; jj < m; jj++)
+			{
+
+			// strtucture mat
+			REAL sbi = BLASFEO_MATEL(sD, bi+ii, bj+jj);
+			// reference mat
+			REAL rbi = BLASFEO_MATEL(rD, bi+ii, bj+jj);
+
+			if ( (sbi != rbi) & ( fabs(sbi-rbi) > REL_TOL*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > REL_TOL))
+				{
+					*err_i = bi+ii;
+					*err_j = bj+jj;
+					if (!debug) return 1;
+
+					printf("\n\nFailed at index %d,%d, (HP) %2.18f != %2.18f (RF)\n", ii, jj, sbi, rbi);
+					printf("Absolute error: %3.5e\n", fabs(sbi-rbi));
+					printf("Relative error: %3.5e\n", fabs(sbi-rbi)/(fabs(sbi)+fabs(rbi)));
+					printf("\nBitwise comparison:\n");
+					printf("HP:  ");
+					printbits(&sbi, sizeof(REAL));
+					printf("REF: ");
+					printbits(&rbi, sizeof(REAL));
+					printf("\n");
+
+					printf("\nResult matrix:\n");
+					blasfeo_print_xmat_debug(m, n, sD, bi, bj, bi+ii, bj+jj, 1, "HP");
+					blasfeo_print_xmat_debug(m, n, rD, bi, bj, bi+ii, bj+jj, 1, "REF");
+
+					return 1;
+				}
+			}
+		}
+#endif // GEMAT
+#endif // LMAT
+#endif // UMAT  
 
 	return 0;
 	}

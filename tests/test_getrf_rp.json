@@ -31,15 +31,17 @@
     "AUTO"
   ],
   "MF": [
-    "PANELMAJ"
+    "PANELMAJ",
+    "COLMAJ"
   ],
   "TARGET": [
-    "X64_INTEL_HASWELL"
+    "X64_INTEL_HASWELL",
+    "X64_INTEL_SANDY_BRIDGE"
   ],
   "LA": [
     "HIGH_PERFORMANCE"
   ],
   "routines": [
-    "getrf_rp"
+    "potrf_u"
   ]
 }
