@@ -2064,7 +2064,7 @@ void blasfeo_srowsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct bl
 
 
 // permute the rows of a matrix struct
-void blasfeo_srowpe(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj)
+void blasfeo_srowpe(int kmax, int n, int *ipiv, struct blasfeo_smat *sA, int ai, int aj)
 	{
 
 	// invalidate stored inverse diagonal
@@ -2074,14 +2074,14 @@ void blasfeo_srowpe(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			blasfeo_srowsw(sA->n, sA, ii+ai, aj, sA, ipiv[ii]+ai, aj);
+			blasfeo_srowsw(n, sA, ii+ai, aj, sA, ipiv[ii]+ai, aj);
 		}
 	return;
 	}
 
 
 // inverse permute the rows of a matrix struct
-void blasfeo_srowpei(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj)
+void blasfeo_srowpei(int kmax, int n, int *ipiv, struct blasfeo_smat *sA, int ai, int aj)
 	{
 
 	// invalidate stored inverse diagonal
@@ -2091,7 +2091,7 @@ void blasfeo_srowpei(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int a
 	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			blasfeo_srowsw(sA->n, sA, ii+ai, aj, sA, ipiv[ii]+ai, aj);
+			blasfeo_srowsw(n, sA, ii+ai, aj, sA, ipiv[ii]+ai, aj);
 		}
 	return;
 	}
@@ -2265,7 +2265,7 @@ void blasfeo_scolsw(int kmax, struct blasfeo_smat *sA, int ai, int aj, struct bl
 
 
 // permute the cols of a matrix struct
-void blasfeo_scolpe(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj)
+void blasfeo_scolpe(int kmax, int m, int *ipiv, struct blasfeo_smat *sA, int ai, int aj)
 	{
 
 	// invalidate stored inverse diagonal
@@ -2275,7 +2275,7 @@ void blasfeo_scolpe(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			blasfeo_scolsw(sA->m, sA, ai, ii+aj, sA, ai, ipiv[ii]+aj);
+			blasfeo_scolsw(m, sA, ai, ii+aj, sA, ai, ipiv[ii]+aj);
 		}
 	return;
 	}
@@ -2283,7 +2283,7 @@ void blasfeo_scolpe(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj
 
 
 // inverse permute the cols of a matrix struct
-void blasfeo_scolpei(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int aj)
+void blasfeo_scolpei(int kmax, int m, int *ipiv, struct blasfeo_smat *sA, int ai, int aj)
 	{
 
 	// invalidate stored inverse diagonal
@@ -2293,7 +2293,7 @@ void blasfeo_scolpei(int kmax, int *ipiv, struct blasfeo_smat *sA, int ai, int a
 	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			blasfeo_scolsw(sA->m, sA, ai, ii+aj, sA, ai, ipiv[ii]+aj);
+			blasfeo_scolsw(m, sA, ai, ii+aj, sA, ai, ipiv[ii]+aj);
 		}
 	return;
 	}
