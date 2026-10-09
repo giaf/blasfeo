@@ -45,13 +45,13 @@ void set_test_args(struct TestArgs *targs)
 	targs->ais = 1;
 //	targs->bis = 1;
 	targs->di0 = 0;
-	targs->dis = 4;
+	targs->dis = 8;
 //	targs->xjs = 5;
 
 	targs->ni0 = 4;
 	targs->nj0 = 4;
-	targs->nis = 5;
+	targs->nis = 20;
 	//targs->nis = 13;
-	targs->njs = 5;
+	targs->njs = 20;
 	//targs->njs = 13;
 	}
