@@ -11,7 +11,7 @@ _test_avx:
 #elif defined(OS_WINDOWS)
   .globl test_avx
   .def test_avx; .scl 2; .type 32; .endef
-test_avx2:
+test_avx:
 #endif
 
   // Call the VZEROALL function to see if it works
