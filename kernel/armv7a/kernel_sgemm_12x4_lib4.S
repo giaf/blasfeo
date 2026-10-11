@@ -1382,3 +1382,7 @@ _kernel_spotrf_nt_l_12x4_lib4:
 
 
 
+
+#if defined(OS_LINUX)
+	.section	.note.GNU-stack,"",%progbits
+#endif

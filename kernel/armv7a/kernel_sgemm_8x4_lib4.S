@@ -1931,3 +1931,7 @@ _kernel_spotrf_nt_l_8x4_lib4:
 #include "kernel_sgemm_8x4_lib.S"
 
 #endif
+
+#if defined(OS_LINUX)
+	.section	.note.GNU-stack,"",%progbits
+#endif

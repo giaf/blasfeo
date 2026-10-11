@@ -4960,3 +4960,7 @@ _ ## NAME:
 
 #endif
 
+
+#if defined(OS_LINUX)
+	.section	.note.GNU-stack,"",%progbits
+#endif
