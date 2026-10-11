@@ -2395,20 +2395,6 @@ void blasfeo_hp_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 // dgetrf row pivoting
 void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
 	{
-#if 0
-	if(ci!=0 | di!=0)
-		{
-#if defined(BLASFEO_REF_API)
-		blasfeo_ref_dgetrf_rp(m, n, sC, ci, cj, sD, di, dj, ipiv);
-		return;
-#else
-#ifdef EXT_DEP
-		printf("\nblasfeo_dgetrf_rp: feature not implemented yet: ci=%d, di=%d\n", ci, di);
-#endif
-		exit(1);
-#endif
-		}
-#endif
 	const int ps = 4;
 
 	int cir = ci & (ps-1);
@@ -2447,6 +2433,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	// if rem is nonzero need to re-align
 	if(rem != 0)
 		{
+#if defined(BLASFEO_REF_API)
 		// factorize and pivot the first %bs columns d in [d D]
 		blasfeo_ref_dgetrf_rp(m, rem, sD, di, dj, sD, di, dj, ipiv);
 		// apply pivot to the matrix D
@@ -2460,6 +2447,12 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		ipiv += rem;             // update ipiv alignment
 		ma = m - rem;            // update adjusted m
 		na = n - rem;            // update adjusted n
+#else
+#if defined(EXT_DEP)
+		printf("\nblasfeo_dgetrf_rp: feature not implemented yet: ci=%d, di=%d\n", ci, di);
+#endif
+		exit(1);
+#endif
 		}
 
 	p = na<ma ? na : ma; // XXX
