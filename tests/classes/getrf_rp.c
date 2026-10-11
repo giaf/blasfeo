@@ -48,8 +48,8 @@ void set_test_args(struct TestArgs *targs)
 	targs->dis = 8;
 //	targs->xjs = 5;
 
-	targs->ni0 = 4;
-	targs->nj0 = 4;
+	targs->ni0 = 1;
+	targs->nj0 = 1;
 	targs->nis = 20;
 	//targs->nis = 13;
 	targs->njs = 20;

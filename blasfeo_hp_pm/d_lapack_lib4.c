@@ -2430,12 +2430,14 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 
 
 	int rem = (dir == 0) ? 0 : ps-dir;
+	printf("rem = %d\n", rem);
 	// if rem is nonzero need to re-align
 	if(rem != 0)
 		{
 #if defined(BLASFEO_REF_API)
+		
 		// factorize and pivot the first %bs columns d in [d D]
-		blasfeo_ref_dgetrf_rp(m, rem, sD, di, dj, sD, di, dj, ipiv);
+		blasfeo_ref_dgetrf_rp(m, (rem > n ? n : rem), sD, di, dj, sD, di, dj, ipiv);
 		// apply pivot to the matrix D
 		blasfeo_drowpe(rem, n-rem, ipiv, sD, di, dj+rem);
 		// calcuate the first rows
