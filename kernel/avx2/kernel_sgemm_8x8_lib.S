@@ -2745,42 +2745,36 @@
 	FUN_START(inner_scale_m11_8x8_libc)
 #endif
 	
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovaps		.LC03(%rip), %ymm14 // beta=1.0
-#else
-	vmovaps		LC03(%rip), %ymm14 // beta=1.0
-#endif
-
 	vmovups		0(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm0
+	vsubps		%ymm0, %ymm15, %ymm0
 	addq		%r11, %r10
 
 	vmovups		0(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm1
+	vsubps		%ymm1, %ymm15, %ymm1
 	addq		%r11, %r10
 
 	vmovups		0(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm2
+	vsubps		%ymm2, %ymm15, %ymm2
 	addq		%r11, %r10
 
 	vmovups		0(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm3
+	vsubps		%ymm3, %ymm15, %ymm3
 	addq		%r11, %r10
 
 	vmovups		0(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm4
+	vsubps		%ymm4, %ymm15, %ymm4
 	addq		%r11, %r10
 
 	vmovups		0(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm5
+	vsubps		%ymm5, %ymm15, %ymm5
 	addq		%r11, %r10
 
 	vmovups		0(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm6
+	vsubps		%ymm6, %ymm15, %ymm6
 	addq		%r11, %r10
 
 	vmovups		0(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm7
+	vsubps		%ymm7, %ymm15, %ymm7
 //	addq		%r11, %r10
 
 #if MACRO_LEVEL>=1
@@ -2948,43 +2942,43 @@
 	vaddps		%ymm0, %ymm15, %ymm0
 	addq		%r11, %r10
 
-	cmpl		$ 2, %r15d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
 	vaddps		%ymm1, %ymm15, %ymm1
 	addq		%r11, %r10
 
-	cmpl		$ 3, %r15d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
 	vaddps		%ymm2, %ymm15, %ymm2
 	addq		%r11, %r10
 
-	cmpl		$ 4, %r15d
+	cmpl		$ 4, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
 	vaddps		%ymm3, %ymm15, %ymm3
 	addq		%r11, %r10
 
-	cmpl		$ 5, %r15d
+	cmpl		$ 5, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
 	vaddps		%ymm4, %ymm15, %ymm4
 	addq		%r11, %r10
 
-	cmpl		$ 6, %r15d
+	cmpl		$ 6, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
 	vaddps		%ymm5, %ymm15, %ymm5
 	addq		%r11, %r10
 
-	cmpl		$ 7, %r15d
+	cmpl		$ 7, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
 	vaddps		%ymm6, %ymm15, %ymm6
 	addq		%r11, %r10
 
-	cmpl		$ 7, %r15d
+	cmpl		$ 7, %r13d
 	je			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
 	vaddps		%ymm7, %ymm15, %ymm7
@@ -3044,57 +3038,50 @@
 	vsubps		%ymm15, %ymm13, %ymm13
 
 
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovaps		.LC03(%rip), %ymm14 // beta=1.0
-#else
-	vmovaps		LC03(%rip), %ymm14 // beta=1.0
-#endif
-
-
 	vmaskmovps	0(%r10), %ymm13, %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm0
+	vsubps		%ymm0, %ymm15, %ymm0
 	addq		%r11, %r10
 
-	cmpl		$ 2, %r15d
+	cmpl		$ 2, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm1
+	vsubps		%ymm1, %ymm15, %ymm1
 	addq		%r11, %r10
 
-	cmpl		$ 3, %r15d
+	cmpl		$ 3, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm2
+	vsubps		%ymm2, %ymm15, %ymm2
 	addq		%r11, %r10
 
-	cmpl		$ 4, %r15d
+	cmpl		$ 4, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm3
+	vsubps		%ymm3, %ymm15, %ymm3
 	addq		%r11, %r10
 
-	cmpl		$ 5, %r15d
+	cmpl		$ 5, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm4
+	vsubps		%ymm4, %ymm15, %ymm4
 	addq		%r11, %r10
 
-	cmpl		$ 6, %r15d
+	cmpl		$ 6, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm5
+	vsubps		%ymm5, %ymm15, %ymm5
 	addq		%r11, %r10
 
-	cmpl		$ 7, %r15d
+	cmpl		$ 7, %r13d
 	jl			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm6
+	vsubps		%ymm6, %ymm15, %ymm6
 	addq		%r11, %r10
 
-	cmpl		$ 7, %r15d
+	cmpl		$ 7, %r13d
 	je			0f // end
 	vmaskmovps	0(%r10), %ymm13, %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm7
+	vsubps		%ymm7, %ymm15, %ymm7
 //	addq		%r11, %r10
 
 0:

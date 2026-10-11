@@ -1923,35 +1923,29 @@ NAME:
 	FUN_START(inner_scale_m11_8x8_lib8)
 #endif
 	
-#if defined(OS_LINUX) | defined(OS_WINDOWS)
-	vmovaps		.LC03(%rip), %ymm14 // beta=1.0
-#else
-	vmovaps		LC03(%rip), %ymm14 // beta=1.0
-#endif
-
 	vmovaps		0(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm0
+	vsubps		%ymm0, %ymm15, %ymm0
 
 	vmovaps		32(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm1
+	vsubps		%ymm1, %ymm15, %ymm1
 
 	vmovaps		64(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm2
+	vsubps		%ymm2, %ymm15, %ymm2
 
 	vmovaps		96(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm3
+	vsubps		%ymm3, %ymm15, %ymm3
 
 	vmovaps		128(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm4
+	vsubps		%ymm4, %ymm15, %ymm4
 
 	vmovaps		160(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm5
+	vsubps		%ymm5, %ymm15, %ymm5
 
 	vmovaps		192(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm6
+	vsubps		%ymm6, %ymm15, %ymm6
 
 	vmovaps		224(%r10), %ymm15
-	vfmsub231ps	%ymm14, %ymm15, %ymm7
+	vsubps		%ymm7, %ymm15, %ymm7
 
 #if MACRO_LEVEL>=1
 	.endm

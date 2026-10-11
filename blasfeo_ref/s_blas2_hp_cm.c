@@ -37,6 +37,7 @@
 #include <stdio.h>
 
 #include <blasfeo_common.h>
+#include <blasfeo_s_blasfeo_hp_api.h>
 
 
 
@@ -71,9 +72,13 @@
 #define REF_SYMV_L_MN blasfeo_hp_ssymv_l_mn
 #define REF_SYMV_U blasfeo_hp_ssymv_u
 #define REF_TRMV_LNN blasfeo_hp_strmv_lnn
+#define REF_TRMV_LNU blasfeo_hp_strmv_lnu
 #define REF_TRMV_LTN blasfeo_hp_strmv_ltn
+#define REF_TRMV_LTU blasfeo_hp_strmv_ltu
 #define REF_TRMV_UNN blasfeo_hp_strmv_unn
+#define REF_TRMV_UNU blasfeo_hp_strmv_unu
 #define REF_TRMV_UTN blasfeo_hp_strmv_utn
+#define REF_TRMV_UTU blasfeo_hp_strmv_utu
 #define REF_TRSV_LNN blasfeo_hp_strsv_lnn
 #define REF_TRSV_LNN_MN blasfeo_hp_strsv_lnn_mn
 #define REF_TRSV_LNU blasfeo_hp_strsv_lnu
@@ -91,9 +96,13 @@
 #define SYMV_L_MN blasfeo_ssymv_l_mn
 #define SYMV_U blasfeo_ssymv_u
 #define TRMV_LNN blasfeo_strmv_lnn
+#define TRMV_LNU blasfeo_strmv_lnu
 #define TRMV_LTN blasfeo_strmv_ltn
+#define TRMV_LTU blasfeo_strmv_ltu
 #define TRMV_UNN blasfeo_strmv_unn
+#define TRMV_UNU blasfeo_strmv_unu
 #define TRMV_UTN blasfeo_strmv_utn
+#define TRMV_UTU blasfeo_strmv_utu
 #define TRSV_LNN blasfeo_strsv_lnn
 #define TRSV_LNN_MN blasfeo_strsv_lnn_mn
 #define TRSV_LNU blasfeo_strsv_lnu

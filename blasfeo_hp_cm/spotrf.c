@@ -298,7 +298,7 @@ l_2:
 
 	sda = tA.cn;
 	dA = tA.dA;
-  sda_s = sda;
+	sda_s = sda;
 
 	ii = 0;
 #if 0//defined(TARGET_X64_INTEL_HASWELL) | defined(TARGET_ARMV8A_ARM_CORTEX_A53)
