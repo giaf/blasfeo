@@ -1356,7 +1356,7 @@ void REF_ROWSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi,
 
 
 // permute the rows of a matrix struct
-void REF_ROWPE(int kmax, int n, int *ipiv, struct MAT *sA, int ai, int aj)
+void REF_ROWPE(int kmax, int *ipiv, int n, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1364,7 +1364,7 @@ void REF_ROWPE(int kmax, int n, int *ipiv, struct MAT *sA, int ai, int aj)
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			REF_ROWSW(n, sA, ii+ai, aj, sA, ipiv[ii]+ai, aj);
+			REF_ROWSW(n, sA, ai+ii, aj, sA, ai+ipiv[ii], aj);
 		}
 	return;
 	}
@@ -1372,7 +1372,7 @@ void REF_ROWPE(int kmax, int n, int *ipiv, struct MAT *sA, int ai, int aj)
 
 
 // inverse permute the rows of a matrix struct
-void REF_ROWPEI(int kmax, int n, int *ipiv, struct MAT *sA, int ai, int aj)
+void REF_ROWPEI(int kmax, int *ipiv, int n, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1380,7 +1380,7 @@ void REF_ROWPEI(int kmax, int n, int *ipiv, struct MAT *sA, int ai, int aj)
 	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			REF_ROWSW(n, sA, ii+ai, aj, sA, ipiv[ii]+ai, aj);
+			REF_ROWSW(n, sA, ai+ii, aj, sA, ai+ipiv[ii], aj);
 		}
 	return;
 	}
@@ -1499,7 +1499,7 @@ void REF_COLSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi,
 
 
 // permute the cols of a matrix struct
-void REF_COLPE(int kmax, int m, int *ipiv, struct MAT *sA, int ai, int aj)
+void REF_COLPE(int kmax, int *ipiv, int m, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1507,7 +1507,7 @@ void REF_COLPE(int kmax, int m, int *ipiv, struct MAT *sA, int ai, int aj)
 	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			REF_COLSW(m, sA, ai, ii+aj, sA, aj, ipiv[ii]+aj);
+			REF_COLSW(m, sA, ai, aj+ii, sA, ai, aj+ipiv[ii]);
 		}
 	return;
 	}
@@ -1515,7 +1515,7 @@ void REF_COLPE(int kmax, int m, int *ipiv, struct MAT *sA, int ai, int aj)
 
 
 // inverse permute the cols of a matrix struct
-void REF_COLPEI(int kmax, int m, int *ipiv, struct MAT *sA, int ai, int aj)
+void REF_COLPEI(int kmax, int *ipiv, int m, struct MAT *sA, int ai, int aj)
 	{
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
@@ -1523,7 +1523,7 @@ void REF_COLPEI(int kmax, int m, int *ipiv, struct MAT *sA, int ai, int aj)
 	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			REF_COLSW(m, sA, ai, ii+aj, sA, ai, ipiv[ii]+aj);
+			REF_COLSW(m, sA, ai, aj+ii, sA, ai, aj+ipiv[ii]);
 		}
 	return;
 	}
@@ -1960,16 +1960,16 @@ void ROWSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int
 
 
 
-void ROWPE(int kmax, int n, int *ipiv, struct MAT *sA, int ai, int aj)
+void ROWPE(int kmax, int *ipiv, int n, struct MAT *sA, int ai, int aj)
 	{
-	REF_ROWPE(kmax, n, ipiv, sA, ai, aj);
+	REF_ROWPE(kmax, ipiv, n, sA, ai, aj);
 	}
 
 
 
-void ROWPEI(int kmax, int n, int *ipiv, struct MAT *sA, int ai, int aj)
+void ROWPEI(int kmax, int *ipiv, int n, struct MAT *sA, int ai, int aj)
 	{
-	REF_ROWPEI(kmax, n, ipiv, sA, ai, aj);
+	REF_ROWPEI(kmax, ipiv, n, sA, ai, aj);
 	}
 
 
@@ -2009,16 +2009,16 @@ void COLSW(int kmax, struct MAT *sA, int ai, int aj, struct MAT *sB, int bi, int
 
 
 
-void COLPE(int kmax, int m, int *ipiv, struct MAT *sA, int ai, int aj)
+void COLPE(int kmax, int *ipiv, int m, struct MAT *sA, int ai, int aj)
 	{
-	REF_COLPE(kmax, m, ipiv, sA, ai, aj);
+	REF_COLPE(kmax, ipiv, m, sA, ai, aj);
 	}
 
 
 
-void COLPEI(int kmax, int m, int *ipiv, struct MAT *sA, int ai, int aj)
+void COLPEI(int kmax, int *ipiv, int m, struct MAT *sA, int ai, int aj)
 	{
-	REF_COLPEI(kmax, m, ipiv, sA, ai, aj);
+	REF_COLPEI(kmax, ipiv, m, sA, ai, aj);
 	}
 
 

@@ -502,17 +502,17 @@ void blasfeo_drowsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 
 
 // permute the rows of a matrix struct
-void blasfeo_drowpe(int m, int n, int *ipiv, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_drowpe(int kmax, int *ipiv, int n, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
 
 	int ii;
-	for(ii=0; ii<m; ii++)
+	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			blasfeo_drowsw(n, sA, ii+ai, aj, sA, ipiv[ii]+ai, aj);
+			blasfeo_drowsw(n, sA, ai+ii, aj, sA, ai+ipiv[ii], aj);
 		}
 	return;
 	}
@@ -520,17 +520,17 @@ void blasfeo_drowpe(int m, int n, int *ipiv, struct blasfeo_dmat *sA, int ai, in
 
 
 // inverse permute the rows of a matrix struct
-void blasfeo_drowpei(int m, int n, int *ipiv, struct blasfeo_dmat *sA, int ai, int aj)
+void blasfeo_drowpei(int kmax, int *ipiv, int n, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
 
 	int ii;
-	for(ii=m-1; ii>=0; ii--)
+	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			blasfeo_drowsw(n, sA, ii+ai, aj, sA, ipiv[ii]+ai, aj);
+			blasfeo_drowsw(n, sA, ai+ii, aj, sA, ai+ipiv[ii], aj);
 		}
 	return;
 	}
@@ -690,17 +690,17 @@ void blasfeo_dcolsw(int kmax, struct blasfeo_dmat *sA, int ai, int aj, struct bl
 
 
 // permute the cols of a matrix struct
-void blasfeo_dcolpe(int m, int n, int *ipiv, struct blasfeo_dmat *sA)
+void blasfeo_dcolpe(int kmax, int *ipiv, int m, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
 
 	int ii;
-	for(ii=0; ii<n; ii++)
+	for(ii=0; ii<kmax; ii++)
 		{
 		if(ipiv[ii]!=ii)
-			blasfeo_dcolsw(m, sA, 0, ii, sA, 0, ipiv[ii]);
+			blasfeo_dcolsw(m, sA, ai, aj+ii, sA, ai, aj+ipiv[ii]);
 		}
 	return;
 	}
@@ -708,17 +708,17 @@ void blasfeo_dcolpe(int m, int n, int *ipiv, struct blasfeo_dmat *sA)
 
 
 // inverse permute the cols of a matrix struct
-void blasfeo_dcolpei(int m, int n, int *ipiv, struct blasfeo_dmat *sA)
+void blasfeo_dcolpei(int kmax, int *ipiv, int m, struct blasfeo_dmat *sA, int ai, int aj)
 	{
 
 	// invalidate stored inverse diagonal
 	sA->use_dA = 0;
 
 	int ii;
-	for(ii=n-1; ii>=0; ii--)
+	for(ii=kmax-1; ii>=0; ii--)
 		{
 		if(ipiv[ii]!=ii)
-			blasfeo_dcolsw(m, sA, 0, ii, sA, 0, ipiv[ii]);
+			blasfeo_dcolsw(m, sA, ai, aj+ii, sA, ai, aj+ipiv[ii]);
 		}
 	return;
 	}

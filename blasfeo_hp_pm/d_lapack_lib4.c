@@ -2438,7 +2438,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		// factorize and pivot the first %bs columns d in [d D]
 		blasfeo_ref_dgetrf_rp(m, (rem > n ? n : rem), sD, di, dj, sD, di, dj, ipiv);
 		// apply pivot to the matrix D
-		blasfeo_drowpe(rem, n-rem, ipiv, sD, di, dj+rem);
+		blasfeo_drowpe(rem, ipiv, n-rem, sD, di, dj+rem);
 		// calcuate the first rows
 		blasfeo_ref_dtrsm_llnu(rem, n-rem, d1, sD, di, dj, sD, di, dj+rem, sD, di, dj+rem);
 		// update lower right block
