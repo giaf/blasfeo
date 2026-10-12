@@ -2550,7 +2550,7 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		ipiv[i0+2] += i0;
 		if(ipiv[i0+2]!=i0+2)
 			{
-			kernel_drowsw_lib4(jj+rem, pDa+(i0+2)/ps*ps*sdd+(i0+2)%ps-rem*ps, pDa+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps)-rem*ps;
+			kernel_drowsw_lib4(jj+rem, pDa+(i0+2)/ps*ps*sdd+(i0+2)%ps-rem*ps, pDa+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps-rem*ps);
 			kernel_drowsw_lib4(na-jj-4, pDa+(i0+2)/ps*ps*sdd+(i0+2)%ps+(jj+4)*ps, pDa+(ipiv[i0+2])/ps*ps*sdd+(ipiv[i0+2])%ps+(jj+4)*ps);
 			}
 		ipiv[i0+2] += rem;
