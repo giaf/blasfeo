@@ -274,9 +274,9 @@ void blasfeo_print_xmat_debug(int m, int n, struct MAT *sA, int ai, int aj, int 
 		for(jj=j0; jj<je; jj++)
 			{
 			if((ii==err_i) & (jj==err_j) & ERR)
-				printf(ANSI_COLOR_RED"%6.2f\t"ANSI_COLOR_RESET, BLASFEO_MATEL(sA, ii, jj));
+				printf(ANSI_COLOR_RED"%- 6.2e\t"ANSI_COLOR_RESET, BLASFEO_MATEL(sA, ii, jj));
 			else if((ii >= ai) & (ii < ai+m) & (jj >= aj) && (jj < aj+n))
-				printf(ANSI_COLOR_GREEN"%6.2f\t"ANSI_COLOR_RESET, BLASFEO_MATEL(sA, ii, jj));
+				printf(ANSI_COLOR_GREEN"%- 6.2e\t"ANSI_COLOR_RESET, BLASFEO_MATEL(sA, ii, jj));
 			else printf("%6.2f\t", BLASFEO_MATEL(sA, ii, jj));
 			}
 		printf("\n");
@@ -312,20 +312,31 @@ int GECMP_BLASFEOAPI(
 	{
 	int ii, jj;
 
+#if defined(GEMAT)
 	for(ii = 0; ii < m; ii++)
 		{
 		for(jj = 0; jj < n; jj++)
+		{
+#elif defined(UMAT)
+	for(ii = 0; ii < m; ii++)
+		{
+		for(jj = ii; jj < m; jj++)
 			{
-
+#elif defined(LMAT)
+	for(ii = 0; ii < m; ii++)
+		{
+		for(jj = 0; jj < ii+1; jj++)
+			{
+#endif
 			// strtucture mat
-			REAL sbi = BLASFEO_MATEL(sD, ii, jj);
+			REAL sbi = BLASFEO_MATEL(sD, bi+ii, bj+jj);
 			// reference mat
-			REAL rbi = BLASFEO_MATEL(rD, ii, jj);
+			REAL rbi = BLASFEO_MATEL(rD, bi+ii, bj+jj);
 
 			if ( (sbi != rbi) & ( fabs(sbi-rbi) > REL_TOL*(fabs(sbi)+fabs(rbi)) ) & ( fabs(sbi-rbi) > REL_TOL))
 				{
-					*err_i = ii;
-					*err_j = jj;
+					*err_i = bi+ii;
+					*err_j = bj+jj;
 					if (!debug) return 1;
 
 					printf("\n\nFailed at index %d,%d, (HP) %2.18f != %2.18f (RF)\n", ii, jj, sbi, rbi);
@@ -339,8 +350,8 @@ int GECMP_BLASFEOAPI(
 					printf("\n");
 
 					printf("\nResult matrix:\n");
-					blasfeo_print_xmat_debug(m, n, sD, bi, bj, ii, jj, 1, "HP");
-					blasfeo_print_xmat_debug(m, n, rD, bi, bj, ii, jj, 1, "REF");
+					blasfeo_print_xmat_debug(m, n, sD, bi, bj, bi+ii, bj+jj, 1, "HP");
+					blasfeo_print_xmat_debug(m, n, rD, bi, bj, bi+ii, bj+jj, 1, "REF");
 
 					return 1;
 				}

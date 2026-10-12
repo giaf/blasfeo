@@ -169,7 +169,7 @@ int main()
 	printf("\nI = \n");
 	blasfeo_print_smat(n, n, &sI, 0, 0);
 
-	blasfeo_srowpe(n, ipiv, &sI);
+	blasfeo_srowpe(n, ipiv, &sI, 0, 0);
 	printf("\nperm(I) = \n");
 	blasfeo_print_smat(n, n, &sI, 0, 0);
 
@@ -187,7 +187,7 @@ int main()
 	printf("\nI' = \n");
 	blasfeo_print_smat(n, n, &sI, 0, 0);
 
-	blasfeo_scolpe(n, ipiv, &sB);
+	blasfeo_scolpe(n, ipiv, &sB, 0, 0);
 	printf("\nperm(I') = \n");
 	blasfeo_print_smat(n, n, &sB, 0, 0);
 
