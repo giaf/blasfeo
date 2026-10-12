@@ -2430,7 +2430,6 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 
 
 	int rem = (dir == 0) ? 0 : ps-dir;
-	printf("rem = %d\n", rem);
 	// if rem is nonzero need to re-align
 	if(rem != 0)
 		{
