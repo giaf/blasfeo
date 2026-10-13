@@ -468,7 +468,8 @@ endif()
 
 # Create the target.h file with the proper target definition
 configure_file(${PROJECT_SOURCE_DIR}/blasfeo_target.h.in
-	${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
+	${CMAKE_CURRENT_BINARY_DIR}/include/blasfeo_target.h @ONLY)
+	#${CMAKE_CURRENT_SOURCE_DIR}/include/blasfeo_target.h @ONLY)
 
 
 # Append the appropriate flags based on the architecture and compiler
@@ -1450,6 +1451,7 @@ endif()
 target_include_directories(blasfeo
 	PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
 		$<INSTALL_INTERFACE:${BLASFEO_HEADERS_INSTALLATION_DIRECTORY}>)
 #		$<INSTALL_INTERFACE:include/blasfeo/include>)
 
@@ -1462,7 +1464,7 @@ install(TARGETS blasfeo EXPORT blasfeoConfig
 
 install(EXPORT blasfeoConfig DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/blasfeo FILE blasfeoConfig.cmake)
 
-file(GLOB_RECURSE BLASFEO_HEADERS "include/*.h")
+file(GLOB_RECURSE BLASFEO_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h ${CMAKE_CURRENT_BINARY_DIR}/include/blasfeo_target.h)
 install(FILES ${BLASFEO_HEADERS} DESTINATION ${BLASFEO_HEADERS_INSTALLATION_DIRECTORY})
 
 
