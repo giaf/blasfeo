@@ -37,7 +37,7 @@
 #include <stdio.h>
 
 
-#include "../../include/blasfeo_target.h"
+#include "blasfeo_target.h"
 #include "../../include/blasfeo_common.h"
 #include "../../include/blasfeo_d_aux.h"
 #include "../../include/blasfeo_d_kernel.h"
