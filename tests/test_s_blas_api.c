@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/blasfeo_target.h"
+#include "blasfeo_target.h"
 #include "../include/blasfeo_common.h"
 #include "../include/blasfeo_timing.h"
 #include "../include/blasfeo_s_aux.h"
