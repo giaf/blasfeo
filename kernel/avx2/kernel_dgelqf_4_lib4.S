@@ -216,6 +216,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -466,6 +467,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -706,6 +708,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -930,6 +933,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -1158,11 +1162,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 32(%r12)
+	vmovsd			%xmm14, 128(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	jmp		102f
 
 101:
@@ -1410,11 +1417,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 168(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	jmp		102f
 
 101:
@@ -1656,11 +1666,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 48(%r12)
+	vmovsd			%xmm14, 208(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	jmp		102f
 
 101:
@@ -1896,11 +1909,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 56(%r12)
+	vmovsd			%xmm14, 248(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	jmp		102f
 
 101:
@@ -2137,11 +2153,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 64(%r12)
+	vmovsd			%xmm14, 256(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	jmp		102f
 
 101:
@@ -2398,11 +2417,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 72(%r12)
+	vmovsd			%xmm14, 296(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	jmp		102f
 
 101:
@@ -2657,11 +2679,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 80(%r12)
+	vmovsd			%xmm14, 336(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	jmp		102f
 
 101:
@@ -2914,11 +2939,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 88(%r12)
+	vmovsd			%xmm14, 376(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	jmp		102f
 
 101:
@@ -4126,6 +4154,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -4339,6 +4368,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -4546,6 +4576,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -4740,6 +4771,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -4962,6 +4994,7 @@ kernel_dgelqf_dlarft4_4_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -5130,6 +5163,7 @@ kernel_dgelqf_dlarft4_4_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -5297,6 +5331,7 @@ kernel_dgelqf_dlarft4_4_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -5456,6 +5491,7 @@ kernel_dgelqf_dlarft4_4_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -5853,6 +5889,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -6121,6 +6158,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -6379,6 +6417,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -6621,6 +6660,7 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -6867,11 +6907,14 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 32(%r12)
+	vmovsd			%xmm14, 128(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	jmp		102f
 
 101:
@@ -7137,11 +7180,14 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 168(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	jmp		102f
 
 101:
@@ -7400,12 +7446,15 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 48(%r12)
+	vmovsd			%xmm14, 208(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	jmp		102f
 
 101:
@@ -7658,12 +7707,15 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 56(%r12)
+	vmovsd			%xmm14, 248(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	jmp		102f
 
 101:
@@ -7917,12 +7969,15 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 64(%r12)
+	vmovsd			%xmm14, 256(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	jmp		102f
 
 101:
@@ -8196,12 +8251,15 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 72(%r12)
+	vmovsd			%xmm14, 296(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	jmp		102f
 
 101:
@@ -8473,12 +8531,15 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 80(%r12)
+	vmovsd			%xmm14, 336(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	jmp		102f
 
 101:
@@ -8748,12 +8809,15 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 88(%r12)
+	vmovsd			%xmm14, 376(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	jmp		102f
 
 101:
@@ -9018,6 +9082,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -9249,6 +9314,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -9474,6 +9540,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -9686,6 +9753,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -9926,6 +9994,7 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -10111,6 +10180,7 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -10296,6 +10366,7 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
@@ -10473,6 +10544,7 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 #else
 	vmovapd			LC02(%rip), %ymm15
 #endif
+	movq	ARG2, %r11 // D
 	jmp		102f
 
 101:
