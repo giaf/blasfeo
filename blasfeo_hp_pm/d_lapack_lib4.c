@@ -3818,7 +3818,7 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 		}
 	if(ii<imax)
 		{
-		if(ii==imax-4)
+		if(ii==imax-4 & m==imax)
 			{
 			kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
 			}
@@ -4104,7 +4104,7 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		}
 	if(ii<imax)
 		{
-		if(ii==imax-4)
+		if(ii==imax-4 & m==imax)
 			{
 			kernel_dgelqf_pd_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
 			}
