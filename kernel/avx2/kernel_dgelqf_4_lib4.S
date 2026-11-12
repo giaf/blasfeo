@@ -74,6 +74,33 @@
 	movq	40(%rsp), %r15; \
 	addq	$STACKSIZE, %rsp;
 
+#if defined(OS_LINUX)
+
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.type NAME, @function; \
+NAME:
+#define FUN_START(NAME) \
+	.type NAME, @function; \
+NAME:
+#define FUN_END(NAME) \
+	.size	NAME, .-NAME
+#define CALL(NAME) \
+	call NAME
+
+#else // defined(OS_MAC)
+
+#define GLOB_FUN_START(NAME) \
+	.globl _ ## NAME; \
+_ ## NAME:
+#define FUN_START(NAME) \
+_ ## NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	callq _ ## NAME
+
+#endif
+
 #elif defined(OS_WINDOWS)
 
 #define STACKSIZE 256
@@ -138,6 +165,17 @@
 	vmovups	208(%rsp), %xmm15; \
 	addq	$STACKSIZE, %rsp;
 
+#define GLOB_FUN_START(NAME) \
+	.globl NAME; \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_START(NAME) \
+	.def NAME; .scl 2; .type 32; .endef; \
+NAME:
+#define FUN_END(NAME)
+#define CALL(NAME) \
+	call NAME
+
 #else
 
 #error wrong OS
@@ -160,30 +198,9 @@
 // void kernel_dgelqf_dlarft12_12_lib4(int n, double *pD, int sdd, double *dD, double *pT)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgelqf_dlarft12_12_lib4
-	.type kernel_dgelqf_dlarft12_12_lib4, @function
-kernel_dgelqf_dlarft12_12_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgelqf_dlarft12_12_lib4
-_kernel_dgelqf_dlarft12_12_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_dlarft12_12_lib4
-	.def kernel_dgelqf_dlarft12_12_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_dlarft12_12_lib4:
-#endif
+	GLOB_FUN_START(kernel_dgelqf_dlarft12_12_lib4)
 	
 	PROLOGUE
-
-	// zero T
-
-	movq	ARG5, %r10 // T
-
-	vxorpd			%ymm15, %ymm15, %ymm15
-	vmovapd			%ymm15, 0(%r10)
-	vmovapd			%ymm15, 32(%r10)
-	vmovapd			%ymm15, 64(%r10)
-	vmovapd			%ymm15, 96(%r10)
 
 	// first column
 
@@ -206,11 +223,13 @@ kernel_dgelqf_dlarft12_12_lib4:
 	cmpl	$ 0, %r10d
 	jg		100b
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		101f
 	vmovsd			%xmm14, 0(%r12)
+	vmovsd			%xmm14, 0(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -219,7 +238,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			0(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -456,11 +474,13 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 8(%r12)
+	vmovsd			%xmm14, 40(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -469,7 +489,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			40(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -696,11 +715,13 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 16(%r12)
+	vmovsd			%xmm14, 80(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -709,7 +730,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			80(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -920,11 +940,13 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// fourth column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 24(%r12)
+	vmovsd			%xmm14, 120(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -933,7 +955,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			120(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -1153,11 +1174,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 //	vpermpd	$ 0x00, %ymm15, %ymm15  // beta
 
 	// fifth column
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 32(%r12)
+	vmovsd			%xmm14, 128(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -1166,8 +1190,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 128, %r11
 	vmovsd			0(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -1405,11 +1427,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// sixth column
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 168(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -1418,8 +1443,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 128, %r11
 	vmovsd			40(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -1651,11 +1674,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// seventh column
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 48(%r12)
+	vmovsd			%xmm14, 208(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -1664,8 +1690,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 128, %r11
 	vmovsd			80(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -1891,11 +1915,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// eight column
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 56(%r12)
+	vmovsd			%xmm14, 248(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -1904,8 +1931,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 128, %r11
 	vmovsd			120(%r11, %r14, 1), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -2132,11 +2157,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 //	vpermpd	$ 0x00, %ymm15, %ymm15  // beta
 
 	// ninth column
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 64(%r12)
+	vmovsd			%xmm14, 256(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -2145,8 +2173,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 256, %r11
 	vmovsd			0(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -2393,11 +2419,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// tenth column
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 72(%r12)
+	vmovsd			%xmm14, 296(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -2406,8 +2435,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 256, %r11
 	vmovsd			40(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -2652,11 +2679,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// eleventh column
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 80(%r12)
+	vmovsd			%xmm14, 336(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -2665,8 +2695,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 256, %r11
 	vmovsd			80(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -2909,11 +2937,14 @@ kernel_dgelqf_dlarft12_12_lib4:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// twelveth
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 88(%r12)
+	vmovsd			%xmm14, 376(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -2922,8 +2953,6 @@ kernel_dgelqf_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 256, %r11
 	vmovsd			120(%r11, %r14, 2), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -3098,9 +3127,7 @@ kernel_dgelqf_dlarft12_12_lib4:
 	
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgelqf_dlarft12_12_lib4, .-kernel_dgelqf_dlarft12_12_lib4
-#endif
+	FUN_END(kernel_dgelqf_dlarft12_12_lib4)
 
 
 
@@ -3110,30 +3137,9 @@ kernel_dgelqf_dlarft12_12_lib4:
 // void kernel_dgelqf_dlarft4_12_lib4(int n, double *pD, int sdd, double *dD, double *pT)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgelqf_dlarft4_12_lib4
-	.type kernel_dgelqf_dlarft4_12_lib4, @function
-kernel_dgelqf_dlarft4_12_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgelqf_dlarft4_12_lib4
-_kernel_dgelqf_dlarft4_12_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_dlarft4_12_lib4
-	.def kernel_dgelqf_dlarft4_12_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_dlarft4_12_lib4:
-#endif
+	GLOB_FUN_START(kernel_dgelqf_dlarft4_12_lib4)
 	
 	PROLOGUE
-
-	// zero T
-
-	movq	ARG5, %r10 // T
-
-	vxorpd			%ymm15, %ymm15, %ymm15
-	vmovapd			%ymm15, 0(%r10)
-	vmovapd			%ymm15, 32(%r10)
-	vmovapd			%ymm15, 64(%r10)
-	vmovapd			%ymm15, 96(%r10)
 
 	// first column
 
@@ -3155,11 +3161,13 @@ kernel_dgelqf_dlarft4_12_lib4:
 	cmpl	$ 0, %r10d
 	jg		100b
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		101f
 	vmovsd			%xmm14, 0(%r12)
+	vmovsd			%xmm14, 0(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -3168,7 +3176,6 @@ kernel_dgelqf_dlarft4_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			0(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -3405,11 +3412,13 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 8(%r12)
+	vmovsd			%xmm14, 40(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -3418,7 +3427,6 @@ kernel_dgelqf_dlarft4_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			40(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -3645,11 +3653,13 @@ kernel_dgelqf_dlarft4_12_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 16(%r12)
+	vmovsd			%xmm14, 80(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -3658,7 +3668,6 @@ kernel_dgelqf_dlarft4_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			80(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -3868,11 +3877,13 @@ kernel_dgelqf_dlarft4_12_lib4:
 107:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 24(%r12)
+	vmovsd			%xmm14, 120(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -3881,7 +3892,6 @@ kernel_dgelqf_dlarft4_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			120(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -4059,9 +4069,7 @@ kernel_dgelqf_dlarft4_12_lib4:
 	
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgelqf_dlarft4_12_lib4, .-kernel_dgelqf_dlarft4_12_lib4
-#endif
+	FUN_END(kernel_dgelqf_dlarft4_12_lib4)
 
 
 
@@ -4071,30 +4079,9 @@ kernel_dgelqf_dlarft4_12_lib4:
 // void kernel_dgelqf_dlarft4_8_lib4(int n, double *pD, int sdd, double *dD, double *pT)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgelqf_dlarft4_8_lib4
-	.type kernel_dgelqf_dlarft4_8_lib4, @function
-kernel_dgelqf_dlarft4_8_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgelqf_dlarft4_8_lib4
-_kernel_dgelqf_dlarft4_8_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_dlarft4_8_lib4
-	.def kernel_dgelqf_dlarft4_8_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_dlarft4_8_lib4:
-#endif
+	GLOB_FUN_START(kernel_dgelqf_dlarft4_8_lib4)
 	
 	PROLOGUE
-
-	// zero T
-
-	movq	ARG5, %r10 // T
-
-	vxorpd			%ymm15, %ymm15, %ymm15
-	vmovapd			%ymm15, 0(%r10)
-	vmovapd			%ymm15, 32(%r10)
-	vmovapd			%ymm15, 64(%r10)
-	vmovapd			%ymm15, 96(%r10)
 
 	// first column
 
@@ -4116,11 +4103,13 @@ kernel_dgelqf_dlarft4_8_lib4:
 	cmpl	$ 0, %r10d
 	jg		100b
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		101f
 	vmovsd			%xmm14, 0(%r12)
+	vmovsd			%xmm14, 0(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -4129,7 +4118,6 @@ kernel_dgelqf_dlarft4_8_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			0(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -4329,11 +4317,13 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 8(%r12)
+	vmovsd			%xmm14, 40(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -4342,7 +4332,6 @@ kernel_dgelqf_dlarft4_8_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			40(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -4536,11 +4525,13 @@ kernel_dgelqf_dlarft4_8_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 16(%r12)
+	vmovsd			%xmm14, 80(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -4549,7 +4540,6 @@ kernel_dgelqf_dlarft4_8_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			80(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -4730,11 +4720,13 @@ kernel_dgelqf_dlarft4_8_lib4:
 107:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 24(%r12)
+	vmovsd			%xmm14, 120(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -4743,7 +4735,6 @@ kernel_dgelqf_dlarft4_8_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			120(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -4897,9 +4888,7 @@ kernel_dgelqf_dlarft4_8_lib4:
 	
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgelqf_dlarft4_8_lib4, .-kernel_dgelqf_dlarft4_8_lib4
-#endif
+	FUN_END(kernel_dgelqf_dlarft4_8_lib4)
 
 
 
@@ -4909,30 +4898,9 @@ kernel_dgelqf_dlarft4_8_lib4:
 // void kernel_dgelqf_dlarft4_4_lib4(int n, double *pD, double *dD, double *pT, double *beta)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgelqf_dlarft4_4_lib4
-	.type kernel_dgelqf_dlarft4_4_lib4, @function
-kernel_dgelqf_dlarft4_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgelqf_dlarft4_4_lib4
-_kernel_dgelqf_dlarft4_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_dlarft4_4_lib4
-	.def kernel_dgelqf_dlarft4_4_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_dlarft4_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dgelqf_dlarft4_4_lib4)
 	
 	PROLOGUE
-
-	// zero T
-
-	movq	ARG4, %r10 // T
-
-	vxorpd			%ymm15, %ymm15, %ymm15
-	vmovapd			%ymm15, 0(%r10)
-	vmovapd			%ymm15, 32(%r10)
-	vmovapd			%ymm15, 64(%r10)
-	vmovapd			%ymm15, 96(%r10)
 
 	// first column
 
@@ -4952,11 +4920,13 @@ kernel_dgelqf_dlarft4_4_lib4:
 	cmpl	$ 0, %r10d
 	jg		100b
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		101f
 	vmovsd			%xmm14, 0(%r12)
+	vmovsd			%xmm14, 0(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -4965,7 +4935,6 @@ kernel_dgelqf_dlarft4_4_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			0(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -5120,11 +5089,13 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 8(%r12)
+	vmovsd			%xmm14, 40(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -5133,7 +5104,6 @@ kernel_dgelqf_dlarft4_4_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			40(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -5287,11 +5257,13 @@ kernel_dgelqf_dlarft4_4_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 16(%r12)
+	vmovsd			%xmm14, 80(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -5300,7 +5272,6 @@ kernel_dgelqf_dlarft4_4_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			80(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -5446,11 +5417,13 @@ kernel_dgelqf_dlarft4_4_lib4:
 107:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 24(%r12)
+	vmovsd			%xmm14, 120(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -5459,7 +5432,6 @@ kernel_dgelqf_dlarft4_4_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			120(%r11), %xmm14 // alpha
 	vfmadd231sd		%xmm14, %xmm14, %xmm15 // beta
 	vsqrtsd			%xmm15, %xmm15, %xmm15 // beta
@@ -5556,9 +5528,7 @@ kernel_dgelqf_dlarft4_4_lib4:
 	
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgelqf_dlarft4_4_lib4, .-kernel_dgelqf_dlarft4_4_lib4
-#endif
+	FUN_END(kernel_dgelqf_dlarft4_4_lib4)
 
 
 
@@ -5568,18 +5538,7 @@ kernel_dgelqf_dlarft4_4_lib4:
 // void kernel_dlarfb_12_lib4(double *dK, double *pT)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dlarfb_12_lib4
-	.type kernel_dlarfb_12_lib4, @function
-kernel_dlarfb_12_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dlarfb_12_lib4
-_kernel_dlarfb_12_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dlarfb_12_lib4
-	.def kernel_dlarfb_12_lib4; .scl 2; .type 32; .endef
-kernel_dlarfb_12_lib4:
-#endif
+	GLOB_FUN_START(kernel_dlarfb_12_lib4)
 	
 	PROLOGUE
 
@@ -5785,9 +5744,7 @@ kernel_dlarfb_12_lib4:
 	
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dlarfb_12_lib4, .-kernel_dlarfb_12_lib4
-#endif
+	FUN_END(kernel_dlarfb_12_lib4)
 
 
 
@@ -5797,30 +5754,9 @@ kernel_dlarfb_12_lib4:
 // void kernel_dgelqf_pd_dlarft12_12_lib4(int n, double *pD, int sdd, double *dD, double *pT)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgelqf_pd_dlarft12_12_lib4
-	.type kernel_dgelqf_pd_dlarft12_12_lib4, @function
-kernel_dgelqf_pd_dlarft12_12_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgelqf_pd_dlarft12_12_lib4
-_kernel_dgelqf_pd_dlarft12_12_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_pd_dlarft12_12_lib4
-	.def kernel_dgelqf_pd_dlarft12_12_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_pd_dlarft12_12_lib4:
-#endif
+	GLOB_FUN_START(kernel_dgelqf_pd_dlarft12_12_lib4)
 	
 	PROLOGUE
-
-	// zero T
-
-	movq	ARG5, %r10 // T
-
-	vxorpd			%ymm15, %ymm15, %ymm15
-	vmovapd			%ymm15, 0(%r10)
-	vmovapd			%ymm15, 32(%r10)
-	vmovapd			%ymm15, 64(%r10)
-	vmovapd			%ymm15, 96(%r10)
 
 	// first column
 
@@ -5843,11 +5779,13 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	cmpl	$ 0, %r10d
 	jg		100b
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		101f
 	vmovsd			%xmm14, 0(%r12)
+	vmovsd			%xmm14, 0(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -5856,7 +5794,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			0(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -6111,11 +6048,13 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 8(%r12)
+	vmovsd			%xmm14, 40(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -6124,7 +6063,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			40(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -6369,11 +6307,13 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 16(%r12)
+	vmovsd			%xmm14, 80(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -6382,7 +6322,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			80(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -6611,11 +6550,13 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// fourth column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 24(%r12)
+	vmovsd			%xmm14, 120(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -6624,7 +6565,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			120(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -6859,14 +6799,17 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	cmpl	$ 0, %r10d
 	jg		108b
 107:
-//	vpermpd	$ 0x00, %ymm15, %ymm15  // beta
+	//vpermpd	$ 0x00, %ymm15, %ymm15  // beta
 
 	// fifth column
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 32(%r12)
+	vmovsd			%xmm14, 128(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -6875,8 +6818,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 128, %r11
 	vmovsd			0(%r11, %r14, 1), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -7132,11 +7073,14 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// sixth column
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 168(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -7145,8 +7089,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 128, %r11
 	vmovsd			40(%r11, %r14, 1), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -7396,11 +7338,14 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// seventh column
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 48(%r12)
+	vmovsd			%xmm14, 208(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -7409,8 +7354,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 128, %r11
 	vmovsd			80(%r11, %r14, 1), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -7654,11 +7597,14 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// eight column
+	movq	ARG2, %r11 // D
+	addq	$ 128, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 56(%r12)
+	vmovsd			%xmm14, 248(%r13, %r15, 1) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -7667,8 +7613,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 128, %r11
 	vmovsd			120(%r11, %r14, 1), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -7913,11 +7857,14 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 //	vpermpd	$ 0x00, %ymm15, %ymm15  // beta
 
 	// ninth column
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 64(%r12)
+	vmovsd			%xmm14, 256(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -7926,8 +7873,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 256, %r11
 	vmovsd			0(%r11, %r14, 2), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -8192,11 +8137,14 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// tenth column
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 72(%r12)
+	vmovsd			%xmm14, 296(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -8205,8 +8153,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 256, %r11
 	vmovsd			40(%r11, %r14, 2), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -8469,11 +8415,14 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// eleventh column
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 80(%r12)
+	vmovsd			%xmm14, 336(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -8482,8 +8431,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 256, %r11
 	vmovsd			80(%r11, %r14, 2), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -8744,11 +8691,14 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
 	// twelveth
+	movq	ARG2, %r11 // D
+	addq	$ 256, %r11
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
-	vmovsd			%xmm14, 40(%r12)
+	vmovsd			%xmm14, 88(%r12)
+	vmovsd			%xmm14, 376(%r13, %r15, 2) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -8757,8 +8707,6 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
-	addq	$ 256, %r11
 	vmovsd			120(%r11, %r14, 2), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -8946,14 +8894,11 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 	vmovapd			%ymm11, 352(%r13, %r15, 1)
 	vmovapd			%ymm10, 352(%r13, %r15, 2)
 
-
 	EPILOGUE
 	
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgelqf_pd_dlarft12_12_lib4, .-kernel_dgelqf_pd_dlarft12_12_lib4
-#endif
+	FUN_END(kernel_dgelqf_pd_dlarft12_12_lib4)
 
 
 
@@ -8963,30 +8908,9 @@ kernel_dgelqf_pd_dlarft12_12_lib4:
 // void kernel_dgelqf_pd_dlarft4_8_lib4(int n, double *pD, int sdd, double *dD, double *pT)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgelqf_pd_dlarft4_8_lib4
-	.type kernel_dgelqf_pd_dlarft4_8_lib4, @function
-kernel_dgelqf_pd_dlarft4_8_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgelqf_pd_dlarft4_8_lib4
-_kernel_dgelqf_pd_dlarft4_8_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_pd_dlarft4_8_lib4
-	.def kernel_dgelqf_pd_dlarft4_8_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_pd_dlarft4_8_lib4:
-#endif
+	GLOB_FUN_START(kernel_dgelqf_pd_dlarft4_8_lib4)
 	
 	PROLOGUE
-
-	// zero T
-
-	movq	ARG5, %r10 // T
-
-	vxorpd			%ymm15, %ymm15, %ymm15
-	vmovapd			%ymm15, 0(%r10)
-	vmovapd			%ymm15, 32(%r10)
-	vmovapd			%ymm15, 64(%r10)
-	vmovapd			%ymm15, 96(%r10)
 
 	// first column
 
@@ -9008,11 +8932,13 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	cmpl	$ 0, %r10d
 	jg		100b
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		101f
 	vmovsd			%xmm14, 0(%r12)
+	vmovsd			%xmm14, 0(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -9021,7 +8947,6 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			0(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -9239,11 +9164,13 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // beta
 
 	// second column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 8(%r12)
+	vmovsd			%xmm14, 40(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -9252,7 +9179,6 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			40(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -9464,11 +9390,13 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // beta
 
 	// third column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 16(%r12)
+	vmovsd			%xmm14, 80(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -9477,7 +9405,6 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			80(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -9676,11 +9603,13 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 107:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // beta
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 24(%r12)
+	vmovsd			%xmm14, 120(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -9689,7 +9618,6 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			120(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -9861,9 +9789,7 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 	
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgelqf_pd_dlarft4_8_lib4, .-kernel_dgelqf_pd_dlarft4_8_lib4
-#endif
+	FUN_END(kernel_dgelqf_pd_dlarft4_8_lib4)
 
 
 
@@ -9873,30 +9799,9 @@ kernel_dgelqf_pd_dlarft4_8_lib4:
 // void kernel_dgelqf_pd_dlarft4_4_lib4(int n, double *pD, double *dD, double *pT, double *beta)
 
 	.p2align 4,,15
-#if defined(OS_LINUX)
-	.globl kernel_dgelqf_pd_dlarft4_4_lib4
-	.type kernel_dgelqf_pd_dlarft4_4_lib4, @function
-kernel_dgelqf_pd_dlarft4_4_lib4:
-#elif defined(OS_MAC)
-	.globl _kernel_dgelqf_pd_dlarft4_4_lib4
-_kernel_dgelqf_pd_dlarft4_4_lib4:
-#elif defined(OS_WINDOWS)
-	.globl kernel_dgelqf_pd_dlarft4_4_lib4
-	.def kernel_dgelqf_pd_dlarft4_4_lib4; .scl 2; .type 32; .endef
-kernel_dgelqf_pd_dlarft4_4_lib4:
-#endif
+	GLOB_FUN_START(kernel_dgelqf_pd_dlarft4_4_lib4)
 	
 	PROLOGUE
-
-	// zero T
-
-	movq	ARG4, %r10 // T
-
-	vxorpd			%ymm15, %ymm15, %ymm15
-	vmovapd			%ymm15, 0(%r10)
-	vmovapd			%ymm15, 32(%r10)
-	vmovapd			%ymm15, 64(%r10)
-	vmovapd			%ymm15, 96(%r10)
 
 	// first column
 
@@ -9916,11 +9821,13 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	cmpl	$ 0, %r10d
 	jg		100b
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		101f
 	vmovsd			%xmm14, 0(%r12)
+	vmovsd			%xmm14, 0(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -9929,7 +9836,6 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			0(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -10101,11 +10007,13 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vpermpd	$ 0x55, %ymm15, %ymm15  // sigma
 
 	// second column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 8(%r12)
+	vmovsd			%xmm14, 40(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -10114,7 +10022,6 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			40(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -10286,11 +10193,13 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	vpermpd	$ 0xaa, %ymm15, %ymm15  // sigma
 
 	// third column
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 16(%r12)
+	vmovsd			%xmm14, 80(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -10299,7 +10208,6 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			80(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -10463,11 +10371,13 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 107:
 	vpermpd	$ 0xff, %ymm15, %ymm15  // sigma
 
+	movq	ARG2, %r11 // D
 	vxorpd			%xmm14, %xmm14, %xmm14
 	vucomisd		%xmm14, %xmm15
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm14, 24(%r12)
+	vmovsd			%xmm14, 120(%r13) // pT[0+ps*0]
 #if defined(OS_LINUX) | defined(OS_WINDOWS)
 	vmovapd			.LC02(%rip), %ymm15
 #else
@@ -10476,7 +10386,6 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	jmp		102f
 
 101:
-	movq	ARG2, %r11 // D
 	vmovsd			120(%r11), %xmm14 // alpha
 	vmovapd			%xmm15, %xmm13 // beta
 	vfmadd231sd		%xmm14, %xmm14, %xmm13 // beta
@@ -10592,9 +10501,7 @@ kernel_dgelqf_pd_dlarft4_4_lib4:
 	
 	ret
 
-#if defined(OS_LINUX)
-	.size	kernel_dgelqf_pd_dlarft4_4_lib4, .-kernel_dgelqf_pd_dlarft4_4_lib4
-#endif
+	FUN_END(kernel_dgelqf_pd_dlarft4_4_lib4)
 
 
 
