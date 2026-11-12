@@ -1097,9 +1097,26 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 		}
 	if(ii<imax)
 		{
-		if(ii==imax-8 & m-ii==8)
+		if(ii==imax-8) // at least 8 left in both directions
 			{
-			kernel_dgelqf_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+			if(m-ii==8)
+				{
+				kernel_dgelqf_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+				}
+			else // m-ii>8
+				{
+				kernel_dgelqf_dlarft8_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+				jj = ii+8;
+				// bigger kernels too ???
+				for(; jj<m-7; jj+=8)
+					{
+					kernel_dlarfb8_rn_8_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+					}
+				if(jj<m)
+					{
+					kernel_dlarfb8_rn_8_vs_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, m-jj);
+					}
+				}
 			}
 		else
 			{
@@ -1230,9 +1247,26 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		}
 	if(ii<imax)
 		{
-		if(ii==imax-8 & m-ii==8)
+		if(ii==imax-8) // at least 8 left in both directions
 			{
-			kernel_dgelqf_pd_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+			if(m-ii==8)
+				{
+				kernel_dgelqf_pd_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+				}
+			else // m-ii>8
+				{
+				kernel_dgelqf_pd_dlarft8_8_lib8(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+				jj = ii+8;
+				// bigger kernels too ???
+				for(; jj<m-7; jj+=8)
+					{
+					kernel_dlarfb8_rn_8_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+					}
+				if(jj<m)
+					{
+					kernel_dlarfb8_rn_8_vs_lib8(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps, m-jj);
+					}
+				}
 			}
 		else
 			{

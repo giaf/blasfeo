@@ -553,7 +553,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		101f
+
 	vmovsd			%xmm24, 0(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 1*8+2*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 2, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -682,7 +698,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 8(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 2*8+3*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 3, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -811,7 +843,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 16(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 3*8+4*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 4, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -941,7 +989,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 24(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 4*8+5*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 5, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -1073,7 +1137,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 32(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 5*8+6*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 6, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -1206,7 +1286,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 40(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 6*8+7*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 7, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -1340,7 +1436,25 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 48(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 7*8+8*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 8, %r10d
+	cmpl	$ 0, %r10d // XXX additional check for last column !!!!!
+	jle		102f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -1475,7 +1589,11 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 56(%r12)
+
+	// no compute next beta
+
 	jmp		102f
 
 101:
@@ -1588,7 +1706,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		101f
+
 	vmovsd			%xmm24, 0(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 1*8+2*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 2, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -1719,7 +1853,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 8(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 2*8+3*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 3, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -1863,7 +2013,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 16(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 3*8+4*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 4, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -2014,7 +2180,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 24(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 4*8+5*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 5, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -2176,7 +2358,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 32(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 5*8+6*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 6, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -2353,7 +2551,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 40(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 6*8+7*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 7, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -2542,7 +2756,25 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 48(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 7*8+8*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 8, %r10d
+	cmpl	$ 0, %r10d // XXX additional check for last column !!!!!
+	jle		102f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -2743,7 +2975,11 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 56(%r12)
+
+	// no compute next beta
+
 	jmp		102f
 
 101:
@@ -2919,7 +3155,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		101f
+
 	vmovsd			%xmm24, 0(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 1*8+2*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 2, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -3048,7 +3300,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 8(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 2*8+3*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 3, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -3177,7 +3445,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 16(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 3*8+4*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 4, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -3307,7 +3591,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 24(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 4*8+5*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 5, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -3439,7 +3739,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 32(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 5*8+6*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 6, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -3572,7 +3888,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 40(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 6*8+7*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 7, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -3706,7 +4038,25 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 48(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 7*8+8*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 8, %r10d
+	cmpl	$ 0, %r10d // XXX additional check for last column !!!!!
+	jle		102f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -3841,7 +4191,11 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 56(%r12)
+
+	// no compute next beta
+
 	jmp		102f
 
 101:
@@ -3954,7 +4308,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		101f
+
 	vmovsd			%xmm24, 0(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 1*8+2*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 2, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -4085,7 +4455,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 8(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 2*8+3*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 3, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -4229,7 +4615,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 16(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 3*8+4*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 4, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -4380,7 +4782,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 24(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 4*8+5*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 5, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -4542,7 +4960,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 32(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 5*8+6*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 6, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -4719,7 +5153,23 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 40(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 6*8+7*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 7, %r10d
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -4908,7 +5358,25 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 48(%r12)
+
+	// compute next beta
+	movq	ARG2, %r11 // D
+	addq	$ 7*8+8*64, %r11
+	vxorpd			%xmm25, %xmm25, %xmm25
+	movq	ARG1, %r10 // n
+	subl	$ 8, %r10d
+	cmpl	$ 0, %r10d // XXX additional check for last column !!!!!
+	jle		102f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+
 	jmp		102f
 
 101:
@@ -5109,7 +5577,11 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 56(%r12)
+
+	// no compute next beta
+
 	jmp		102f
 
 101:
@@ -5284,7 +5756,6 @@ NAME:
 
 	movq	ARG1, %r10 // n
 	movq	ARG4, %r11 // A
-
 	vxorpd			%xmm25, %xmm25, %xmm25
 //	subl	$ 1, %r10d
 //	addq	$ 64, %r11
@@ -5306,7 +5777,26 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		101f
+
 	vmovsd			%xmm24, 0(%r12)
+
+	// compute next beta
+	movq	ARG1, %r10 // n
+	movq	ARG4, %r11 // A
+	vxorpd			%xmm25, %xmm25, %xmm25
+//	subl	$ 1, %r10d
+	addq	$ 1*8, %r11
+	cmpl	$ 0, %r10d
+	jle		103f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+103:
+
 	jmp		102f
 
 101:
@@ -5438,7 +5928,26 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 8(%r12)
+
+	// compute next beta
+	movq	ARG1, %r10 // n
+	movq	ARG4, %r11 // A
+	vxorpd			%xmm25, %xmm25, %xmm25
+//	subl	$ 1, %r10d
+	addq	$ 2*8, %r11
+	cmpl	$ 0, %r10d
+	jle		103f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+103:
+
 	jmp		102f
 
 101:
@@ -5585,7 +6094,26 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 16(%r12)
+
+	// compute next beta
+	movq	ARG1, %r10 // n
+	movq	ARG4, %r11 // A
+	vxorpd			%xmm25, %xmm25, %xmm25
+//	subl	$ 1, %r10d
+	addq	$ 3*8, %r11
+	cmpl	$ 0, %r10d
+	jle		103f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+103:
+
 	jmp		102f
 
 101:
@@ -5739,7 +6267,26 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 24(%r12)
+
+	// compute next beta
+	movq	ARG1, %r10 // n
+	movq	ARG4, %r11 // A
+	vxorpd			%xmm25, %xmm25, %xmm25
+//	subl	$ 1, %r10d
+	addq	$ 4*8, %r11
+	cmpl	$ 0, %r10d
+	jle		103f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+103:
+
 	jmp		102f
 
 101:
@@ -5904,7 +6451,26 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 32(%r12)
+
+	// compute next beta
+	movq	ARG1, %r10 // n
+	movq	ARG4, %r11 // A
+	vxorpd			%xmm25, %xmm25, %xmm25
+//	subl	$ 1, %r10d
+	addq	$ 5*8, %r11
+	cmpl	$ 0, %r10d
+	jle		103f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+103:
+
 	jmp		102f
 
 101:
@@ -6084,7 +6650,26 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 40(%r12)
+
+	// compute next beta
+	movq	ARG1, %r10 // n
+	movq	ARG4, %r11 // A
+	vxorpd			%xmm25, %xmm25, %xmm25
+//	subl	$ 1, %r10d
+	addq	$ 6*8, %r11
+	cmpl	$ 0, %r10d
+	jle		103f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+103:
+
 	jmp		102f
 
 101:
@@ -6276,7 +6861,26 @@ NAME:
 	vucomisd		%xmm24, %xmm25
 	jne		101f
 //	jp		111f
+
 	vmovsd			%xmm24, 48(%r12)
+
+	// compute next beta
+	movq	ARG1, %r10 // n
+	movq	ARG4, %r11 // A
+	vxorpd			%xmm25, %xmm25, %xmm25
+//	subl	$ 1, %r10d
+	addq	$ 7*8, %r11
+	cmpl	$ 0, %r10d
+	jle		103f
+100:
+	vmovsd			0(%r11), %xmm24
+	vfmadd231sd		%xmm24, %xmm24, %xmm25
+	subl	$ 1, %r10d
+	addq	$ 64, %r11
+	cmpl	$ 0, %r10d
+	jg		100b
+103:
+
 	jmp		102f
 
 101:
@@ -6481,6 +7085,9 @@ NAME:
 	jne		101f
 //	jp		111f
 	vmovsd			%xmm24, 56(%r12)
+
+	// no compute next beta
+
 	jmp		102f
 
 101:
@@ -6659,6 +7266,7 @@ NAME:
 	movq	ARG1, %r10 // n0
 	movq	ARG5, %r11 // L
 
+	// XXX probably wrong: seemingly reading the upper triangular of L instead of the lower triangular !!!!!
 	vxorpd			%xmm25, %xmm25, %xmm25
 	vmovsd			0(%r11), %xmm24
 	vfmadd231sd		%xmm24, %xmm24, %xmm25

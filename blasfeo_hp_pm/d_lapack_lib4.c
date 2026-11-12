@@ -3818,9 +3818,26 @@ void blasfeo_hp_dgelqf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 		}
 	if(ii<imax)
 		{
-		if(ii==imax-4 & m-ii==4)
+		if(ii==imax-4) // at least 4 left in both directions
 			{
-			kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+			if(m-ii==4)
+				{
+				kernel_dgelqf_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+				}
+			else // m-ii>4
+				{
+				kernel_dgelqf_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+				jj = ii+4;
+				// bigger kernels too ???
+				for(; jj<m-3; jj+=4)
+					{
+					kernel_dlarfb4_rn_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+					}
+				for(ll=0; ll<m-jj; ll++)
+					{
+					kernel_dlarfb4_rn_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+					}
+				}
 			}
 		else
 			{
@@ -4104,9 +4121,26 @@ void blasfeo_hp_dgelqf_pd(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 		}
 	if(ii<imax)
 		{
-		if(ii==imax-4 & m-ii==4)
+		if(ii==imax-4) // at least 4 left in both directions
 			{
-			kernel_dgelqf_pd_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+			if(m-ii==4)
+				{
+				kernel_dgelqf_pd_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii);
+				}
+			else // m-ii>4
+				{
+				kernel_dgelqf_pd_dlarft4_4_lib4(n-ii, pD+ii*sdd+ii*ps, dD+ii, pT);
+				jj = ii+4;
+				// bigger kernels too ???
+				for(; jj<m-3; jj+=4)
+					{
+					kernel_dlarfb4_rn_4_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+jj*sdd+ii*ps);
+					}
+				for(ll=0; ll<m-jj; ll++)
+					{
+					kernel_dlarfb4_rn_1_lib4(n-ii, pD+ii*sdd+ii*ps, pT, pD+ll+jj*sdd+ii*ps);
+					}
+				}
 			}
 		else
 			{
