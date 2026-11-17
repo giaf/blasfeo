@@ -404,11 +404,11 @@ inner_kernel_gemv_add_t_4_lib4:
 
 	movsd	32(%ebx), %xmm6
 	mulsd	%xmm7, %xmm6
-	addsd	%xmm6, %xmm1
+	addsd	%xmm6, %xmm2
 
 	movsd	64(%ebx), %xmm6
 	mulsd	%xmm7, %xmm6
-	addsd	%xmm6, %xmm2
+	addsd	%xmm6, %xmm1
 
 	movsd	96(%ebx), %xmm6
 	mulsd	%xmm7, %xmm6
