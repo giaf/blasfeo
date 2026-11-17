@@ -69,6 +69,7 @@ conventions adopted see [Naming Conventions](/docs/naming)
  - blasfeo\_syrk\_(s|d)potrf\_l\_ln
  - blasfeo\_(s|d)getrf\_nopivot
  - blasfeo\_(s|d)getrf\_rowpivot
+ - blasfeo\_(s|d)getrf\_fullpivot
  - blasfeo\_(s|d)geqrf
  - blasfeo\_(s|d)geqrf\_worksize
  - blasfeo\_(s|d)gelqf

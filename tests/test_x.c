@@ -232,6 +232,12 @@ int main()
 	int_zeros(&cipiv, n, 1);
 	int_zeros(&bipiv, n, 1);
 
+	// Allocate column pivot vectors
+	int *sjpiv;
+	int *rjpiv;
+	int_zeros(&sjpiv, n, 1);
+	int_zeros(&rjpiv, n, 1);
+
 	// Test description structure
 	struct TestArgs targs;
 	initialize_test_args(&targs);
@@ -281,6 +287,7 @@ int main()
 	args.sC = &sC;
 	args.sD = &sD;
 	args.sipiv = sipiv;
+	args.sjpiv = sjpiv;
 
 	// blasfeo reference
 	args.rA = &rA;
@@ -289,6 +296,7 @@ int main()
 	args.rC = &rC;
 	args.rD = &rD;
 	args.ripiv = ripiv;
+	args.rjpiv = rjpiv;
 
 	// blasapi matrices (column major)
 	args.cA = cA;
@@ -439,6 +447,8 @@ int main()
 	int_free(ripiv);
 	int_free(cipiv);
 	int_free(bipiv);
+	int_free(sjpiv);
+	int_free(rjpiv);
 
 	if (bad_calls > 0)
 		return 1;

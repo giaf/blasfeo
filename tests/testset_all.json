@@ -63,6 +63,7 @@
     "syrk_ln_mn",
     "syrk_ln",
     "getrf_rowpivot",
+    "getrf_fullpivot",
     "potrf_l",
     "trsm_llnu",
     "trsm_lunn",

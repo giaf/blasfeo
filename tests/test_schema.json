@@ -194,6 +194,13 @@
           "getrf_rp"
         ]
       },
+      "getrf_fullpivot": {
+        "testclass_src": "getrf_fp.c",
+        "flags":{},
+        "routines": [
+          "getrf_fp"
+        ]
+      },
       "getrf_nopivot": {
         "testclass_src": "getrf_nopivot.c",
         "flags":{},
