@@ -293,6 +293,9 @@ void blasfeo_dsyrk_dpotrf_ln_mn(int m, int n, int k, struct blasfeo_dmat *sA, in
 void blasfeo_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj);
 // D <= lu( C ) ; row pivoting
 void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv);
+// D <= lu( C ) ; full (complete) pivoting, rank revealing: P * C * Q = L * U, with P (Q) the row (column) swaps in ipiv (jpiv), as in rowpe (colpe) ;
+// stops at the first pivot with absolute value <= tol, the number of pivots is returned in rank
+void blasfeo_dgetrf_fp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv, int *jpiv, int *rank, double tol);
 // D <= qr( C )
 int blasfeo_dgeqrf_worksize(int m, int n); // in bytes
 void blasfeo_dgeqrf(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, void *work);

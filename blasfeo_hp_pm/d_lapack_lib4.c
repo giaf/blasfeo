@@ -3543,6 +3543,251 @@ void blasfeo_hp_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 
 
 
+// dgetrf full (complete) pivoting, rank revealing
+void blasfeo_hp_dgetrf_fp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv, int *jpiv, int *rank, double tol)
+	{
+
+	const int ps = 4;
+
+	int cir = ci & (ps-1);
+	int dir = di & (ps-1);
+
+	int sdc = sC->cn;
+	int sdd = sD->cn;
+	double *pC = sC->pA + cj*ps + (ci - cir)*sdc;
+	double *pD = sD->pA + dj*ps + (di - dir)*sdd;
+	double *dD = sD->dA;
+
+	if(di==0 && dj==0)
+		sD->use_dA = 1;
+	else
+		sD->use_dA = 0;
+
+	*rank = 0;
+
+	if(m<=0 | n<=0)
+		return;
+
+	if(pC+cir!=pD+dir)
+		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
+
+	int ii, jj, kk, ll, ip, jp, k0, k1, i0;
+	double tmp, dmax, d_00_inv, d_ij, c_0, m_0;
+	double l_v[4], m_v[4];
+	double *pDi, *pDj, *pDk;
+
+	int iimax = m<n ? m : n;
+	// rows are indexed from the beginning of the first panel of D
+	int me = m + dir;
+
+	// the pivot is the element with largest absolute value, first in column-major order;
+	// the trailing matrix is processed one panel of rows at a time, keeping track of the
+	// largest absolute value in the panel; only if this is not smaller than the current
+	// pivot, the panel is searched again for the column (jp) and later the row (ip)
+
+	// pivot search
+	dmax = 0.0;
+	i0 = dir;
+	jp = 0;
+	for(k0=dir; k0<me; k0=k1)
+		{
+		k1 = (k0 | (ps-1)) + 1;
+		k1 = k1<me ? k1 : me;
+		pDk = pD + (k0 & ~(ps-1))*sdd;
+		m_0 = 0.0;
+		if(k1-k0==ps)
+			{
+			for(ll=0; ll<ps; ll++)
+				{
+				m_v[ll] = 0.0;
+				}
+			for(jj=0; jj<n; jj++)
+				{
+				for(ll=0; ll<ps; ll++)
+					{
+					c_0 = fabs(pDk[ll+jj*ps]);
+					m_v[ll] = m_v[ll]>c_0 ? m_v[ll] : c_0;
+					}
+				}
+			for(ll=0; ll<ps; ll++)
+				{
+				m_0 = m_0>m_v[ll] ? m_0 : m_v[ll];
+				}
+			}
+		else
+			{
+			for(jj=0; jj<n; jj++)
+				{
+				for(kk=k0; kk<k1; kk++)
+					{
+					c_0 = fabs(pDk[(kk&(ps-1))+jj*ps]);
+					m_0 = m_0>c_0 ? m_0 : c_0;
+					}
+				}
+			}
+		if(m_0>=dmax & m_0>0.0)
+			{
+			// search the panel for the first column containing the maximum
+			for(jj=0; jj<n; jj++)
+				{
+				for(kk=k0; kk<k1; kk++)
+					{
+					if(fabs(pDk[(kk&(ps-1))+jj*ps])==m_0)
+						goto found_0;
+					}
+				}
+			found_0:
+			if(jj<n & (m_0>dmax | jj<jp))
+				{
+				dmax = m_0;
+				i0 = k0;
+				jp = jj;
+				}
+			}
+		}
+
+	// factorize
+	for(ii=0; ii<iimax; ii++)
+		{
+		if(!(dmax>tol))
+			break;
+		// search the panel for the row of the pivot
+		ip = i0;
+		k1 = (i0 | (ps-1)) + 1;
+		k1 = k1<me ? k1 : me;
+		pDk = pD + (i0 & ~(ps-1))*sdd + jp*ps;
+		for(kk=i0; kk<k1; kk++)
+			{
+			if(fabs(pDk[kk&(ps-1)])==dmax)
+				{
+				ip = kk;
+				break;
+				}
+			}
+		ipiv[ii] = ip - dir;
+		jpiv[ii] = jp;
+		// pointer to row ii
+		kk = ii + dir;
+		pDi = pD + (kk & ~(ps-1))*sdd + (kk&(ps-1));
+		// swap rows
+		if(ip!=kk)
+			{
+			pDj = pD + (ip & ~(ps-1))*sdd + (ip&(ps-1));
+			for(jj=0; jj<n; jj++)
+				{
+				tmp = pDi[jj*ps];
+				pDi[jj*ps] = pDj[jj*ps];
+				pDj[jj*ps] = tmp;
+				}
+			}
+		// swap columns
+		if(jp!=ii)
+			{
+			for(k0=dir; k0<me; k0=k1)
+				{
+				k1 = (k0 | (ps-1)) + 1;
+				k1 = k1<me ? k1 : me;
+				pDk = pD + (k0 & ~(ps-1))*sdd;
+				for(kk=k0; kk<k1; kk++)
+					{
+					tmp = pDk[(kk&(ps-1))+ii*ps];
+					pDk[(kk&(ps-1))+ii*ps] = pDk[(kk&(ps-1))+jp*ps];
+					pDk[(kk&(ps-1))+jp*ps] = tmp;
+					}
+				}
+			}
+		d_00_inv = 1.0/pDi[ii*ps];
+		dD[ii] = d_00_inv;
+		// scale column of L, rank-1 update of the trailing matrix and pivot search
+		dmax = 0.0;
+		i0 = ii+1+dir;
+		jp = ii+1;
+		for(k0=ii+1+dir; k0<me; k0=k1)
+			{
+			k1 = (k0 | (ps-1)) + 1;
+			k1 = k1<me ? k1 : me;
+			pDk = pD + (k0 & ~(ps-1))*sdd;
+			m_0 = 0.0;
+			if(k1-k0==ps)
+				{
+				for(ll=0; ll<ps; ll++)
+					{
+					l_v[ll] = pDk[ll+ii*ps] * d_00_inv;
+					pDk[ll+ii*ps] = l_v[ll];
+					m_v[ll] = 0.0;
+					}
+				for(jj=ii+1; jj<n; jj++)
+					{
+					d_ij = pDi[jj*ps];
+					for(ll=0; ll<ps; ll++)
+						{
+						c_0 = pDk[ll+jj*ps] - l_v[ll] * d_ij;
+						pDk[ll+jj*ps] = c_0;
+						c_0 = fabs(c_0);
+						m_v[ll] = m_v[ll]>c_0 ? m_v[ll] : c_0;
+						}
+					}
+				for(ll=0; ll<ps; ll++)
+					{
+					m_0 = m_0>m_v[ll] ? m_0 : m_v[ll];
+					}
+				}
+			else
+				{
+				for(kk=k0; kk<k1; kk++)
+					{
+					pDk[(kk&(ps-1))+ii*ps] *= d_00_inv;
+					}
+				for(jj=ii+1; jj<n; jj++)
+					{
+					d_ij = pDi[jj*ps];
+					for(kk=k0; kk<k1; kk++)
+						{
+						c_0 = pDk[(kk&(ps-1))+jj*ps] - pDk[(kk&(ps-1))+ii*ps] * d_ij;
+						pDk[(kk&(ps-1))+jj*ps] = c_0;
+						c_0 = fabs(c_0);
+						m_0 = m_0>c_0 ? m_0 : c_0;
+						}
+					}
+				}
+			if(m_0>=dmax & m_0>0.0)
+				{
+				// search the panel for the first column containing the maximum
+				for(jj=ii+1; jj<n; jj++)
+					{
+					for(kk=k0; kk<k1; kk++)
+						{
+						if(fabs(pDk[(kk&(ps-1))+jj*ps])==m_0)
+							goto found_1;
+						}
+					}
+				found_1:
+				if(jj<n & (m_0>dmax | jj<jp))
+					{
+					dmax = m_0;
+					i0 = k0;
+					jp = jj;
+					}
+				}
+			}
+		}
+
+	*rank = ii;
+
+	// no pivoting on the rank deficient part
+	for(; ii<iimax; ii++)
+		{
+		ipiv[ii] = ii;
+		jpiv[ii] = ii;
+		dD[ii] = 0.0;
+		}
+
+	return;
+
+	}
+
+
+
 int blasfeo_hp_dgeqrf_worksize(int m, int n)
 	{
 	const int ps = 4;
@@ -4458,6 +4703,13 @@ void blasfeo_dgetrf_np(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, st
 void blasfeo_dgetrf_rp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv)
 	{
 	blasfeo_hp_dgetrf_rp(m, n, sC, ci, cj, sD, di, dj, ipiv);
+	}
+
+
+
+void blasfeo_dgetrf_fp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj, struct blasfeo_dmat *sD, int di, int dj, int *ipiv, int *jpiv, int *rank, double tol)
+	{
+	blasfeo_hp_dgetrf_fp(m, n, sC, ci, cj, sD, di, dj, ipiv, jpiv, rank, tol);
 	}
 
 

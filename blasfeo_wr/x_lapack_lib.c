@@ -432,6 +432,113 @@ void GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 
 
 
+// dgetrf full (complete) pivoting, rank revealing
+void GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv, int *jpiv, int *rank, REAL tol)
+	{
+	*rank = 0;
+	if(m<=0 | n<=0)
+		return;
+
+	// invalidate stored inverse diagonal of result matrix
+	sD->use_dA = 0;
+
+	int ii, jj, kk, ip, jp;
+	REAL tmp, dmax, d_00_inv, d_ij;
+	REAL *pC = sC->pA+ci+cj*sC->m;
+	REAL *pD = sD->pA+di+dj*sD->m;
+	int i1 = 1;
+	int ldc = sC->m;
+	int ldd = sD->m;
+	if(!(pC==pD))
+		{
+		for(jj=0; jj<n; jj++)
+			COPY(&m, pC+jj*ldc, &i1, pD+jj*ldd, &i1);
+		}
+	int iimax = m<n ? m : n;
+	// pivot search: largest absolute value, first in column-major order
+	dmax = 0.0;
+	ip = 0;
+	jp = 0;
+	for(jj=0; jj<n; jj++)
+		{
+		for(kk=0; kk<m; kk++)
+			{
+			tmp = pD[kk+jj*ldd];
+			tmp = tmp>0 ? tmp : -tmp;
+			if(tmp>dmax)
+				{
+				dmax = tmp;
+				ip = kk;
+				jp = jj;
+				}
+			}
+		}
+	// factorize
+	for(ii=0; ii<iimax; ii++)
+		{
+		if(!(dmax>tol))
+			break;
+		ipiv[ii] = ip;
+		jpiv[ii] = jp;
+		// swap rows
+		if(ip!=ii)
+			{
+			for(jj=0; jj<n; jj++)
+				{
+				tmp = pD[ii+jj*ldd];
+				pD[ii+jj*ldd] = pD[ip+jj*ldd];
+				pD[ip+jj*ldd] = tmp;
+				}
+			}
+		// swap columns
+		if(jp!=ii)
+			{
+			for(kk=0; kk<m; kk++)
+				{
+				tmp = pD[kk+ii*ldd];
+				pD[kk+ii*ldd] = pD[kk+jp*ldd];
+				pD[kk+jp*ldd] = tmp;
+				}
+			}
+		// scale column of L
+		d_00_inv = 1.0/pD[ii+ii*ldd];
+		for(kk=ii+1; kk<m; kk++)
+			{
+			pD[kk+ii*ldd] *= d_00_inv;
+			}
+		// rank-1 update of the trailing block and pivot search
+		dmax = 0.0;
+		ip = ii+1;
+		jp = ii+1;
+		for(jj=ii+1; jj<n; jj++)
+			{
+			d_ij = pD[ii+jj*ldd];
+			for(kk=ii+1; kk<m; kk++)
+				{
+				tmp = pD[kk+jj*ldd] - pD[kk+ii*ldd] * d_ij;
+				pD[kk+jj*ldd] = tmp;
+				tmp = tmp>0 ? tmp : -tmp;
+				if(tmp>dmax)
+					{
+					dmax = tmp;
+					ip = kk;
+					jp = jj;
+					}
+				}
+			}
+		}
+	*rank = ii;
+	// no pivoting on the rank deficient part
+	for(; ii<iimax; ii++)
+		{
+		ipiv[ii] = ii;
+		jpiv[ii] = ii;
+		}
+	return;
+	}
+
+
+
 int GEQRF_WORK_SIZE(int m, int n)
 	{
 	REAL dwork;

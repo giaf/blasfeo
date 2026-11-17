@@ -72,6 +72,7 @@
 #define GEQRF blasfeo_sgeqrf
 #define GEQRF_WORK_SIZE blasfeo_sgeqrf_worksize
 //#define GETF2_NOPIVOT sgetf2_nopivot
+#define GETRF_FULLPIVOT blasfeo_sgetrf_fp
 #define GETRF_NOPIVOT blasfeo_sgetrf_np
 #define GETRF_ROWPIVOT blasfeo_sgetrf_rp
 #define POTRF_L blasfeo_spotrf_l
