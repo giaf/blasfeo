@@ -464,7 +464,7 @@ void GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT 
 		for(kk=0; kk<m; kk++)
 			{
 			tmp = pD[kk+jj*ldd];
-			tmp = tmp>0 ? tmp : -tmp;
+			tmp = tmp>0.0 ? tmp : -tmp;
 			if(tmp>dmax)
 				{
 				dmax = tmp;
@@ -517,7 +517,7 @@ void GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT 
 				{
 				tmp = pD[kk+jj*ldd] - pD[kk+ii*ldd] * d_ij;
 				pD[kk+jj*ldd] = tmp;
-				tmp = tmp>0 ? tmp : -tmp;
+				tmp = tmp>0.0 ? tmp : -tmp;
 				if(tmp>dmax)
 					{
 					dmax = tmp;

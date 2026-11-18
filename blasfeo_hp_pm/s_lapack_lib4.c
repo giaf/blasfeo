@@ -1260,12 +1260,12 @@ void blasfeo_hp_sgetrf_fp(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 	if(pC+cir!=pD+dir)
 		blasfeo_sgecp(m, n, sC, ci, cj, sD, di, dj);
 
-	int ii, jj, kk, ll, ip, jp, k0, k1, i0;
+	int ii, jj, kk, ll, ip, jp, k0, k1, kp;
 	float tmp, dmax, d_00_inv, d_ij, c_0, m_0;
 	float l_v[4], m_v[4];
 	float *pDi, *pDj, *pDk;
 
-	int iimax = m<n ? m : n;
+	int p = m<n ? m : n;
 	// rows are indexed from the beginning of the first panel of D
 	int me = m + dir;
 
@@ -1276,7 +1276,7 @@ void blasfeo_hp_sgetrf_fp(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 
 	// pivot search
 	dmax = 0.0;
-	i0 = dir;
+	kp = dir;
 	jp = 0;
 	for(k0=dir; k0<me; k0=k1)
 		{
@@ -1329,23 +1329,23 @@ void blasfeo_hp_sgetrf_fp(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 			if(jj<n & (m_0>dmax | jj<jp))
 				{
 				dmax = m_0;
-				i0 = k0;
+				kp = k0;
 				jp = jj;
 				}
 			}
 		}
 
 	// factorize
-	for(ii=0; ii<iimax; ii++)
+	for(ii=0; ii<p; ii++)
 		{
 		if(!(dmax>tol) | dmax==0.0)
 			break;
 		// search the panel for the row of the pivot
-		ip = i0;
-		k1 = (i0 | (ps-1)) + 1;
+		ip = kp;
+		k1 = (kp | (ps-1)) + 1;
 		k1 = k1<me ? k1 : me;
-		pDk = pD + (i0 & ~(ps-1))*sdd + jp*ps;
-		for(kk=i0; kk<k1; kk++)
+		pDk = pD + (kp & ~(ps-1))*sdd + jp*ps;
+		for(kk=kp; kk<k1; kk++)
 			{
 			if(fabsf(pDk[kk&(ps-1)])==dmax)
 				{
@@ -1389,7 +1389,7 @@ void blasfeo_hp_sgetrf_fp(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 		dD[ii] = d_00_inv;
 		// scale column of L, rank-1 update of the trailing matrix and pivot search
 		dmax = 0.0;
-		i0 = ii+1+dir;
+		kp = ii+1+dir;
 		jp = ii+1;
 		for(k0=ii+1+dir; k0<me; k0=k1)
 			{
@@ -1454,7 +1454,7 @@ void blasfeo_hp_sgetrf_fp(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 				if(jj<n & (m_0>dmax | jj<jp))
 					{
 					dmax = m_0;
-					i0 = k0;
+					kp = k0;
 					jp = jj;
 					}
 				}
@@ -1464,7 +1464,7 @@ void blasfeo_hp_sgetrf_fp(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 	*rank = ii;
 
 	// no pivoting on the rank deficient part
-	for(; ii<iimax; ii++)
+	for(; ii<p; ii++)
 		{
 		ipiv[ii] = ii;
 		jpiv[ii] = ii;

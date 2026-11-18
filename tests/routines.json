@@ -105,7 +105,7 @@
         "common_name": "Sequential General LU factorization with full pivot, rank revealing",
         "doc": [
           "LU factorization of a general M-by-N matrix A with full (complete) pivot",
-          "The factorization stops at the first pivot with absolute value smaller or equal than tol",
+          "The factorization stops at the first pivot with absolute value smaller than or equal to tol",
           "P * A * Q = L * U"
         ],
         "signature":{

@@ -1550,7 +1550,7 @@ void REF_GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct X
 	{
 	int ii, jj, kk, ip, jp;
 	REAL dtmp, dmax, d_00_inv, d_ij;
-#if defined(MF_COLMAJ)
+#if defined(MF_COLMAJ) | defined(REF_BLAS)
 	int ldc = sC->m;
 	int ldd = sD->m;
 	REAL *pC = sC->pA + ci + cj*ldc;
@@ -1592,7 +1592,7 @@ void REF_GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct X
 		for(kk=0; kk<m; kk++)
 			{
 			dtmp = XMATEL_D(ddi+kk, ddj+jj);
-			dtmp = dtmp>0 ? dtmp : -dtmp;
+			dtmp = dtmp>0.0 ? dtmp : -dtmp;
 			if(dtmp>dmax)
 				{
 				dmax = dtmp;
@@ -1646,7 +1646,7 @@ void REF_GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct X
 				{
 				dtmp = XMATEL_D(ddi+kk, ddj+jj) - XMATEL_D(ddi+kk, ddj+ii) * d_ij;
 				XMATEL_D(ddi+kk, ddj+jj) = dtmp;
-				dtmp = dtmp>0 ? dtmp : -dtmp;
+				dtmp = dtmp>0.0 ? dtmp : -dtmp;
 				if(dtmp>dmax)
 					{
 					dmax = dtmp;
