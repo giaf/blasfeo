@@ -476,7 +476,7 @@ void GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT 
 	// factorize
 	for(ii=0; ii<iimax; ii++)
 		{
-		if(!(dmax>tol))
+		if(!(dmax>tol) | dmax==0.0)
 			break;
 		ipiv[ii] = ip;
 		jpiv[ii] = jp;

@@ -3649,7 +3649,7 @@ void blasfeo_hp_dgetrf_fp(int m, int n, struct blasfeo_dmat *sC, int ci, int cj,
 	// factorize
 	for(ii=0; ii<iimax; ii++)
 		{
-		if(!(dmax>tol))
+		if(!(dmax>tol) | dmax==0.0)
 			break;
 		// search the panel for the row of the pivot
 		ip = i0;

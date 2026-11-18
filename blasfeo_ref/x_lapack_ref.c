@@ -1543,7 +1543,7 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 // P * C * Q = L * U, with
 // P row permutation (ipiv), Q column permutation (jpiv),
 // L lower unit trapezoidal, U upper trapezoidal;
-// the factorization stops at the first pivot with absolute value <= tol:
+// the factorization stops at the first pivot with absolute value <= tol (or zero):
 // the first rank columns of L and rows of U are computed, and
 // the trailing (m-rank)x(n-rank) block of D holds the Schur complement
 void REF_GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv, int *jpiv, int *rank, REAL tol)
@@ -1604,7 +1604,7 @@ void REF_GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct X
 	// factorize
 	for(ii=0; ii<iimax; ii++)
 		{
-		if(!(dmax>tol))
+		if(!(dmax>tol) | dmax==0.0)
 			break;
 		ipiv[ii] = ip;
 		jpiv[ii] = jp;
