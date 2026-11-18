@@ -111,6 +111,7 @@
         "signature":{
           "int": "rows",
           "int": "columns",
+          "FLOAT": "tolerance",
           "STRMAT_ptr": "input matrix",
           "int": "input (A) row offset",
           "int": "input (A) column offset",
@@ -119,8 +120,7 @@
           "int": "output (LU) column offset",
           "int_ptr": "row pivot vector",
           "int_ptr": "column pivot vector",
-          "int_ptr": "rank",
-          "FLOAT": "tolerance"
+          "int_ptr": "rank"
         }
       },
       "geqrf":{},

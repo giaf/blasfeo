@@ -1233,7 +1233,7 @@ void blasfeo_hp_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 
 
 // sgetrf full (complete) pivoting, rank revealing
-void blasfeo_hp_sgetrf_fp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv, int *jpiv, int *rank, float tol)
+void blasfeo_hp_sgetrf_fp(int m, int n, float tol, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv, int *jpiv, int *rank)
 	{
 
 	const int ps = 4;
@@ -1667,9 +1667,9 @@ void blasfeo_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 
 
 
-void blasfeo_sgetrf_fp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv, int *jpiv, int *rank, float tol)
+void blasfeo_sgetrf_fp(int m, int n, float tol, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv, int *jpiv, int *rank)
 	{
-	blasfeo_hp_sgetrf_fp(m, n, sC, ci, cj, sD, di, dj, ipiv, jpiv, rank, tol);
+	blasfeo_hp_sgetrf_fp(m, n, tol, sC, ci, cj, sD, di, dj, ipiv, jpiv, rank);
 	}
 
 

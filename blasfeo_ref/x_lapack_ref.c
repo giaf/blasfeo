@@ -1546,7 +1546,7 @@ void REF_GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XM
 // the factorization stops at the first pivot with absolute value <= tol (or zero):
 // the first rank columns of L and rows of U are computed, and
 // the trailing (m-rank)x(n-rank) block of D holds the Schur complement
-void REF_GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv, int *jpiv, int *rank, REAL tol)
+void REF_GETRF_FULLPIVOT(int m, int n, REAL tol, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv, int *jpiv, int *rank)
 	{
 	int ii, jj, kk, ip, jp;
 	REAL dtmp, dmax, d_00_inv, d_ij;
@@ -3489,9 +3489,9 @@ void GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 
 
 #if ! ( defined(REF_BLAS) )
-void GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv, int *jpiv, int *rank, REAL tol)
+void GETRF_FULLPIVOT(int m, int n, REAL tol, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv, int *jpiv, int *rank)
 	{
-	REF_GETRF_FULLPIVOT(m, n, sC, ci, cj, sD, di, dj, ipiv, jpiv, rank, tol);
+	REF_GETRF_FULLPIVOT(m, n, tol, sC, ci, cj, sD, di, dj, ipiv, jpiv, rank);
 	}
 #endif
 

@@ -433,7 +433,7 @@ void GETRF_ROWPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *
 
 
 // dgetrf full (complete) pivoting, rank revealing
-void GETRF_FULLPIVOT(int m, int n, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv, int *jpiv, int *rank, REAL tol)
+void GETRF_FULLPIVOT(int m, int n, REAL tol, struct XMAT *sC, int ci, int cj, struct XMAT *sD, int di, int dj, int *ipiv, int *jpiv, int *rank)
 	{
 	*rank = 0;
 	if(m<=0 | n<=0)

@@ -9,23 +9,23 @@ void call_routines(struct RoutineArgs *args)
 	// routine call
 	//
 	BLASFEO(ROUTINE)(
-		args->m, args->n,
+		args->m, args->n, tol,
 		args->sA_po, args->ai, args->aj,
 		args->sD, args->di, args->dj,
-		args->sipiv, args->sjpiv, &srank, tol);
+		args->sipiv, args->sjpiv, &srank);
 
 	BLASFEO(REF(ROUTINE))(
-		args->m, args->n,
+		args->m, args->n, tol,
 		args->rA_po, args->ai, args->aj,
 		args->rD, args->di, args->dj,
-		args->ripiv, args->rjpiv, &rrank, tol);
+		args->ripiv, args->rjpiv, &rrank);
 	}
 
 
 
 void print_routine(struct RoutineArgs *args)
 	{
-	printf("blasfeo_%s(%d, %d, A, %d, %d, D, %d, %d, ipiv, jpiv, rank, tol);\n", string(ROUTINE), args->m, args->n, args->ai, args->aj, args->di, args->dj);
+	printf("blasfeo_%s(%d, %d, tol, A, %d, %d, D, %d, %d, ipiv, jpiv, rank);\n", string(ROUTINE), args->m, args->n, args->ai, args->aj, args->di, args->dj);
 	}
 
 
