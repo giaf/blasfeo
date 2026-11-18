@@ -719,7 +719,6 @@ NAME:
 	movsd	0(%r11), %xmm8
 	mulsd	%xmm12, %xmm8
 	addsd	%xmm8, %xmm0
-	subl	$ 1, %r10d
 
 	movsd	32(%r11), %xmm8
 	mulsd	%xmm12, %xmm8
