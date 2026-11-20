@@ -944,6 +944,21 @@ void blasfeo_hp_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj,
 
 
 
+// sgetrf full (complete) pivoting, rank revealing
+void blasfeo_hp_sgetrf_fp(int m, int n, float tol, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv, int *jpiv, int *rank)
+	{
+#if defined(BLASFEO_REF_API)
+	blasfeo_ref_sgetrf_fp(m, n, tol, sC, ci, cj, sD, di, dj, ipiv, jpiv, rank);
+#else
+#ifdef EXT_DEP
+	printf("\nblasfeo_sgetrf_fp: feature not implemented yet\n");
+#endif	
+	exit(1);
+#endif
+	}
+
+
+
 int blasfeo_hp_sgeqrf_worksize(int m, int n)
 	{
 	return 0;
@@ -1130,6 +1145,13 @@ void blasfeo_sgetrf_np(int m, int n, struct blasfeo_smat *sC, int ci, int cj, st
 void blasfeo_sgetrf_rp(int m, int n, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv)
 	{
 	blasfeo_hp_sgetrf_rp(m, n, sC, ci, cj, sD, di, dj, ipiv);
+	}
+
+
+
+void blasfeo_sgetrf_fp(int m, int n, float tol, struct blasfeo_smat *sC, int ci, int cj, struct blasfeo_smat *sD, int di, int dj, int *ipiv, int *jpiv, int *rank)
+	{
+	blasfeo_hp_sgetrf_fp(m, n, tol, sC, ci, cj, sD, di, dj, ipiv, jpiv, rank);
 	}
 
 

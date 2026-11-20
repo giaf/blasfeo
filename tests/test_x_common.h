@@ -157,8 +157,10 @@ struct RoutineArgs
 	// indexes arrays
 	// struct signature
 	int *sipiv;
+	int *sjpiv;
 	// ref signature
 	int *ripiv;
+	int *rjpiv;
 	// ref compare signature
 	int *cipiv;
 	int *bipiv;

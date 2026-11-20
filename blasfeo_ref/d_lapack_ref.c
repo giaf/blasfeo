@@ -84,6 +84,7 @@
 #define REF_GELQF_PD_LLA blasfeo_ref_dgelqf_pd_lla
 #define REF_GEQRF blasfeo_ref_dgeqrf
 #define REF_GEQRF_WORK_SIZE blasfeo_ref_dgeqrf_worksize
+#define REF_GETRF_FULLPIVOT blasfeo_ref_dgetrf_fp
 #define REF_GETRF_NOPIVOT blasfeo_ref_dgetrf_np
 #define REF_GETRF_ROWPIVOT blasfeo_ref_dgetrf_rp
 #define REF_POTRF_L blasfeo_ref_dpotrf_l
@@ -103,6 +104,7 @@
 #define GELQF_PD_LLA blasfeo_dgelqf_pd_lla
 #define GEQRF blasfeo_dgeqrf
 #define GEQRF_WORK_SIZE blasfeo_dgeqrf_worksize
+#define GETRF_FULLPIVOT blasfeo_dgetrf_fp
 #define GETRF_NOPIVOT blasfeo_dgetrf_np
 #define GETRF_ROWPIVOT blasfeo_dgetrf_rp
 #define POTRF_L blasfeo_dpotrf_l
