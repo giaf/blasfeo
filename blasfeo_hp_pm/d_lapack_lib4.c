@@ -3571,9 +3571,10 @@ void blasfeo_hp_dgetrf_fp(int m, int n, double tol, struct blasfeo_dmat *sC, int
 	if(pC+cir!=pD+dir)
 		blasfeo_dgecp(m, n, sC, ci, cj, sD, di, dj);
 
-	int ii, jj, kk, ll, ip, jp, k0, k1, kp;
+	int ii, jj, kk, ip, jp, k0, k1, kp;
 	double tmp, dmax, d_00_inv, d_ij, c_0, m_0;
-	double l_v[4], m_v[4];
+	double d_0, d_1, l_0, l_1, l_2, l_3;
+	double m_00, m_10, m_20, m_30, m_01, m_11, m_21, m_31;
 	double *pDi, *pDj, *pDk;
 
 	int p = m<n ? m : n;
@@ -3597,22 +3598,33 @@ void blasfeo_hp_dgetrf_fp(int m, int n, double tol, struct blasfeo_dmat *sC, int
 		m_0 = 0.0;
 		if(k1-k0==ps)
 			{
-			for(ll=0; ll<ps; ll++)
+			m_00 = 0.0; m_10 = 0.0; m_20 = 0.0; m_30 = 0.0;
+			m_01 = 0.0; m_11 = 0.0; m_21 = 0.0; m_31 = 0.0;
+			for(jj=0; jj<n-1; jj+=2)
 				{
-				m_v[ll] = 0.0;
+				c_0 = fabs(pDk[0+(jj+0)*ps]); m_00 = m_00>c_0 ? m_00 : c_0;
+				c_0 = fabs(pDk[1+(jj+0)*ps]); m_10 = m_10>c_0 ? m_10 : c_0;
+				c_0 = fabs(pDk[2+(jj+0)*ps]); m_20 = m_20>c_0 ? m_20 : c_0;
+				c_0 = fabs(pDk[3+(jj+0)*ps]); m_30 = m_30>c_0 ? m_30 : c_0;
+				c_0 = fabs(pDk[0+(jj+1)*ps]); m_01 = m_01>c_0 ? m_01 : c_0;
+				c_0 = fabs(pDk[1+(jj+1)*ps]); m_11 = m_11>c_0 ? m_11 : c_0;
+				c_0 = fabs(pDk[2+(jj+1)*ps]); m_21 = m_21>c_0 ? m_21 : c_0;
+				c_0 = fabs(pDk[3+(jj+1)*ps]); m_31 = m_31>c_0 ? m_31 : c_0;
 				}
-			for(jj=0; jj<n; jj++)
+			if(jj<n)
 				{
-				for(ll=0; ll<ps; ll++)
-					{
-					c_0 = fabs(pDk[ll+jj*ps]);
-					m_v[ll] = m_v[ll]>c_0 ? m_v[ll] : c_0;
-					}
+				c_0 = fabs(pDk[0+jj*ps]); m_00 = m_00>c_0 ? m_00 : c_0;
+				c_0 = fabs(pDk[1+jj*ps]); m_10 = m_10>c_0 ? m_10 : c_0;
+				c_0 = fabs(pDk[2+jj*ps]); m_20 = m_20>c_0 ? m_20 : c_0;
+				c_0 = fabs(pDk[3+jj*ps]); m_30 = m_30>c_0 ? m_30 : c_0;
 				}
-			for(ll=0; ll<ps; ll++)
-				{
-				m_0 = m_0>m_v[ll] ? m_0 : m_v[ll];
-				}
+			m_00 = m_00>m_01 ? m_00 : m_01;
+			m_10 = m_10>m_11 ? m_10 : m_11;
+			m_20 = m_20>m_21 ? m_20 : m_21;
+			m_30 = m_30>m_31 ? m_30 : m_31;
+			m_00 = m_00>m_10 ? m_00 : m_10;
+			m_20 = m_20>m_30 ? m_20 : m_30;
+			m_0 = m_00>m_20 ? m_00 : m_20;
 			}
 		else
 			{
@@ -3710,27 +3722,44 @@ void blasfeo_hp_dgetrf_fp(int m, int n, double tol, struct blasfeo_dmat *sC, int
 			m_0 = 0.0;
 			if(k1-k0==ps)
 				{
-				for(ll=0; ll<ps; ll++)
+				l_0 = pDk[0+ii*ps] * d_00_inv;
+				l_1 = pDk[1+ii*ps] * d_00_inv;
+				l_2 = pDk[2+ii*ps] * d_00_inv;
+				l_3 = pDk[3+ii*ps] * d_00_inv;
+				pDk[0+ii*ps] = l_0;
+				pDk[1+ii*ps] = l_1;
+				pDk[2+ii*ps] = l_2;
+				pDk[3+ii*ps] = l_3;
+				m_00 = 0.0; m_10 = 0.0; m_20 = 0.0; m_30 = 0.0;
+				m_01 = 0.0; m_11 = 0.0; m_21 = 0.0; m_31 = 0.0;
+				for(jj=ii+1; jj<n-1; jj+=2)
 					{
-					l_v[ll] = pDk[ll+ii*ps] * d_00_inv;
-					pDk[ll+ii*ps] = l_v[ll];
-					m_v[ll] = 0.0;
+					d_0 = pDi[(jj+0)*ps];
+					d_1 = pDi[(jj+1)*ps];
+					c_0 = pDk[0+(jj+0)*ps] - l_0 * d_0; pDk[0+(jj+0)*ps] = c_0; c_0 = fabs(c_0); m_00 = m_00>c_0 ? m_00 : c_0;
+					c_0 = pDk[1+(jj+0)*ps] - l_1 * d_0; pDk[1+(jj+0)*ps] = c_0; c_0 = fabs(c_0); m_10 = m_10>c_0 ? m_10 : c_0;
+					c_0 = pDk[2+(jj+0)*ps] - l_2 * d_0; pDk[2+(jj+0)*ps] = c_0; c_0 = fabs(c_0); m_20 = m_20>c_0 ? m_20 : c_0;
+					c_0 = pDk[3+(jj+0)*ps] - l_3 * d_0; pDk[3+(jj+0)*ps] = c_0; c_0 = fabs(c_0); m_30 = m_30>c_0 ? m_30 : c_0;
+					c_0 = pDk[0+(jj+1)*ps] - l_0 * d_1; pDk[0+(jj+1)*ps] = c_0; c_0 = fabs(c_0); m_01 = m_01>c_0 ? m_01 : c_0;
+					c_0 = pDk[1+(jj+1)*ps] - l_1 * d_1; pDk[1+(jj+1)*ps] = c_0; c_0 = fabs(c_0); m_11 = m_11>c_0 ? m_11 : c_0;
+					c_0 = pDk[2+(jj+1)*ps] - l_2 * d_1; pDk[2+(jj+1)*ps] = c_0; c_0 = fabs(c_0); m_21 = m_21>c_0 ? m_21 : c_0;
+					c_0 = pDk[3+(jj+1)*ps] - l_3 * d_1; pDk[3+(jj+1)*ps] = c_0; c_0 = fabs(c_0); m_31 = m_31>c_0 ? m_31 : c_0;
 					}
-				for(jj=ii+1; jj<n; jj++)
+				if(jj<n)
 					{
-					d_ij = pDi[jj*ps];
-					for(ll=0; ll<ps; ll++)
-						{
-						c_0 = pDk[ll+jj*ps] - l_v[ll] * d_ij;
-						pDk[ll+jj*ps] = c_0;
-						c_0 = fabs(c_0);
-						m_v[ll] = m_v[ll]>c_0 ? m_v[ll] : c_0;
-						}
+					d_0 = pDi[jj*ps];
+					c_0 = pDk[0+jj*ps] - l_0 * d_0; pDk[0+jj*ps] = c_0; c_0 = fabs(c_0); m_00 = m_00>c_0 ? m_00 : c_0;
+					c_0 = pDk[1+jj*ps] - l_1 * d_0; pDk[1+jj*ps] = c_0; c_0 = fabs(c_0); m_10 = m_10>c_0 ? m_10 : c_0;
+					c_0 = pDk[2+jj*ps] - l_2 * d_0; pDk[2+jj*ps] = c_0; c_0 = fabs(c_0); m_20 = m_20>c_0 ? m_20 : c_0;
+					c_0 = pDk[3+jj*ps] - l_3 * d_0; pDk[3+jj*ps] = c_0; c_0 = fabs(c_0); m_30 = m_30>c_0 ? m_30 : c_0;
 					}
-				for(ll=0; ll<ps; ll++)
-					{
-					m_0 = m_0>m_v[ll] ? m_0 : m_v[ll];
-					}
+				m_00 = m_00>m_01 ? m_00 : m_01;
+				m_10 = m_10>m_11 ? m_10 : m_11;
+				m_20 = m_20>m_21 ? m_20 : m_21;
+				m_30 = m_30>m_31 ? m_30 : m_31;
+				m_00 = m_00>m_10 ? m_00 : m_10;
+				m_20 = m_20>m_30 ? m_20 : m_30;
+				m_0 = m_00>m_20 ? m_00 : m_20;
 				}
 			else
 				{
